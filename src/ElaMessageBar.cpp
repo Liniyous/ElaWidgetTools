@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
+#include <QResizeEvent>
 
 #include "ElaApplication.h"
 #include "ElaIconButton.h"
@@ -253,28 +254,42 @@ bool ElaMessageBar::eventFilter(QObject* watched, QEvent* event)
         {
         case QEvent::Resize:
         {
+            QResizeEvent* resizeEvent = dynamic_cast<QResizeEvent*>(event);
+            QSize offsetSize = parentWidget()->size() - resizeEvent->oldSize();
             if (d->_isNormalDisplay)
             {
                 switch (d->_policy)
                 {
                 case ElaMessageBarType::Top:
-                case ElaMessageBarType::Bottom:
                 {
                     this->move(parentWidget()->width() / 2 - minimumWidth() / 2, this->y());
                     break;
                 }
+                case ElaMessageBarType::Bottom:
+                {
+                    this->move(parentWidget()->width() / 2 - minimumWidth() / 2, this->pos().y() + offsetSize.height());
+                    break;
+                }
                 case ElaMessageBarType::Left:
                 case ElaMessageBarType::TopLeft:
+                {
+                    this->move(d->_messageBarHorizontalMargin, this->pos().y());
+                    break;
+                }
                 case ElaMessageBarType::BottomLeft:
                 {
-                    this->move(d->_messageBarHorizontalMargin, this->y());
+                    this->move(d->_messageBarHorizontalMargin, this->pos().y() + offsetSize.height());
                     break;
                 }
                 case ElaMessageBarType::Right:
                 case ElaMessageBarType::TopRight:
-                case ElaMessageBarType::BottomRight:
                 {
                     this->move(parentWidget()->width() - minimumWidth() - d->_messageBarHorizontalMargin, this->y());
+                    break;
+                }
+                case ElaMessageBarType::BottomRight:
+                {
+                    this->move(parentWidget()->width() - minimumWidth() - d->_messageBarHorizontalMargin, this->pos().y() + offsetSize.height());
                     break;
                 }
                 }

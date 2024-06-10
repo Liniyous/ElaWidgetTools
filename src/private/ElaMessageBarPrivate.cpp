@@ -58,6 +58,7 @@ void ElaMessageBarPrivate::onOtherMessageBarClosed(ElaMessageBarType::PositionPo
 void ElaMessageBarPrivate::_messageBarStartAnimation(int displayMsec)
 {
     Q_Q(ElaMessageBar);
+    q->show();
     QFont font = q->font();
     font.setPixelSize(16);
     font.setWeight(QFont::Bold);
@@ -114,29 +115,21 @@ void ElaMessageBarPrivate::_messageBarStartAnimation(int displayMsec)
     barPosAnimation->setEndValue(QPoint(endX, endY));
     barPosAnimation->setEasingCurve(QEasingCurve::InOutSine);
     barPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    q->show();
 }
 
 void ElaMessageBarPrivate::_messageBarFinshAnimation()
 {
     Q_Q(ElaMessageBar);
     QPropertyAnimation* barFinishedOpacityAnimation = new QPropertyAnimation(q->graphicsEffect(), "opacity");
+    connect(barFinishedOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+        q->deleteLater();
+    });
     barFinishedOpacityAnimation->setDuration(300);
     barFinishedOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     barFinishedOpacityAnimation->setStartValue(1);
     barFinishedOpacityAnimation->setEndValue(0);
     barFinishedOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    QPropertyAnimation* barFinishedPosAnimation = new QPropertyAnimation(this, "MessageBarFinishY");
-    connect(barFinishedPosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { q->move(q->pos().x(), value.toUInt()); });
-    connect(barFinishedPosAnimation, &QPropertyAnimation::finished, this, [=]() {
-        q->deleteLater();
-    });
     _updateActiveMap(false);
-    barFinishedPosAnimation->setDuration(350);
-    barFinishedPosAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    barFinishedPosAnimation->setStartValue(q->pos().y());
-    barFinishedPosAnimation->setEndValue(q->pos().y() - 20);
-    barFinishedPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     Q_EMIT messageBarClosed(_policy, _messageBarIndex);
 }
 
