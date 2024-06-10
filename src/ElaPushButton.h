@@ -5,7 +5,7 @@
 
 #include "Def.h"
 #include "stdafx.h"
-class ElaPushButton : public QPushButton
+class ELA_EXPORT ElaPushButton : public QPushButton
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(int, BorderRadius)

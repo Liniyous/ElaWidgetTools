@@ -4,7 +4,8 @@
 #include <QRadioButton>
 
 #include "Def.h"
-class ElaRadioButton : public QRadioButton
+#include "stdafx.h"
+class ELA_EXPORT ElaRadioButton : public QRadioButton
 {
     Q_OBJECT
 public:

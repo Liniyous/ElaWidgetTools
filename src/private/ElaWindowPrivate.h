@@ -30,6 +30,7 @@ public:
     Q_SLOT void onWMWindowClickedEvent(QMap<QString, QVariant> data);
     Q_SLOT void onThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
+    Q_SLOT void onThemeModeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
     friend class ElaNavigationBar;

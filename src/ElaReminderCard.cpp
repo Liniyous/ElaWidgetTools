@@ -31,10 +31,8 @@ ElaReminderCard::ElaReminderCard(QWidget* parent)
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Default;
     d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    setFont(QFont("微软雅黑"));
     setMouseTracking(true);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { d->_themeMode = themeMode; });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaReminderCard::~ElaReminderCard()

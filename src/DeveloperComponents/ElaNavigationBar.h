@@ -7,7 +7,7 @@
 #include "stdafx.h"
 
 class ElaNavigationBarPrivate;
-class ELA_EXPORT ElaNavigationBar : public QWidget
+class ElaNavigationBar : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaNavigationBar)

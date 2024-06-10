@@ -3,7 +3,8 @@
 
 #include <QListView>
 
-class ElaListView : public QListView
+#include "stdafx.h"
+class ELA_EXPORT ElaListView : public QListView
 {
     Q_OBJECT
 public:

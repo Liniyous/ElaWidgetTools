@@ -8,7 +8,7 @@
 #include "stdafx.h"
 
 class ElaInteractiveCardPrivate;
-class ElaInteractiveCard : public QPushButton
+class ELA_EXPORT ElaInteractiveCard : public QPushButton
 {
     Q_OBJECT
     Q_Q_CREATE(ElaInteractiveCard)

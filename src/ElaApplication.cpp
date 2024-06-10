@@ -32,7 +32,10 @@ void ElaApplication::init()
 {
     QFontDatabase::addApplicationFont(":/src/Font/ElaAwesome.ttf");
     QApplication::setWindowIcon(_pWindowIcon);
+    //默认字体
     QFont font = qApp->font();
+    font.setPointSize(10);
+    font.setFamily("Microsoft YaHei");
     font.setHintingPreference(QFont::PreferNoHinting);
     qApp->setFont(font);
 }

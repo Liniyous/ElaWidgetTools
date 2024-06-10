@@ -7,7 +7,7 @@
 #include "stdafx.h"
 
 class ElaMessageBarPrivate;
-class ElaMessageBar : public QWidget
+class ELA_EXPORT ElaMessageBar : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaMessageBar)

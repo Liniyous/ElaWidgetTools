@@ -16,11 +16,6 @@ ElaBreadcrumbBarDelegate::~ElaBreadcrumbBarDelegate()
 {
 }
 
-void ElaBreadcrumbBarDelegate::setPressedModelIndex(QModelIndex modelIndex)
-{
-    _pressedModelIndex = modelIndex;
-}
-
 void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     painter->save();
@@ -31,7 +26,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
     QString breadcrumbUserData = index.data(Qt::UserRole).toString();
     if (breadcrumbUserData != "LastBreadcrumb")
     {
-        if (index == _pressedModelIndex)
+        if (option.state & QStyle::State_HasFocus)
         {
             //鼠标按下
             painter->setPen(QColor(0x86, 0x86, 0x8A));

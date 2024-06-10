@@ -21,9 +21,11 @@ ElaMessageButton::ElaMessageButton(QWidget* parent)
     d->q_ptr = this;
     d->_pBorderRadius = 3;
     setFixedSize(80, 38);
+    QFont font = this->font();
+    font.setPointSize(11);
+    setFont(font);
     setMouseTracking(true);
     setText("Message");
-    setFont(QFont("微软雅黑", 11));
     setObjectName("ElaMessageButton");
     setStyleSheet("#ElaMessageButton{background-color:transparent;}");
     d->_pDisplayMsec = 2000;
@@ -65,7 +67,9 @@ ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
     d->_pBorderRadius = 3;
     setMouseTracking(true);
     setFixedSize(80, 38);
-    setFont(QFont("Microsoft YaHei", 11));
+    QFont font = this->font();
+    font.setPointSize(11);
+    setFont(font);
     setObjectName("ElaMessageButton");
     setStyleSheet("#ElaMessageButton{background-color:transparent;}");
     d->_pDisplayMsec = 2000;

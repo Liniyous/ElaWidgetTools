@@ -4,14 +4,12 @@
 #include <QSpinBox>
 
 #include "stdafx.h"
-class ElaSpinBox : public QSpinBox
+class ELA_EXPORT ElaSpinBox : public QSpinBox
 {
     Q_OBJECT
 public:
     explicit ElaSpinBox(QWidget* parent = nullptr);
     ~ElaSpinBox();
-
-private:
 };
 
 #endif // ELASPINBOX_H

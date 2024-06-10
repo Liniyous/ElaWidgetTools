@@ -63,8 +63,6 @@ void ElaComboBoxDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     }
 
     // 文字绘制
-    QFont titlefont("Microsoft YaHei", 10);
-    painter->setFont(titlefont);
     painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
     painter->drawText(QRect(option.rect.x() + 10, option.rect.y(), option.rect.width(), option.rect.height()), Qt::AlignVCenter, index.data().toString());
     painter->restore();

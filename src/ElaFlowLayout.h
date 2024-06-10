@@ -4,9 +4,13 @@
 #include <QLayout>
 #include <QMap>
 #include <QStyle>
-class ElaEvent;
-class ElaFlowLayout : public QLayout
+
+#include "stdafx.h"
+class ElaFlowLayoutPrivate;
+class ELA_EXPORT ElaFlowLayout : public QLayout
 {
+    Q_OBJECT
+    Q_Q_CREATE(ElaFlowLayout)
 public:
     explicit ElaFlowLayout(QWidget* parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
     explicit ElaFlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);
@@ -25,19 +29,6 @@ public:
     QSize sizeHint() const override;
     QLayoutItem* takeAt(int index) override;
     void setIsAnimation(bool isAnimation);
-
-private:
-    ElaEvent* _navigationAnimationEvent{nullptr};
-    bool _isNavigationAnimation{false};
-    Q_SLOT void onNavgationAnimationStateChanged(QMap<QString, QVariant> data);
-    int doLayout(const QRect& rect, bool testOnly) const;
-    int smartSpacing(QStyle::PixelMetric pm) const;
-    mutable QMap<ElaFlowLayout*, int> _lastHeightMap;
-    mutable QMap<QLayoutItem*, QPoint> _lastGeometryMap;
-    QList<QLayoutItem*> _itemList;
-    bool _isAnimation{false};
-    int _hSpacing;
-    int _vSpacing;
 };
 
 #endif // ELAFLOWLAYOUT_H

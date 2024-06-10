@@ -6,7 +6,7 @@
 #include "stdafx.h"
 class QPropertyAnimation;
 class ElaScrollBarPrivate;
-class ElaScrollBar : public QScrollBar
+class ELA_EXPORT ElaScrollBar : public QScrollBar
 {
     Q_OBJECT
     Q_Q_CREATE(ElaScrollBar)

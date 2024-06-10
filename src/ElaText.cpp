@@ -3,26 +3,33 @@
 #include <QPainter>
 
 #include "ElaApplication.h"
+#include "private/ElaTextPrivate.h"
 ElaText::ElaText(QWidget* parent)
-    : QLabel(parent)
+    : QLabel(parent), d_ptr(new ElaTextPrivate())
 {
-    QFont textFont = QFont("微软雅黑");
-    textFont.setLetterSpacing(QFont::AbsoluteSpacing, this->_textSpacing);
-    textFont.setPixelSize(_textSize);
+    Q_D(ElaText);
+    d->q_ptr = this;
+    QFont textFont = font();
+    textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
+    textFont.setPixelSize(d->_textSize);
     setWordWrap(true);
     setFont(textFont);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaText::onThemeChanged);
+    d->onThemeChanged(ElaApplication::getInstance()->getThemeMode());
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
 }
 
 ElaText::ElaText(QString text, QWidget* parent)
-    : QLabel(text, parent)
+    : QLabel(text, parent), d_ptr(new ElaTextPrivate())
 {
-    QFont textFont = QFont("微软雅黑");
-    textFont.setLetterSpacing(QFont::AbsoluteSpacing, this->_textSpacing);
-    textFont.setPixelSize(_textSize);
+    Q_D(ElaText);
+    d->q_ptr = this;
+    QFont textFont = font();
+    textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
+    textFont.setPixelSize(d->_textSize);
     setWordWrap(true);
     setFont(textFont);
-    connect(ElaApplication::getInstance(), &::ElaApplication::themeModeChanged, this, &ElaText::onThemeChanged);
+    d->onThemeChanged(ElaApplication::getInstance()->getThemeMode());
+    connect(ElaApplication::getInstance(), &::ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
 }
 
 ElaText::~ElaText()
@@ -31,21 +38,23 @@ ElaText::~ElaText()
 
 void ElaText::setTextSize(int size)
 {
-    this->_textSize = size;
+    Q_D(ElaText);
+    d->_textSize = size;
     QFont font = this->font();
-    font.setPixelSize(_textSize);
+    font.setPixelSize(d->_textSize);
     setFont(font);
 }
 
 int ElaText::getTextSize() const
 {
-    return this->_textSize;
+    return d_ptr->_textSize;
 }
 
 void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
 {
+    Q_D(ElaText);
     QFont textFont = font();
-    _textStyle = textStyle;
+    d->_textStyle = textStyle;
     switch (textStyle)
     {
     case ElaTextType::NoStyle:
@@ -54,48 +63,48 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
     }
     case ElaTextType::Caption:
     {
-        _textSize = 12;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 12;
+        textFont.setPixelSize(d->_textSize);
         break;
     }
     case ElaTextType::Body:
     {
-        _textSize = 13;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 13;
+        textFont.setPixelSize(d->_textSize);
         break;
     }
     case ElaTextType::BodyStrong:
     {
-        _textSize = 13;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 13;
+        textFont.setPixelSize(d->_textSize);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::Subtitle:
     {
-        _textSize = 20;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 20;
+        textFont.setPixelSize(d->_textSize);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::Title:
     {
-        _textSize = 28;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 28;
+        textFont.setPixelSize(d->_textSize);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::TitleLarge:
     {
-        _textSize = 40;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 40;
+        textFont.setPixelSize(d->_textSize);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::Display:
     {
-        _textSize = 68;
-        textFont.setPixelSize(_textSize);
+        d->_textSize = 68;
+        textFont.setPixelSize(d->_textSize);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
@@ -105,22 +114,7 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
 
 ElaTextType::TextStyle ElaText::getTextStyle() const
 {
-    return this->_textStyle;
-}
-
-void ElaText::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
-{
-    QPalette palette = this->palette();
-    if (themeMode == ElaApplicationType::Light)
-    {
-        palette.setColor(QPalette::WindowText, Qt::black);
-        setPalette(palette);
-    }
-    else
-    {
-        palette.setColor(QPalette::WindowText, Qt::white);
-        setPalette(palette);
-    }
+    return d_ptr->_textStyle;
 }
 
 void ElaText::paintEvent(QPaintEvent* event)

@@ -10,13 +10,11 @@ class ElaBreadcrumbBarDelegate : public QStyledItemDelegate
 public:
     explicit ElaBreadcrumbBarDelegate(QObject* parent = nullptr);
     ~ElaBreadcrumbBarDelegate();
-    void setPressedModelIndex(QModelIndex modelIndex);
 
 protected:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    QModelIndex _pressedModelIndex;
     ElaApplicationType::ThemeMode _themeMode;
 };
 

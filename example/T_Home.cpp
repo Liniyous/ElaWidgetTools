@@ -70,12 +70,21 @@ T_Home::T_Home(QWidget* parent)
     centerVLayout->setSpacing(20);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget);
-    QWidget* homeRight = new QWidget(this);
-    homeRight->setWindowTitle("HomeRight");
-    addCentralWidget(homeRight);
+    QLabel* homeStack1 = new QLabel("HomeStack1", this);
+    QFont font = homeStack1->font();
+    font.setPointSize(25);
+    homeStack1->setFont(font);
+    homeStack1->setAlignment(Qt::AlignCenter);
+    homeStack1->setWindowTitle("HomeStack1");
+    addCentralWidget(homeStack1);
+    QLabel* homeStack2 = new QLabel("HomeStack2", this);
+    homeStack2->setFont(font);
+    homeStack2->setAlignment(Qt::AlignCenter);
+    homeStack2->setWindowTitle("HomeStack2");
+    addCentralWidget(homeStack2);
 
     ElaAcrylicUrlCard* urlCard1 = new ElaAcrylicUrlCard(this);
-    urlCard1->setUrl("https://space.bilibili.com/21256707");
+    urlCard1->setUrl("https://github.com/Liniyous/ElaWidgetTools");
     urlCard1->setCardPixmap(QPixmap(":/src/Image/github.png"));
     urlCard1->setTitle("ElaTool Github");
     urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
@@ -144,22 +153,38 @@ T_Home::~T_Home()
 
 void T_Home::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton)
+    switch (event->button())
+    {
+    case Qt::LeftButton:
     {
         ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
         ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
+        break;
     }
-    else if (event->button() == Qt::RightButton)
+    case Qt::RightButton:
     {
         _homeMenu->popup(event->globalPosition().toPoint());
+        break;
     }
-    else if (event->button() == Qt::ForwardButton)
-    {
-        this->navigation(1);
-    }
-    else if (event->button() == Qt::BackButton)
+    case Qt::BackButton:
     {
         this->navigation(0);
+        break;
+    }
+    case Qt::ForwardButton:
+    {
+        this->navigation(1);
+        break;
+    }
+    case Qt::MiddleButton:
+    {
+        this->navigation(2);
+        break;
+    }
+    default:
+    {
+        break;
+    }
     }
     ElaScrollPage::mouseReleaseEvent(event);
 }

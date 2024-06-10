@@ -1,0 +1,29 @@
+#ifndef ELAWIDGET_H
+#define ELAWIDGET_H
+
+#include <QWidget>
+
+#include "Def.h"
+#include "stdafx.h"
+
+class ElaWidgetPrivate;
+class ElaWidget : public QWidget
+{
+    Q_OBJECT
+    Q_Q_CREATE(ElaWidget)
+public:
+    explicit ElaWidget(QWidget* parent = nullptr);
+    ~ElaWidget();
+    void setCentralWidget(QWidget* centralWidget);
+
+    void setWindowTitle(QString title);
+    void setIsStayTop(bool isStayTop);
+    bool getIsStayTop() const;
+    void setIsFixedSize(bool isFixedSize);
+    bool getIsFixedSize() const;
+
+protected:
+    virtual void paintEvent(QPaintEvent* event) override;
+};
+
+#endif // ELAWIDGET_H

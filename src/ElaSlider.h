@@ -3,7 +3,8 @@
 
 #include <QSlider>
 
-class ElaSlider : public QSlider
+#include "stdafx.h"
+class ELA_EXPORT ElaSlider : public QSlider
 {
     Q_OBJECT
 public:

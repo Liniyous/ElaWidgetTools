@@ -5,7 +5,7 @@
 
 #include "stdafx.h"
 class ElaToggleSwitchPrivate;
-class ElaToggleSwitch : public QWidget
+class ELA_EXPORT ElaToggleSwitch : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaToggleSwitch);

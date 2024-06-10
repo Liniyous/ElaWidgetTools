@@ -7,7 +7,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class ElaMessageButtonPrivate;
-class ElaMessageButton : public QPushButton
+class ELA_EXPORT ElaMessageButton : public QPushButton
 {
     Q_OBJECT
     Q_Q_CREATE(ElaMessageButton)

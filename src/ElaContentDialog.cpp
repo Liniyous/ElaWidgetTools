@@ -13,7 +13,9 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
+#include "ElaApplication.h"
 #include "ElaText.h"
+#include "private/ElaContentDialogPrivate.h"
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
 {
@@ -33,8 +35,10 @@
 #endif
 
 ElaContentDialog::ElaContentDialog(QWidget* parent)
-    : QDialog{parent}
+    : QDialog{parent}, d_ptr(new ElaContentDialogPrivate())
 {
+    Q_D(ElaContentDialog);
+    d->q_ptr = this;
     QList<QWidget*> widgetList = QApplication::topLevelWidgets();
     QWidget* mainWindow = nullptr;
     for (auto widget : widgetList)
@@ -46,12 +50,12 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     }
     if (mainWindow)
     {
-        _shadowWidget = new QWidget(mainWindow);
-        _shadowWidget->move(0, 0);
-        _shadowWidget->setFixedSize(mainWindow->size());
-        _shadowWidget->setObjectName("ElaShadowWidget");
-        _shadowWidget->setStyleSheet("#ElaShadowWidget{background-color:rgba(0,0,0,90);}");
-        _shadowWidget->setVisible(true);
+        d->_shadowWidget = new QWidget(mainWindow);
+        d->_shadowWidget->move(0, 0);
+        d->_shadowWidget->setFixedSize(mainWindow->size());
+        d->_shadowWidget->setObjectName("ElaShadowWidget");
+        d->_shadowWidget->setStyleSheet("#ElaShadowWidget{background-color:rgba(0,0,0,90);}");
+        d->_shadowWidget->setVisible(true);
     }
     resize(400, height());
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
@@ -60,41 +64,48 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     setShadow((HWND)winId());
 #endif
     QGuiApplication::instance()->installNativeEventFilter(this);
-    _leftButton = new ElaPushButton("cancel", this);
-    connect(_leftButton, &ElaPushButton::clicked, this, [=]() {
+    setAttribute(Qt::WA_DeleteOnClose);
+    d->_leftButton = new ElaPushButton("cancel", this);
+    connect(d->_leftButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
-        onLeftButtonClicked(); });
-    _leftButton->setMinimumSize(0, 0);
-    _leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    _leftButton->setFixedHeight(38);
-    _leftButton->setBorderRadius(6);
-    _middleButton = new ElaPushButton("minimum", this);
-    connect(_middleButton, &ElaPushButton::clicked, this, [=]() {
+        onLeftButtonClicked();
+        close();
+    });
+    d->_leftButton->setMinimumSize(0, 0);
+    d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    d->_leftButton->setFixedHeight(38);
+    d->_leftButton->setBorderRadius(6);
+    d->_middleButton = new ElaPushButton("minimum", this);
+    connect(d->_middleButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT middleButtonClicked();
-        onMiddleButtonClicked(); });
-    _middleButton->setMinimumSize(0, 0);
-    _middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    _middleButton->setFixedHeight(38);
-    _middleButton->setBorderRadius(6);
-    _rightButton = new ElaPushButton("exit", this);
-    connect(_rightButton, &ElaPushButton::clicked, this, [=]() {
+        onMiddleButtonClicked();
+        close();
+    });
+    d->_middleButton->setMinimumSize(0, 0);
+    d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    d->_middleButton->setFixedHeight(38);
+    d->_middleButton->setBorderRadius(6);
+    d->_rightButton = new ElaPushButton("exit", this);
+    connect(d->_rightButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT rightButtonClicked();
-        onRightButtonClicked(); });
-    _rightButton->setLightDefaultColor(QColor(0x00, 0x66, 0xB4));
-    _rightButton->setLightHoverColor(QColor(0x00, 0x70, 0xC6));
-    _rightButton->setLightPressColor(QColor(0x00, 0x7A, 0xD8));
-    _rightButton->setLightTextColor(Qt::white);
-    _rightButton->setDarkDefaultColor(QColor(0x4C, 0xA0, 0xE0));
-    _rightButton->setDarkHoverColor(QColor(0x45, 0x91, 0xCC));
-    _rightButton->setDarkPressColor(QColor(0x3F, 0x85, 0xBB));
-    _rightButton->setDarkTextColor(Qt::black);
-    _rightButton->setMinimumSize(0, 0);
-    _rightButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    _rightButton->setFixedHeight(38);
-    _rightButton->setBorderRadius(6);
+        onRightButtonClicked();
+        close();
+    });
+    d->_rightButton->setLightDefaultColor(QColor(0x00, 0x66, 0xB4));
+    d->_rightButton->setLightHoverColor(QColor(0x00, 0x70, 0xC6));
+    d->_rightButton->setLightPressColor(QColor(0x00, 0x7A, 0xD8));
+    d->_rightButton->setLightTextColor(Qt::white);
+    d->_rightButton->setDarkDefaultColor(QColor(0x4C, 0xA0, 0xE0));
+    d->_rightButton->setDarkHoverColor(QColor(0x45, 0x91, 0xCC));
+    d->_rightButton->setDarkPressColor(QColor(0x3F, 0x85, 0xBB));
+    d->_rightButton->setDarkTextColor(Qt::black);
+    d->_rightButton->setMinimumSize(0, 0);
+    d->_rightButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    d->_rightButton->setFixedHeight(38);
+    d->_rightButton->setBorderRadius(6);
 
-    _centralWidget = new QWidget(this);
-    QVBoxLayout* centralVLayout = new QVBoxLayout(_centralWidget);
+    d->_centralWidget = new QWidget(this);
+    QVBoxLayout* centralVLayout = new QVBoxLayout(d->_centralWidget);
     centralVLayout->setContentsMargins(9, 15, 9, 20);
     ElaText* title = new ElaText("退出", this);
     title->setTextStyle(ElaTextType::Title);
@@ -104,27 +115,30 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     centralVLayout->addWidget(subTitle);
     centralVLayout->addStretch();
 
-    _mainLayout = new QVBoxLayout(this);
-    _buttonLayout = new QHBoxLayout();
-    _buttonLayout->addWidget(_leftButton);
-    _buttonLayout->addWidget(_middleButton);
-    _buttonLayout->addWidget(_rightButton);
-    _mainLayout->addWidget(_centralWidget);
-    _mainLayout->addLayout(_buttonLayout);
+    d->_mainLayout = new QVBoxLayout(this);
+    d->_buttonLayout = new QHBoxLayout();
+    d->_buttonLayout->addWidget(d->_leftButton);
+    d->_buttonLayout->addWidget(d->_middleButton);
+    d->_buttonLayout->addWidget(d->_rightButton);
+    d->_mainLayout->addWidget(d->_centralWidget);
+    d->_mainLayout->addLayout(d->_buttonLayout);
+
+    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaContentDialog::~ElaContentDialog()
 {
-    if (_shadowWidget)
+    Q_D(ElaContentDialog);
+    QGuiApplication::instance()->removeNativeEventFilter(this);
+    if (d->_shadowWidget)
     {
-        delete _shadowWidget;
+        delete d->_shadowWidget;
     }
 }
 
 void ElaContentDialog::onLeftButtonClicked()
 {
-    this->hide();
-    this->deleteLater();
 }
 
 void ElaContentDialog::onMiddleButtonClicked()
@@ -133,30 +147,48 @@ void ElaContentDialog::onMiddleButtonClicked()
 
 void ElaContentDialog::onRightButtonClicked()
 {
-    this->hide();
-    this->deleteLater();
 }
 
 void ElaContentDialog::setCentralWidget(QWidget* centralWidget)
 {
-    _mainLayout->takeAt(0);
-    _mainLayout->takeAt(0);
-    delete _centralWidget;
-    _mainLayout->addWidget(centralWidget);
-    _mainLayout->addLayout(_buttonLayout);
+    Q_D(ElaContentDialog);
+    d->_mainLayout->takeAt(0);
+    d->_mainLayout->takeAt(0);
+    delete d->_centralWidget;
+    d->_mainLayout->addWidget(centralWidget);
+    d->_mainLayout->addLayout(d->_buttonLayout);
+}
+
+void ElaContentDialog::setLeftButtonText(QString text)
+{
+    Q_D(ElaContentDialog);
+    d->_leftButton->setText(text);
+}
+
+void ElaContentDialog::setMiddleButtonText(QString text)
+{
+    Q_D(ElaContentDialog);
+    d->_middleButton->setText(text);
+}
+
+void ElaContentDialog::setRightButtonText(QString text)
+{
+    Q_D(ElaContentDialog);
+    d->_rightButton->setText(text);
 }
 
 void ElaContentDialog::paintEvent(QPaintEvent* event)
 {
+    Q_D(ElaContentDialog);
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::white);
+    painter.setBrush(d->_themeMode == ElaApplicationType::Light ? Qt::white : QColor(0x2B, 0x2B, 0x2B));
     // 背景绘制
     painter.drawRect(rect());
     // 按钮栏背景绘制
-    painter.setBrush(QColor(0xF3, 0xF3, 0xF3));
+    painter.setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0xF3, 0xF3, 0xF3) : QColor(0x20, 0x20, 0x20));
     painter.drawRoundedRect(QRectF(0, height() - 60, width(), 60), 8, 8);
     painter.restore();
 }

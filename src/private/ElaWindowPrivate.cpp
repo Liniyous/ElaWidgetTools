@@ -26,18 +26,17 @@ void ElaWindowPrivate::onNavigationButtonClicked()
 {
     int contentMargin = _contentsMargins;
     int appBarHeight = _appBar->height();
-    if (!_navigationBar->isVisible())
+    if (_navigationBar->pos().x() == -45 || _navigationBar->pos().x() == -305)
     {
         _navigationBar->switchCompact(false);
         _navigationBar->move(-_navigationBar->width(), _navigationBar->pos().y());
         _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height());
-        QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "geometry");
+        QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
         navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
         navigationMoveAnimation->setDuration(300);
-        navigationMoveAnimation->setStartValue(_navigationBar->geometry());
-        navigationMoveAnimation->setEndValue(QRect(contentMargin, appBarHeight + contentMargin, _navigationBar->width(), _navigationBar->height()));
+        navigationMoveAnimation->setStartValue(_navigationBar->pos());
+        navigationMoveAnimation->setEndValue(QPoint(contentMargin, appBarHeight + contentMargin));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        _navigationBar->show();
         _navigationBar->d_ptr->_raiseNavigationBar();
         _isNavigationBarExpanded = true;
     }
@@ -50,17 +49,14 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QMap<QString, QVariant> data)
     {
         return;
     }
-    if (_navigationBar->isVisible() && _isNavigationBarExpanded)
+    if (_isNavigationBarExpanded)
     {
-        QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "geometry");
-        connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
-            navigationMoveAnimation->deleteLater();
-            _navigationBar->hide(); });
+        QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
         navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
         navigationMoveAnimation->setDuration(300);
-        navigationMoveAnimation->setStartValue(_navigationBar->geometry());
-        navigationMoveAnimation->setEndValue(QRect(-_navigationBar->width() - 5, 35, _navigationBar->width(), _navigationBar->height()));
-        navigationMoveAnimation->start();
+        navigationMoveAnimation->setStartValue(_navigationBar->pos());
+        navigationMoveAnimation->setEndValue(QPoint(-_navigationBar->width() - 5, 35));
+        navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         _isNavigationBarExpanded = false;
     }
 }
@@ -134,6 +130,20 @@ void ElaWindowPrivate::onDisplayModeChanged()
     }
 }
 
+void ElaWindowPrivate::onThemeModeChanged(ElaApplicationType::ThemeMode themeMode)
+{
+    if (ElaApplication::getInstance()->getThemeMode() == ElaApplicationType::Light)
+    {
+        _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
+        _windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
+    }
+    else
+    {
+        _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
+        _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
+    }
+}
+
 qreal ElaWindowPrivate::_distance(QPoint point1, QPoint point2)
 {
     return sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) + (point1.y() - point2.y()) * (point1.y() - point2.y()));
@@ -145,8 +155,11 @@ void ElaWindowPrivate::_adjustNavigationSize()
     if (!_isNavagationAnimationFinished)
     {
         //不在布局中 动态调整高度 避免动画过程中显示不完全
+        ElaNavigationBarPrivate* navigationBarPrivate = _navigationBar->d_func();
         _centerStackedWidget->resize(q->width() - _centerStackedWidget->x() - 5, q->height() - 40);
         _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height());
+        navigationBarPrivate->_maximalWidget->resize(navigationBarPrivate->_maximalWidget->width(), _navigationBar->height());
+        navigationBarPrivate->_compactWidget->resize(navigationBarPrivate->_compactWidget->width(), _navigationBar->height());
     }
 }
 
@@ -162,17 +175,11 @@ void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
         {
             _mainLayout->addStretch();
         }
-        QMap<QString, QVariant> postData;
-        postData.insert("NavigationAnimationState", true);
-        ElaEventBus::getInstance()->post("NavigationAnimationStateChanged", postData);
     }
     else
     {
         _centerLayout->addWidget(_navigationBar);
         _centerLayout->addWidget(_centerStackedWidget);
         _mainLayout->takeAt(2);
-        QMap<QString, QVariant> postData;
-        postData.insert("NavigationAnimationState", false);
-        ElaEventBus::getInstance()->post("NavigationAnimationStateChanged", postData);
     }
 }

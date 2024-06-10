@@ -21,8 +21,7 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     setProperty("ElaBaseClassName", "ElaScrollPage");
     d->q_ptr = this;
     d->_breadcrumbBar = new ElaBreadcrumbBar(this);
-    connect(d->_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList)
-            {
+    connect(d->_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList) {
         if (d->_centralWidgetMap.contains(breadcrumb))
         {
             int widgetIndex = d->_centralWidgetMap.value(breadcrumb);

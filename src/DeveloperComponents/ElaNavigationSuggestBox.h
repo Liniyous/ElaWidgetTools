@@ -7,7 +7,7 @@
 
 class ElaNavigationNode;
 class ElaNavigationSuggestBoxPrivate;
-class ELA_EXPORT ElaNavigationSuggestBox : public QWidget
+class ElaNavigationSuggestBox : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaNavigationSuggestBox)

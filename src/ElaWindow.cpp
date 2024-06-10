@@ -25,11 +25,12 @@ Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaNavigationType::NavigationDisplayMode, Nav
 ElaWindow::ElaWindow(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaWindowPrivate())
 {
+    Q_D(ElaWindow);
+    d->q_ptr = this;
     ElaApplication::getInstance()->init();
     setObjectName("ElaWidnow");
-    Q_D(ElaWindow);
     resize(1020, 680); // 默认宽高
-    d->q_ptr = this;
+
     d->_pThemeChangeTime = 700;
     d->_pNavigationBarDisplayMode = ElaNavigationType::NavigationDisplayMode::Auto;
     connect(this, &ElaWindow::pNavigationBarDisplayModeChanged, d, &ElaWindowPrivate::onDisplayModeChanged);
@@ -75,6 +76,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::navigationButtonClicked, d, &ElaWindowPrivate::onNavigationButtonClicked);
 
     // 主题变更动画
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
     // 主题变更绘制窗口
     d->_animationWidget = new ElaThemeAnimationWidget(this);
@@ -237,6 +239,7 @@ void ElaWindow::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
+    d->_windowLinearGradient->setFinalStop(width(), height());
     painter.setBrush(*d->_windowLinearGradient);
     painter.drawRect(rect());
     painter.restore();
@@ -253,7 +256,6 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
     d->_windowLinearGradient->setFinalStop(width(), height());
     if (getNavigationBarDisplayMode() == ElaNavigationType::Auto)
     {
-        int contentMargin = d->_contentsMargins;
         int appBarHeight = d->_appBar->height();
         d->_adjustNavigationSize();
         if (width() >= 850 && d->_currentNavigationBarDisplayMode != ElaNavigationType::Maximal)
@@ -277,18 +279,19 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
             {
                 navigationBarPrivate->_mainLayout->takeAt(0);
             }
+            navigationBarPrivate->_maximalWidget->resize(300, d->_navigationBar->height());
             navigationBarPrivate->_maximalWidget->setVisible(true);
             connect(maximalAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 navigationBarPrivate->_maximalWidget->move(value.toPoint().x() - 300, value.toPoint().y());
             });
             maximalAnimation->setEasingCurve(QEasingCurve::OutSine);
             maximalAnimation->setDuration(300);
-            maximalAnimation->setStartValue(QPoint(d->_navigationBar->width() - 45, navigationBarPrivate->_compactWidget->pos().y()));
+            maximalAnimation->setStartValue(QPoint(d->_navigationBar->width() - 40, navigationBarPrivate->_compactWidget->pos().y()));
             maximalAnimation->setEndValue(QPoint(d->_navigationBar->width(), navigationBarPrivate->_compactWidget->pos().y()));
             maximalAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
             navigationMoveAnimation->setStartValue(d->_navigationBar->pos());
-            navigationMoveAnimation->setEndValue(QPoint(contentMargin, appBarHeight + contentMargin));
+            navigationMoveAnimation->setEndValue(QPoint(d->_contentsMargins, appBarHeight + d->_contentsMargins));
 
             //堆栈动画
             QPropertyAnimation* stackedMoveAnimation = new QPropertyAnimation(d->_centerStackedWidget, "pos");
@@ -297,7 +300,7 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
             stackedMoveAnimation->setDuration(300);
             stackedMoveAnimation->setStartValue(d->_centerStackedWidget->pos());
             // 305 = 300  + 5
-            stackedMoveAnimation->setEndValue(QPoint(305, appBarHeight + contentMargin));
+            stackedMoveAnimation->setEndValue(QPoint(305, appBarHeight + d->_contentsMargins));
 
             navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
             stackedMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -324,7 +327,7 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
                 {
                     navigationBarPrivate->_mainLayout->takeAt(0);
                 }
-                navigationBarPrivate->_compactWidget->resize(40, navigationBarPrivate->q_func()->height());
+                navigationBarPrivate->_compactWidget->resize(40, d->_navigationBar->height());
                 navigationBarPrivate->_compactWidget->setVisible(true);
                 connect(maximalAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                     navigationBarPrivate->_maximalWidget->move(value.toPoint().x() - 300, value.toPoint().y());
@@ -338,7 +341,6 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
 
             if (d->_currentNavigationBarDisplayMode == ElaNavigationType::Maximal)
             {
-                d->_navigationBar->show();
                 navigationMoveAnimation->setEasingCurve(QEasingCurve::OutSine);
                 navigationMoveAnimation->setDuration(300);
                 navigationMoveAnimation->setStartValue(d->_navigationBar->pos());
@@ -347,7 +349,6 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
             else
             {
                 d->_navigationBar->switchCompact(true);
-                d->_navigationBar->show();
                 navigationMoveAnimation->setEasingCurve(QEasingCurve::OutSine);
                 navigationMoveAnimation->setDuration(300);
                 navigationMoveAnimation->setStartValue(d->_navigationBar->pos());
@@ -360,7 +361,7 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
             stackedMoveAnimation->setDuration(300);
             stackedMoveAnimation->setEasingCurve(QEasingCurve::OutSine);
             stackedMoveAnimation->setStartValue(d->_centerStackedWidget->pos());
-            stackedMoveAnimation->setEndValue(QPoint(contentMargin + d->_compactBarWidth, appBarHeight + contentMargin));
+            stackedMoveAnimation->setEndValue(QPoint(d->_contentsMargins + d->_compactBarWidth, appBarHeight + d->_contentsMargins));
             d->_resetWindowLayout(true);
             navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
             stackedMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -373,13 +374,9 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
         {
             QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(d->_navigationBar, "pos");
             connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
-                d->_navigationBar->hide();
                 d->_navigationBar->switchCompact(true);
                 d->_centerLayout->addWidget(d->_centerStackedWidget);
                 d->_mainLayout->takeAt(2);
-                QMap<QString, QVariant> postData;
-                postData.insert("NavigationAnimationState", false);
-                ElaEventBus::getInstance()->post("NavigationAnimationStateChanged", postData);
                 d->_isNavagationAnimationFinished = true; });
             navigationMoveAnimation->setEasingCurve(QEasingCurve::OutSine);
             navigationMoveAnimation->setDuration(300);
@@ -391,7 +388,7 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
             stackedMoveAnimation->setDuration(300);
             stackedMoveAnimation->setEasingCurve(QEasingCurve::OutSine);
             stackedMoveAnimation->setStartValue(d->_centerStackedWidget->pos());
-            stackedMoveAnimation->setEndValue(QPoint(contentMargin, appBarHeight + contentMargin));
+            stackedMoveAnimation->setEndValue(QPoint(d->_contentsMargins, appBarHeight + d->_contentsMargins));
             d->_resetWindowLayout(true);
             navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
             stackedMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);

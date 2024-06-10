@@ -26,21 +26,13 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
     _listView->setModel(_listModel);
     _listDelegate = new ElaBreadcrumbBarDelegate(this);
     _listView->setItemDelegate(_listDelegate);
-    connect(_listView, &QListView::pressed, this, [=](const QModelIndex& index) {
-        if (_listModel->getBreadcrumbListCount() != 1 && index.row() != _listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
-        {
-            _listDelegate->setPressedModelIndex(index);
-            _listView->update();
-        } });
     connect(_listView, &QListView::clicked, this, [=](const QModelIndex& index) {
         if (_listModel->getBreadcrumbListCount() != 1 && index.row() != _listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
         {
-            _listDelegate->setPressedModelIndex(QModelIndex());
-            _listView->update();
             Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), _listModel->getBreadcrumbList());
             _listModel->removeBreadcrumb(index.row() / 2 + 1);
         } });
-    QFont textFont = QFont("微软雅黑");
+    QFont textFont = this->font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
     textFont.setPixelSize(28);
     _listView->setFont(textFont);

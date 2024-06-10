@@ -6,7 +6,7 @@
 class ElaListView;
 class ElaBreadcrumbBarModel;
 class ElaBreadcrumbBarDelegate;
-class ElaBreadcrumbBar : public QWidget
+class ELA_EXPORT ElaBreadcrumbBar : public QWidget
 {
     Q_OBJECT
 public:

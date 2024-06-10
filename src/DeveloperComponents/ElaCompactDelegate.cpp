@@ -100,7 +100,7 @@ void ElaCompactDelegate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
     }
 }
 
-void ElaCompactDelegate::onNavigationNodeStateChange(QMap<QString, QVariant> data)
+void ElaCompactDelegate::navigationNodeStateChange(QMap<QString, QVariant> data)
 {
     if (data.contains("SelectMarkChanged"))
     {

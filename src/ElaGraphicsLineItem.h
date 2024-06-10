@@ -5,7 +5,7 @@
 
 #include "stdafx.h"
 class ElaGraphicsItem;
-class ElaGraphicsLineItem : public QGraphicsPathItem
+class ELA_EXPORT ElaGraphicsLineItem : public QGraphicsPathItem
 {
     Q_PRIVATE_CREATE(QPointF, StartPoint);
     Q_PRIVATE_CREATE(QPointF, EndPoint);

@@ -7,7 +7,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class ElaMenuPrivate;
-class ElaMenu : public QWidget
+class ELA_EXPORT ElaMenu : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaMenu)

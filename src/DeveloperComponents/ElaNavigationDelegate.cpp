@@ -5,63 +5,69 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
+#include "DeveloperComponents/private/ElaNavigationDelegatePrivate.h"
 #include "ElaApplication.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationView.h"
+Q_PROPERTY_CREATE_Q_CPP(ElaNavigationDelegate, qreal, Opacity);
+Q_PROPERTY_CREATE_Q_CPP(ElaNavigationDelegate, qreal, Rotate);
+Q_PRIVATE_CREATE_Q_CPP(ElaNavigationDelegate, ElaNavigationView*, NavigationView);
 ElaNavigationDelegate::ElaNavigationDelegate(QObject* parent)
-    : QStyledItemDelegate(parent)
+    : QStyledItemDelegate(parent), d_ptr(new ElaNavigationDelegatePrivate())
 {
-    _pOpacity = 1;
-    _pRotate = 0;
-    _pNavigationView = nullptr;
-    _themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    Q_D(ElaNavigationDelegate);
+    d->q_ptr = this;
+    d->_pOpacity = 1;
+    d->_pRotate = 0;
+    d->_pNavigationView = nullptr;
+    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
     setProperty("lastSelectMarkTop", 10.0);
     setProperty("lastSelectMarkBottom", 10.0);
     setProperty("selectMarkTop", 10.0);
     setProperty("selectMarkBottom", 10.0);
     // Mark向上
-    _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
-    connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                _lastSelectMarkTop = value.toReal();
-                _pNavigationView->viewport()->update(); });
-    _lastSelectMarkTopAnimation->setDuration(300);
-    _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    d->_lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
+    connect(d->_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                d->_lastSelectMarkTop = value.toReal();
+                d->_pNavigationView->viewport()->update(); });
+    d->_lastSelectMarkTopAnimation->setDuration(300);
+    d->_lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
-    _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
-    connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                _selectMarkBottom = value.toReal();
-                _pNavigationView->viewport()->update(); });
-    _selectMarkBottomAnimation->setDuration(300);
-    _selectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]() {
-                _isSelectMarkDisplay = true;
-                this->_lastSelectedNode = nullptr;
-                _selectMarkBottomAnimation->setStartValue(0);
-                _selectMarkBottomAnimation->setEndValue(10);
-                _selectMarkBottomAnimation->start(); });
+    d->_selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
+    connect(d->_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                d->_selectMarkBottom = value.toReal();
+                d->_pNavigationView->viewport()->update(); });
+    d->_selectMarkBottomAnimation->setDuration(300);
+    d->_selectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    connect(d->_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]() {
+                d->_isSelectMarkDisplay = true;
+                d->_lastSelectedNode = nullptr;
+                d->_selectMarkBottomAnimation->setStartValue(0);
+                d->_selectMarkBottomAnimation->setEndValue(10);
+                d->_selectMarkBottomAnimation->start(); });
 
     // Mark向下
-    _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
-    connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                _lastSelectMarkBottom =  value.toReal();
-                _pNavigationView->viewport()->update(); });
-    _lastSelectMarkBottomAnimation->setDuration(300);
-    _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    d->_lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
+    connect(d->_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                d->_lastSelectMarkBottom =  value.toReal();
+                d->_pNavigationView->viewport()->update(); });
+    d->_lastSelectMarkBottomAnimation->setDuration(300);
+    d->_lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
-    _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
-    connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                _selectMarkTop =  value.toReal();
-                _pNavigationView->viewport()->update(); });
-    _selectMarkTopAnimation->setDuration(300);
-    _selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
-        _isSelectMarkDisplay = true;
-        this->_lastSelectedNode = nullptr;
-        _selectMarkTopAnimation->setStartValue(0);
-        _selectMarkTopAnimation->setEndValue(10);
-        _selectMarkTopAnimation->start(); });
+    d->_selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
+    connect(d->_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                d->_selectMarkTop =  value.toReal();
+                d->_pNavigationView->viewport()->update(); });
+    d->_selectMarkTopAnimation->setDuration(300);
+    d->_selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    connect(d->_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
+        d->_isSelectMarkDisplay = true;
+        d->_lastSelectedNode = nullptr;
+        d->_selectMarkTopAnimation->setStartValue(0);
+        d->_selectMarkTopAnimation->setEndValue(10);
+        d->_selectMarkTopAnimation->start(); });
 }
 
 ElaNavigationDelegate::~ElaNavigationDelegate()
@@ -70,15 +76,16 @@ ElaNavigationDelegate::~ElaNavigationDelegate()
 
 void ElaNavigationDelegate::navigationNodeStateChange(QMap<QString, QVariant> data)
 {
+    Q_D(ElaNavigationDelegate);
     if (data.contains("Expand"))
     {
-        ElaNavigationNode* lastExpandNode = _expandAnimationTargetNode;
-        _opacityAnimationTargetNode = data.value("Expand").value<ElaNavigationNode*>();
-        _expandAnimationTargetNode = _opacityAnimationTargetNode;
+        ElaNavigationNode* lastExpandNode = d->_expandAnimationTargetNode;
+        d->_opacityAnimationTargetNode = data.value("Expand").value<ElaNavigationNode*>();
+        d->_expandAnimationTargetNode = d->_opacityAnimationTargetNode;
         QPropertyAnimation* nodeOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
-        connect(nodeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { this->_opacityAnimationTargetNode = nullptr; });
+        connect(nodeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { d->_opacityAnimationTargetNode = nullptr; });
         connect(nodeOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            _pNavigationView->viewport()->update();
+            d->_pNavigationView->viewport()->update();
         });
         nodeOpacityAnimation->setDuration(600);
         nodeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
@@ -88,15 +95,15 @@ void ElaNavigationDelegate::navigationNodeStateChange(QMap<QString, QVariant> da
         nodeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
         QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pRotate");
-        connect(rotateAnimation, &QPropertyAnimation::finished, this, [=]() { this->_expandAnimationTargetNode = nullptr; });
+        connect(rotateAnimation, &QPropertyAnimation::finished, this, [=]() { d->_expandAnimationTargetNode = nullptr; });
         connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            _pNavigationView->viewport()->update();
+            d->_pNavigationView->viewport()->update();
         });
         rotateAnimation->setDuration(300);
         rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        if (lastExpandNode == _expandAnimationTargetNode)
+        if (lastExpandNode == d->_expandAnimationTargetNode)
         {
-            rotateAnimation->setStartValue(_pRotate);
+            rotateAnimation->setStartValue(d->_pRotate);
         }
         else
         {
@@ -107,23 +114,23 @@ void ElaNavigationDelegate::navigationNodeStateChange(QMap<QString, QVariant> da
     }
     else if (data.contains("Collapse"))
     {
-        ElaNavigationNode* lastExpandNode = _expandAnimationTargetNode;
-        _opacityAnimationTargetNode = data.value("Collapse").value<ElaNavigationNode*>();
-        _expandAnimationTargetNode = _opacityAnimationTargetNode;
-        _pOpacity = 0;
+        ElaNavigationNode* lastExpandNode = d->_expandAnimationTargetNode;
+        d->_opacityAnimationTargetNode = data.value("Collapse").value<ElaNavigationNode*>();
+        d->_expandAnimationTargetNode = d->_opacityAnimationTargetNode;
+        d->_pOpacity = 0;
 
         QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pRotate");
         connect(rotateAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _pOpacity = 1;
-            this->_expandAnimationTargetNode = nullptr; });
+            d->_pOpacity = 1;
+            d->_expandAnimationTargetNode = nullptr; });
         connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            _pNavigationView->viewport()->update();
+            d->_pNavigationView->viewport()->update();
         });
         rotateAnimation->setDuration(300);
         rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        if (lastExpandNode == _expandAnimationTargetNode)
+        if (lastExpandNode == d->_expandAnimationTargetNode)
         {
-            rotateAnimation->setStartValue(_pRotate);
+            rotateAnimation->setStartValue(d->_pRotate);
         }
         else
         {
@@ -134,36 +141,37 @@ void ElaNavigationDelegate::navigationNodeStateChange(QMap<QString, QVariant> da
     }
     else if (data.contains("SelectMarkChanged"))
     {
-        _lastSelectedNode = data.value("LastSelectedNode").value<ElaNavigationNode*>();
+        d->_lastSelectedNode = data.value("LastSelectedNode").value<ElaNavigationNode*>();
         ElaNavigationNode* selectedNode = data.value("SelectedNode").value<ElaNavigationNode*>();
-        bool direction = _compareItemY(selectedNode, _lastSelectedNode);
-        _lastSelectMarkTop = 10;
-        _lastSelectMarkBottom = 10;
-        _selectMarkTop = 10;
-        _selectMarkBottom = 10;
+        bool direction = d->_compareItemY(selectedNode, d->_lastSelectedNode);
+        d->_lastSelectMarkTop = 10;
+        d->_lastSelectMarkBottom = 10;
+        d->_selectMarkTop = 10;
+        d->_selectMarkBottom = 10;
         if (direction)
         {
-            _lastSelectMarkTopAnimation->setStartValue(10);
-            _lastSelectMarkTopAnimation->setEndValue(0);
-            _lastSelectMarkTopAnimation->start();
-            _lastSelectMarkBottomAnimation->stop();
-            _selectMarkTopAnimation->stop();
-            _isSelectMarkDisplay = false;
+            d->_lastSelectMarkTopAnimation->setStartValue(10);
+            d->_lastSelectMarkTopAnimation->setEndValue(0);
+            d->_lastSelectMarkTopAnimation->start();
+            d->_lastSelectMarkBottomAnimation->stop();
+            d->_selectMarkTopAnimation->stop();
+            d->_isSelectMarkDisplay = false;
         }
         else
         {
-            _lastSelectMarkBottomAnimation->setStartValue(10);
-            _lastSelectMarkBottomAnimation->setEndValue(0);
-            _lastSelectMarkBottomAnimation->start();
-            _lastSelectMarkTopAnimation->stop();
-            _selectMarkBottomAnimation->stop();
-            _isSelectMarkDisplay = false;
+            d->_lastSelectMarkBottomAnimation->setStartValue(10);
+            d->_lastSelectMarkBottomAnimation->setEndValue(0);
+            d->_lastSelectMarkBottomAnimation->start();
+            d->_lastSelectMarkTopAnimation->stop();
+            d->_selectMarkBottomAnimation->stop();
+            d->_isSelectMarkDisplay = false;
         }
     }
 }
 
 void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
+    Q_D(const ElaNavigationDelegate);
     QStyleOptionViewItem viewOption(option);
     initStyleOption(&viewOption, index);
     ElaNavigationNode* node = static_cast<ElaNavigationNode*>(index.internalPointer());
@@ -176,12 +184,12 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
     QRect itemRect = option.rect;
-    if (this->_opacityAnimationTargetNode && _opacityAnimationTargetNode->getIsChildNode(node))
+    if (d->_opacityAnimationTargetNode && d->_opacityAnimationTargetNode->getIsChildNode(node))
     {
-        painter->setOpacity(_pOpacity);
+        painter->setOpacity(d->_pOpacity);
     }
     // 图标绘制
-    painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
     if (node->getAwesome() != ElaIconType::None)
     {
         QFont iconFont = QFont("ElaAwesome");
@@ -197,9 +205,9 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
             QRectF expandIconRect(247, itemRect.y(), 17, itemRect.height());
             painter->save();
             painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
-            if (node == _expandAnimationTargetNode)
+            if (node == d->_expandAnimationTargetNode)
             {
-                painter->rotate(_pRotate);
+                painter->rotate(d->_pRotate);
             }
             else
             {
@@ -240,7 +248,8 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
             painter->setBrush(QColor(0xFF, 0x4D, 0x4F));
             painter->drawEllipse(QPoint(255, itemRect.y() + itemRect.height() / 2), 9, 9);
             painter->setPen(QPen(Qt::white, 2));
-            QFont font = QFont("Microsoft YaHei");
+            QFont font = QFont("Microsoft YaHei", 10);
+            font.setHintingPreference(QFont::PreferNoHinting);
             font.setBold(true);
             if (keyPoints > 99)
             {
@@ -262,21 +271,22 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
 
     // 文字绘制
     QFont titlefont("Microsoft YaHei", 10);
+    titlefont.setHintingPreference(QFont::PreferNoHinting);
     painter->setFont(titlefont);
-    painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
     painter->drawText(itemRect.x() + 37, itemRect.y() + 25, node->getNodeTitle());
     // 选中特效
-    if (_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
+    if (d->_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
     {
         painter->setPen(Qt::NoPen);
         painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
-        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _selectMarkTop, 3, itemRect.height() - _selectMarkTop - _selectMarkBottom), 3, 3);
+        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_selectMarkTop, 3, itemRect.height() - d->_selectMarkTop - d->_selectMarkBottom), 3, 3);
     }
-    if (node == _lastSelectedNode)
+    if (node == d->_lastSelectedNode)
     {
         painter->setPen(Qt::NoPen);
         painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
-        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _lastSelectMarkTop, 3, itemRect.height() - _lastSelectMarkTop - _lastSelectMarkBottom), 3, 3);
+        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_lastSelectMarkTop, 3, itemRect.height() - d->_lastSelectMarkTop - d->_lastSelectMarkBottom), 3, 3);
     }
     painter->restore();
 }
@@ -286,109 +296,4 @@ QSize ElaNavigationDelegate::sizeHint(const QStyleOptionViewItem& option, const 
     QSize size = QStyledItemDelegate::sizeHint(option, index);
     size.setHeight(40);
     return size;
-}
-
-bool ElaNavigationDelegate::_compareItemY(ElaNavigationNode* node1, ElaNavigationNode* node2)
-{
-    // 返回TRUE 即node1 高于 node2
-    if (!node1)
-    {
-        return false;
-    }
-    if (!node2)
-    {
-        return true;
-    }
-    // 同一父节点
-    if (node1->getParentNode() == node2->getParentNode())
-    {
-        if (node1->getModelIndex().row() < node2->getModelIndex().row())
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        ElaNavigationNode* node1OriginalNode = node1->getOriginalNode();
-        ElaNavigationNode* node2OriginalNode = node2->getOriginalNode();
-        // 不同父节点  相同起源节点
-        if (node1OriginalNode == node2OriginalNode)
-        {
-            int node1Depth = node1->getDepth();
-            int node2Depth = node2->getDepth();
-            // 相同深度
-            if (node1Depth == node2Depth)
-            {
-                ElaNavigationNode* node1ParentNode = node1->getParentNode();
-                ElaNavigationNode* node2ParentNode = node2->getParentNode();
-                if (node1ParentNode->getModelIndex().row() < node2ParentNode->getModelIndex().row())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (node1Depth < node2Depth)
-                {
-                    ElaNavigationNode* node2ParentNode = node2->getParentNode();
-                    while (node2ParentNode->getDepth() != node1Depth)
-                    {
-                        node2ParentNode = node2ParentNode->getParentNode();
-                    }
-                    // 父子节点关系
-                    if (node1 == node2ParentNode)
-                    {
-                        return true;
-                    }
-                    if (node1->getModelIndex().row() < node2ParentNode->getModelIndex().row())
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    ElaNavigationNode* node1ParentNode = node1->getParentNode();
-                    while (node1ParentNode->getDepth() != node2Depth)
-                    {
-                        node1ParentNode = node1ParentNode->getParentNode();
-                    }
-                    if (node2 == node1ParentNode)
-                    {
-                        return false;
-                    }
-                    if (node1ParentNode->getModelIndex().row() < node2->getModelIndex().row())
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-        else
-        {
-            if (node1OriginalNode->getModelIndex().row() < node2OriginalNode->getModelIndex().row())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
 }

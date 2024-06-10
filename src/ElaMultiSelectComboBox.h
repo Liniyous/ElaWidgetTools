@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 class ElaMultiSelectComboBoxPrivate;
-class ElaMultiSelectComboBox : public QComboBox
+class ELA_EXPORT ElaMultiSelectComboBox : public QComboBox
 {
     Q_OBJECT
     Q_Q_CREATE(ElaMultiSelectComboBox)

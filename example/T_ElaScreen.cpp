@@ -8,7 +8,7 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
 {
     ElaDxgiManager* dxgiManager = ElaDxgiManager::getInstance();
     dxgiManager->setGrabArea(1920, 1080);
-    //dxgiManager->startGrabScreen();
+    dxgiManager->startGrabScreen();
 
     _dxgiScreen = new ElaDxgiScreen(this);
     _dxgiScreen->setIsSyncGrabSize(true);

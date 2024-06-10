@@ -7,7 +7,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class ElaAcrylicUrlCardPrivate;
-class ElaAcrylicUrlCard : public QPushButton
+class ELA_EXPORT ElaAcrylicUrlCard : public QPushButton
 {
     Q_OBJECT
     Q_Q_CREATE(ElaAcrylicUrlCard);

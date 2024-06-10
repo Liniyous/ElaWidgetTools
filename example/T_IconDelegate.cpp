@@ -7,8 +7,7 @@
 T_IconDelegate::T_IconDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { _themeMode = themeMode; });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 T_IconDelegate::~T_IconDelegate()
@@ -47,7 +46,8 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
     }
     painter->drawText(option.rect.x() + option.rect.width() / 2 - 11, option.rect.y() + option.rect.height() / 2 - 11, iconValue);
     // 文字绘制
-    QFont titlefont("Microsoft YaHei", 10);
+    QFont titlefont = painter->font();
+    titlefont.setPointSize(10);
     painter->setFont(titlefont);
     qreal rowTextWidth = option.rect.width() * 0.8;
     int subTitleRow = painter->fontMetrics().horizontalAdvance(iconName) / rowTextWidth;

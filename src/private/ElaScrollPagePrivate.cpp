@@ -18,6 +18,7 @@ void ElaScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastInd
 {
     QWidget* currentWidget = _centralStackedWidget->widget(lastIndex);
     QWidget* targetWidget = _centralStackedWidget->widget(targetIndex);
+    targetWidget->resize(currentWidget->size());
     targetWidget->setVisible(true);
 
     QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");

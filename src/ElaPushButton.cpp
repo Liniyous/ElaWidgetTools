@@ -21,7 +21,9 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     setMouseTracking(true);
     setFixedSize(90, 38);
     setText("PushButton");
-    setFont(QFont("Microsoft YaHei", 11));
+    QFont font = this->font();
+    font.setPointSize(11);
+    setFont(font);
     setObjectName("ElaPushButton");
     setStyleSheet("#ElaPushButton{background-color:transparent;}");
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaPushButton::onThemeChanged);
@@ -49,7 +51,9 @@ ElaPushButton::ElaPushButton(QString text, QWidget* parent)
     }
     setMouseTracking(true);
     setFixedSize(90, 38);
-    setFont(QFont("Microsoft YaHei", 11));
+    QFont font = this->font();
+    font.setPointSize(11);
+    setFont(font);
     setObjectName("ElaPushButton");
     setStyleSheet("#ElaPushButton{background-color:transparent;}");
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaPushButton::onThemeChanged);
@@ -154,7 +158,7 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     }
     else
     {
-        painter.setPen(QPen(QColor(0x50, 0x50, 0x50), 1));
+        painter.setPen(Qt::NoPen);
         painter.setBrush(_isPressed ? _pDarkPressColor : (underMouse() ? _pDarkHoverColor : _pDarkDefaultColor));
     }
     painter.drawRoundedRect(foregroundRect, _pBorderRadius, _pBorderRadius);

@@ -13,7 +13,9 @@ ElaCheckBox::ElaCheckBox(QWidget* parent)
     setFixedSize(25, 25);
     setObjectName("ElaCheckBox");
     setStyleSheet("#ElaCheckBox{background-color:transparent;}");
-    setFont(QFont("Microsoft YaHei", 11));
+    QFont font = this->font();
+    font.setPointSize(11);
+    setFont(font);
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
@@ -24,7 +26,9 @@ ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
     setMouseTracking(true);
     setObjectName("ElaCheckBox");
     setStyleSheet("#ElaCheckBox{background-color:transparent;}");
-    setFont(QFont("Microsoft YaHei", 11));
+    QFont font = this->font();
+    font.setPointSize(11);
+    setFont(font);
     int textWidth = fontMetrics().horizontalAdvance(text);
     setFixedSize(textWidth + 25 * 0.8 + _textLeftSpacing, 25);
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });

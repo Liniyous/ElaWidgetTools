@@ -15,6 +15,7 @@
 #include "DeveloperComponents/ElaNavigationNode.h"
 #include "DeveloperComponents/ElaNavigationSuggestBox.h"
 #include "DeveloperComponents/ElaNavigationView.h"
+#include "ElaApplication.h"
 #include "ElaBreadcrumbBar.h"
 #include "ElaListView.h"
 #include "ElaMenu.h"
@@ -198,7 +199,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     footerPostData.insert("SelectedNode", QVariant::fromValue(nullptr));
                     compactPostData.insert("LastSelectedNode", QVariant::fromValue(_footerModel->getSelectedNode()));
                     _footerModel->setSelectedNode(nullptr);
-                    _footerDelegate->onNavigationNodeStateChange(footerPostData);
+                    _footerDelegate->navigationNodeStateChange(footerPostData);
                 }
                 QMap<QString, QVariant> postData = QMap<QString, QVariant>();
                 postData.insert("SelectMarkChanged", true);
@@ -217,8 +218,12 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                 postData.insert("SelectedNode", QVariant::fromValue(node));
                 ElaNavigationNode* originalNode = node->getOriginalNode();
                 compactPostData.insert("SelectedNode", QVariant::fromValue(originalNode));
-                _compactModel->setSelectedNode(originalNode);
-                _compactDelegate->onNavigationNodeStateChange(compactPostData);
+                //避免同一起源节点下的无效Mark动画
+                if (originalNode != _compactModel->getSelectedNode())
+                {
+                    _compactModel->setSelectedNode(originalNode);
+                    _compactDelegate->navigationNodeStateChange(compactPostData);
+                }
                 _navigationModel->setSelectedNode(node);
                 _navigationDelegate->navigationNodeStateChange(postData);
                 if (!node->getIsVisible())
@@ -288,8 +293,8 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
             postData.insert("SelectedNode", QVariant::fromValue(node));
             compactPostData.insert("SelectedNode", QVariant::fromValue(node));
             _compactModel->setSelectedNode(node);
-            _compactDelegate->onNavigationNodeStateChange(compactPostData);
-            _footerDelegate->onNavigationNodeStateChange(postData);
+            _compactDelegate->navigationNodeStateChange(compactPostData);
+            _footerDelegate->navigationNodeStateChange(postData);
             _footerModel->setSelectedNode(node);
         }
     }
@@ -297,7 +302,6 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
 
 void ElaNavigationBarPrivate::onCompactViewClicked(const QModelIndex& index)
 {
-    Q_Q(ElaNavigationBar);
     ElaNavigationNode* node = index.data(Qt::UserRole).value<ElaNavigationNode*>();
     if (node->getIsFooterNode())
     {

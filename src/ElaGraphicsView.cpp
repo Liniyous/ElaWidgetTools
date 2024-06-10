@@ -4,17 +4,27 @@
 #include <QScrollBar>
 #include <QWheelEvent>
 
-#include "ElaScrollBar.h"
+#include "private/ElaGraphicsViewPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsView, qreal, MaxTransform);
+Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsView, qreal, MinTransform);
 ElaGraphicsView::ElaGraphicsView(QWidget* parent)
-    : QGraphicsView(parent)
+    : QGraphicsView(parent), d_ptr(new ElaGraphicsViewPrivate())
 {
-    _initStyle();
+    Q_D(ElaGraphicsView);
+    d->q_ptr = this;
+    d->_pMaxTransform = 5;
+    d->_pMinTransform = 0.15;
+    d->_initStyle();
 }
 
 ElaGraphicsView::ElaGraphicsView(QGraphicsScene* scene, QWidget* parent)
-    : QGraphicsView(scene, parent)
+    : QGraphicsView(scene, parent), d_ptr(new ElaGraphicsViewPrivate())
 {
-    _initStyle();
+    Q_D(ElaGraphicsView);
+    d->q_ptr = this;
+    d->_pMaxTransform = 5;
+    d->_pMinTransform = 0.15;
+    d->_initStyle();
 }
 
 ElaGraphicsView::~ElaGraphicsView()
@@ -23,20 +33,19 @@ ElaGraphicsView::~ElaGraphicsView()
 
 void ElaGraphicsView::wheelEvent(QWheelEvent* event)
 {
-    // qDebug() << transform().m11();
+    Q_D(ElaGraphicsView);
     if (event->modifiers() == Qt::CTRL)
     {
         // 放大
-        if ((event->angleDelta().y() > 0) && transform().m11() <= 5)
+        if ((event->angleDelta().y() > 0) && transform().m11() <= d->_pMaxTransform)
         {
             this->scale(1.1, 1.1);
-            return;
         }
-        else if ((event->angleDelta().y() < 0) && transform().m11() >= 0.15)
+        else if ((event->angleDelta().y() < 0) && transform().m11() >= d->_pMinTransform)
         {
             this->scale(1.0 / 1.1, 1.0 / 1.1);
-            return;
         }
+        return;
     }
     QGraphicsView::wheelEvent(event);
 }
@@ -57,16 +66,4 @@ void ElaGraphicsView::keyReleaseEvent(QKeyEvent* event)
         setDragMode(QGraphicsView::RubberBandDrag);
     }
     QGraphicsView::keyReleaseEvent(event);
-}
-
-void ElaGraphicsView::_initStyle()
-{
-    setDragMode(QGraphicsView::RubberBandDrag);
-    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    setResizeAnchor(QGraphicsView::AnchorUnderMouse);
-    setMouseTracking(true);
-    setObjectName("ElaGraphicsView");
-    setStyleSheet("#ElaGraphicsView{background-color:white;border:0px;}");
-    setVerticalScrollBar(new ElaScrollBar(this));
-    setHorizontalScrollBar(new ElaScrollBar(this));
 }

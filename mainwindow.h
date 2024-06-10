@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+#include "ElaContentDialog.h"
 #include "ElaWindow.h"
 class T_Home;
 class T_Icon;
@@ -22,5 +23,8 @@ private:
     T_ElaScreen* _elaScreenPage{nullptr};
     T_Icon* _iconPage{nullptr};
     T_BaseComponents* _baseComponentsPage{nullptr};
+    QString _elaDxgiKey{""};
+    QString _aboutKey{""};
+    QString _settingKey{""};
 };
 #endif // MAINWINDOW_H

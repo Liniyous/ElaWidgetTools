@@ -71,7 +71,6 @@ qt_add_resources(ElaWidgetTools
 )
 
 target_link_libraries(ElaWidgetTools PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::WidgetsPrivate
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

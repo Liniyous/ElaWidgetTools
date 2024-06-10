@@ -3,12 +3,13 @@
 #include <QAbstractNativeEventFilter>
 #include <QDialog>
 
-class QHBoxLayout;
-class QVBoxLayout;
-class ElaPushButton;
-class ElaContentDialog : public QDialog, QAbstractNativeEventFilter
+#include "stdafx.h"
+
+class ElaContentDialogPrivate;
+class ELA_EXPORT ElaContentDialog : public QDialog, QAbstractNativeEventFilter
 {
     Q_OBJECT
+    Q_Q_CREATE(ElaContentDialog)
 public:
     explicit ElaContentDialog(QWidget* parent = nullptr);
     ~ElaContentDialog();
@@ -16,6 +17,10 @@ public:
     Q_SLOT virtual void onMiddleButtonClicked();
     Q_SLOT virtual void onRightButtonClicked();
     void setCentralWidget(QWidget* centralWidget);
+
+    void setLeftButtonText(QString text);
+    void setMiddleButtonText(QString text);
+    void setRightButtonText(QString text);
 Q_SIGNALS:
     Q_SIGNAL void leftButtonClicked();
     Q_SIGNAL void middleButtonClicked();
@@ -27,15 +32,6 @@ protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
 #endif
     bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
-
-private:
-    QWidget* _shadowWidget{nullptr};
-    QWidget* _centralWidget{nullptr};
-    QVBoxLayout* _mainLayout{nullptr};
-    QHBoxLayout* _buttonLayout{nullptr};
-    ElaPushButton* _leftButton{nullptr};
-    ElaPushButton* _middleButton{nullptr};
-    ElaPushButton* _rightButton{nullptr};
 };
 
 #endif // ELACONTENTDIALOG_H

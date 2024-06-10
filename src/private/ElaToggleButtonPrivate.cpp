@@ -18,9 +18,10 @@ void ElaToggleButtonPrivate::_initStyle()
     _themeMode = ElaApplication::getInstance()->getThemeMode();
     q->setMouseTracking(true);
     q->setFixedSize(80, 38);
-    q->setFont(QFont("Microsoft YaHei", 11));
+    QFont font = q->font();
+    font.setPointSize(11);
+    q->setFont(font);
     q->setObjectName("ElaToggleButton");
     q->setStyleSheet("#ElaToggleButton{background-color:transparent;}");
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { _themeMode = themeMode; });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }

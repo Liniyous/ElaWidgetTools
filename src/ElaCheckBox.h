@@ -5,7 +5,7 @@
 
 #include "Def.h"
 #include "stdafx.h"
-class ElaCheckBox : public QCheckBox
+class ELA_EXPORT ElaCheckBox : public QCheckBox
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(int, BorderRadius)

@@ -73,6 +73,7 @@ void ElaNavigationSuggestDelegate::paint(QPainter* painter, const QStyleOptionVi
     }
     //文字绘制
     QFont titlefont("Microsoft YaHei", 10);
+    titlefont.setHintingPreference(QFont::PreferNoHinting);
     painter->setFont(titlefont);
     painter->drawText(option.rect.x() + 37, option.rect.y() + 25, node->getNodeTitle());
     painter->restore();

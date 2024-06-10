@@ -29,10 +29,8 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);
     view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);
-    setFont(QFont("Microsoft YaHei", 10));
     QComboBox::setMaxVisibleItems(5);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { d->_themeMode = themeMode; });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaComboBox::~ElaComboBox()
@@ -113,8 +111,7 @@ void ElaComboBox::hidePopup()
     {
         QWidget* container = this->view()->parentWidget();
         QPropertyAnimation* opcaityAnimation = new QPropertyAnimation(container, "windowOpacity");
-        connect(opcaityAnimation, &QPropertyAnimation::finished, this, [=]()
-                {
+        connect(opcaityAnimation, &QPropertyAnimation::finished, this, [=]() {
             QComboBox::hidePopup();
             container->setWindowOpacity(1);
             d->_isHidePopupAnimationFinished = true; });
@@ -125,8 +122,7 @@ void ElaComboBox::hidePopup()
 
         QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
         QPoint viewPos = QPoint(0, 0);
-        connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]()
-                { d->_comboView->move(viewPos); });
+        connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { d->_comboView->move(viewPos); });
         viewPosAnimation->setStartValue(viewPos);
         viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
         viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);

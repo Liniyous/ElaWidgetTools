@@ -5,7 +5,7 @@
 
 #include "stdafx.h"
 class ElaToggleButtonPrivate;
-class ElaToggleButton : public QPushButton
+class ELA_EXPORT ElaToggleButton : public QPushButton
 {
     Q_OBJECT
     Q_Q_CREATE(ElaToggleButton)

@@ -28,7 +28,6 @@ void ElaMenuDelegate::paint(QPainter* painter, const QStyleOptionViewItem& optio
         viewOption.state &= ~QStyle::State_HasFocus;
     }
     painter->save();
-    painter->setFont(QFont("微软雅黑"));
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
 
     // 选中绘制

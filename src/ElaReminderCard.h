@@ -6,7 +6,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class ElaReminderCardPrivate;
-class ElaReminderCard : public QPushButton
+class ELA_EXPORT ElaReminderCard : public QPushButton
 {
     Q_OBJECT
     Q_Q_CREATE(ElaReminderCard)

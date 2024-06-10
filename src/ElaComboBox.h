@@ -6,7 +6,7 @@
 #include "stdafx.h"
 
 class ElaComboBoxPrivate;
-class ElaComboBox : public QComboBox
+class ELA_EXPORT ElaComboBox : public QComboBox
 {
     Q_OBJECT
     Q_Q_CREATE(ElaComboBox);

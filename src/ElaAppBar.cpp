@@ -79,6 +79,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
     d->_titleLabel = new QLabel(this);
     QFont textfont("Microsoft YaHei", 10);
+    textfont.setHintingPreference(QFont::PreferNoHinting);
     d->_titleLabel->setFont(textfont);
 
     // 主题变更
@@ -136,6 +137,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
 ElaAppBar::~ElaAppBar()
 {
+    QGuiApplication::instance()->removeNativeEventFilter(this);
 }
 
 void ElaAppBar::setWindowTitle(QString title)

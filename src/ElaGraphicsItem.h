@@ -9,7 +9,7 @@
 #include "stdafx.h"
 class ElaGraphicsScene;
 class ElaGraphicsItemPrivate;
-class ElaGraphicsItem : public QGraphicsObject
+class ELA_EXPORT ElaGraphicsItem : public QGraphicsObject
 {
     Q_OBJECT
     Q_Q_CREATE(ElaGraphicsItem)

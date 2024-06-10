@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "stdafx.h"
-class ElaImageCard : public QWidget
+class ELA_EXPORT ElaImageCard : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(QImage, CardImage);
