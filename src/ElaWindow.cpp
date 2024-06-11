@@ -28,7 +28,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     Q_D(ElaWindow);
     d->q_ptr = this;
     ElaApplication::getInstance()->init();
-    setObjectName("ElaWidnow");
+    setProperty("ElaBaseClassName", "ElaWindow");
     resize(1020, 680); // 默认宽高
 
     d->_pThemeChangeTime = 700;

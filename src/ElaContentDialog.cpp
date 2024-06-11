@@ -43,9 +43,10 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     QWidget* mainWindow = nullptr;
     for (auto widget : widgetList)
     {
-        if (widget->isActiveWindow() && widget->objectName() == "ElaWidnow")
+        if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
         {
             mainWindow = widget;
+            break;
         }
     }
     if (mainWindow)

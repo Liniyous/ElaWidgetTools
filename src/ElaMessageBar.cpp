@@ -92,7 +92,7 @@ void ElaMessageBar::success(ElaMessageBarType::PositionPolicy policy, QString ti
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->objectName() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
             {
                 parent = widget;
             }
@@ -114,7 +114,7 @@ void ElaMessageBar::warning(ElaMessageBarType::PositionPolicy policy, QString ti
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->objectName() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWidnow")
             {
                 parent = widget;
             }
@@ -135,7 +135,7 @@ void ElaMessageBar::information(ElaMessageBarType::PositionPolicy policy, QStrin
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->objectName() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWidnow")
             {
                 parent = widget;
             }
@@ -156,7 +156,7 @@ void ElaMessageBar::error(ElaMessageBarType::PositionPolicy policy, QString titl
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->objectName() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWidnow")
             {
                 parent = widget;
             }
