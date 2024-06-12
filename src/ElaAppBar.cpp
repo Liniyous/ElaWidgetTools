@@ -439,6 +439,12 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         minmaxInfo->ptMinTrackSize.y = 290 * qApp->devicePixelRatio();
         minmaxInfo->ptMaxPosition.x = rect.left;
         minmaxInfo->ptMaxPosition.y = rect.top;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        auto pixelRatio = window()->devicePixelRatio();
+        auto geometry = window()->screen()->availableGeometry();
+        minmaxInfo->ptMaxSize.x = qRound(geometry.width() * pixelRatio);
+        minmaxInfo->ptMaxSize.y = qRound(geometry.height() * pixelRatio);
+#endif
         return true;
     }
     case WM_NCACTIVATE:
