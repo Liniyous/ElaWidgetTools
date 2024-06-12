@@ -318,8 +318,8 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
                 return true;
             }
             // qDebug() << clientRect->left << clientRect->top << clientRect->bottom << clientRect->right;
-            clientRect->top = 0;
-            clientRect->left = 0;
+            auto geometry = window()->screen()->geometry();
+            clientRect->top = geometry.top();
         }
         *result = WVR_REDRAW;
         return true;
