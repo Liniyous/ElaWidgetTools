@@ -21,6 +21,7 @@ Q_SIGNALS:
     Q_SIGNAL void messageBarClosed(ElaMessageBarType::PositionPolicy policy, int messageBarIndex);
 
 private:
+    ElaApplicationType::ThemeMode _themeMode;
     int _borderRadius{6};
     QString _title{""};
     QString _text{""};

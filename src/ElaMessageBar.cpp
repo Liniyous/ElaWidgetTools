@@ -22,6 +22,7 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     d->_text = text;
     d->_policy = policy;
     d->_messageMode = messageMode;
+    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
     setFixedHeight(60);
     setMouseTracking(true);
     QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(this);
@@ -114,7 +115,7 @@ void ElaMessageBar::warning(ElaMessageBarType::PositionPolicy policy, QString ti
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
             {
                 parent = widget;
             }
@@ -135,7 +136,7 @@ void ElaMessageBar::information(ElaMessageBarType::PositionPolicy policy, QStrin
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
             {
                 parent = widget;
             }
@@ -156,7 +157,7 @@ void ElaMessageBar::error(ElaMessageBarType::PositionPolicy policy, QString titl
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWidnow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
             {
                 parent = widget;
             }
@@ -174,18 +175,18 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaMessageBar);
     QPainter painter(this);
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
     painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = ElaApplication::getInstance()->getShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRoundedRect(d->_shadowBorderWidth - i, d->_shadowBorderWidth - i, this->width() - (d->_shadowBorderWidth - i) * 2, this->height() - (d->_shadowBorderWidth - i) * 2, d->_borderRadius + i, d->_borderRadius + i);
-        int alpha = 6 * (d->_shadowBorderWidth - i + 1);
+        int alpha = 5 * (d->_shadowBorderWidth - i + 1);
         color.setAlpha(alpha > 255 ? 255 : alpha);
         painter.setPen(color);
         painter.drawPath(path);
@@ -194,7 +195,6 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
 
     // 背景和图标绘制
     painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
     switch (d->_messageMode)
     {
