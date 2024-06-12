@@ -1,4 +1,4 @@
-#ifndef T_ICONMODEL_H
+﻿#ifndef T_ICONMODEL_H
 #define T_ICONMODEL_H
 
 #include <QAbstractTableModel>

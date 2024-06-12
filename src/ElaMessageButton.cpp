@@ -154,13 +154,13 @@ void ElaMessageButton::paintEvent(QPaintEvent* event)
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = ElaApplication::getInstance()->getShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRoundedRect(d->_shadowBorderWidth - i, d->_shadowBorderWidth - i, this->width() - (d->_shadowBorderWidth - i) * 2, this->height() - (d->_shadowBorderWidth - i) * 2, d->_pBorderRadius + i, d->_pBorderRadius + i);
-        int alpha = 6 * (d->_shadowBorderWidth - i + 1);
+        int alpha = 5 * (d->_shadowBorderWidth - i + 1);
         color.setAlpha(alpha > 255 ? 255 : alpha);
         painter.setPen(color);
         painter.drawPath(path);

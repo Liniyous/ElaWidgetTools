@@ -1,4 +1,4 @@
-#include "ElaFooterDelegatePrivate.h"
+﻿#include "ElaFooterDelegatePrivate.h"
 
 #include "DeveloperComponents/ElaFooterDelegate.h"
 #include "DeveloperComponents/ElaNavigationNode.h"

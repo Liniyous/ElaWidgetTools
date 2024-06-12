@@ -40,10 +40,8 @@ ElaAcrylicUrlCard::ElaAcrylicUrlCard(QWidget* parent)
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
     d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(this, &ElaAcrylicUrlCard::clicked, this, [=]()
-            { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { d->_themeMode = themeMode; });
+    connect(this, &ElaAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaAcrylicUrlCard::~ElaAcrylicUrlCard()
@@ -65,13 +63,13 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = ElaApplication::getInstance()->getShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRoundedRect(d->_shadowBorderWidth - i, d->_shadowBorderWidth - i, this->width() - (d->_shadowBorderWidth - i) * 2, this->height() - (d->_shadowBorderWidth - i) * 2, d->_pBorderRadius + i, d->_pBorderRadius + i);
-        int alpha = 6 * (d->_shadowBorderWidth - i + 1);
+        int alpha = 5 * (d->_shadowBorderWidth - i + 1);
         color.setAlpha(alpha > 255 ? 255 : alpha);
         painter.setPen(color);
         painter.drawPath(path);
@@ -129,7 +127,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setPen(QPen(Qt::black));
     QFont font = this->font();
-    font.setWeight(QFont::DemiBold);
+    font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setFont(font);
     if (d->_themeMode == ElaApplicationType::Light)

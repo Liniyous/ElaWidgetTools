@@ -1,4 +1,4 @@
-#include "T_IconDelegate.h"
+﻿#include "T_IconDelegate.h"
 
 #include <QPainter>
 
@@ -57,7 +57,7 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
         for (int i = 0; i < subTitleRow + 1; i++)
         {
             QString text = painter->fontMetrics().elidedText(subTitleText, Qt::ElideRight, rowTextWidth);
-            if (text.last(3).contains("…"))
+            if (text.right(3).contains("…"))
             {
                 text = text.replace("…", subTitleText.mid(text.length() - 1, 1));
             }

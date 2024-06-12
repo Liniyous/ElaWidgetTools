@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
+#include <QScreen>
 #include <QTimer>
 #include <QVBoxLayout>
 
@@ -230,7 +231,11 @@ void ElaAppBar::closeWindow()
 }
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result)
+#else
+bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, long* result)
+#endif
 {
     Q_D(ElaAppBar);
     if ((eventType != "windows_generic_MSG") || !message)
@@ -428,16 +433,12 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, qi
     case WM_GETMINMAXINFO:
     {
         MINMAXINFO* minmaxInfo = reinterpret_cast<MINMAXINFO*>(lParam);
-        auto pixelRatio = window()->devicePixelRatio();
-        auto geometry = window()->screen()->availableGeometry();
         RECT rect;
         SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
         minmaxInfo->ptMinTrackSize.x = (d->_titleLabel->width() + 320) * qApp->devicePixelRatio();
         minmaxInfo->ptMinTrackSize.y = 290 * qApp->devicePixelRatio();
         minmaxInfo->ptMaxPosition.x = rect.left;
         minmaxInfo->ptMaxPosition.y = rect.top;
-        minmaxInfo->ptMaxSize.x = qRound(geometry.width() * pixelRatio);
-        minmaxInfo->ptMaxSize.y = qRound(geometry.height() * pixelRatio);
         return true;
     }
     case WM_NCACTIVATE:

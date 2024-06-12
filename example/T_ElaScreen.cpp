@@ -1,4 +1,4 @@
-#include "T_ElaScreen.h"
+﻿#include "T_ElaScreen.h"
 
 #include <QVBoxLayout>
 

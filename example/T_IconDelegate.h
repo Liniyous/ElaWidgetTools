@@ -1,4 +1,4 @@
-#ifndef T_ICONDELEGATE_H
+﻿#ifndef T_ICONDELEGATE_H
 #define T_ICONDELEGATE_H
 
 #include <QStyledItemDelegate>

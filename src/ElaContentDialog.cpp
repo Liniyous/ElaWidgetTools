@@ -1,4 +1,4 @@
-#include "ElaContentDialog.h"
+﻿#include "ElaContentDialog.h"
 
 #include <ElaPushButton.h>
 #include <Windows.h>
@@ -211,7 +211,11 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
 }
 #endif
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 bool ElaContentDialog::nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result)
+#else
+bool ElaContentDialog::nativeEventFilter(const QByteArray& eventType, void* message, long* result)
+#endif
 {
     if ((eventType != "windows_generic_MSG") || !message)
     {

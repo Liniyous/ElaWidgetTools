@@ -2,6 +2,7 @@
 
 //#include <private/qtreeview_p.h>
 
+#include <QDebug>
 #include <QHeaderView>
 #include <QModelIndex>
 #include <QMouseEvent>

@@ -75,7 +75,18 @@ void ElaBreadcrumbBarModel::removeBreadcrumb(int index)
         return;
     }
     beginResetModel();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     _breadcrumbList.remove(index, _breadcrumbList.count() - index);
+#else
+    for (int i = _breadcrumbList.count() - 1; i >= 0; i--)
+    {
+        if (i < index)
+        {
+            break;
+        }
+        _breadcrumbList.removeAt(i);
+    }
+#endif
     endResetModel();
 }
 

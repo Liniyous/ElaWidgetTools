@@ -85,7 +85,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     QVBoxLayout* maximalLayout = new QVBoxLayout(d->_maximalWidget);
     maximalLayout->setContentsMargins(10, 10, 10, 0);
     maximalLayout->addWidget(d->_userCard);
-    maximalLayout->addSpacing(12);
+    maximalLayout->addSpacing(6);
     maximalLayout->addWidget(d->_navigationSuggestBox);
     maximalLayout->addSpacing(12);
     maximalLayout->addWidget(d->_navigationView);
@@ -145,11 +145,11 @@ void ElaNavigationBar::setUserInfoCardVisible(bool isVisible)
     d->_userCard->setVisible(isVisible);
     if (isVisible)
     {
-        d->_navigationSuggestBox->d_ptr->_searchView->move(15, 175);
+        d->_navigationSuggestBox->d_ptr->_searchView->move(16, 174);
     }
     else
     {
-        d->_navigationSuggestBox->d_ptr->_searchView->move(15, 80);
+        d->_navigationSuggestBox->d_ptr->_searchView->move(16, 86);
     }
 }
 

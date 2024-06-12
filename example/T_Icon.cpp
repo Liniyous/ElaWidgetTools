@@ -1,4 +1,4 @@
-#include "T_Icon.h"
+﻿#include "T_Icon.h"
 
 #include <QStandardItemModel>
 #include <QVBoxLayout>

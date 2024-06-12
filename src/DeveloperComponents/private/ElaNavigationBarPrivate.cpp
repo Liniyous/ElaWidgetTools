@@ -1,4 +1,4 @@
-#include "ElaNavigationBarPrivate.h"
+﻿#include "ElaNavigationBarPrivate.h"
 
 #include <QLayout>
 #include <QPropertyAnimation>

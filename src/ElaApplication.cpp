@@ -1,16 +1,24 @@
-#include "ElaApplication.h"
+﻿#include "ElaApplication.h"
 
 #include <QApplication>
 #include <QCursor>
 #include <QFontDatabase>
 #include <QWidget>
+
+#include "private/ElaApplicationPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(ElaApplication, bool, IsApplicationClosed)
+Q_PROPERTY_CREATE_Q_CPP(ElaApplication, QColor, LightShadowEffectColor)
+Q_PROPERTY_CREATE_Q_CPP(ElaApplication, QColor, DarkShadowEffectColor)
+Q_PRIVATE_CREATE_Q_CPP(ElaApplication, QIcon, WindowIcon)
 ElaApplication::ElaApplication(QObject* parent)
-    : QObject{parent}
+    : QObject{parent}, d_ptr(new ElaApplicationPrivate())
 {
-    _pIsApplicationClosed = false;
-    _pWindowIcon = QIcon(":/src/Image/Cirno.jpg");
-    _pShadowEffectColor = QColor(0xDA, 0xDA, 0xDA);
-    //_pGraphicsDropShadowEffectColor = QColor(0xAE, 0xAE, 0xB0);
+    Q_D(ElaApplication);
+    d->q_ptr = this;
+    d->_pIsApplicationClosed = false;
+    d->_pWindowIcon = QIcon(":/src/Image/Cirno.jpg");
+    d->_pLightShadowEffectColor = QColor(165, 165, 165, 155);
+    d->_pDarkShadowEffectColor = QColor(185, 185, 185, 155);
 }
 
 ElaApplication::~ElaApplication()
@@ -19,19 +27,22 @@ ElaApplication::~ElaApplication()
 
 void ElaApplication::setThemeMode(ElaApplicationType::ThemeMode themeMode)
 {
-    this->_themeMode = themeMode;
-    Q_EMIT themeModeChanged(this->_themeMode);
+    Q_D(ElaApplication);
+    d->_themeMode = themeMode;
+    Q_EMIT themeModeChanged(d->_themeMode);
 }
 
 ElaApplicationType::ThemeMode ElaApplication::getThemeMode() const
 {
-    return this->_themeMode;
+    Q_D(const ElaApplication);
+    return d->_themeMode;
 }
 
 void ElaApplication::init()
 {
+    Q_D(ElaApplication);
     QFontDatabase::addApplicationFont(":/src/Font/ElaAwesome.ttf");
-    QApplication::setWindowIcon(_pWindowIcon);
+    QApplication::setWindowIcon(d->_pWindowIcon);
     //默认字体
     QFont font = qApp->font();
     font.setPointSize(10);

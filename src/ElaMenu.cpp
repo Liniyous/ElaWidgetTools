@@ -1,4 +1,4 @@
-#include "ElaMenu.h"
+﻿#include "ElaMenu.h"
 
 #include <QApplication>
 #include <QCloseEvent>
@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
+#include <QScreen>
 #include <QUuid>
 #include <QVBoxLayout>
 
@@ -290,7 +291,7 @@ void ElaMenu::paintEvent(QPaintEvent* event)
         QPainterPath path;
         path.setFillRule(Qt::WindingFill);
         path.addRoundedRect(d->_shadowBorderWidth - i, d->_shadowBorderWidth - i, this->width() - (d->_shadowBorderWidth - i) * 2, this->height() - (d->_shadowBorderWidth - i) * 2, d->_pBorderRadius + i, d->_pBorderRadius + i);
-        int alpha = 6 * (d->_shadowBorderWidth - i + 1);
+        int alpha = 5 * (d->_shadowBorderWidth - i + 1);
         color.setAlpha(alpha > 255 ? 255 : alpha);
         painter.setPen(color);
         painter.drawPath(path);

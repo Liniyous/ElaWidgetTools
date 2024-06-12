@@ -8,13 +8,16 @@
 #include "Def.h"
 #include "singleton.h"
 #include "stdafx.h"
+class ElaApplicationPrivate;
 class ELA_EXPORT ElaApplication : public QObject
 {
     Q_OBJECT
+    Q_Q_CREATE(ElaApplication)
     Q_SINGLETON_CREATE(ElaApplication)
-    Q_PROPERTY_CREATE(bool, IsApplicationClosed)
-    Q_PROPERTY_CREATE(QColor, ShadowEffectColor)
-    Q_PRIVATE_CREATE(QIcon, WindowIcon)
+    Q_PROPERTY_CREATE_Q_H(bool, IsApplicationClosed)
+    Q_PROPERTY_CREATE_Q_H(QColor, LightShadowEffectColor)
+    Q_PROPERTY_CREATE_Q_H(QColor, DarkShadowEffectColor)
+    Q_PRIVATE_CREATE_Q_H(QIcon, WindowIcon)
 private:
     explicit ElaApplication(QObject* parent = nullptr);
     ~ElaApplication();
@@ -26,9 +29,6 @@ public:
     ElaApplicationType::ThemeMode getThemeMode() const;
 Q_SIGNALS:
     Q_SIGNAL void themeModeChanged(ElaApplicationType::ThemeMode themeMode);
-
-private:
-    ElaApplicationType::ThemeMode _themeMode{ElaApplicationType::Light};
 };
 
 #endif // ELAAPPLICATION_H

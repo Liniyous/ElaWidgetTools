@@ -34,7 +34,12 @@ Q_SIGNALS:
     Q_SIGNAL void closeButtonClicked();
 
 protected:
-    bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
+#else
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
+#endif
+
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     [[maybe_unused]] bool eventFilter(QObject* obj, QEvent* event) override;
 #endif

@@ -1,4 +1,4 @@
-#ifndef ELACONTENTDIALOG_H
+﻿#ifndef ELACONTENTDIALOG_H
 #define ELACONTENTDIALOG_H
 #include <QAbstractNativeEventFilter>
 #include <QDialog>
@@ -31,7 +31,11 @@ protected:
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     bool eventFilter(QObject* obj, QEvent* event) override;
 #endif
-    bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
+#else
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
+#endif
 };
 
 #endif // ELACONTENTDIALOG_H

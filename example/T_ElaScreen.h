@@ -1,4 +1,4 @@
-#ifndef T_ELASCREEN_H
+﻿#ifndef T_ELASCREEN_H
 #define T_ELASCREEN_H
 #include <QWidget>
 

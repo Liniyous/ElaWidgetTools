@@ -1,4 +1,4 @@
-#ifndef ELADXGIMANAGER_H
+﻿#ifndef ELADXGIMANAGER_H
 #define ELADXGIMANAGER_H
 
 #include <QtQml/qqml.h>

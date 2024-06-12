@@ -1,7 +1,7 @@
 # ElaWidgetTools
 
 ## 简介
-本项目是基于QT-Widget开发的FluentUI风格的组件库，同时提供不限于组件的常用集成功能；目前Main分支支持QT6所有版本，推荐版本为QT6.4.3和QT6.6.2；
+本项目是基于QT-Widget开发的FluentUI风格的组件库，同时提供不限于组件的常用集成功能；目前Main分支支持QT5.15.2及QT6所有版本，推荐版本为QT6.4.3和QT6.6.2；
 
 ## 重要提示
 该项目目前为试作阶段，暂不接受任何PR！！！感谢您的支持！
@@ -64,6 +64,7 @@
 |ElaScrollPage|滚动页面|自带堆栈页面和面包屑导航|
 |ElaScrollPageArea|滚动页面区域组件||
 |ElaSlider|拖动条||
+|ElaExponentialBlur|指数模糊||
 |ElaText|Text文本||
 |ElaGraphicsScene|高级场景|大量实用API|
 |ElaGraphicsView|高级视图|按键缩放、拖动|

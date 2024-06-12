@@ -1,5 +1,7 @@
 #include "ElaNavigationSuggestBox.h"
 
+#include <QAction>
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QListView>
@@ -35,12 +37,12 @@ ElaNavigationSuggestBox::ElaNavigationSuggestBox(QWidget* parent)
     mainLayout->addWidget(d->_searchEdit);
     d->_searchView = new ElaNavigationSuggestView(window());
     d->_searchView->resize(280, 300);
-    d->_searchView->setFixedWidth(276);
+    d->_searchView->setFixedWidth(278);
     d->_searchModel = new ElaNavigationSuggestModel(this);
     d->_searchDelegate = new ElaNavigationSuggestDelegate(this);
     d->_searchView->setModel(d->_searchModel);
     d->_searchView->setItemDelegate(d->_searchDelegate);
-    d->_searchView->move(17, 175);
+    d->_searchView->move(16, 174);
     d->_searchView->hide();
     connect(d->_searchEdit, &ElaLineEdit::textEdited, d, &ElaNavigationSuggestBoxPrivate::onSearchEditTextEdit);
     connect(d->_searchEdit, &ElaLineEdit::focusIn, d, &ElaNavigationSuggestBoxPrivate::onSearchEditTextEdit);

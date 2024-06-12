@@ -1,4 +1,4 @@
-#include "T_Home.h"
+﻿#include "T_Home.h"
 
 #include <QHBoxLayout>
 #include <QMouseEvent>
@@ -163,7 +163,11 @@ void T_Home::mouseReleaseEvent(QMouseEvent* event)
     }
     case Qt::RightButton:
     {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         _homeMenu->popup(event->globalPosition().toPoint());
+#else
+        _homeMenu->popup(event->globalPos());
+#endif
         break;
     }
     case Qt::BackButton:

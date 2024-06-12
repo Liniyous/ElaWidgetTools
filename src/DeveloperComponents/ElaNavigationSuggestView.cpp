@@ -18,7 +18,7 @@ ElaNavigationSuggestView::ElaNavigationSuggestView(QWidget* parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QGraphicsDropShadowEffect* shadow = new QGraphicsDropShadowEffect(this);
     shadow->setOffset(0, 0);
-    shadow->setColor(ElaApplication::getInstance()->getShadowEffectColor());
+    shadow->setColor(QColor(0xDA, 0xDA, 0xDA));
     shadow->setBlurRadius(50);
     setGraphicsEffect(shadow);
 }
