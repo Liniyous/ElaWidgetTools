@@ -33,7 +33,7 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     setView(d->_comboView);
     d->_comboView->setSelectionBehavior(QAbstractItemView::SelectRows);
     d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);
-    connect(d->_comboView, &QAbstractItemView::pressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
+    connect(d->_comboView, &ElaComboBoxListView::itemPressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
     connect(this, QOverload<int>::of(&ElaMultiSelectComboBox::currentIndexChanged), d, &ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
     view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);
@@ -191,6 +191,7 @@ void ElaMultiSelectComboBox::showPopup()
     opacityAnimation->setEndValue(1);
     opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
     opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    d->_refreshCurrentIndexs();
 }
 
 void ElaMultiSelectComboBox::hidePopup()

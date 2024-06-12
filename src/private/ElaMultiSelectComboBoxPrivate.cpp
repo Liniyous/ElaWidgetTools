@@ -22,15 +22,16 @@ void ElaMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
     {
         _itemSelection[index.row()] = false;
     }
+    _refreshCurrentIndexs();
 }
 
 void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
 {
     Q_Q(ElaMultiSelectComboBox);
     QString str;
+    _adjustSelectedVector();
     for (int i = 0; i < q->count(); i++)
     {
-        _adjustSelectedVector();
         // 该位选中
         QModelIndex index = q->model()->index(i, 0);
         if (_itemSelection[i])

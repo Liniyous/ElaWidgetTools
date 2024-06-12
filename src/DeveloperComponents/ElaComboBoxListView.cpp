@@ -1,6 +1,7 @@
 #include "ElaComboBoxListView.h"
 
 #include <QGraphicsDropShadowEffect>
+#include <QMouseEvent>
 
 #include "ElaApplication.h"
 #include "ElaScrollBar.h"
@@ -39,4 +40,14 @@ void ElaComboBoxListView::onThemeChanged(ElaApplicationType::ThemeMode themeMode
             "QListView{border:2px solid #494949;border-radius:8px;background-color: #2D2D2D;}"
             "QListView::item{height: 35px;border:none;}");
     }
+}
+
+void ElaComboBoxListView::mousePressEvent(QMouseEvent* event)
+{
+    QModelIndex index = indexAt(event->pos());
+    if (index.isValid())
+    {
+        Q_EMIT itemPressed(index);
+    }
+    event->ignore();
 }
