@@ -8,7 +8,7 @@
 
 #include "Def.h"
 #include "DeveloperComponents/ElaComboBoxDelegate.h"
-#include "DeveloperComponents/ElaComboBoxListView.h"
+#include "DeveloperComponents/ElaComboBoxView.h"
 #include "ElaApplication.h"
 #include "private/ElaComboBoxPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaComboBox, int, BorderRadius)
@@ -23,7 +23,7 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     setStyleSheet("#ElaComboBox{background-color:transparent;}");
     setMaximumHeight(35);
 
-    d->_comboView = new ElaComboBoxListView(this);
+    d->_comboView = new ElaComboBoxView(false, this);
     d->_comboView->setItemDelegate(new ElaComboBoxDelegate(this));
     setView(d->_comboView);
     d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);

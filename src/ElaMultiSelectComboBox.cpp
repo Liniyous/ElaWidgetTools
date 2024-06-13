@@ -13,7 +13,7 @@
 
 #include "Def.h"
 #include "DeveloperComponents/ElaComboBoxDelegate.h"
-#include "DeveloperComponents/ElaComboBoxListView.h"
+#include "DeveloperComponents/ElaComboBoxView.h"
 #include "ElaApplication.h"
 #include "private/ElaMultiSelectComboBoxPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaMultiSelectComboBox, int, BorderRadius)
@@ -28,12 +28,12 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     setMouseTracking(true);
     setInsertPolicy(QComboBox::NoInsert);
     setModel(new QStandardItemModel(this));
-    d->_comboView = new ElaComboBoxListView(this);
+    d->_comboView = new ElaComboBoxView(true, this);
     d->_comboView->setItemDelegate(new ElaComboBoxDelegate(this));
     setView(d->_comboView);
     d->_comboView->setSelectionBehavior(QAbstractItemView::SelectRows);
     d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);
-    connect(d->_comboView, &ElaComboBoxListView::itemPressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
+    connect(d->_comboView, &ElaComboBoxView::itemPressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
     connect(this, QOverload<int>::of(&ElaMultiSelectComboBox::currentIndexChanged), d, &ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
     view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);

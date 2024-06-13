@@ -6,7 +6,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class ElaComboBox;
-class ElaComboBoxListView;
+class ElaComboBoxView;
 class ElaComboBoxPrivate : public QObject
 {
     Q_OBJECT
@@ -17,7 +17,7 @@ public:
     ~ElaComboBoxPrivate();
 
 private:
-    ElaComboBoxListView* _comboView{nullptr};
+    ElaComboBoxView* _comboView{nullptr};
     bool _isHidePopupAnimationFinished{true};
     ElaApplicationType::ThemeMode _themeMode;
 };
