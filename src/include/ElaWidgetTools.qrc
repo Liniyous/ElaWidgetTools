@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/src">
+    <qresource prefix="/include">
         <file>Font/ElaAwesome.ttf</file>
         <file>Image/control/Acrylic.png</file>
         <file>Image/control/AnimatedIcon.png</file>

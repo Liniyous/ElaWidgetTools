@@ -26,8 +26,8 @@ ElaGraphicsItem::ElaGraphicsItem(QGraphicsItem* parent)
     d->_pWidth = 50;
     d->_pHeight = 50;
     d->_itemUID = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
-    d->_pItemImage = QImage(":/Image/Moon.jpg");
-    d->_pItemSelectedImage = QImage(":/Image/Cirno.jpg");
+    d->_pItemImage = QImage(":/include/Image/Moon.jpg");
+    d->_pItemSelectedImage = QImage(":/include/Image/Cirno.jpg");
     d->_pItemName = "";
     d->_pMaxLinkPortCount = 1;
     d->_pCurrentLinkPortCount = 0;
@@ -44,8 +44,8 @@ ElaGraphicsItem::ElaGraphicsItem(int width, int height, QGraphicsItem* parent)
     d->_pWidth = width;
     d->_pHeight = height;
     d->_itemUID = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
-    d->_pItemImage = QImage(":/Image/Moon.jpg");
-    d->_pItemSelectedImage = QImage(":/Image/Cirno.jpg");
+    d->_pItemImage = QImage(":/include/Image/Moon.jpg");
+    d->_pItemSelectedImage = QImage(":/include/Image/Cirno.jpg");
     d->_pItemName = "";
     d->_pMaxLinkPortCount = 1;
     d->_pCurrentLinkPortCount = 0;

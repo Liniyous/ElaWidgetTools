@@ -16,7 +16,7 @@ ElaApplication::ElaApplication(QObject* parent)
     Q_D(ElaApplication);
     d->q_ptr = this;
     d->_pIsApplicationClosed = false;
-    d->_pWindowIcon = QIcon(":/Image/Cirno.jpg");
+    d->_pWindowIcon = QIcon(":/include/Image/Cirno.jpg");
     d->_pLightShadowEffectColor = QColor(165, 165, 165, 155);
     d->_pDarkShadowEffectColor = QColor(185, 185, 185, 155);
 }
@@ -41,7 +41,7 @@ ElaApplicationType::ThemeMode ElaApplication::getThemeMode() const
 void ElaApplication::init()
 {
     Q_D(ElaApplication);
-    QFontDatabase::addApplicationFont(":/Font/ElaAwesome.ttf");
+    QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
     QApplication::setWindowIcon(d->_pWindowIcon);
     //默认字体
     QFont font = qApp->font();
