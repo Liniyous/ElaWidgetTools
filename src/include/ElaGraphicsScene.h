@@ -14,7 +14,7 @@
 class ElaGraphicsItem;
 class ElaGraphicsScenePrivate;
 
-class ElaGraphicsScene : public QGraphicsScene
+class ELA_EXPORT ElaGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
     Q_Q_CREATE(ElaGraphicsScene)

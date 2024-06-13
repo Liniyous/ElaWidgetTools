@@ -17,8 +17,7 @@ ElaListViewDelegate::ElaListViewDelegate(QObject* parent)
     _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
     _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
     _themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { _themeMode = themeMode; });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaListViewDelegate::~ElaListViewDelegate()

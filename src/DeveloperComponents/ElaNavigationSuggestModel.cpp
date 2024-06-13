@@ -1,6 +1,6 @@
 #include "ElaNavigationSuggestModel.h"
 
-ElaNavigationSuggestModel::ElaNavigationSuggestModel(QObject *parent)
+ElaNavigationSuggestModel::ElaNavigationSuggestModel(QObject* parent)
     : QAbstractListModel{parent}
 {
 }
@@ -9,18 +9,18 @@ ElaNavigationSuggestModel::~ElaNavigationSuggestModel()
 {
 }
 
-int ElaNavigationSuggestModel::rowCount(const QModelIndex &parent) const
+int ElaNavigationSuggestModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return _nodesVector.count();
 }
 
-QVariant ElaNavigationSuggestModel::data(const QModelIndex &index, int role) const
+QVariant ElaNavigationSuggestModel::data(const QModelIndex& index, int role) const
 {
     return QVariant();
 }
 
-void ElaNavigationSuggestModel::setSearchNode(QVector<ElaNavigationNode *> node)
+void ElaNavigationSuggestModel::setSearchNode(QVector<ElaNavigationNode*> node)
 {
     if (node.count() == 0)
     {
@@ -36,7 +36,7 @@ void ElaNavigationSuggestModel::clearSearchNode()
     this->_nodesVector.clear();
 }
 
-ElaNavigationNode *ElaNavigationSuggestModel::getSearchNode(int row)
+ElaNavigationNode* ElaNavigationSuggestModel::getSearchNode(int row)
 {
     if (row >= _nodesVector.count())
     {

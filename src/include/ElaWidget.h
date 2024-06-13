@@ -3,11 +3,10 @@
 
 #include <QWidget>
 
-#include "Def.h"
 #include "stdafx.h"
 
 class ElaWidgetPrivate;
-class ElaWidget : public QWidget
+class ELA_EXPORT ElaWidget : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaWidget)

@@ -3,7 +3,7 @@
 
 #include <QtCore/qglobal.h>
 
-#ifdef ELAWIDGETTOOLS_BUILD_STATIC_LIB
+#ifdef ELAWIDGETTOOLS_LIBRARY
 #define ELA_EXPORT Q_DECL_EXPORT
 #else
 #define ELA_EXPORT Q_DECL_IMPORT

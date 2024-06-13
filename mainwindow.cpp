@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget* parent)
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Minimal);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);
-    setUserInfoCardPixmap(QPixmap(":/src/Image/Cirno.jpg"));
+    setUserInfoCardPixmap(QPixmap(":/Image/Cirno.jpg"));
     setUserInfoCardTitle("Ela Tool");
     setUserInfoCardSubTitle("Liniyous@gmail.com");
     setWindowTitle("ElaWidgetTool");

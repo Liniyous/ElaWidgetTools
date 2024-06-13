@@ -2,9 +2,10 @@
 #define DEF_H
 #include <QObject>
 
+#include "stdafx.h"
 namespace ElaAppBarType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum ButtonType
 {
     RouteBackButtonHint = 0x0001,
@@ -23,7 +24,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(ButtonFlags)
 
 namespace ElaApplicationType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum ThemeMode
 {
     Light = 0x0000,
@@ -34,7 +35,7 @@ Q_ENUM_NS(ThemeMode)
 
 namespace ElaTextType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum TextStyle
 {
     NoStyle = 0x0000,
@@ -51,7 +52,7 @@ Q_ENUM_NS(TextStyle)
 
 namespace ElaNavigationType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum NodeOperateReturnType
 {
     Success = 0x0000,
@@ -76,7 +77,7 @@ Q_ENUM_NS(NavigationDisplayMode)
 
 namespace ElaEventBusType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum EventBusReturnType
 {
     Success = 0x0000,
@@ -89,7 +90,7 @@ Q_ENUM_NS(EventBusReturnType)
 
 namespace ElaCardPixType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum PixMode
 {
     Default = 0x0000,
@@ -101,7 +102,7 @@ Q_ENUM_NS(PixMode)
 
 namespace ElaGraphicsSceneType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum SceneMode
 {
     Default = 0x0000,
@@ -115,7 +116,7 @@ Q_ENUM_NS(SceneMode)
 
 namespace ElaMessageBarType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum PositionPolicy
 {
     Top = 0x0000,
@@ -141,7 +142,7 @@ Q_ENUM_NS(MessageMode)
 
 namespace ElaAwesomeType
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
 enum class ElaIconType
 {
     None = 0x0,

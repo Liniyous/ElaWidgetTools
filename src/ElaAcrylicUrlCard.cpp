@@ -27,7 +27,7 @@ ElaAcrylicUrlCard::ElaAcrylicUrlCard(QWidget* parent)
 {
     Q_D(ElaAcrylicUrlCard);
     d->q_ptr = this;
-    d->_noisePix = QPixmap(":/src/Image/noise.png");
+    d->_noisePix = QPixmap(":/Image/noise.png");
     d->_pBorderRadius = 5;
     d->_pMainOpacity = 0.95;
     d->_pNoiseOpacity = 0.06;
