@@ -347,7 +347,6 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
             }
             else
             {
-                d->_navigationBar->switchCompact(true);
                 navigationMoveAnimation->setEasingCurve(QEasingCurve::OutSine);
                 navigationMoveAnimation->setDuration(300);
                 navigationMoveAnimation->setStartValue(d->_navigationBar->pos());
