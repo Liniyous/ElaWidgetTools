@@ -27,7 +27,6 @@ ElaWindow::ElaWindow(QWidget* parent)
 {
     Q_D(ElaWindow);
     d->q_ptr = this;
-    ElaApplication::getInstance()->init();
     setProperty("ElaBaseClassName", "ElaWindow");
     resize(1020, 680); // 默认宽高
 

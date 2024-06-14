@@ -58,7 +58,7 @@ foreach(filepath ${RES_PATHS})
 endforeach(filepath)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_resources(${PROJECT_NAME}
+    qt_add_resources(${PROJECT_NAME} "ElaWidgetTools"
         RESOURCES PREFIX "/"
         FILES
         ${resource_files}
@@ -78,3 +78,4 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     D3D11
     DXGI
 )
+message(${CMAKE_INSTALL_PREFIX})

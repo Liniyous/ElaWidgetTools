@@ -22,6 +22,7 @@ public:
 
 private:
     ElaApplicationType::ThemeMode _themeMode{ElaApplicationType::Light};
+    void _init();
 };
 
 #endif // ELAAPPLICATIONPRIVATE_H

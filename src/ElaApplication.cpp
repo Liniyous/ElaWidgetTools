@@ -41,6 +41,7 @@ ElaApplicationType::ThemeMode ElaApplication::getThemeMode() const
 void ElaApplication::init()
 {
     Q_D(ElaApplication);
+    Q_INIT_RESOURCE(ElaWidgetTools);
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
     QApplication::setWindowIcon(d->_pWindowIcon);
     //默认字体

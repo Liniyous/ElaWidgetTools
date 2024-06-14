@@ -19,6 +19,7 @@
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
+    ElaApplication::getInstance()->init();
     // ElaApplication::getInstance()->setThemeMode(ElaApplicationType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Minimal);
