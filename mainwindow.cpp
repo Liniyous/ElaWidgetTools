@@ -5,7 +5,6 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "ElaApplication.h"
 #include "ElaContentDialog.h"
 #include "ElaEventBus.h"
 #include "ElaGraphicsItem.h"
@@ -19,7 +18,6 @@
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
-    ElaApplication::getInstance()->init();
     // ElaApplication::getInstance()->setThemeMode(ElaApplicationType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Minimal);
