@@ -15,7 +15,6 @@ int main(int argc, char* argv[])
     ElaApplication::getInstance()->init();
     MainWindow w;
     w.show();
-
     // HWND handle = FindWindowA(NULL, "ElaWidgetTools");
     // if (handle != NULL)
     // {
