@@ -84,12 +84,12 @@ T_Home::T_Home(QWidget* parent)
     addCentralWidget(homeStack2);
 
     ElaAcrylicUrlCard* urlCard1 = new ElaAcrylicUrlCard(this);
-    urlCard1->setUrl("https:/include//github.com/Liniyous/ElaWidgetTools");
+    urlCard1->setUrl("https://github.com/Liniyous/ElaWidgetTools");
     urlCard1->setCardPixmap(QPixmap(":/include/Image/github.png"));
     urlCard1->setTitle("ElaTool Github");
     urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
     ElaAcrylicUrlCard* urlCard2 = new ElaAcrylicUrlCard(this);
-    urlCard2->setUrl("https:/include//space.bilibili.com/21256707");
+    urlCard2->setUrl("https://space.bilibili.com/21256707");
     urlCard2->setCardPixmap(QPixmap(":/include/Image/Moon.jpg"));
     urlCard2->setTitle("ElaWidgetTool");
     urlCard2->setSubTitle("8009963@qq.com");

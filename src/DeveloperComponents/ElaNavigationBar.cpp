@@ -65,6 +65,9 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     });
 
     d->_userCard = new ElaInteractiveCard(this);
+    d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
+    d->_userCard->setTitle("Ela Tool");
+    d->_userCard->setSubTitle("Liniyous@gmail.com");
     ElaWindow* window = dynamic_cast<ElaWindow*>(parent);
     connect(d->_userCard, &ElaInteractiveCard::clicked, this, [=]() { Q_EMIT window->userInfoCardClicked(); });
 
