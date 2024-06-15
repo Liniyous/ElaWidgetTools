@@ -54,6 +54,11 @@ else()
     endif()
 endif()
 
+add_subdirectory(src)
+include_directories(
+    src/include
+)
+
 target_link_libraries(ElaWidgetTools PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
     ${CMAKE_CURRENT_BINARY_DIR}/src/elawidgettools.lib
 )
@@ -79,10 +84,7 @@ install(TARGETS ElaWidgetTools
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-include_directories(
-    src/include
-)
-add_subdirectory(src)
+
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ElaWidgetTools)
