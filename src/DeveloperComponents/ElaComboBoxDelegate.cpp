@@ -39,7 +39,8 @@ void ElaComboBoxDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
     QRect optionRect = option.rect;
     optionRect.setTopLeft(QPoint(optionRect.left() + margin, optionRect.top() + margin));
     optionRect.setBottomRight(QPoint(optionRect.right() - margin, optionRect.bottom() - margin));
-    path.addRoundedRect(optionRect, 8, 8);
+    path.addRoundedRect(optionRect, 5, 5);
+
     if (option.showDecorationSelected && (option.state & QStyle::State_Selected))
     {
         if (option.state & QStyle::State_MouseOver)
@@ -52,6 +53,10 @@ void ElaComboBoxDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
             // 选中
             painter->fillPath(path, *_selectedgradient);
         }
+        //选中Mark
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() - +optionRect.height() * 0.4), 2, 2);
     }
     else
     {
@@ -64,7 +69,7 @@ void ElaComboBoxDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
 
     // 文字绘制
     painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
-    painter->drawText(QRect(option.rect.x() + 10, option.rect.y(), option.rect.width(), option.rect.height()), Qt::AlignVCenter, index.data().toString());
+    painter->drawText(QRect(option.rect.x() + 15, option.rect.y(), option.rect.width() - 15, option.rect.height()), Qt::AlignVCenter, index.data().toString());
     painter->restore();
 }
 

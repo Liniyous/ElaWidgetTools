@@ -25,6 +25,7 @@ ElaComboBox::ElaComboBox(QWidget* parent)
 
     d->_comboView = new ElaComboBoxView(false, this);
     d->_comboView->setItemDelegate(new ElaComboBoxDelegate(this));
+    d->_comboView->setAutoScroll(false);
     setView(d->_comboView);
     d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);
     view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);

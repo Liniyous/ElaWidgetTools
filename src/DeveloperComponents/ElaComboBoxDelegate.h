@@ -4,6 +4,7 @@
 #include <QStyledItemDelegate>
 
 #include "Def.h"
+#include "stdafx.h"
 class ElaComboBoxDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
