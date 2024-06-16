@@ -60,8 +60,10 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     }
     resize(400, height());
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+    setWindowModality(Qt::ApplicationModal);
     setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     installEventFilter(this);
+    createWinId();
     setShadow((HWND)winId());
 #endif
     QGuiApplication::instance()->installNativeEventFilter(this);
@@ -132,6 +134,9 @@ ElaContentDialog::~ElaContentDialog()
 {
     Q_D(ElaContentDialog);
     QGuiApplication::instance()->removeNativeEventFilter(this);
+#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+    removeEventFilter(this);
+#endif
     if (d->_shadowWidget)
     {
         delete d->_shadowWidget;
@@ -252,11 +257,11 @@ bool ElaContentDialog::nativeEventFilter(const QByteArray& eventType, void* mess
         }
         if (::IsZoomed(hwnd))
         {
-            window()->setContentsMargins(8, 8, 8, 8);
+            setContentsMargins(8, 8, 8, 8);
         }
         else
         {
-            window()->setContentsMargins(0, 0, 0, 0);
+            // setContentsMargins(0, 0, 0, 0);
         }
         *result = 0;
         return true;
