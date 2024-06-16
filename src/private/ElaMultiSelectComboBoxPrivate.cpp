@@ -1,6 +1,6 @@
 #include "ElaMultiSelectComboBoxPrivate.h"
 
-#include "DeveloperComponents/ElaComboBoxView.h"
+#include "ElaComboBoxView.h"
 #include "ElaMultiSelectComboBox.h"
 
 ElaMultiSelectComboBoxPrivate::ElaMultiSelectComboBoxPrivate(QObject* parent)

@@ -24,10 +24,9 @@ endforeach(filepath)
 
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/include/private
-    ${PROJECT_SOURCE_DIR}/include/DeveloperComponents
-    ${PROJECT_SOURCE_DIR}/include/DeveloperComponents/private
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/private
+    ${CMAKE_CURRENT_SOURCE_DIR}/DeveloperComponents
 )
 
 set(PROJECT_SOURCES

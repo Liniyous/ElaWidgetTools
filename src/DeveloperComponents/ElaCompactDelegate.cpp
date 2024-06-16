@@ -4,10 +4,10 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
-#include "DeveloperComponents/ElaCompactModel.h"
-#include "DeveloperComponents/ElaNavigationNode.h"
 #include "ElaApplication.h"
+#include "ElaCompactModel.h"
 #include "ElaListView.h"
+#include "ElaNavigationNode.h"
 ElaCompactDelegate::ElaCompactDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {

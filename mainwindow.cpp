@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     // scene->addItem(item3);
     ElaGraphicsView* view = new ElaGraphicsView(scene);
     view->setScene(scene);
+
     QString testKey_1;
     QString testKey_2;
     addPageNode("HOME", _homePage, ElaIconType::House);

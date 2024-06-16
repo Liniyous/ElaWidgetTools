@@ -5,9 +5,8 @@
 #include <QPropertyAnimation>
 #include <QStyleOption>
 
-#include "DeveloperComponents/ElaNavigationNode.h"
 #include "ElaApplication.h"
-#include "ElaEventBus.h"
+#include "ElaNavigationNode.h"
 ElaNavigationStyle::ElaNavigationStyle(QStyle* style)
 {
     _hovergradient = new QLinearGradient(0, 0, 290, 38);

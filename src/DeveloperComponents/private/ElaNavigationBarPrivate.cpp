@@ -5,25 +5,24 @@
 #include <QStackedWidget>
 #include <QTimer>
 
-#include "DeveloperComponents/ElaCompactDelegate.h"
-#include "DeveloperComponents/ElaCompactModel.h"
-#include "DeveloperComponents/ElaFooterDelegate.h"
-#include "DeveloperComponents/ElaFooterModel.h"
-#include "DeveloperComponents/ElaNavigationBar.h"
-#include "DeveloperComponents/ElaNavigationDelegate.h"
-#include "DeveloperComponents/ElaNavigationModel.h"
-#include "DeveloperComponents/ElaNavigationNode.h"
-#include "DeveloperComponents/ElaNavigationSuggestBox.h"
-#include "DeveloperComponents/ElaNavigationView.h"
-#include "ElaApplication.h"
 #include "ElaBreadcrumbBar.h"
+#include "ElaCompactDelegate.h"
+#include "ElaCompactModel.h"
+#include "ElaFooterDelegate.h"
+#include "ElaFooterModel.h"
 #include "ElaListView.h"
 #include "ElaMenu.h"
+#include "ElaNavigationBar.h"
+#include "ElaNavigationDelegate.h"
+#include "ElaNavigationModel.h"
+#include "ElaNavigationNode.h"
+#include "ElaNavigationSuggestBox.h"
 #include "ElaNavigationSuggestBoxPrivate.h"
+#include "ElaNavigationView.h"
 #include "ElaScrollPage.h"
+#include "ElaScrollPagePrivate.h"
 #include "ElaWindow.h"
-#include "private/ElaScrollPagePrivate.h"
-#include "private/ElaWindowPrivate.h"
+#include "ElaWindowPrivate.h"
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {

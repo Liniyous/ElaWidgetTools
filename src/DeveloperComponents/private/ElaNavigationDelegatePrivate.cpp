@@ -2,7 +2,7 @@
 
 #include <QModelIndex>
 
-#include "DeveloperComponents/ElaNavigationNode.h"
+#include "ElaNavigationNode.h"
 ElaNavigationDelegatePrivate::ElaNavigationDelegatePrivate(QObject* parent)
     : QObject{parent}
 {

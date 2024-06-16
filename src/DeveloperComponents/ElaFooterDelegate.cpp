@@ -4,11 +4,11 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
-#include "DeveloperComponents/ElaFooterModel.h"
-#include "DeveloperComponents/ElaNavigationNode.h"
-#include "DeveloperComponents/private/ElaFooterDelegatePrivate.h"
 #include "ElaApplication.h"
+#include "ElaFooterModel.h"
 #include "ElaListView.h"
+#include "ElaNavigationNode.h"
+#include "private/ElaFooterDelegatePrivate.h"
 Q_PRIVATE_CREATE_Q_CPP(ElaFooterDelegate, ElaListView*, ElaListView);
 ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
     : QStyledItemDelegate{parent}, d_ptr(new ElaFooterDelegatePrivate())

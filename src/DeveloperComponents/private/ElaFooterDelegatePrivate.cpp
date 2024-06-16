@@ -1,7 +1,7 @@
 ﻿#include "ElaFooterDelegatePrivate.h"
 
-#include "DeveloperComponents/ElaFooterDelegate.h"
-#include "DeveloperComponents/ElaNavigationNode.h"
+#include "ElaFooterDelegate.h"
+#include "ElaNavigationNode.h"
 ElaFooterDelegatePrivate::ElaFooterDelegatePrivate(QObject* parent)
     : QObject{parent}
 {

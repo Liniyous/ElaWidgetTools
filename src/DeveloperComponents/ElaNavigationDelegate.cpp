@@ -5,11 +5,11 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
-#include "DeveloperComponents/private/ElaNavigationDelegatePrivate.h"
 #include "ElaApplication.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationView.h"
+#include "private/ElaNavigationDelegatePrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationDelegate, qreal, Opacity);
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationDelegate, qreal, Rotate);
 Q_PRIVATE_CREATE_Q_CPP(ElaNavigationDelegate, ElaNavigationView*, NavigationView);

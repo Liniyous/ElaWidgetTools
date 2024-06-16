@@ -5,14 +5,13 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "DeveloperComponents/ElaNavigationBar.h"
-#include "DeveloperComponents/ElaThemeAnimationWidget.h"
-#include "DeveloperComponents/private/ElaNavigationBarPrivate.h"
 #include "ElaAppBar.h"
+#include "ElaAppBarPrivate.h"
 #include "ElaApplication.h"
-#include "ElaEventBus.h"
+#include "ElaNavigationBar.h"
+#include "ElaThemeAnimationWidget.h"
 #include "ElaWindow.h"
-#include "private/ElaAppBarPrivate.h"
+#include "private/ElaNavigationBarPrivate.h"
 ElaWindowPrivate::ElaWindowPrivate(QObject* parent)
     : QObject{parent}
 {

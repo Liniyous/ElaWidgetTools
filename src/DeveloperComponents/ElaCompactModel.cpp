@@ -1,6 +1,6 @@
 #include "ElaCompactModel.h"
 
-#include "DeveloperComponents/ElaNavigationNode.h"
+#include "ElaNavigationNode.h"
 
 ElaCompactModel::ElaCompactModel(QObject* parent)
     : QAbstractListModel{parent}

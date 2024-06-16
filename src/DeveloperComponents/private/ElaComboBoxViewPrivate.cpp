@@ -1,6 +1,6 @@
 #include "ElaComboBoxViewPrivate.h"
 
-#include "DeveloperComponents/ElaComboBoxView.h"
+#include "ElaComboBoxView.h"
 
 ElaComboBoxViewPrivate::ElaComboBoxViewPrivate(QObject* parent)
     : QObject{parent}

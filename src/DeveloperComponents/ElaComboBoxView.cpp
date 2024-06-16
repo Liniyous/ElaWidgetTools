@@ -3,9 +3,9 @@
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 
-#include "DeveloperComponents/private/ElaComboBoxViewPrivate.h"
 #include "ElaApplication.h"
 #include "ElaScrollBar.h"
+#include "private/ElaComboBoxViewPrivate.h"
 ElaComboBoxView::ElaComboBoxView(bool isMultiSelect, QWidget* parent)
     : QListView(parent), d_ptr(new ElaComboBoxViewPrivate())
 {

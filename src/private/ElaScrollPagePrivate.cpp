@@ -22,14 +22,14 @@ void ElaScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastInd
     targetWidget->setVisible(true);
 
     QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
-    currentWidgetAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    currentWidgetAnimation->setEasingCurve(QEasingCurve::InQuart);
     currentWidgetAnimation->setDuration(280);
 
     QPropertyAnimation* targetWidgetAnimation = new QPropertyAnimation(targetWidget, "pos");
     connect(targetWidgetAnimation, &QPropertyAnimation::finished, this, [=]() {
         _centralStackedWidget->setCurrentIndex(targetIndex);
     });
-    targetWidgetAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    targetWidgetAnimation->setEasingCurve(QEasingCurve::InQuart);
     targetWidgetAnimation->setDuration(280);
     if (targetIndex > lastIndex)
     {

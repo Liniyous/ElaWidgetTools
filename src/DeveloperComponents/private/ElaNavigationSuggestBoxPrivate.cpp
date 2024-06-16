@@ -1,11 +1,11 @@
 #include "ElaNavigationSuggestBoxPrivate.h"
 
-#include "DeveloperComponents/ElaNavigationNode.h"
-#include "DeveloperComponents/ElaNavigationSuggestBox.h"
-#include "DeveloperComponents/ElaNavigationSuggestModel.h"
-#include "DeveloperComponents/ElaNavigationSuggestView.h"
 #include "ElaApplication.h"
 #include "ElaLineEdit.h"
+#include "ElaNavigationNode.h"
+#include "ElaNavigationSuggestBox.h"
+#include "ElaNavigationSuggestModel.h"
+#include "ElaNavigationSuggestView.h"
 ElaNavigationSuggestBoxPrivate::ElaNavigationSuggestBoxPrivate(QObject* parent)
     : QObject{parent}
 {

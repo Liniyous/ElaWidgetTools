@@ -9,13 +9,12 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "DeveloperComponents/ElaCompactDelegate.h"
-#include "DeveloperComponents/ElaCompactModel.h"
-#include "DeveloperComponents/ElaFooterDelegate.h"
-#include "DeveloperComponents/ElaFooterModel.h"
-#include "DeveloperComponents/ElaNavigationSuggestView.h"
 #include "ElaApplication.h"
+#include "ElaCompactDelegate.h"
+#include "ElaCompactModel.h"
 #include "ElaEventBus.h"
+#include "ElaFooterDelegate.h"
+#include "ElaFooterModel.h"
 #include "ElaInteractiveCard.h"
 #include "ElaListView.h"
 #include "ElaMenu.h"
@@ -23,11 +22,12 @@
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationSuggestBox.h"
+#include "ElaNavigationSuggestView.h"
 #include "ElaNavigationView.h"
 #include "ElaWindow.h"
+#include "ElaWindowPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaNavigationSuggestBoxPrivate.h"
-#include "private/ElaWindowPrivate.h"
 
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaNavigationBarPrivate())
