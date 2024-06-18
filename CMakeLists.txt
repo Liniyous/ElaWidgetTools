@@ -60,7 +60,7 @@ include_directories(
 )
 
 target_link_libraries(ElaWidgetTools PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-    ${CMAKE_CURRENT_BINARY_DIR}/src/elawidgettools.lib
+    elawidgettools
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

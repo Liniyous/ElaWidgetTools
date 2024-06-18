@@ -4,6 +4,7 @@
 #include <dxgi1_6.h>
 #include <windows.h>
 
+#include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QThread>
