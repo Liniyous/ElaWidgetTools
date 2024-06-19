@@ -8,6 +8,7 @@
 #include "ElaApplication.h"
 ElaSpinBoxStyle::ElaSpinBoxStyle(QStyle* style)
 {
+    _themeMode = ElaApplication::getInstance()->getThemeMode();
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 

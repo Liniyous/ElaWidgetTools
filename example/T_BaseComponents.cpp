@@ -7,6 +7,7 @@
 #include "ElaComboBox.h"
 #include "ElaMessageButton.h"
 #include "ElaMultiSelectComboBox.h"
+#include "ElaProgressBar.h"
 #include "ElaRadioButton.h"
 #include "ElaScrollPageArea.h"
 #include "ElaSlider.h"
@@ -129,6 +130,17 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     radioButtonLayout->addWidget(_radioButton);
     radioButtonLayout->addStretch();
 
+    _progressBar = new ElaProgressBar(this);
+    _progressBar->setMinimum(0);
+    _progressBar->setMaximum(0);
+    ElaScrollPageArea* progressBarArea = new ElaScrollPageArea(this);
+    QHBoxLayout* progressBarLayout = new QHBoxLayout(progressBarArea);
+    ElaText* progressBarText = new ElaText("ElaProgressBar", this);
+    progressBarText->setTextSize(15);
+    progressBarLayout->addWidget(progressBarText);
+    progressBarLayout->addWidget(_progressBar);
+    progressBarLayout->addStretch();
+
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaBaseComponents");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
@@ -141,6 +153,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centerLayout->addWidget(spinBoxArea);
     centerLayout->addWidget(sliderArea);
     centerLayout->addWidget(radioButtonArea);
+    centerLayout->addWidget(progressBarArea);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);
     addCentralWidget(centralWidget, true, true, 0);

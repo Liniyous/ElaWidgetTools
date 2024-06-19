@@ -12,6 +12,7 @@ class ElaCheckBox;
 class ElaSpinBox;
 class ElaSlider;
 class ElaRadioButton;
+class ElaProgressBar;
 class T_BaseComponents : public ElaScrollPage
 {
     Q_OBJECT
@@ -32,6 +33,7 @@ private:
     ElaSpinBox* _spinBox{nullptr};
     ElaSlider* _slider{nullptr};
     ElaRadioButton* _radioButton{nullptr};
+    ElaProgressBar* _progressBar{nullptr};
 };
 
 #endif // T_BASECOMPONENTS_H
