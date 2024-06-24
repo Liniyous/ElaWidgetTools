@@ -90,19 +90,22 @@ void ElaComboBox::showPopup()
     QComboBox::showPopup();
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
 
-    QWidget* container = this->view()->parentWidget();
-    container->move(container->pos().x(), container->pos().y() + 3);
-    QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
-    QPoint viewPos = QPoint(0, 0);
-    viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
-    viewPosAnimation->setEndValue(viewPos);
-    viewPosAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    QPropertyAnimation* opacityAnimation = new QPropertyAnimation(container, "windowOpacity");
-    opacityAnimation->setStartValue(0);
-    opacityAnimation->setEndValue(1);
-    opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QWidget* container = this->findChild<QFrame*>();
+    if (container)
+    {
+        container->move(container->pos().x(), container->pos().y() + 3);
+        QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
+        QPoint viewPos = QPoint(0, 0);
+        viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
+        viewPosAnimation->setEndValue(viewPos);
+        viewPosAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(container, "windowOpacity");
+        opacityAnimation->setStartValue(0);
+        opacityAnimation->setEndValue(1);
+        opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
 }
 
 void ElaComboBox::hidePopup()
@@ -110,24 +113,27 @@ void ElaComboBox::hidePopup()
     Q_D(ElaComboBox);
     if (d->_isHidePopupAnimationFinished)
     {
-        QWidget* container = this->view()->parentWidget();
-        QPropertyAnimation* opcaityAnimation = new QPropertyAnimation(container, "windowOpacity");
-        connect(opcaityAnimation, &QPropertyAnimation::finished, this, [=]() {
+        QWidget* container = this->findChild<QFrame*>();
+        if (container)
+        {
+            QPropertyAnimation* opcaityAnimation = new QPropertyAnimation(container, "windowOpacity");
+            connect(opcaityAnimation, &QPropertyAnimation::finished, this, [=]() {
             QComboBox::hidePopup();
             container->setWindowOpacity(1);
             d->_isHidePopupAnimationFinished = true; });
-        opcaityAnimation->setStartValue(1);
-        opcaityAnimation->setEndValue(0);
-        opcaityAnimation->setEasingCurve(QEasingCurve::InCubic);
-        opcaityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            opcaityAnimation->setStartValue(1);
+            opcaityAnimation->setEndValue(0);
+            opcaityAnimation->setEasingCurve(QEasingCurve::InCubic);
+            opcaityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 
-        QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
-        QPoint viewPos = QPoint(0, 0);
-        connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { d->_comboView->move(viewPos); });
-        viewPosAnimation->setStartValue(viewPos);
-        viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
-        viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);
-        viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        d->_isHidePopupAnimationFinished = false;
+            QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
+            QPoint viewPos = QPoint(0, 0);
+            connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { d->_comboView->move(viewPos); });
+            viewPosAnimation->setStartValue(viewPos);
+            viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
+            viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);
+            viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            d->_isHidePopupAnimationFinished = false;
+        }
     }
 }
