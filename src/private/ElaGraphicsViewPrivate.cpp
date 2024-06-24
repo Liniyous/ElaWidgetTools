@@ -17,6 +17,7 @@ void ElaGraphicsViewPrivate::_initStyle()
     q->setDragMode(QGraphicsView::RubberBandDrag);
     q->setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     q->setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+    q->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
     q->setMouseTracking(true);
     q->setObjectName("ElaGraphicsView");
     q->setStyleSheet("#ElaGraphicsView{background-color:white;border:0px;}");
