@@ -4,7 +4,6 @@
 
 #include "Def.h"
 #include "stdafx.h"
-class ElaEvent;
 class ElaNavigationNode;
 class QStyleOptionViewItem;
 class ElaNavigationStyle : public QProxyStyle

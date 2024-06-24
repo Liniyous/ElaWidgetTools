@@ -14,7 +14,7 @@
 [win-link]: https://github.com/Liniyous/ElaWidgetTools/actions?query=workflow%3AWindows "WindowsAction"
 [win-badge]: https://img.shields.io/badge/Windows-Passing-61C263
 
-[ubuntu-link]: https://github.com/zhuzichu520/FluentUI/actions?query=workflow%3AUbuntu "UbuntuAction"
+[ubuntu-link]: https://github.com/Liniyous/ElaWidgetTools/actions?query=workflow%3AUbuntu "UbuntuAction"
 [ubuntu-badge]: https://img.shields.io/badge/Ubuntu-StayTuned-yellow
 
 ## 发布
@@ -58,6 +58,8 @@
 |ElaSwitchButton|切换按钮||
 |ElaRadioButton|单选按钮||
 |ElaToggleSwitch|开关按钮||
+|ElaTabBar|选项卡|谷歌浏览器风格|
+|ElaTabWidget|选项卡页面|谷歌浏览器风格|
 |ElaReminderCard|带图片的提醒卡片||
 |ElaScrollbar|滚动条||
 |ElaScrollArea|滚动区域|可设置鼠标拖动|

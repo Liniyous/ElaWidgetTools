@@ -9,6 +9,8 @@ ElaText::ElaText(QWidget* parent)
 {
     Q_D(ElaText);
     d->q_ptr = this;
+    setObjectName("ElaText");
+    setStyleSheet("#ElaText{background-color:transparent;}");
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
     textFont.setPixelSize(d->_textSize);
@@ -23,6 +25,8 @@ ElaText::ElaText(QString text, QWidget* parent)
 {
     Q_D(ElaText);
     d->q_ptr = this;
+    setObjectName("ElaText");
+    setStyleSheet("#ElaText{background-color:transparent;}");
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
     textFont.setPixelSize(d->_textSize);
