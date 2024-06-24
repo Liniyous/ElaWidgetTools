@@ -15,6 +15,7 @@
 #include "example/T_ElaScreen.h"
 #include "example/T_Home.h"
 #include "example/T_Icon.h"
+#include "example/T_TabWidget.h"
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
@@ -32,6 +33,8 @@ MainWindow::MainWindow(QWidget* parent)
     _elaScreenPage = new T_ElaScreen(this);
     _iconPage = new T_Icon(this);
     _baseComponentsPage = new T_BaseComponents(this);
+    _tabWidgetPage = new T_TabWidget(this);
+
     // GraphicsView
     ElaGraphicsScene* scene = new ElaGraphicsScene(this);
     scene->setSceneRect(0, 0, 1500, 1500);
@@ -61,6 +64,7 @@ MainWindow::MainWindow(QWidget* parent)
     addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
     addPageNode("ElaGraphics", view, 9, ElaIconType::KeySkeleton);
     addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
+    addPageNode("ElaTabWidget", _tabWidgetPage, ElaIconType::Table);
     addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
     addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);
     addPageNode("Third Level", new QWidget(this), testKey_1, ElaIconType::Acorn);
@@ -79,6 +83,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
     ElaWidget* widget = new ElaWidget();
+    widget->setWindowModality(Qt::ApplicationModal);
     widget->setCentralWidget(new QWidget());
     widget->hide();
     connect(this, &ElaWindow::footerNodeClicked, this, [=](QString footerKey) {
