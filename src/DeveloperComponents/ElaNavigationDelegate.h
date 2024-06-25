@@ -18,7 +18,7 @@ class ElaNavigationDelegate : public QStyledItemDelegate
 public:
     ElaNavigationDelegate(QObject* parent = nullptr);
     ~ElaNavigationDelegate();
-    void navigationNodeStateChange(QMap<QString, QVariant> data);
+    void navigationNodeStateChange(QVariantMap data);
 
 protected:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;

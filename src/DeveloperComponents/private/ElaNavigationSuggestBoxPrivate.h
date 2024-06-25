@@ -19,7 +19,7 @@ class ElaNavigationSuggestBoxPrivate : public QObject
 public:
     explicit ElaNavigationSuggestBoxPrivate(QObject* parent = nullptr);
     ~ElaNavigationSuggestBoxPrivate();
-    Q_SLOT void onWMWindowClickedEvent(QMap<QString, QVariant> data);
+    Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onSearchEditTextEdit(const QString& searchText);
     Q_SLOT void onSearchViewPressed(const QModelIndex& index);
 

@@ -74,7 +74,7 @@ ElaNavigationDelegate::~ElaNavigationDelegate()
 {
 }
 
-void ElaNavigationDelegate::navigationNodeStateChange(QMap<QString, QVariant> data)
+void ElaNavigationDelegate::navigationNodeStateChange(QVariantMap data)
 {
     Q_D(ElaNavigationDelegate);
     if (data.contains("Expand"))

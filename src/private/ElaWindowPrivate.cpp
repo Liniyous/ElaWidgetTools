@@ -41,7 +41,7 @@ void ElaWindowPrivate::onNavigationButtonClicked()
     }
 }
 
-void ElaWindowPrivate::onWMWindowClickedEvent(QMap<QString, QVariant> data)
+void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_UNUSED(data)
     if (ElaApplication::containsCursorToItem(_navigationBar))

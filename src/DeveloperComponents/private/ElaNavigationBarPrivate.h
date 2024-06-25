@@ -39,7 +39,7 @@ public:
     QStringList getLastRoute();
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
     Q_SLOT void onRouteBackButtonClicked();
-    Q_SLOT void onElaRouteEvent(QMap<QString, QVariant> data);
+    Q_INVOKABLE void onElaRouteEvent(QVariantMap data);
 
     //核心跳转逻辑
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true);

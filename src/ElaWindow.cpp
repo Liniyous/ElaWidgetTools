@@ -67,9 +67,8 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_mainLayout->addLayout(d->_centerLayout);
 
     // 事件总线
-    d->_focusEvent = new ElaEvent("WMWindowClicked", this);
-    ElaEventBus::getInstance()->registerEvent(d->_focusEvent);
-    connect(d->_focusEvent, &ElaEvent::triggered, d, &ElaWindowPrivate::onWMWindowClickedEvent);
+    d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+    d->_focusEvent->registerAndInit();
 
     // 展开导航栏
     connect(d->_appBar, &ElaAppBar::navigationButtonClicked, d, &ElaWindowPrivate::onNavigationButtonClicked);

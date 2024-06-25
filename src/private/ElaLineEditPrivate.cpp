@@ -14,7 +14,7 @@ ElaLineEditPrivate::~ElaLineEditPrivate()
 {
 }
 
-void ElaLineEditPrivate::onWMWindowClickedEvent(QMap<QString, QVariant> data)
+void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_Q(ElaLineEdit);
     Q_UNUSED(data)

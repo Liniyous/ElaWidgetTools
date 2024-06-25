@@ -15,7 +15,7 @@ ElaNavigationSuggestBoxPrivate::~ElaNavigationSuggestBoxPrivate()
 {
 }
 
-void ElaNavigationSuggestBoxPrivate::onWMWindowClickedEvent(QMap<QString, QVariant> data)
+void ElaNavigationSuggestBoxPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_Q(ElaNavigationSuggestBox);
     Q_UNUSED(data)

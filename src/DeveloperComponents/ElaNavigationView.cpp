@@ -53,7 +53,7 @@ ElaNavigationView::~ElaNavigationView()
 {
 }
 
-void ElaNavigationView::navigationNodeStateChange(QMap<QString, QVariant> data)
+void ElaNavigationView::navigationNodeStateChange(QVariantMap data)
 {
     this->_navigationStyle->navigationNodeStateChange(data);
 }

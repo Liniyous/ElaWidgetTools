@@ -102,7 +102,7 @@ void ElaNavigationBarPrivate::onRouteBackButtonClicked()
     }
 }
 
-void ElaNavigationBarPrivate::onElaRouteEvent(QMap<QString, QVariant> data)
+void ElaNavigationBarPrivate::onElaRouteEvent(QVariantMap data)
 {
     QStringList pageKeyList = data.value("ElaPageKey").toStringList();
     if (pageKeyList.isEmpty())
@@ -136,7 +136,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
         {
             if (node->getIsHasChild())
             {
-                QMap<QString, QVariant> data;
+                QVariantMap data;
                 if (_navigationView->isExpanded(index))
                 {
                     // 收起
@@ -170,7 +170,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                 // 记录跳转
                 if (isLogRoute)
                 {
-                    QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+                    QVariantMap postData = QVariantMap();
                     QStringList pageKeyList;
                     if (selectedNode)
                     {
@@ -187,12 +187,12 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     onElaRouteEvent(postData);
                 }
                 _switchMainStackIndex(node->getNodeKey());
-                QMap<QString, QVariant> compactPostData = QMap<QString, QVariant>();
+                QVariantMap compactPostData = QVariantMap();
                 compactPostData.insert("SelectMarkChanged", true);
                 if (_footerModel->getSelectedNode())
                 {
                     _footerView->clearSelection();
-                    QMap<QString, QVariant> footerPostData = QMap<QString, QVariant>();
+                    QVariantMap footerPostData = QVariantMap();
                     footerPostData.insert("SelectMarkChanged", true);
                     footerPostData.insert("LastSelectedNode", QVariant::fromValue(_footerModel->getSelectedNode()));
                     footerPostData.insert("SelectedNode", QVariant::fromValue(nullptr));
@@ -200,7 +200,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     _footerModel->setSelectedNode(nullptr);
                     _footerDelegate->navigationNodeStateChange(footerPostData);
                 }
-                QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+                QVariantMap postData = QVariantMap();
                 postData.insert("SelectMarkChanged", true);
                 if (_navigationModel->getSelectedNode())
                 {
@@ -250,7 +250,7 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
         // 记录跳转
         if (isLogRoute && node->getIsHasFooterPage())
         {
-            QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+            QVariantMap postData = QVariantMap();
             QStringList pageKeyList;
             if (selectedNode)
             {
@@ -270,11 +270,11 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
 
         if (node->getIsHasFooterPage())
         {
-            QMap<QString, QVariant> compactPostData = QMap<QString, QVariant>();
+            QVariantMap compactPostData = QVariantMap();
             compactPostData.insert("SelectMarkChanged", true);
             if (_navigationModel->getSelectedNode() || _navigationModel->getSelectedExpandedNode())
             {
-                QMap<QString, QVariant> mainPostData = QMap<QString, QVariant>();
+                QVariantMap mainPostData = QVariantMap();
                 mainPostData.insert("SelectMarkChanged", true);
                 mainPostData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode() ? _navigationModel->getSelectedExpandedNode() : _navigationModel->getSelectedNode()));
                 mainPostData.insert("SelectedNode", QVariant::fromValue(nullptr));
@@ -286,7 +286,7 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
             }
             _footerView->clearSelection();
             _footerView->selectionModel()->select(index, QItemSelectionModel::Select);
-            QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+            QVariantMap postData = QVariantMap();
             postData.insert("SelectMarkChanged", true);
             postData.insert("LastSelectedNode", QVariant::fromValue(_footerModel->getSelectedNode()));
             postData.insert("SelectedNode", QVariant::fromValue(node));
@@ -340,7 +340,7 @@ void ElaNavigationBarPrivate::_resetNodeSelected()
         _navigationView->selectionModel()->select(selectedNode->getModelIndex(), QItemSelectionModel::Select);
         if (_navigationModel->getSelectedExpandedNode())
         {
-            QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+            QVariantMap postData = QVariantMap();
             postData.insert("SelectMarkChanged", true);
             postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
             postData.insert("SelectedNode", QVariant::fromValue(selectedNode));
@@ -362,7 +362,7 @@ void ElaNavigationBarPrivate::_resetNodeSelected()
         // 单级节点展开/收起时Mark变化
         if (!_navigationModel->getSelectedExpandedNode())
         {
-            QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+            QVariantMap postData = QVariantMap();
             postData.insert("SelectMarkChanged", true);
             postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedNode()));
             postData.insert("SelectedNode", QVariant::fromValue(parentNode));
@@ -376,7 +376,7 @@ void ElaNavigationBarPrivate::_resetNodeSelected()
                 // 同一起源节点展开/收起时的Mark变化
                 if (_navigationModel->getSelectedExpandedNode()->getOriginalNode() == parentNode->getOriginalNode())
                 {
-                    QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+                    QVariantMap postData = QVariantMap();
                     postData.insert("SelectMarkChanged", true);
                     postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
                     postData.insert("SelectedNode", QVariant::fromValue(parentNode));
@@ -394,7 +394,7 @@ void ElaNavigationBarPrivate::_expandSelectedNodeParent()
     ElaNavigationNode* parentNode = _navigationModel->getSelectedNode()->getParentNode();
     while (parentNode && !parentNode->getIsRootNode())
     {
-        QMap<QString, QVariant> data;
+        QVariantMap data;
         data.insert("Expand", QVariant::fromValue(parentNode));
         _navigationDelegate->navigationNodeStateChange(data);
         _navigationView->navigationNodeStateChange(data);

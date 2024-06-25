@@ -18,10 +18,8 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     d->_pAwesome = ElaIconType::None;
     d->_pBorderRadius = 6;
     // 事件总线
-    d->_focusEvent = new ElaEvent(this);
-    d->_focusEvent->setEventName("WMWindowClicked");
-    ElaEventBus::getInstance()->registerEvent(d->_focusEvent);
-    connect(d->_focusEvent, &ElaEvent::triggered, d, &ElaLineEditPrivate::onWMWindowClickedEvent);
+    d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+    d->_focusEvent->registerAndInit();
     d->_initStyle();
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
 }
@@ -34,9 +32,8 @@ ElaLineEdit::ElaLineEdit(ElaIconType awesome, QWidget* parent)
     d->_pAwesome = awesome;
     d->_pBorderRadius = 6;
     // 事件总线
-    d->_focusEvent = new ElaEvent("WMWindowClicked", this);
-    ElaEventBus::getInstance()->registerEvent(d->_focusEvent);
-    connect(d->_focusEvent, &ElaEvent::triggered, d, &ElaLineEditPrivate::onWMWindowClickedEvent);
+    d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+    d->_focusEvent->registerAndInit();
     d->_initStyle();
 }
 

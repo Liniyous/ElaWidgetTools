@@ -16,7 +16,7 @@ public:
     ~ElaNavigationStyle();
     void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w) const override;
     void drawPanelItemViewItem(const QStyleOption* opt, QPainter* p, const QWidget* w) const;
-    void navigationNodeStateChange(QMap<QString, QVariant> data);
+    void navigationNodeStateChange(QVariantMap data);
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:

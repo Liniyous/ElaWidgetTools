@@ -27,7 +27,7 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
             int widgetIndex = d->_centralWidgetMap.value(breadcrumb);
             d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
             d->_navigationTargetIndex = widgetIndex;
-            QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+            QVariantMap postData = QVariantMap();
             QStringList pageKeyList(this->property("ElaPageKey").toString());
             pageKeyList.append("BreadcrumbClicked");
             pageKeyList.append(lastBreadcrumbList);
@@ -91,7 +91,7 @@ void ElaScrollPage::navigation(int widgetIndex, bool isLogRoute)
     d->_navigationTargetIndex = widgetIndex;
     if (isLogRoute)
     {
-        QMap<QString, QVariant> postData = QMap<QString, QVariant>();
+        QVariantMap postData = QVariantMap();
         QStringList pageKeyList(this->property("ElaPageKey").toString());
         pageKeyList.append("Navigation");
         QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();

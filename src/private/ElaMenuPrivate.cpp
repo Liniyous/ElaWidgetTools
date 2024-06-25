@@ -44,7 +44,7 @@ void ElaMenuPrivate::onMenuClicked(const QModelIndex& index)
             {
                 _centerView->clearSelection();
                 _centerView->selectionModel()->select(index, QItemSelectionModel::Select);
-                QMap<QString, QVariant> postData;
+                QVariantMap postData;
                 postData.insert("ElaMenuCheckSumKey", _menuCheckSumKey);
                 postData.insert("PopupChildMenu", QVariant::fromValue(childMenu));
                 postData.insert("PopupChildMenuDepth", childMenu->d_ptr->_menuDepth);
@@ -56,14 +56,14 @@ void ElaMenuPrivate::onMenuClicked(const QModelIndex& index)
     }
     else
     {
-        QMap<QString, QVariant> postData;
+        QVariantMap postData;
         postData.insert("ElaMenuCheckSumKey", _menuCheckSumKey);
         postData.insert("CloseAllMenu", "");
         ElaEventBus::getInstance()->post("ElaMenuEvent", postData);
     }
 }
 
-void ElaMenuPrivate::onElaMenuEvent(QMap<QString, QVariant> data)
+void ElaMenuPrivate::onElaMenuEvent(QVariantMap data)
 {
     Q_Q(ElaMenu);
     if (_menuCheckSumKey != data.value("ElaMenuCheckSumKey").toString())

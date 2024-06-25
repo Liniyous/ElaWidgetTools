@@ -27,7 +27,7 @@ public:
     explicit ElaWindowPrivate(QObject* parent = nullptr);
     ~ElaWindowPrivate();
     Q_SLOT void onNavigationButtonClicked();
-    Q_SLOT void onWMWindowClickedEvent(QMap<QString, QVariant> data);
+    Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
     Q_SLOT void onThemeModeChanged(ElaApplicationType::ThemeMode themeMode);

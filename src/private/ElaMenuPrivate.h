@@ -22,7 +22,7 @@ public:
     ~ElaMenuPrivate();
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
     Q_SLOT void onMenuClicked(const QModelIndex& index);
-    Q_SLOT void onElaMenuEvent(QMap<QString, QVariant> data);
+    Q_INVOKABLE void onElaMenuEvent(QVariantMap data);
 
 private:
     QString _menuCheckSumKey{""};

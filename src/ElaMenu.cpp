@@ -46,10 +46,8 @@ ElaMenu::ElaMenu(QWidget* parent)
     hide();
 
     // 事件总线
-    d->_menuEvent = new ElaEvent("ElaMenuEvent", this);
-    ElaEventBus::getInstance()->registerEvent(d->_menuEvent);
-    connect(d->_menuEvent, &ElaEvent::triggered, d, &ElaMenuPrivate::onElaMenuEvent);
-
+    d->_menuEvent = new ElaEvent("ElaMenuEvent", "onElaMenuEvent", d);
+    d->_menuEvent->registerAndInit();
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaMenuPrivate::onThemeChanged);
 }
 
@@ -72,7 +70,7 @@ void ElaMenu::popup(const QPoint& pos, QAction* at)
     d->_centerView->clearSelection();
     if (d->_isTopMostMenu)
     {
-        QMap<QString, QVariant> postData;
+        QVariantMap postData;
         postData.insert("ElaMenuCheckSumKey", d->_menuCheckSumKey);
         postData.insert("HideAllMenu", "");
         ElaEventBus::getInstance()->post("ElaMenuEvent", postData);
@@ -241,7 +239,7 @@ bool ElaMenu::event(QEvent* event)
         }
         if (!d->_containsCursorToAllMenu(parentMenu, parentMenu->d_ptr->_childMenus))
         {
-            QMap<QString, QVariant> postData;
+            QVariantMap postData;
             postData.insert("ElaMenuCheckSumKey", d->_menuCheckSumKey);
             postData.insert("CloseAllMenu", "");
             ElaEventBus::getInstance()->post("ElaMenuEvent", postData);
@@ -260,7 +258,7 @@ bool ElaMenu::event(QEvent* event)
     }
     case QEvent::MouseButtonPress:
     {
-        QMap<QString, QVariant> postData;
+        QVariantMap postData;
         postData.insert("ElaMenuCheckSumKey", d->_menuCheckSumKey);
         postData.insert("CloseAllMenu", "");
         ElaEventBus::getInstance()->post("ElaMenuEvent", postData);

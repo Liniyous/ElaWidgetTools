@@ -87,7 +87,7 @@ void ElaNavigationStyle::drawPanelItemViewItem(const QStyleOption* opt, QPainter
     p->restore();
 }
 
-void ElaNavigationStyle::navigationNodeStateChange(QMap<QString, QVariant> data)
+void ElaNavigationStyle::navigationNodeStateChange(QVariantMap data)
 {
     if (data.contains("Expand"))
     {

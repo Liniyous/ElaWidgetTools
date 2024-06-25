@@ -49,9 +49,8 @@ ElaNavigationSuggestBox::ElaNavigationSuggestBox(QWidget* parent)
     connect(d->_searchView, &ElaNavigationSuggestView::clicked, d, &ElaNavigationSuggestBoxPrivate::onSearchViewPressed);
 
     // 事件总线
-    d->_focusEvent = new ElaEvent("WMWindowClicked", this);
-    ElaEventBus::getInstance()->registerEvent(d->_focusEvent);
-    connect(d->_focusEvent, &ElaEvent::triggered, d, &ElaNavigationSuggestBoxPrivate::onWMWindowClickedEvent);
+    d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
+    d->_focusEvent->registerAndInit();
 }
 
 ElaNavigationSuggestBox::~ElaNavigationSuggestBox()

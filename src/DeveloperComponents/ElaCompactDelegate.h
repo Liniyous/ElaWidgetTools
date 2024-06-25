@@ -17,7 +17,7 @@ public:
     explicit ElaCompactDelegate(QObject* parent = nullptr);
     ~ElaCompactDelegate();
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
-    void navigationNodeStateChange(QMap<QString, QVariant> data);
+    void navigationNodeStateChange(QVariantMap data);
 
 protected:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;

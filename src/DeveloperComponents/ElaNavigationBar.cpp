@@ -130,10 +130,8 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_mainLayout->addWidget(d->_compactWidget);
     d->_compactWidget->setVisible(false);
     // 事件总线
-    d->_routeEvent = new ElaEvent("ElaRouteEvent", this);
-    ElaEventBus::getInstance()->registerEvent(d->_routeEvent);
-    connect(d->_routeEvent, &ElaEvent::triggered, d, &ElaNavigationBarPrivate::onElaRouteEvent);
-
+    d->_routeEvent = new ElaEvent("ElaRouteEvent", "onElaRouteEvent", d);
+    d->_routeEvent->registerAndInit();
     //主题设置
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
 }

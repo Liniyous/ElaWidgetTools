@@ -1,41 +1,44 @@
 #ifndef ELAEVENTBUS_H
 #define ELAEVENTBUS_H
-#include <QMap>
+
 #include <QObject>
+#include <QVariantMap>
 
 #include "Def.h"
 #include "singleton.h"
 #include "stdafx.h"
+class ElaEventPrivate;
 class ELA_EXPORT ElaEvent : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(QString, EventName);
+    Q_Q_CREATE(ElaEvent)
+    Q_PROPERTY_CREATE_Q_H(QString, EventName);
+    Q_PROPERTY_CREATE_Q_H(QString, FunctionName);
+    Q_PROPERTY_CREATE_Q_H(Qt::ConnectionType, ConnectionType);
 
 public:
     explicit ElaEvent(QObject* parent = nullptr);
-    explicit ElaEvent(QString eventName, QObject* parent = nullptr);
+    explicit ElaEvent(QString eventName, QString functionName, QObject* parent = nullptr);
     ~ElaEvent();
-Q_SIGNALS:
-    Q_SIGNAL void triggered(QMap<QString, QVariant> data);
+    ElaEventBusType::EventBusReturnType registerAndInit();
 };
 
+class ElaEventBusPrivate;
 class ELA_EXPORT ElaEventBus : public QObject
 {
     Q_OBJECT
-
+    Q_Q_CREATE(ElaEventBus)
 private:
     explicit ElaEventBus(QObject* parent = nullptr);
     ~ElaEventBus();
 
 public:
     Q_SINGLETON_CREATE(ElaEventBus);
-    ElaEventBusType::EventBusReturnType registerEvent(ElaEvent* event);
-    ElaEventBusType::EventBusReturnType unRegisterEvent(ElaEvent* event);
-    ElaEventBusType::EventBusReturnType post(const QString& eventName, const QMap<QString, QVariant>& data = {});
+    ElaEventBusType::EventBusReturnType post(const QString& eventName, const QVariantMap& data = {});
     QStringList getRegisteredEventsName();
 
 private:
-    QMap<QString, QList<ElaEvent*>> _eventMap;
+    friend class ElaEvent;
 };
 
 #endif // ELAEVENTBUS_H
