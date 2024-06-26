@@ -57,6 +57,7 @@
 |ElaPushButton|按钮||
 |ElaSwitchButton|切换按钮||
 |ElaRadioButton|单选按钮||
+|ElaNavigationRouter|路由跳转||
 |ElaToggleSwitch|开关按钮||
 |ElaTabBar|选项卡|谷歌浏览器风格|
 |ElaTabWidget|选项卡页面|谷歌浏览器风格|

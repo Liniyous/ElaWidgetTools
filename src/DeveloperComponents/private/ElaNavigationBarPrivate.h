@@ -9,7 +9,6 @@
 #include "stdafx.h"
 class QLayout;
 class ElaMenu;
-class ElaEvent;
 class QVBoxLayout;
 class QHBoxLayout;
 class QStackedWidget;
@@ -36,18 +35,13 @@ class ElaNavigationBarPrivate : public QObject
 public:
     explicit ElaNavigationBarPrivate(QObject* parent = nullptr);
     ~ElaNavigationBarPrivate();
-    QStringList getLastRoute();
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
-    Q_SLOT void onRouteBackButtonClicked();
-    Q_INVOKABLE void onElaRouteEvent(QVariantMap data);
+    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
     //核心跳转逻辑
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true);
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true);
     void onCompactViewClicked(const QModelIndex& index);
-
-Q_SIGNALS:
-    Q_SIGNAL void routeBackButtonStateChanged(bool isEnable);
 
 private:
     friend class ElaWindow;
@@ -60,9 +54,7 @@ private:
     ElaCompactModel* _compactModel{nullptr};
     ElaCompactDelegate* _compactDelegate{nullptr};
 
-    ElaEvent* _routeEvent{nullptr};
     QLinearGradient* _windowLinearGradient{nullptr};
-    QQueue<QStringList> _routeQueue;
     ElaNavigationModel* _navigationModel{nullptr};
     ElaNavigationView* _navigationView{nullptr};
     ElaNavigationDelegate* _navigationDelegate{nullptr};

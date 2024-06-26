@@ -16,10 +16,10 @@
 #include "ElaNavigationDelegate.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
+#include "ElaNavigationRouter.h"
 #include "ElaNavigationSuggestBox.h"
 #include "ElaNavigationSuggestBoxPrivate.h"
 #include "ElaNavigationView.h"
-#include "ElaScrollPage.h"
 #include "ElaScrollPagePrivate.h"
 #include "ElaWindow.h"
 #include "ElaWindowPrivate.h"
@@ -30,22 +30,6 @@ ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
 
 ElaNavigationBarPrivate::~ElaNavigationBarPrivate()
 {
-}
-
-QStringList ElaNavigationBarPrivate::getLastRoute()
-{
-    int routeQueueCount = _routeQueue.count();
-    if (routeQueueCount > 0)
-    {
-        if (routeQueueCount == 1)
-        {
-            Q_EMIT routeBackButtonStateChanged(false);
-        }
-        QStringList nodeList = _routeQueue.last();
-        _routeQueue.removeLast();
-        return nodeList;
-    }
-    return QStringList();
 }
 
 void ElaNavigationBarPrivate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
@@ -62,65 +46,11 @@ void ElaNavigationBarPrivate::onThemeChanged(ElaApplicationType::ThemeMode theme
     }
 }
 
-void ElaNavigationBarPrivate::onRouteBackButtonClicked()
+void ElaNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)
 {
     Q_Q(ElaNavigationBar);
-    QStringList lastNodeKeyList = getLastRoute();
-    if (lastNodeKeyList.isEmpty())
-    {
-        return;
-    }
-    if (lastNodeKeyList.count() == 1)
-    {
-        q->navigation(lastNodeKeyList[0], false);
-    }
-    else
-    {
-        // 面包屑
-        q->navigation(lastNodeKeyList[0], false);
-        QString stateCheckSumKey = lastNodeKeyList[1];
-        ElaWindow* window = dynamic_cast<ElaWindow*>(q->parent());
-        QStackedWidget* centerStackedWidget = window->d_ptr->_centerStackedWidget;
-        if (centerStackedWidget->currentWidget()->property("ElaBaseClassName").toString() == "ElaScrollPage")
-        {
-            ElaScrollPage* scrollPage = dynamic_cast<ElaScrollPage*>(centerStackedWidget->currentWidget());
-            if (scrollPage)
-            {
-                if (stateCheckSumKey == "Navigation")
-                {
-                    scrollPage->navigation(scrollPage->d_ptr->_centralWidgetMap.value(lastNodeKeyList[2]), false);
-                }
-                else if (stateCheckSumKey == "BreadcrumbClicked")
-                {
-                    int widgetIndex = scrollPage->d_ptr->_centralWidgetMap.value(lastNodeKeyList.last());
-                    scrollPage->d_ptr->_switchCentralStackIndex(widgetIndex, scrollPage->d_ptr->_navigationTargetIndex);
-                    scrollPage->d_ptr->_navigationTargetIndex = widgetIndex;
-                    scrollPage->d_ptr->_breadcrumbBar->setBreadcrumbList(lastNodeKeyList.mid(2));
-                }
-            }
-        }
-    }
-}
-
-void ElaNavigationBarPrivate::onElaRouteEvent(QVariantMap data)
-{
-    QStringList pageKeyList = data.value("ElaPageKey").toStringList();
-    if (pageKeyList.isEmpty())
-    {
-        return;
-    }
-    if (_routeQueue.isEmpty())
-    {
-        Q_EMIT routeBackButtonStateChanged(true);
-    }
-    else
-    {
-        if (_routeQueue.count() >= 25)
-        {
-            _routeQueue.dequeue();
-        }
-    }
-    _routeQueue.enqueue(pageKeyList);
+    QString pageKey = routeData.value("ElaPageKey").toString();
+    q->navigation(pageKey, false);
 }
 
 void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute)
@@ -170,7 +100,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                 // 记录跳转
                 if (isLogRoute)
                 {
-                    QVariantMap postData = QVariantMap();
+                    QVariantMap routeData = QVariantMap();
                     QStringList pageKeyList;
                     if (selectedNode)
                     {
@@ -183,8 +113,8 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                             pageKeyList.append(_footerModel->getSelectedNode()->getNodeKey());
                         }
                     }
-                    postData.insert("ElaPageKey", pageKeyList);
-                    onElaRouteEvent(postData);
+                    routeData.insert("ElaPageKey", pageKeyList);
+                    ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
                 }
                 _switchMainStackIndex(node->getNodeKey());
                 QVariantMap compactPostData = QVariantMap();
@@ -250,7 +180,7 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
         // 记录跳转
         if (isLogRoute && node->getIsHasFooterPage())
         {
-            QVariantMap postData = QVariantMap();
+            QVariantMap routeData = QVariantMap();
             QStringList pageKeyList;
             if (selectedNode)
             {
@@ -263,8 +193,8 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
                     pageKeyList.append(_navigationModel->getSelectedNode()->getNodeKey());
                 }
             }
-            postData.insert("ElaPageKey", pageKeyList);
-            onElaRouteEvent(postData);
+            routeData.insert("ElaPageKey", pageKeyList);
+            ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
         }
         _switchMainStackIndex(node->getNodeKey());
 

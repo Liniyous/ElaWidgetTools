@@ -19,9 +19,9 @@ class ElaScrollPagePrivate : public QObject
 public:
     explicit ElaScrollPagePrivate(QObject* parent = nullptr);
     ~ElaScrollPagePrivate();
+    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
 private:
-    friend class ElaNavigationBarPrivate;
     QHBoxLayout* _pageTitleLayout{nullptr};
     QStackedWidget* _centralStackedWidget{nullptr};
     ElaBreadcrumbBar* _breadcrumbBar{nullptr};

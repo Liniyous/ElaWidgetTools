@@ -65,7 +65,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_routeBackButton = new ElaIconButton(ElaIconType::ArrowLeft, 18, 40, 30, this);
     d->_routeBackButton->setEnabled(false);
     // 路由跳转
-    connect(d->_routeBackButton, &QPushButton::clicked, this, [this]() { Q_EMIT routeBackButtonClicked(); });
+    connect(d->_routeBackButton, &QPushButton::clicked, this, &ElaAppBar::routeBackButtonClicked);
 
     // 导航栏展开按钮
     d->_navigationButton = new ElaIconButton(ElaIconType::Bars, 16, 40, 30, this);

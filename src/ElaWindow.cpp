@@ -17,6 +17,7 @@
 #include "ElaApplication.h"
 #include "ElaEventBus.h"
 #include "ElaInteractiveCard.h"
+#include "ElaNavigationRouter.h"
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaWindowPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
@@ -39,16 +40,18 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
+    connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
+        ElaNavigationRouter::getInstance()->navigationRouteBack();
+    });
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWindow::closeButtonClicked);
 
     // 导航栏
     d->_navigationBar = new ElaNavigationBar(this);
     // 返回按钮状态变更
-    connect(d->_navigationBar, &ElaNavigationBar::routeBackButtonStateChanged, this, [d](bool isEnable) {
+    connect(ElaNavigationRouter::getInstance(), &ElaNavigationRouter::navigationRouterStateChanged, this, [d](bool isEnable) {
         d->_appBar->setRouteBackButtonEnable(isEnable);
     });
-    // 返回按钮按下
-    connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, d->_navigationBar->d_func(), &ElaNavigationBarPrivate::onRouteBackButtonClicked);
+
     // 页脚没有绑定页面时发送
     connect(d->_navigationBar, &ElaNavigationBar::footerNodeClicked, this, &ElaWindow::footerNodeClicked);
 

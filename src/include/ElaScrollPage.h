@@ -23,9 +23,6 @@ public:
     void setPageTitleSpacing(int spacing);
     int getPageTitleSpacing() const;
     void setTitleVisible(bool isVisible);
-
-private:
-    friend class ElaNavigationBarPrivate;
 };
 
 #endif // ELASCROLLPAGE_H

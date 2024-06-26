@@ -47,9 +47,6 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_navigationView->setItemDelegateForColumn(0, d->_navigationDelegate);
     connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
 
-    // 返回按钮状态变更
-    connect(d, &ElaNavigationBarPrivate::routeBackButtonStateChanged, this, &ElaNavigationBar::routeBackButtonStateChanged);
-
     d->_navigationSuggestBox = new ElaNavigationSuggestBox(this);
     d->_navigationSuggestBox->setFixedSize(280, 35);
     // 搜索跳转
@@ -129,9 +126,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_mainLayout->addWidget(d->_maximalWidget);
     d->_mainLayout->addWidget(d->_compactWidget);
     d->_compactWidget->setVisible(false);
-    // 事件总线
-    d->_routeEvent = new ElaEvent("ElaRouteEvent", "onElaRouteEvent", d);
-    d->_routeEvent->registerAndInit();
+
     //主题设置
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
 }

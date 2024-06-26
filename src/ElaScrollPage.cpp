@@ -10,7 +10,7 @@
 #include <QVBoxLayout>
 
 #include "ElaBreadcrumbBar.h"
-#include "ElaEventBus.h"
+#include "ElaNavigationRouter.h"
 #include "ElaScrollArea.h"
 #include "private/ElaScrollPagePrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaScrollPage, int, BorderRadius)
@@ -27,12 +27,10 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
             int widgetIndex = d->_centralWidgetMap.value(breadcrumb);
             d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
             d->_navigationTargetIndex = widgetIndex;
-            QVariantMap postData = QVariantMap();
-            QStringList pageKeyList(this->property("ElaPageKey").toString());
-            pageKeyList.append("BreadcrumbClicked");
-            pageKeyList.append(lastBreadcrumbList);
-            postData.insert("ElaPageKey", pageKeyList);
-            ElaEventBus::getInstance()->post("ElaRouteEvent", postData);
+            QVariantMap routeData = QVariantMap();
+            routeData.insert("ElaScrollPageCheckSumKey", "BreadcrumbClicked");
+            routeData.insert("LastBreadcrumbList", lastBreadcrumbList);
+            ElaNavigationRouter::getInstance()->navigationRoute(d,"onNavigationRouteBack", routeData);
         } });
     d->_pageTitleLayout = new QHBoxLayout();
     d->_pageTitleLayout->setContentsMargins(0, 0, 0, 0);
@@ -91,13 +89,11 @@ void ElaScrollPage::navigation(int widgetIndex, bool isLogRoute)
     d->_navigationTargetIndex = widgetIndex;
     if (isLogRoute)
     {
-        QVariantMap postData = QVariantMap();
-        QStringList pageKeyList(this->property("ElaPageKey").toString());
-        pageKeyList.append("Navigation");
+        QVariantMap routeData = QVariantMap();
+        routeData.insert("ElaScrollPageCheckSumKey", "Navigation");
         QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
-        pageKeyList.append(breadcrumbList.last());
-        postData.insert("ElaPageKey", pageKeyList);
-        ElaEventBus::getInstance()->post("ElaRouteEvent", postData);
+        routeData.insert("ElaPageTitle", breadcrumbList.last());
+        ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
     }
     d->_breadcrumbBar->appendBreadcrumb(d->_centralWidgetMap.key(widgetIndex));
 }

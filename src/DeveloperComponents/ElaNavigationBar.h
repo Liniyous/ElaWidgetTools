@@ -25,7 +25,6 @@ public:
     void navigation(QString pageKey, bool isLogClicked = true);
     void switchCompact(bool direction);
 Q_SIGNALS:
-    Q_SIGNAL void routeBackButtonStateChanged(bool isEnable);
     Q_SIGNAL void footerNodeClicked(QString footerKey); // 页脚没有绑定页面时发送
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

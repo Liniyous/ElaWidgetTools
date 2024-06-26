@@ -5,6 +5,9 @@
 #include <QStackedWidget>
 #include <QTimer>
 
+#include "ElaBreadcrumbBar.h"
+#include "ElaScrollPage.h"
+
 ElaScrollPagePrivate::ElaScrollPagePrivate(QObject* parent)
     : QObject{parent}
 {
@@ -12,6 +15,26 @@ ElaScrollPagePrivate::ElaScrollPagePrivate(QObject* parent)
 
 ElaScrollPagePrivate::~ElaScrollPagePrivate()
 {
+}
+
+void ElaScrollPagePrivate::onNavigationRouteBack(QVariantMap routeData)
+{
+    // 面包屑
+    Q_Q(ElaScrollPage);
+    QString pageCheckSumKey = routeData.value("ElaScrollPageCheckSumKey").toString();
+    if (pageCheckSumKey == "Navigation")
+    {
+        QString pageTitle = routeData.value("ElaPageTitle").toString();
+        q->navigation(_centralWidgetMap.value(pageTitle), false);
+    }
+    else if (pageCheckSumKey == "BreadcrumbClicked")
+    {
+        QStringList lastBreadcrumbList = routeData.value("LastBreadcrumbList").toStringList();
+        int widgetIndex = _centralWidgetMap.value(lastBreadcrumbList.last());
+        _switchCentralStackIndex(widgetIndex, _navigationTargetIndex);
+        _navigationTargetIndex = widgetIndex;
+        _breadcrumbBar->setBreadcrumbList(lastBreadcrumbList);
+    }
 }
 
 void ElaScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex)

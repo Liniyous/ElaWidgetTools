@@ -75,6 +75,18 @@ Q_ENUM_NS(NavigationDisplayMode)
 
 } // namespace ElaNavigationType
 
+namespace ElaNavigationRouterType
+{
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
+enum NavigationRouteType
+{
+    Success = 0x0000,
+    ObjectInvalid = 0x0001,
+    FunctionNameInvalid = 0x0002,
+};
+Q_ENUM_NS(NavigationRouteType)
+} // namespace ElaNavigationRouterType
+
 namespace ElaEventBusType
 {
 Q_NAMESPACE_EXPORT(ELA_EXPORT)
