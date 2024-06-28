@@ -7,6 +7,10 @@ T_IconModel::T_IconModel(QObject* parent)
     _metaEnum = QMetaEnum::fromType<ElaIconType>();
     _columnCount = 7;
     _rowCount = (_metaEnum.keyCount() - 1) / _columnCount;
+    if ((_metaEnum.keyCount() - 1) % _columnCount)
+    {
+        _rowCount += 1;
+    }
     _pIsSearchMode = false;
 }
 
@@ -78,6 +82,10 @@ void T_IconModel::setColumnCount(int count)
             else
             {
                 _rowCount = (_metaEnum.keyCount() - 1) / _columnCount;
+                if ((_metaEnum.keyCount() - 1) % _columnCount)
+                {
+                    _rowCount += 1;
+                }
             }
         }
         endResetModel();
@@ -90,6 +98,10 @@ QVariant T_IconModel::data(const QModelIndex& index, int role) const
     {
         if (!_pIsSearchMode)
         {
+            if (index.row() * _columnCount + index.column() >= _metaEnum.keyCount() - 1)
+            {
+                return QVariant();
+            }
             return QStringList{_metaEnum.key(index.row() * _columnCount + index.column() + 1), QChar(_metaEnum.value(index.row() * _columnCount + index.column() + 1))};
         }
         else
