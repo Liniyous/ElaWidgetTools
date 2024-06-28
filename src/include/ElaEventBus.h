@@ -28,14 +28,15 @@ class ELA_EXPORT ElaEventBus : public QObject
 {
     Q_OBJECT
     Q_Q_CREATE(ElaEventBus)
+    Q_SINGLETON_CREATE_H(ElaEventBus);
+
 private:
     explicit ElaEventBus(QObject* parent = nullptr);
     ~ElaEventBus();
 
 public:
-    Q_SINGLETON_CREATE(ElaEventBus);
     ElaEventBusType::EventBusReturnType post(const QString& eventName, const QVariantMap& data = {});
-    QStringList getRegisteredEventsName();
+    QStringList getRegisteredEventsName() const;
 
 private:
     friend class ElaEvent;

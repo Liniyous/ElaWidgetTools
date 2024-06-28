@@ -10,6 +10,7 @@
 #include "ElaGraphicsItem.h"
 #include "ElaGraphicsScene.h"
 #include "ElaGraphicsView.h"
+#include "ElaNavigationRouter.h"
 #include "ElaWidget.h"
 #include "example/T_BaseComponents.h"
 #include "example/T_ElaScreen.h"

@@ -7,7 +7,7 @@
 #include "stdafx.h"
 class ELA_EXPORT ElaIcon
 {
-    Q_SINGLETON_CREATE(ElaIcon)
+    Q_SINGLETON_CREATE_H(ElaIcon)
 private:
     explicit ElaIcon();
     ~ElaIcon();

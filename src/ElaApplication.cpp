@@ -6,6 +6,7 @@
 #include <QWidget>
 
 #include "private/ElaApplicationPrivate.h"
+Q_SINGLETON_CREATE_CPP(ElaApplication)
 Q_PROPERTY_CREATE_Q_CPP(ElaApplication, bool, IsApplicationClosed)
 Q_PROPERTY_CREATE_Q_CPP(ElaApplication, QColor, LightShadowEffectColor)
 Q_PROPERTY_CREATE_Q_CPP(ElaApplication, QColor, DarkShadowEffectColor)

@@ -36,10 +36,24 @@ public:                                         \
         return Singleton<Class>::getInstance(); \
     }
 
-#define Q_HIDE_CONSTRUCTOR(Class)       \
-private:                                \
-    Class() = default;                  \
-    Class(const Class& other) = delete; \
-    Q_DISABLE_COPY_MOVE(Class);
+#define Q_SINGLETON_CREATE_H(Class) \
+private:                            \
+    static Class* _instance;        \
+                                    \
+public:                             \
+    static Class* getInstance();
+
+#define Q_SINGLETON_CREATE_CPP(Class)  \
+    Class* Class::_instance = nullptr; \
+    Class* Class::getInstance()        \
+    {                                  \
+        static QMutex mutex;           \
+        QMutexLocker locker(&mutex);   \
+        if (_instance == nullptr)      \
+        {                              \
+            _instance = new Class();   \
+        }                              \
+        return _instance;              \
+    }
 
 #endif // SINGLETON_H

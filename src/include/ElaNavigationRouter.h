@@ -13,6 +13,7 @@ class ELA_EXPORT ElaNavigationRouter : public QObject
 {
     Q_OBJECT
     Q_Q_CREATE(ElaNavigationRouter)
+    Q_SINGLETON_CREATE_H(ElaNavigationRouter)
     Q_PROPERTY_CREATE_Q_H(int, MaxRouteCount)
 private:
     explicit ElaNavigationRouter(QObject* parent = nullptr);
@@ -22,7 +23,6 @@ Q_SIGNALS:
     Q_SIGNAL void navigationRouterStateChanged(bool state);
 
 public:
-    Q_SINGLETON_CREATE(ElaNavigationRouter)
     ElaNavigationRouterType::NavigationRouteType navigationRoute(QObject* routeObject, QString routeFunctionName, const QVariantMap& routeData = {}, Qt::ConnectionType connectionType = Qt::AutoConnection);
     void navigationRouteBack();
 };

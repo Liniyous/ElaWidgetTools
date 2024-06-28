@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaApplication.h"
 ElaImageCard::ElaImageCard(QWidget* parent)
     : QWidget(parent)
 {

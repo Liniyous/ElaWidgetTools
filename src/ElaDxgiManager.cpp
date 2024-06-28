@@ -12,6 +12,7 @@
 
 #include "ElaDxgi.h"
 #include "ElaDxgiManagerPrivate.h"
+Q_SINGLETON_CREATE_CPP(ElaDxgiManager);
 ElaDxgiManager::ElaDxgiManager(QObject* parent)
     : QObject{parent}, d_ptr(new ElaDxgiManagerPrivate())
 {
@@ -25,22 +26,25 @@ ElaDxgiManager::ElaDxgiManager(QObject* parent)
     {
         for (int i = 1; i < d->_dxgi->getDxDeviceList().count(); i++)
         {
-            bool retAgain = d->_dxgi->initialize(i, 0);
-            if (retAgain)
+            bool ret = d->_dxgi->initialize(i, 0);
+            if (ret)
             {
                 break;
             }
         }
     }
-    if (!d->_dxgi)
+    if (!ret)
     {
         qCritical() << "No available screenshot devices";
         return;
     }
-    d->_dxgi->moveToThread(d->_dxgiThread);
-    d->_dxgiThread->start();
-    connect(d, &ElaDxgiManagerPrivate::grabScreen, d->_dxgi, &ElaDxgi::onGrabScreen);
-    connect(d->_dxgi, &ElaDxgi::grabScreenOver, this, &ElaDxgiManager::grabImageUpdate);
+    else
+    {
+        d->_dxgi->moveToThread(d->_dxgiThread);
+        d->_dxgiThread->start();
+        connect(d, &ElaDxgiManagerPrivate::grabScreen, d->_dxgi, &ElaDxgi::onGrabScreen);
+        connect(d->_dxgi, &ElaDxgi::grabScreenOver, this, &ElaDxgiManager::grabImageUpdate);
+    }
 }
 
 ElaDxgiManager::~ElaDxgiManager()

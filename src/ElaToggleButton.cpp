@@ -48,7 +48,6 @@ void ElaToggleButton::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);

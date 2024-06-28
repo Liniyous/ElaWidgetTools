@@ -13,7 +13,7 @@ class ELA_EXPORT ElaApplication : public QObject
 {
     Q_OBJECT
     Q_Q_CREATE(ElaApplication)
-    Q_SINGLETON_CREATE(ElaApplication)
+    Q_SINGLETON_CREATE_H(ElaApplication)
     Q_PROPERTY_CREATE_Q_H(bool, IsApplicationClosed)
     Q_PROPERTY_CREATE_Q_H(QColor, LightShadowEffectColor)
     Q_PROPERTY_CREATE_Q_H(QColor, DarkShadowEffectColor)

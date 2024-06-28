@@ -10,12 +10,13 @@ class ELA_EXPORT ElaDxgiManager : public QObject
 {
     Q_OBJECT
     Q_Q_CREATE(ElaDxgiManager)
+    Q_SINGLETON_CREATE_H(ElaDxgiManager);
+
 private:
     explicit ElaDxgiManager(QObject* parent = nullptr);
     ~ElaDxgiManager();
 
 public:
-    Q_SINGLETON_CREATE(ElaDxgiManager);
     QStringList getDxDeviceList() const;
     QStringList getOutputDeviceList() const;
     QImage grabScreenToImage() const;

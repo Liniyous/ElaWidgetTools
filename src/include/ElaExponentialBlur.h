@@ -8,7 +8,7 @@
 class ELA_EXPORT ElaExponentialBlur : public QObject
 {
     Q_OBJECT
-    Q_SINGLETON_CREATE(ElaExponentialBlur)
+    Q_SINGLETON_CREATE_H(ElaExponentialBlur)
 private:
     explicit ElaExponentialBlur(QObject* parent = nullptr);
     ~ElaExponentialBlur();

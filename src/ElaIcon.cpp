@@ -2,7 +2,10 @@
 
 #include <QPainter>
 #include <QPixmap>
-ElaIcon::ElaIcon() {}
+Q_SINGLETON_CREATE_CPP(ElaIcon)
+ElaIcon::ElaIcon()
+{
+}
 
 ElaIcon::~ElaIcon()
 {

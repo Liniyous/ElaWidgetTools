@@ -2,6 +2,7 @@
 
 #include "ElaNavigationRouterPrivate.h"
 
+Q_SINGLETON_CREATE_CPP(ElaNavigationRouter)
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationRouter, int, MaxRouteCount)
 ElaNavigationRouter::ElaNavigationRouter(QObject* parent)
     : QObject{parent}, d_ptr(new ElaNavigationRouterPrivate())

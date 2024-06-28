@@ -5,6 +5,7 @@
 
 int ElaExponentialBlur::_aprec = 12;
 int ElaExponentialBlur::_zprec = 7;
+Q_SINGLETON_CREATE_CPP(ElaExponentialBlur)
 ElaExponentialBlur::ElaExponentialBlur(QObject* parent)
     : QObject{parent}
 {

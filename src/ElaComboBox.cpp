@@ -28,8 +28,13 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     d->_comboView->setAutoScroll(false);
     setView(d->_comboView);
     d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);
-    view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
-    view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);
+    QWidget* container = this->findChild<QFrame*>();
+    if (container)
+    {
+        container->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+        container->setAttribute(Qt::WA_TranslucentBackground);
+    }
+    view()->setAutoScroll(false);
     QComboBox::setMaxVisibleItems(5);
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }

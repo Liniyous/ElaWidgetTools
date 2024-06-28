@@ -8,7 +8,6 @@
 #include <QWidget>
 
 #include "ElaAppBar.h"
-#include "ElaApplication.h"
 #include "ElaIconButton.h"
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}

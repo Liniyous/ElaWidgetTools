@@ -3,6 +3,7 @@
 #include <QVariant>
 
 #include "ElaEventBusPrivate.h"
+Q_SINGLETON_CREATE_CPP(ElaEventBus);
 Q_PROPERTY_CREATE_Q_CPP(ElaEvent, QString, EventName);
 Q_PROPERTY_CREATE_Q_CPP(ElaEvent, QString, FunctionName);
 Q_PROPERTY_CREATE_Q_CPP(ElaEvent, Qt::ConnectionType, ConnectionType);
@@ -68,9 +69,9 @@ ElaEventBusType::EventBusReturnType ElaEventBus::post(const QString& eventName, 
     return ElaEventBusType::EventBusReturnType::Success;
 }
 
-QStringList ElaEventBus::getRegisteredEventsName()
+QStringList ElaEventBus::getRegisteredEventsName() const
 {
-    Q_D(ElaEventBus);
+    Q_D(const ElaEventBus);
     if (d->_eventMap.count() == 0)
     {
         return QStringList();
