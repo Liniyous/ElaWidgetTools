@@ -6,10 +6,10 @@
 
 #include "ElaAcrylicUrlCard.h"
 #include "ElaFlowLayout.h"
-#include "ElaIcon.h"
 #include "ElaImageCard.h"
 #include "ElaMenu.h"
 #include "ElaMessageBar.h"
+#include "ElaNavigationRouter.h"
 #include "ElaReminderCard.h"
 #include "ElaScrollArea.h"
 #include "ElaText.h"
@@ -70,14 +70,14 @@ T_Home::T_Home(QWidget* parent)
     centerVLayout->setSpacing(20);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget);
-    QLabel* homeStack1 = new QLabel("HomeStack1", this);
+    ElaText* homeStack1 = new ElaText("HomeStack1", this);
     QFont font = homeStack1->font();
     font.setPointSize(25);
     homeStack1->setFont(font);
     homeStack1->setAlignment(Qt::AlignCenter);
     homeStack1->setWindowTitle("HomeStack1");
     addCentralWidget(homeStack1);
-    QLabel* homeStack2 = new QLabel("HomeStack2", this);
+    ElaText* homeStack2 = new ElaText("HomeStack2", this);
     homeStack2->setFont(font);
     homeStack2->setAlignment(Qt::AlignCenter);
     homeStack2->setWindowTitle("HomeStack2");
@@ -133,10 +133,12 @@ T_Home::T_Home(QWidget* parent)
     checkMenu2->addAction("查看3");
     checkMenu2->addAction("查看4");
     QKeySequence key = QKeySequence(Qt::CTRL | Qt::Key_S);
-    QAction* action = _homeMenu->addAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
-
+    _homeMenu->addAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
     _homeMenu->addAction(ElaIconType::ArrowRotateRight, "刷新");
-    _homeMenu->addAction(ElaIconType::ArrowRotateLeft, "撤销");
+    QAction* action = _homeMenu->addAction(ElaIconType::ArrowRotateLeft, "撤销");
+    connect(action, &QAction::triggered, this, [=]() {
+        ElaNavigationRouter::getInstance()->navigationRouteBack();
+    });
     _homeMenu->addAction(ElaIconType::Copy, "复制");
     _homeMenu->addAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
     // _homeMenu->addSeparator();

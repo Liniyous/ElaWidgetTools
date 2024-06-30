@@ -50,7 +50,7 @@ void ElaTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt,
         if (opt->state.testFlag(QStyle::State_MouseOver))
         {
             p->setPen(Qt::NoPen);
-            p->setBrush(QColor(0xDC, 0xDC, 0xDD));
+            p->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xDC, 0xDC, 0xDD) : QColor(0x5C, 0x5A, 0x56));
             p->drawRoundedRect(opt->rect, 2, 2);
         }
         QFont iconFont = QFont("ElaAwesome");
@@ -189,4 +189,21 @@ QSize ElaTabBarStyle::sizeFromContents(ContentsType type, const QStyleOption* op
     }
     }
     return QProxyStyle::sizeFromContents(type, option, size, widget);
+}
+
+QRect ElaTabBarStyle::subElementRect(SubElement element, const QStyleOption* option, const QWidget* widget) const
+{
+    switch (element)
+    {
+    case QStyle::SE_TabBarScrollLeftButton:
+    case QStyle::SE_TabBarScrollRightButton:
+    {
+        return QRect();
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QProxyStyle::subElementRect(element, option, widget);
 }
