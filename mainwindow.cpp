@@ -10,7 +10,7 @@
 #include "ElaGraphicsItem.h"
 #include "ElaGraphicsScene.h"
 #include "ElaGraphicsView.h"
-#include "ElaNavigationRouter.h"
+#include "ElaLog.h"
 #include "ElaWidget.h"
 #include "example/T_BaseComponents.h"
 #include "example/T_ElaScreen.h"
@@ -20,6 +20,7 @@
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
+    ElaLog::getInstance()->initMessageLog(true);
     // ElaApplication::getInstance()->setThemeMode(ElaApplicationType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Minimal);
@@ -99,7 +100,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() { this->navigation(_baseComponentsPage->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() { this->navigation(view->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaIconNavigation, this, [=]() { this->navigation(_iconPage->property("ElaPageKey").toString()); });
-    qDebug() << ElaEventBus::getInstance()->getRegisteredEventsName();
+    qDebug() << "已注册的事件列表" << ElaEventBus::getInstance()->getRegisteredEventsName();
 
     // 拦截默认关闭事件
     this->setIsDefaultClosed(false);

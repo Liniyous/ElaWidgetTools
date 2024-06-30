@@ -51,6 +51,7 @@
 |ElaImageCard|图片卡片||
 |ElaInteractiveCard|带图片的交互式透明卡片||
 |ElaLineEdit|输入框||
+|ElaLog|消息日志||
 |ElaMenu|菜单||
 |ElaMessageBar|弹出式信息栏|支持八方向，锚定位置|
 |ElaMessageButton|弹出信息按钮||

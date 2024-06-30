@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-#include "ElaContentDialog.h"
 #include "ElaWindow.h"
 class T_Home;
 class T_Icon;
