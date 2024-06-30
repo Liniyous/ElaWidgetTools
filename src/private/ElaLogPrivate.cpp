@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QMutex>
+#include <iostream>
 
 #include "ElaLog.h"
 Q_GLOBAL_STATIC(QMutex, messageLogMutex)
@@ -48,7 +49,7 @@ void ElaLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& 
     }
     }
 #ifndef QT_NO_DEBUG
-    std::cout << logInfo.toLocal8bit().constData() << "\n";
+    std::cout << logInfo.toLocal8Bit().constData() << "\n";
 #endif
     messageLogMutex->lock();
     QFile logfile;
