@@ -406,7 +406,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         *result = HTCLIENT;
         return true;
     }
-    case WM_LBUTTONUP:
+    case WM_LBUTTONDOWN:
     {
         ElaEventBus::getInstance()->post("WMWindowClicked");
         return false;
