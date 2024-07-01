@@ -14,7 +14,6 @@ class ElaAppBar;
 class QStackedWidget;
 class QHBoxLayout;
 class QVBoxLayout;
-class QParallelAnimationGroup;
 class ElaThemeAnimationWidget;
 class ElaWindowPrivate : public QObject
 {
@@ -31,11 +30,10 @@ public:
     Q_SLOT void onThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
     Q_SLOT void onThemeModeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
+    Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
 
 private:
-    friend class ElaNavigationBar;
-    friend class ElaNavigationBarPrivate;
-    ElaNavigationType::NavigationDisplayMode _currentNavigationBarDisplayMode{ElaNavigationType::NavigationDisplayMode::Maximal};
     ElaEvent* _focusEvent{nullptr};
     ElaNavigationBar* _navigationBar{nullptr};
     QStackedWidget* _centerStackedWidget{nullptr};
@@ -43,15 +41,18 @@ private:
     QLinearGradient* _windowLinearGradient{nullptr};
     QHBoxLayout* _centerLayout{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
-    bool _isNavigationBarExpanded{false};
-    bool _isNavagationAnimationFinished{true};
     int _contentsMargins{5};
     int _compactBarWidth{45};
     bool _isNavigationEnable{true};
+    bool _isNavigationBarExpanded{false};
     ElaThemeAnimationWidget* _animationWidget{nullptr};
 
+    ElaNavigationType::NavigationDisplayMode _currentNavigationBarDisplayMode{ElaNavigationType::Maximal};
+
+    QMap<QString, int> _routeMap; // key__nodeKey title可以一致  value__stackIndex
+    int _navigationTargetIndex{0};
+
     qreal _distance(QPoint point1, QPoint point2);
-    void _adjustNavigationSize();
     void _resetWindowLayout(bool isAnimation);
 };
 

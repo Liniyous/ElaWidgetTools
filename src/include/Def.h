@@ -73,6 +73,12 @@ enum NavigationDisplayMode
 };
 Q_ENUM_NS(NavigationDisplayMode)
 
+enum NavigationNodeType
+{
+    PageNode = 0x0000,
+    FooterNode = 0x0001,
+};
+Q_ENUM_NS(NavigationNodeType)
 } // namespace ElaNavigationType
 
 namespace ElaNavigationRouterType

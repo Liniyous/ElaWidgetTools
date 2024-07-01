@@ -3,6 +3,7 @@
 #include <QImage>
 #include <QPropertyAnimation>
 #include <QStackedWidget>
+#include <QTimer>
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
@@ -11,7 +12,6 @@
 #include "ElaNavigationBar.h"
 #include "ElaThemeAnimationWidget.h"
 #include "ElaWindow.h"
-#include "private/ElaNavigationBarPrivate.h"
 ElaWindowPrivate::ElaWindowPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -25,9 +25,10 @@ void ElaWindowPrivate::onNavigationButtonClicked()
 {
     int contentMargin = _contentsMargins;
     int appBarHeight = _appBar->height();
-    if (_navigationBar->pos().x() == -45 || _navigationBar->pos().x() == -305)
+    if (_navigationBar->pos().x() == 5 || _navigationBar->pos().x() == -305)
     {
-        _navigationBar->switchCompact(false);
+        _resetWindowLayout(true);
+        _navigationBar->setDisplayMode(ElaNavigationType::Maximal, false);
         _navigationBar->move(-_navigationBar->width(), _navigationBar->pos().y());
         _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height());
         QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
@@ -36,7 +37,6 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
         navigationMoveAnimation->setEndValue(QPoint(contentMargin, appBarHeight + contentMargin));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        _navigationBar->d_ptr->_raiseNavigationBar();
         _isNavigationBarExpanded = true;
     }
 }
@@ -103,27 +103,25 @@ void ElaWindowPrivate::onDisplayModeChanged()
     {
     case ElaNavigationType::Auto:
     {
+        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         break;
     }
     case ElaNavigationType::Minimal:
     {
-        _navigationBar->move(-_navigationBar->width() - 5, 35);
-        if (_centerLayout->count() == 2)
-        {
-            _centerLayout->takeAt(0);
-        }
-        _navigationBar->setVisible(false);
+        _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
         _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint);
-        break;
-    }
-    case ElaNavigationType::Maximal:
-    {
-        _navigationBar->setVisible(true);
         break;
     }
     case ElaNavigationType::Compact:
     {
-        _navigationBar->switchCompact(true);
+        _navigationBar->setDisplayMode(ElaNavigationType::Compact, false);
+        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
+        break;
+    }
+    case ElaNavigationType::Maximal:
+    {
+        _navigationBar->setDisplayMode(ElaNavigationType::Maximal, false);
+        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         break;
     }
     }
@@ -143,23 +141,57 @@ void ElaWindowPrivate::onThemeModeChanged(ElaApplicationType::ThemeMode themeMod
     }
 }
 
+void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey)
+{
+    int nodeIndex = _routeMap.value(nodeKey);
+    if (nodeIndex == -1)
+    {
+        // 页脚没有绑定页面
+        return;
+    }
+    if (_navigationTargetIndex == nodeIndex || _centerStackedWidget->count() <= nodeIndex)
+    {
+        return;
+    }
+    _navigationTargetIndex = nodeIndex;
+    QTimer::singleShot(180, this, [=]() {
+        QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
+        QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
+        currentWidgetAnimation->setEasingCurve(QEasingCurve::InOutCubic);
+        currentWidgetAnimation->setDuration(280);
+        QPoint currentWidgetPos = currentWidget->pos();
+        currentWidgetPos.setY(10);
+        currentWidgetAnimation->setEndValue(currentWidgetPos);
+        currentWidgetPos.setY(currentWidgetPos.y() + 60);
+        currentWidgetAnimation->setStartValue(currentWidgetPos);
+        _centerStackedWidget->setCurrentIndex(nodeIndex);
+        currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped); });
+}
+
+void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page)
+{
+    if (nodeType == ElaNavigationType::PageNode)
+    {
+        _routeMap.insert(nodeKey, _centerStackedWidget->count());
+        _centerStackedWidget->addWidget(page);
+    }
+    else
+    {
+        if (page)
+        {
+            _routeMap.insert(nodeKey, _centerStackedWidget->count());
+            _centerStackedWidget->addWidget(page);
+        }
+        else
+        {
+            _routeMap.insert(nodeKey, -1);
+        }
+    }
+}
+
 qreal ElaWindowPrivate::_distance(QPoint point1, QPoint point2)
 {
     return sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) + (point1.y() - point2.y()) * (point1.y() - point2.y()));
-}
-
-void ElaWindowPrivate::_adjustNavigationSize()
-{
-    Q_Q(ElaWindow);
-    if (!_isNavagationAnimationFinished)
-    {
-        //不在布局中 动态调整高度 避免动画过程中显示不完全
-        ElaNavigationBarPrivate* navigationBarPrivate = _navigationBar->d_func();
-        _centerStackedWidget->resize(q->width() - _centerStackedWidget->x() - 5, q->height() - 40);
-        _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height());
-        navigationBarPrivate->_maximalWidget->resize(navigationBarPrivate->_maximalWidget->width(), _navigationBar->height());
-        navigationBarPrivate->_compactWidget->resize(navigationBarPrivate->_compactWidget->width(), _navigationBar->height());
-    }
 }
 
 void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
@@ -177,8 +209,15 @@ void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
     }
     else
     {
-        _centerLayout->addWidget(_navigationBar);
-        _centerLayout->addWidget(_centerStackedWidget);
-        _mainLayout->takeAt(2);
+        if (_centerLayout->count() == 0)
+        {
+            _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
+            _centerLayout->addWidget(_navigationBar);
+            _centerLayout->addWidget(_centerStackedWidget);
+        }
+        if (_mainLayout->count() == 3)
+        {
+            _mainLayout->takeAt(2);
+        }
     }
 }

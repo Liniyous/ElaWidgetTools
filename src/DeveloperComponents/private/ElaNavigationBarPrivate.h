@@ -44,8 +44,6 @@ public:
     void onCompactViewClicked(const QModelIndex& index);
 
 private:
-    friend class ElaWindow;
-    friend class ElaWindowPrivate;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
     QWidget* _maximalWidget{nullptr};
     QWidget* _compactWidget{nullptr};
@@ -63,17 +61,19 @@ private:
     ElaFooterDelegate* _footerDelegate{nullptr};
     ElaNavigationSuggestBox* _navigationSuggestBox{nullptr};
     ElaInteractiveCard* _userCard{nullptr};
-    QMap<QString, int> _routeMap; // key__nodeKey title可以一致  value__stackIndex
-    int _navigationTargetIndex{0};
+
+    ElaNavigationType::NavigationDisplayMode _currentDisplayMode{ElaNavigationType::NavigationDisplayMode::Maximal};
     void _resetNodeSelected();
     void _expandSelectedNodeParent();
     void _initNodeModelIndex(const QModelIndex& parentIndex);
 
-    void _switchMainStackIndex(QString nodeKey);
-    void _raiseNavigationBar();
     void _addStackedPage(QWidget* page, QString pageKey);
     void _addFooterPage(QWidget* page, QString footKey);
-    void _setLayoutWidgetsVisible(QLayout* layout, bool isVisible);
+
+    void _raiseNavigationBar();
+    void _switchContentLayout(bool direction);
+    void _startContentWidgetAnimation(QPoint startPoint, QPoint endPoint, bool isAnimation);
+    void _resetNavigationLayout(ElaNavigationType::NavigationDisplayMode displayMode);
 };
 
 #endif // ELANAVIGATIONBARPRIVATE_H

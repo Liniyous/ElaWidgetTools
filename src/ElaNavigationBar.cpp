@@ -1,18 +1,15 @@
 #include "ElaNavigationBar.h"
 
-#include <Windows.h>
-
-#include <QGraphicsDropShadowEffect>
+#include <QEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
+#include <QResizeEvent>
 #include <QScroller>
-#include <QStackedWidget>
 #include <QVBoxLayout>
 
 #include "ElaApplication.h"
 #include "ElaCompactDelegate.h"
 #include "ElaCompactModel.h"
-#include "ElaEventBus.h"
 #include "ElaFooterDelegate.h"
 #include "ElaFooterModel.h"
 #include "ElaInteractiveCard.h"
@@ -24,11 +21,8 @@
 #include "ElaNavigationSuggestBox.h"
 #include "ElaNavigationSuggestView.h"
 #include "ElaNavigationView.h"
-#include "ElaWindow.h"
-#include "ElaWindowPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaNavigationSuggestBoxPrivate.h"
-
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaNavigationBarPrivate())
 {
@@ -65,8 +59,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
     d->_userCard->setTitle("Ela Tool");
     d->_userCard->setSubTitle("Liniyous@gmail.com");
-    ElaWindow* window = dynamic_cast<ElaWindow*>(parent);
-    connect(d->_userCard, &ElaInteractiveCard::clicked, this, [=]() { Q_EMIT window->userInfoCardClicked(); });
+    connect(d->_userCard, &ElaInteractiveCard::clicked, this, &ElaNavigationBar::userInfoCardClicked);
 
     // 页脚
     d->_footerView = new ElaListView(this);
@@ -129,6 +122,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 
     //主题设置
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
+    parent->installEventFilter(this);
 }
 
 ElaNavigationBar::~ElaNavigationBar()
@@ -147,6 +141,24 @@ void ElaNavigationBar::setUserInfoCardVisible(bool isVisible)
     {
         d->_navigationSuggestBox->d_ptr->_searchView->move(16, 86);
     }
+}
+
+void ElaNavigationBar::setUserInfoCardPixmap(QPixmap pix)
+{
+    Q_D(ElaNavigationBar);
+    d->_userCard->setCardPixmap(pix);
+}
+
+void ElaNavigationBar::setUserInfoCardTitle(QString title)
+{
+    Q_D(ElaNavigationBar);
+    d->_userCard->setTitle(title);
+}
+
+void ElaNavigationBar::setUserInfoCardSubTitle(QString subTitle)
+{
+    Q_D(ElaNavigationBar);
+    d->_userCard->setSubTitle(subTitle);
 }
 
 ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType awesome) const
@@ -283,6 +295,11 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     return returnType;
 }
 
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QString& footerKey, int keyPoints, ElaIconType awesome) const
+{
+    return addFooterNode(footerTitle, nullptr, footerKey, keyPoints, awesome);
+}
+
 ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints, ElaIconType awesome) const
 {
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_footerModel->addFooterNode(footerTitle, footerKey, page ? true : false, keyPoints, awesome);
@@ -319,32 +336,99 @@ void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked)
     }
 }
 
-void ElaNavigationBar::switchCompact(bool direction)
+void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation)
 {
     Q_D(ElaNavigationBar);
-    if (direction)
+    if (d->_currentDisplayMode == displayMode || displayMode == ElaNavigationType::Auto)
     {
-        setFixedWidth(45);
+        return;
+    }
+    ElaNavigationType::NavigationDisplayMode lastMode = d->_currentDisplayMode;
+    d->_raiseNavigationBar();
+    switch (displayMode)
+    {
+    case ElaNavigationType::Minimal:
+    {
+        QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(this, "maximumWidth");
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            setFixedWidth(value.toUInt());
+        });
+        navigationBarWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        navigationBarWidthAnimation->setStartValue(width());
+        navigationBarWidthAnimation->setEndValue(0);
+        navigationBarWidthAnimation->setDuration(isAnimation ? 300 : 0);
+        navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
         while (d->_mainLayout->count() > 0)
         {
             d->_mainLayout->takeAt(0);
         }
-        d->_mainLayout->addWidget(d->_compactWidget);
-        d->_maximalWidget->setVisible(false);
+        d->_compactWidget->resize(40, height());
         d->_compactWidget->setVisible(true);
-        move(-45, this->pos().y());
+        d->_startContentWidgetAnimation(d->_compactWidget->pos(), QPoint(-45, d->_compactWidget->pos().y()), isAnimation);
+        break;
     }
-    else
+    case ElaNavigationType::Compact:
     {
-        setFixedWidth(300);
+        QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(this, "maximumWidth");
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            setFixedWidth(value.toUInt());
+        });
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
+            d->_switchContentLayout(true);
+        });
+        navigationBarWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        navigationBarWidthAnimation->setStartValue(width());
+        navigationBarWidthAnimation->setEndValue(45);
+        navigationBarWidthAnimation->setDuration(isAnimation ? 300 : 0);
+        navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        if (lastMode == ElaNavigationType::Maximal)
+        {
+            while (d->_mainLayout->count() > 0)
+            {
+                d->_mainLayout->takeAt(0);
+            }
+            d->_compactWidget->resize(40, height());
+            d->_compactWidget->setVisible(true);
+            d->_startContentWidgetAnimation(QPoint(width(), d->_compactWidget->pos().y()), QPoint(0, d->_compactWidget->pos().y()), isAnimation);
+        }
+        else
+        {
+            d->_resetNavigationLayout(ElaNavigationType::Minimal);
+            d->_startContentWidgetAnimation(d->_compactWidget->pos(), QPoint(0, d->_compactWidget->pos().y()), isAnimation);
+        }
+        break;
+    }
+    case ElaNavigationType::Maximal:
+    {
+        QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(this, "maximumWidth");
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            setFixedWidth(value.toUInt());
+        });
+        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
+            d->_switchContentLayout(false);
+        });
+        navigationBarWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        navigationBarWidthAnimation->setStartValue(width());
+        navigationBarWidthAnimation->setEndValue(300);
+        navigationBarWidthAnimation->setDuration(isAnimation ? 300 : 0);
+        navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
         while (d->_mainLayout->count() > 0)
         {
             d->_mainLayout->takeAt(0);
         }
-        d->_mainLayout->addWidget(d->_maximalWidget);
+        d->_maximalWidget->resize(300, height());
         d->_maximalWidget->setVisible(true);
-        d->_compactWidget->setVisible(false);
+        d->_startContentWidgetAnimation(d->_compactWidget->pos(), QPoint(300, d->_compactWidget->pos().y()), isAnimation);
+        break;
     }
+    default:
+    {
+        return;
+    }
+    }
+    d->_currentDisplayMode = displayMode;
 }
 
 void ElaNavigationBar::paintEvent(QPaintEvent* event)
@@ -357,4 +441,14 @@ void ElaNavigationBar::paintEvent(QPaintEvent* event)
     painter.drawRoundedRect(rect(), 8, 8);
     painter.restore();
     QWidget::paintEvent(event);
+}
+
+void ElaNavigationBar::resizeEvent(QResizeEvent* event)
+{
+    Q_D(ElaNavigationBar);
+    if (d->_currentDisplayMode == ElaNavigationType::Compact)
+    {
+        d->_compactWidget->resize(d->_compactWidget->width(), this->height());
+    }
+    QWidget::resizeEvent(event);
 }

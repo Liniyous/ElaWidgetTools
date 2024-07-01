@@ -2,8 +2,6 @@
 
 #include <QLayout>
 #include <QPropertyAnimation>
-#include <QStackedWidget>
-#include <QTimer>
 
 #include "ElaBreadcrumbBar.h"
 #include "ElaCompactDelegate.h"
@@ -21,8 +19,6 @@
 #include "ElaNavigationSuggestBoxPrivate.h"
 #include "ElaNavigationView.h"
 #include "ElaScrollPagePrivate.h"
-#include "ElaWindow.h"
-#include "ElaWindowPrivate.h"
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -55,6 +51,7 @@ void ElaNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)
 
 void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute)
 {
+    Q_Q(ElaNavigationBar);
     if (index.isValid())
     {
         ElaNavigationNode* node = static_cast<ElaNavigationNode*>(index.internalPointer());
@@ -116,7 +113,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     routeData.insert("ElaPageKey", pageKeyList);
                     ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
                 }
-                _switchMainStackIndex(node->getNodeKey());
+                Q_EMIT q->navigationNodeClicked(ElaNavigationType::PageNode, node->getNodeKey());
                 QVariantMap compactPostData = QVariantMap();
                 compactPostData.insert("SelectMarkChanged", true);
                 if (_footerModel->getSelectedNode())
@@ -167,6 +164,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
 
 void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool isLogRoute)
 {
+    Q_Q(ElaNavigationBar);
     ElaNavigationNode* node = index.data(Qt::UserRole).value<ElaNavigationNode*>();
     if (node->getKeyPoints())
     {
@@ -196,7 +194,7 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
             routeData.insert("ElaPageKey", pageKeyList);
             ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
         }
-        _switchMainStackIndex(node->getNodeKey());
+        Q_EMIT q->navigationNodeClicked(ElaNavigationType::FooterNode, node->getNodeKey());
 
         if (node->getIsHasFooterPage())
         {
@@ -349,35 +347,31 @@ void ElaNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex
     }
 }
 
-void ElaNavigationBarPrivate::_switchMainStackIndex(QString nodeKey)
+void ElaNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
 {
     Q_Q(ElaNavigationBar);
-    ElaWindow* window = dynamic_cast<ElaWindow*>(q->parent());
-    QStackedWidget* centerStackedWidget = window->d_ptr->_centerStackedWidget;
-    int nodeIndex = _routeMap.value(nodeKey);
-    if (nodeIndex == -1)
+    page->setProperty("ElaPageKey", pageKey);
+    Q_EMIT q->navigationNodeAdded(ElaNavigationType::PageNode, pageKey, page);
+    _initNodeModelIndex(QModelIndex());
+    _navigationSuggestBox->d_ptr->_appendPageNode(_navigationModel->getNavigationNode(pageKey));
+    static bool isFirstAdd = true;
+    if (isFirstAdd)
     {
-        // 页脚没有绑定页面
-        Q_EMIT q->footerNodeClicked(nodeKey);
-        return;
+        isFirstAdd = false;
+        _resetNodeSelected();
     }
-    if (_navigationTargetIndex == nodeIndex || centerStackedWidget->count() <= nodeIndex)
+}
+
+void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
+{
+    Q_Q(ElaNavigationBar);
+    Q_EMIT q->navigationNodeAdded(ElaNavigationType::FooterNode, footKey, page);
+    if (page)
     {
-        return;
+        page->setProperty("ElaPageKey", footKey);
     }
-    _navigationTargetIndex = nodeIndex;
-    QTimer::singleShot(180, this, [=]() {
-        QWidget* currentWidget = centerStackedWidget->widget(nodeIndex);
-        QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
-        currentWidgetAnimation->setEasingCurve(QEasingCurve::InOutCubic);
-        currentWidgetAnimation->setDuration(280);
-        QPoint currentWidgetPos = currentWidget->pos();
-        currentWidgetPos.setY(10);
-        currentWidgetAnimation->setEndValue(currentWidgetPos);
-        currentWidgetPos.setY(currentWidgetPos.y() + 60);
-        currentWidgetAnimation->setStartValue(currentWidgetPos);
-        centerStackedWidget->setCurrentIndex(nodeIndex);
-        currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped); });
+    _footerView->setFixedHeight(40 * _footerModel->getFooterNodeCount());
+    _navigationSuggestBox->d_ptr->_appendPageNode(_footerModel->getNavigationNode(footKey));
 }
 
 void ElaNavigationBarPrivate::_raiseNavigationBar()
@@ -387,53 +381,73 @@ void ElaNavigationBarPrivate::_raiseNavigationBar()
     _navigationSuggestBox->d_ptr->_raiseSearchView();
 }
 
-void ElaNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
+void ElaNavigationBarPrivate::_switchContentLayout(bool direction)
 {
-    Q_Q(ElaNavigationBar);
-    page->setProperty("ElaPageKey", pageKey);
-    ElaWindow* window = dynamic_cast<ElaWindow*>(q->parent());
-    QStackedWidget* centerStackedWidget = window->d_ptr->_centerStackedWidget;
-    _routeMap.insert(pageKey, centerStackedWidget->count());
-    centerStackedWidget->addWidget(page);
-    _initNodeModelIndex(QModelIndex());
-    _navigationSuggestBox->d_ptr->_appendPageNode(_navigationModel->getNavigationNode(pageKey));
-    if (centerStackedWidget->count() == 1)
+    if (direction)
     {
-        _resetNodeSelected();
-    }
-}
-
-void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
-{
-    Q_Q(ElaNavigationBar);
-    if (page)
-    {
-        page->setProperty("ElaPageKey", footKey);
-        ElaWindow* window = dynamic_cast<ElaWindow*>(q->parent());
-        QStackedWidget* centerStackedWidget = window->d_ptr->_centerStackedWidget;
-        _routeMap.insert(footKey, centerStackedWidget->count());
-        centerStackedWidget->addWidget(page);
+        while (_mainLayout->count() > 0)
+        {
+            _mainLayout->takeAt(0);
+        }
+        _mainLayout->addWidget(_compactWidget);
+        _maximalWidget->setVisible(false);
+        _compactWidget->setVisible(true);
     }
     else
     {
-        _routeMap.insert(footKey, -1);
+        while (_mainLayout->count() > 0)
+        {
+            _mainLayout->takeAt(0);
+        }
+        _mainLayout->addWidget(_maximalWidget);
+        _maximalWidget->setVisible(true);
+        _compactWidget->setVisible(false);
     }
-    _footerView->setFixedHeight(40 * _footerModel->getFooterNodeCount());
-    _navigationSuggestBox->d_ptr->_appendPageNode(_footerModel->getNavigationNode(footKey));
 }
 
-void ElaNavigationBarPrivate::_setLayoutWidgetsVisible(QLayout* layout, bool isVisible)
+void ElaNavigationBarPrivate::_startContentWidgetAnimation(QPoint startPoint, QPoint endPoint, bool isAnimation)
 {
-    if (!layout)
+    Q_Q(ElaNavigationBar);
+    QPropertyAnimation* maximalAnimation = new QPropertyAnimation(_compactWidget, "pos");
+    connect(maximalAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        _compactWidget->resize(_compactWidget->width(), q->height());
+        _maximalWidget->resize(_maximalWidget->width(), q->height());
+        _maximalWidget->move(value.toPoint().x() - 300, value.toPoint().y());
+    });
+    maximalAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    maximalAnimation->setDuration(isAnimation ? 300 : 0);
+    maximalAnimation->setStartValue(startPoint);
+    maximalAnimation->setEndValue(endPoint);
+    maximalAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void ElaNavigationBarPrivate::_resetNavigationLayout(ElaNavigationType::NavigationDisplayMode displayMode)
+{
+    Q_Q(ElaNavigationBar);
+    switch (displayMode)
+    {
+    case ElaNavigationType::Minimal:
+    {
+        while (_mainLayout->count() > 0)
+        {
+            _mainLayout->takeAt(0);
+        }
+        _compactWidget->resize(40, q->height());
+        _compactWidget->setVisible(true);
+        _maximalWidget->move(_compactWidget->pos().x() - 300, _maximalWidget->pos().y());
+        break;
+    }
+    case ElaNavigationType::Compact:
+    {
+        break;
+    }
+    case ElaNavigationType::Maximal:
+    {
+        break;
+    }
+    default:
     {
         return;
     }
-    for (int i = 0; i < layout->count(); i++)
-    {
-        QWidget* widget = layout->itemAt(i)->widget();
-        if (widget)
-        {
-            widget->setVisible(isVisible);
-        }
     }
 }

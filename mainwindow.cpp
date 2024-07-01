@@ -20,10 +20,10 @@
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
-    ElaLog::getInstance()->initMessageLog(true);
+    // ElaLog::getInstance()->initMessageLog(true);
     // ElaApplication::getInstance()->setThemeMode(ElaApplicationType::Dark);
     // setIsNavigationBarEnable(false);
-    // setNavigationBarDisplayMode(ElaNavigationType::Minimal);
+    // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);
     setUserInfoCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
     setUserInfoCardTitle("Ela Tool");
@@ -88,8 +88,8 @@ MainWindow::MainWindow(QWidget* parent)
     widget->setWindowModality(Qt::ApplicationModal);
     widget->setCentralWidget(new QWidget());
     widget->hide();
-    connect(this, &ElaWindow::footerNodeClicked, this, [=](QString footerKey) {
-        if (_aboutKey == footerKey)
+    connect(this, &ElaWindow::navigationNodeClicked, this, [=](ElaNavigationType::NavigationNodeType nodeType, QString nodeKey) {
+        if (_aboutKey == nodeKey)
         {
             widget->show();
         }

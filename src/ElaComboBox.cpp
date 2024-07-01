@@ -123,9 +123,10 @@ void ElaComboBox::hidePopup()
         {
             QPropertyAnimation* opcaityAnimation = new QPropertyAnimation(container, "windowOpacity");
             connect(opcaityAnimation, &QPropertyAnimation::finished, this, [=]() {
-            QComboBox::hidePopup();
-            container->setWindowOpacity(1);
-            d->_isHidePopupAnimationFinished = true; });
+                QComboBox::hidePopup();
+                container->setWindowOpacity(1);
+                d->_isHidePopupAnimationFinished = true;
+            });
             opcaityAnimation->setStartValue(1);
             opcaityAnimation->setEndValue(0);
             opcaityAnimation->setEasingCurve(QEasingCurve::InCubic);
