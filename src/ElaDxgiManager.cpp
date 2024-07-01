@@ -35,6 +35,8 @@ ElaDxgiManager::ElaDxgiManager(QObject* parent)
     }
     if (!ret)
     {
+        delete d->_dxgi;
+        d->_dxgi = nullptr;
         qCritical() << "No available screenshot devices";
         return;
     }
@@ -65,24 +67,40 @@ ElaDxgiManager::~ElaDxgiManager()
 QStringList ElaDxgiManager::getDxDeviceList() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return QStringList();
+    }
     return d->_dxgi->getDxDeviceList();
 }
 
 QStringList ElaDxgiManager::getOutputDeviceList() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return QStringList();
+    }
     return d->_dxgi->getOutputDeviceList();
 }
 
 QImage ElaDxgiManager::grabScreenToImage() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return QImage();
+    }
     return d->_dxgi->getGrabImage();
 }
 
 void ElaDxgiManager::startGrabScreen()
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return;
+    }
     if (!d->_dxgi->getIsGrabActive())
     {
         d->_dxgi->setIsGrabActive(true);
@@ -93,12 +111,20 @@ void ElaDxgiManager::startGrabScreen()
 void ElaDxgiManager::stopGrabScreen()
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return;
+    }
     d->_dxgi->setIsGrabActive(false);
 }
 
 bool ElaDxgiManager::setDxDeviceID(int dxID)
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return false;
+    }
     if (dxID < 0 || d->_dxgi->getDxDeviceList().count() <= dxID)
     {
         return false;
@@ -120,12 +146,20 @@ bool ElaDxgiManager::setDxDeviceID(int dxID)
 int ElaDxgiManager::getDxDeviceID() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return -1;
+    }
     return d->_dxgi->getDxDeviceID();
 }
 
 bool ElaDxgiManager::setOutputDeviceID(int deviceID)
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return false;
+    }
     if (deviceID < 0 || d->_dxgi->getOutputDeviceList().count() <= deviceID)
     {
         return false;
@@ -147,12 +181,20 @@ bool ElaDxgiManager::setOutputDeviceID(int deviceID)
 int ElaDxgiManager::getOutputDeviceID() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return -1;
+    }
     return d->_dxgi->getOutputDeviceID();
 }
 
 void ElaDxgiManager::setGrabArea(int width, int height)
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return;
+    }
     int maxWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     int maxHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
     if (width <= 0 || width > maxWidth)
@@ -169,6 +211,10 @@ void ElaDxgiManager::setGrabArea(int width, int height)
 void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return;
+    }
     int maxWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     int maxHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
     if (width <= 0 || width > maxWidth)
@@ -185,12 +231,20 @@ void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 QRect ElaDxgiManager::getGrabArea() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return QRect();
+    }
     return d->_dxgi->getGrabArea();
 }
 
 void ElaDxgiManager::setGrabFrameRate(int frameRateValue)
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return;
+    }
     if (frameRateValue > 0)
     {
         d->_dxgi->setGrabFrameRate(frameRateValue);
@@ -200,12 +254,20 @@ void ElaDxgiManager::setGrabFrameRate(int frameRateValue)
 int ElaDxgiManager::getGrabFrameRate() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return -1;
+    }
     return d->_dxgi->getGrabFrameRate();
 }
 
 void ElaDxgiManager::setTimeoutMsValue(int timeoutValue)
 {
     Q_D(ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return;
+    }
     if (timeoutValue > 0)
     {
         d->_dxgi->setTimeoutMsValue(timeoutValue);
@@ -215,6 +277,10 @@ void ElaDxgiManager::setTimeoutMsValue(int timeoutValue)
 int ElaDxgiManager::getTimeoutMsValue() const
 {
     Q_D(const ElaDxgiManager);
+    if (!d->_dxgi)
+    {
+        return -1;
+    }
     return d->_dxgi->getTimeoutMsValue();
 }
 
