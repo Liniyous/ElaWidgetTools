@@ -45,6 +45,7 @@ private:
     int _compactBarWidth{45};
     bool _isNavigationEnable{true};
     bool _isNavigationBarExpanded{false};
+    bool _isWMClickedAnimationFinished{true};
     ElaThemeAnimationWidget* _animationWidget{nullptr};
 
     ElaNavigationType::NavigationDisplayMode _currentNavigationBarDisplayMode{ElaNavigationType::Maximal};

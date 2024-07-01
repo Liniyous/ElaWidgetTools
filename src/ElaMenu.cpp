@@ -249,11 +249,13 @@ bool ElaMenu::event(QEvent* event)
     case QEvent::ToolTip:
     {
         QModelIndex modelIndex = d->_centerView->indexAt(mapFromGlobal(QCursor::pos()));
-        if (d->_actionList.at(modelIndex.row())->data().value<ElaMenu*>())
+        if (modelIndex.isValid())
         {
-            d->onMenuClicked(modelIndex);
+            if (d->_actionList.at(modelIndex.row())->data().value<ElaMenu*>())
+            {
+                d->onMenuClicked(modelIndex);
+            }
         }
-
         break;
     }
     case QEvent::MouseButtonPress:

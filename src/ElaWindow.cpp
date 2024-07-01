@@ -260,9 +260,13 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
         return;
     }
     d->_windowLinearGradient->setFinalStop(width(), height());
-    d->_resetWindowLayout(false);
-    if (getNavigationBarDisplayMode() == ElaNavigationType::Auto)
+    if (d->_pNavigationBarDisplayMode == ElaNavigationType::Minimal)
     {
+        d->_resetWindowLayout(false);
+    }
+    if (d->_pNavigationBarDisplayMode == ElaNavigationType::Auto)
+    {
+        d->_resetWindowLayout(false);
         if (width() >= 850 && d->_currentNavigationBarDisplayMode != ElaNavigationType::Maximal)
         {
             d->_navigationBar->setDisplayMode(ElaNavigationType::Maximal);

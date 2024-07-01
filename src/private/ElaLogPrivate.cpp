@@ -3,7 +3,10 @@
 #include <QDateTime>
 #include <QFile>
 #include <QMutex>
+
+#ifndef QT_NO_DEBUG
 #include <iostream>
+#endif
 
 #include "ElaLog.h"
 Q_GLOBAL_STATIC(QMutex, messageLogMutex)

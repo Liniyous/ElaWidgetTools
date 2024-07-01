@@ -25,7 +25,7 @@ void ElaWindowPrivate::onNavigationButtonClicked()
 {
     int contentMargin = _contentsMargins;
     int appBarHeight = _appBar->height();
-    if (_navigationBar->pos().x() == 5 || _navigationBar->pos().x() == -305)
+    if (_isWMClickedAnimationFinished)
     {
         _resetWindowLayout(true);
         _navigationBar->setDisplayMode(ElaNavigationType::Maximal, false);
@@ -37,6 +37,7 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
         navigationMoveAnimation->setEndValue(QPoint(contentMargin, appBarHeight + contentMargin));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        _isWMClickedAnimationFinished = false;
         _isNavigationBarExpanded = true;
     }
 }
@@ -50,7 +51,11 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
     }
     if (_isNavigationBarExpanded)
     {
+        _isWMClickedAnimationFinished = false;
         QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
+        connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _isWMClickedAnimationFinished = true;
+        });
         navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
         navigationMoveAnimation->setDuration(300);
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
