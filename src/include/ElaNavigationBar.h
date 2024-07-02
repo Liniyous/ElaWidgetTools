@@ -28,6 +28,9 @@ public:
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, int keyPoints = 0, ElaIconType awesome = ElaIconType::None) const;
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints = 0, ElaIconType awesome = ElaIconType::None) const;
 
+    void setNodeKeyPoints(QString nodeKey, int keyPoints);
+    int getNodeKeyPoints(QString nodeKey) const;
+
     void navigation(QString pageKey, bool isLogClicked = true);
     void setDisplayMode(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
 

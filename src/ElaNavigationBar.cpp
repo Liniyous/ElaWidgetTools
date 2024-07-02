@@ -312,6 +312,36 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString
     return returnType;
 }
 
+void ElaNavigationBar::setNodeKeyPoints(QString nodeKey, int keyPoints)
+{
+    Q_D(ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node || node->getIsExpanderNode() || keyPoints < 0)
+    {
+        return;
+    }
+    node->setKeyPoints(keyPoints);
+    if (node->getIsFooterNode())
+    {
+        d->_footerView->viewport()->update();
+    }
+    else
+    {
+        d->_navigationView->viewport()->update();
+    }
+}
+
+int ElaNavigationBar::getNodeKeyPoints(QString nodeKey) const
+{
+    Q_D(const ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node || node->getIsExpanderNode())
+    {
+        return -1;
+    }
+    return node->getKeyPoints();
+}
+
 void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked)
 {
     Q_D(ElaNavigationBar);
