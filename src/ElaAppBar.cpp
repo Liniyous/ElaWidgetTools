@@ -22,7 +22,7 @@
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsFixedSize)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsDefaultClosed)
-
+Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsOnlyAllowMinAndClose)
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
 {
@@ -51,6 +51,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_pIsStayTop = false;
     d->_pIsFixedSize = false;
     d->_pIsDefaultClosed = true;
+    d->_pIsOnlyAllowMinAndClose = false;
     d->_currentWinID = window()->winId();
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
@@ -359,7 +360,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         bool top = nativeLocalPos.y < d->_margins;
         bool bottom = nativeLocalPos.y > clientHeight - d->_margins;
         *result = 0;
-        if (!d->_pIsFixedSize && !window()->isFullScreen() && !window()->isMaximized())
+        if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize && !window()->isFullScreen() && !window()->isMaximized())
         {
             if (left && top)
             {
@@ -408,18 +409,31 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     }
     case WM_LBUTTONDBLCLK:
     {
-        ElaEventBus::getInstance()->post("WMWindowClicked");
+        QVariantMap postData;
+        postData.insert("WMClickType", "WM_LBUTTONDBLCLK");
+        ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         return false;
     }
     case WM_LBUTTONDOWN:
     {
-        ElaEventBus::getInstance()->post("WMWindowClicked");
+        QVariantMap postData;
+        postData.insert("WMClickType", "WM_LBUTTONDOWN");
+        ElaEventBus::getInstance()->post("WMWindowClicked", postData);
+        return false;
+    }
+    case WM_LBUTTONUP:
+    {
+        QVariantMap postData;
+        postData.insert("WMClickType", "WM_LBUTTONUP");
+        ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         return false;
     }
     case WM_NCLBUTTONDOWN:
     {
-        ElaEventBus::getInstance()->post("WMWindowClicked");
-        if (d->_containsCursorToItem(d->_maxButton))
+        QVariantMap postData;
+        postData.insert("WMClickType", "WM_NCLBUTTONDOWN");
+        ElaEventBus::getInstance()->post("WMWindowClicked", postData);
+        if (d->_containsCursorToItem(d->_maxButton) || d->_pIsOnlyAllowMinAndClose)
         {
             return true;
         }
@@ -427,13 +441,23 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     }
     case WM_NCLBUTTONUP:
     {
-        ElaEventBus::getInstance()->post("WMWindowClicked");
-        if (d->_containsCursorToItem(d->_maxButton))
+        QVariantMap postData;
+        postData.insert("WMClickType", "WM_NCLBUTTONDOWN");
+        ElaEventBus::getInstance()->post("WMWindowClicked", postData);
+        if (d->_containsCursorToItem(d->_maxButton) && !d->_pIsOnlyAllowMinAndClose)
         {
             d->onMaxButtonClicked();
             return true;
         }
         break;
+    }
+    case WM_NCLBUTTONDBLCLK:
+    {
+        if (!d->_pIsOnlyAllowMinAndClose)
+        {
+            return false;
+        }
+        return true;
     }
     case WM_GETMINMAXINFO:
     {
@@ -453,11 +477,13 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         return true;
     }
     case WM_NCACTIVATE:
+    {
         *result = TRUE;
         return true;
+    }
     case WM_NCRBUTTONDOWN:
     {
-        if (wParam == HTCAPTION)
+        if (wParam == HTCAPTION && !d->_pIsOnlyAllowMinAndClose)
         {
             d->_showSystemMenu(QCursor::pos());
         }
@@ -466,7 +492,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     case WM_KEYDOWN:
     case WM_SYSKEYDOWN:
     {
-        if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SPACE) & 0x8000))
+        if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SPACE) & 0x8000) && !d->_pIsOnlyAllowMinAndClose)
         {
             auto pos = window()->geometry().topLeft();
             d->_showSystemMenu(QPoint(pos.x(), pos.y() + this->height()));

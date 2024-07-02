@@ -15,6 +15,7 @@ class ElaAppBarPrivate : public QObject
     Q_PROPERTY_CREATE_D(bool, IsStayTop)
     Q_PROPERTY_CREATE_D(bool, IsFixedSize)
     Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)
+    Q_PROPERTY_CREATE_D(bool, IsOnlyAllowMinAndClose)
 public:
     explicit ElaAppBarPrivate(QObject* parent = nullptr);
     ~ElaAppBarPrivate();

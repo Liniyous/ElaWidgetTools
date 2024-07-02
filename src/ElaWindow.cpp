@@ -10,13 +10,13 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "DeveloperComponents/ElaThemeAnimationWidget.h"
 #include "DeveloperComponents/private/ElaNavigationBarPrivate.h"
 #include "ElaAppBar.h"
 #include "ElaApplication.h"
 #include "ElaEventBus.h"
 #include "ElaNavigationBar.h"
 #include "ElaNavigationRouter.h"
+#include "ElaThemeAnimationWidget.h"
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaWindowPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
@@ -84,10 +84,6 @@ ElaWindow::ElaWindow(QWidget* parent)
     // 主题变更动画
     connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
-    // 主题变更绘制窗口
-    d->_animationWidget = new ElaThemeAnimationWidget(this);
-    d->_animationWidget->move(0, 0);
-    d->_animationWidget->hide();
 }
 
 ElaWindow::~ElaWindow()

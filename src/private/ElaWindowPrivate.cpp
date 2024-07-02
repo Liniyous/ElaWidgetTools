@@ -32,73 +32,83 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         _navigationBar->move(-_navigationBar->width(), _navigationBar->pos().y());
         _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height());
         QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
+        connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _isNavigationBarExpanded = true;
+        });
         navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
         navigationMoveAnimation->setDuration(300);
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
         navigationMoveAnimation->setEndValue(QPoint(contentMargin, appBarHeight + contentMargin));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         _isWMClickedAnimationFinished = false;
-        _isNavigationBarExpanded = true;
     }
 }
 
 void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
-    Q_UNUSED(data)
-    if (ElaApplication::containsCursorToItem(_navigationBar))
+    QString clickType = data.value("WMClickType").toString();
+    if (clickType == "WM_LBUTTONDBLCLK" || clickType == "WM_LBUTTONUP" || clickType == "WM_NCLBUTTONDOWN")
     {
-        return;
-    }
-    if (_isNavigationBarExpanded)
-    {
-        _isWMClickedAnimationFinished = false;
-        QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
-        connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _isWMClickedAnimationFinished = true;
-        });
-        navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        navigationMoveAnimation->setDuration(300);
-        navigationMoveAnimation->setStartValue(_navigationBar->pos());
-        navigationMoveAnimation->setEndValue(QPoint(-_navigationBar->width() - 5, 35));
-        navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        _isNavigationBarExpanded = false;
+        if (ElaApplication::containsCursorToItem(_navigationBar))
+        {
+            return;
+        }
+        if (_isNavigationBarExpanded)
+        {
+            QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
+            connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
+                _isWMClickedAnimationFinished = true;
+            });
+            navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
+            navigationMoveAnimation->setDuration(300);
+            navigationMoveAnimation->setStartValue(_navigationBar->pos());
+            navigationMoveAnimation->setEndValue(QPoint(-_navigationBar->width() - 5, 35));
+            navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            _isNavigationBarExpanded = false;
+        }
     }
 }
 
 void ElaWindowPrivate::onThemeReadyChange()
 {
     Q_Q(ElaWindow);
-    if (!_animationWidget->getIsAnimationFinished())
+    // 主题变更绘制窗口
+    _appBar->setIsOnlyAllowMinAndClose(true);
+    if (!_animationWidget)
     {
-        return;
-    }
-    ElaApplication* app = ElaApplication::getInstance();
-    _animationWidget->setWindowBackground(q->grab(q->rect()).toImage());
-
-    QPoint centerPos = q->mapFromGlobal(QCursor::pos());
-    _animationWidget->setCenter(centerPos);
-    qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
-    qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));
-    qreal bottomLeftDis = _distance(centerPos, QPoint(0, q->height()));
-    qreal bottomRightDis = _distance(centerPos, QPoint(q->width(), q->height()));
-    QList<qreal> disList{topLeftDis, topRightDis, bottomLeftDis, bottomRightDis};
-    std::sort(disList.begin(), disList.end());
-    _animationWidget->setEndRadius(disList[3]);
-    _animationWidget->resize(q->width(), q->height());
-    _animationWidget->move(q->mapToGlobal(QPoint(0, 0)));
-    _animationWidget->setIsMaximum(q->isMaximized());
-    _animationWidget->startAnimation(_pThemeChangeTime);
-    if (app->getThemeMode() == ElaApplicationType::Light)
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
-        _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
-        app->setThemeMode(ElaApplicationType::Dark);
-    }
-    else
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
-        _windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
-        app->setThemeMode(ElaApplicationType::Light);
+        _animationWidget = new ElaThemeAnimationWidget(q);
+        connect(_animationWidget, &ElaThemeAnimationWidget::animationFinished, this, [=]() {
+            _appBar->setIsOnlyAllowMinAndClose(false);
+            _animationWidget = nullptr;
+        });
+        _animationWidget->move(0, 0);
+        ElaApplication* app = ElaApplication::getInstance();
+        _animationWidget->setOldWindowBackground(q->grab(q->rect()).toImage());
+        if (app->getThemeMode() == ElaApplicationType::Light)
+        {
+            _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
+            _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
+            app->setThemeMode(ElaApplicationType::Dark);
+        }
+        else
+        {
+            _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
+            _windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
+            app->setThemeMode(ElaApplicationType::Light);
+        }
+        _animationWidget->setNewWindowBackground(q->grab(q->rect()).toImage());
+        QPoint centerPos = q->mapFromGlobal(QCursor::pos());
+        _animationWidget->setCenter(centerPos);
+        qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
+        qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));
+        qreal bottomLeftDis = _distance(centerPos, QPoint(0, q->height()));
+        qreal bottomRightDis = _distance(centerPos, QPoint(q->width(), q->height()));
+        QList<qreal> disList{topLeftDis, topRightDis, bottomLeftDis, bottomRightDis};
+        std::sort(disList.begin(), disList.end());
+        _animationWidget->setEndRadius(disList[3]);
+        _animationWidget->resize(q->width(), q->height());
+        _animationWidget->startAnimation(_pThemeChangeTime);
+        _animationWidget->show();
     }
 }
 

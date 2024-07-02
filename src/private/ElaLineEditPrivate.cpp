@@ -17,12 +17,15 @@ ElaLineEditPrivate::~ElaLineEditPrivate()
 void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_Q(ElaLineEdit);
-    Q_UNUSED(data)
-    if (ElaApplication::containsCursorToItem(q))
+    QString clickType = data.value("WMClickType").toString();
+    if (clickType == "WM_LBUTTONDOWN" || clickType == "WM_NCLBUTTONDOWN")
     {
-        return;
+        if (ElaApplication::containsCursorToItem(q))
+        {
+            return;
+        }
+        q->clearFocus();
     }
-    q->clearFocus();
 }
 
 void ElaLineEditPrivate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)

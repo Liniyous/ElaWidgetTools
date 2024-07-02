@@ -14,6 +14,7 @@ class ELA_EXPORT ElaAppBar : public QWidget, QAbstractNativeEventFilter
     Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
     Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
     Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
+    Q_PROPERTY_CREATE_Q_H(bool, IsOnlyAllowMinAndClose)
 public:
     explicit ElaAppBar(QWidget* parent = nullptr);
     ~ElaAppBar();

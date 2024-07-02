@@ -7,7 +7,9 @@
 #ifndef QT_NO_DEBUG
 #include <iostream>
 #endif
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <QTextStream>
+#endif
 #include "ElaLog.h"
 Q_GLOBAL_STATIC(QMutex, messageLogMutex)
 Q_GLOBAL_STATIC(QString, logFileNameTime)
