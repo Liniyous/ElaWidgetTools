@@ -132,18 +132,19 @@ T_Home::T_Home(QWidget* parent)
     checkMenu2->addAction("查看2");
     checkMenu2->addAction("查看3");
     checkMenu2->addAction("查看4");
-    QKeySequence key = QKeySequence(Qt::CTRL | Qt::Key_S);
-    _homeMenu->addAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
-    _homeMenu->addAction(ElaIconType::ArrowRotateRight, "刷新");
-    QAction* action = _homeMenu->addAction(ElaIconType::ArrowRotateLeft, "撤销");
+
+    // QKeySequence key = QKeySequence(Qt::CTRL | Qt::Key_S);
+
+    _homeMenu->addSeparator();
+    _homeMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
+    _homeMenu->addElaIconAction(ElaIconType::ArrowRotateRight, "刷新");
+    QAction* action = _homeMenu->addElaIconAction(ElaIconType::ArrowRotateLeft, "撤销");
     connect(action, &QAction::triggered, this, [=]() {
         ElaNavigationRouter::getInstance()->navigationRouteBack();
     });
-    _homeMenu->addAction(ElaIconType::Copy, "复制");
-    _homeMenu->addAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
-    // _homeMenu->addSeparator();
-    // _homeMenu->addAction("复制");
-    // _homeMenu->addAction("粘贴");
+
+    _homeMenu->addElaIconAction(ElaIconType::Copy, "复制");
+    _homeMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
 
     // 初始化提示
     ElaMessageBar::success(ElaMessageBarType::BottomRight, "Success", "初始化成功!", 2000);
@@ -159,8 +160,8 @@ void T_Home::mouseReleaseEvent(QMouseEvent* event)
     {
     case Qt::LeftButton:
     {
-        ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
-        ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
+        //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
+        //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
         break;
     }
     case Qt::RightButton:

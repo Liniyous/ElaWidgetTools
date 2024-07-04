@@ -52,7 +52,9 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     _multiSelectComboBox = new ElaMultiSelectComboBox(this);
     _multiSelectComboBox->setFixedWidth(150);
     QStringList multiComboList{"TEST1", "TSET2", "TEST3", "TEST4", "TEST5", "TSET6", "TSET7"};
+    QStringList multiSelectComboList{"TEST1", "TSET2", "TEST4", "TEST5"};
     _multiSelectComboBox->addItems(multiComboList);
+    _multiSelectComboBox->setCurrentSelection(multiSelectComboList);
     ElaScrollPageArea* multiSelectComboBoxArea = new ElaScrollPageArea(this);
     QHBoxLayout* multiSelectComboBoxLayout = new QHBoxLayout(multiSelectComboBoxArea);
     ElaText* multiSelectComboBoxText = new ElaText("ElaMutilSelectComboBox", this);

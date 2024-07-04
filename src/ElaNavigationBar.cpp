@@ -217,7 +217,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         if (d_ptr->_compactMenuMap.contains(originalNode))
         {
             ElaMenu* menu = d_ptr->_compactMenuMap.value(originalNode);
-            QAction* action = menu->addAction(node->getAwesome(), node->getNodeTitle());
+            QAction* action = menu->addElaIconAction(node->getAwesome(), node->getNodeTitle());
             connect(action, &QAction::triggered, this, [=]() {
                 d_ptr->onTreeViewClicked(node->getModelIndex());
             });
@@ -225,7 +225,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         else
         {
             ElaMenu* menu = new ElaMenu(const_cast<ElaNavigationBar*>(this));
-            QAction* action = menu->addAction(node->getAwesome(), node->getNodeTitle());
+            QAction* action = menu->addElaIconAction(node->getAwesome(), node->getNodeTitle());
             connect(action, &QAction::triggered, this, [=]() {
                 d_ptr->onTreeViewClicked(node->getModelIndex());
             });
@@ -276,7 +276,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         if (d_ptr->_compactMenuMap.contains(originalNode))
         {
             ElaMenu* menu = d_ptr->_compactMenuMap.value(originalNode);
-            QAction* action = menu->addAction(node->getAwesome(), node->getNodeTitle());
+            QAction* action = menu->addElaIconAction(node->getAwesome(), node->getNodeTitle());
             connect(action, &QAction::triggered, this, [=]() {
                 d_ptr->onTreeViewClicked(node->getModelIndex());
             });
@@ -284,7 +284,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         else
         {
             ElaMenu* menu = new ElaMenu(const_cast<ElaNavigationBar*>(this));
-            QAction* action = menu->addAction(node->getAwesome(), node->getNodeTitle());
+            QAction* action = menu->addElaIconAction(node->getAwesome(), node->getNodeTitle());
             connect(action, &QAction::triggered, this, [=]() {
                 d_ptr->onTreeViewClicked(node->getModelIndex());
             });
