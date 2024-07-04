@@ -18,6 +18,8 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     Q_D(ElaComboBox);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
+    d->_pExpandIconRotate = 0;
+    d->_pExpandMarkWidth = 0;
     d->_themeMode = ElaApplication::getInstance()->getThemeMode();
     setObjectName("ElaComboBox");
     setStyleSheet("#ElaComboBox{background-color:transparent;}");
@@ -70,20 +72,20 @@ void ElaComboBox::paintEvent(QPaintEvent* event)
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
     painter.drawText(10, height() / 2 + painter.fontMetrics().ascent() / 2 - 1, this->currentText());
-    // 图标绘制
+    //展开指示器绘制
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+    painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 3, d->_pExpandMarkWidth * 2, 3), 2, 2);
+    // 展开图标绘制
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(17);
     painter.setFont(iconFont);
-    if (view()->isVisible())
-    {
-        // 展开
-        painter.drawText(width() * 0.95 - iconFont.pixelSize() - 1, height() / 2 + iconFont.pixelSize() / 2 - 1, QChar((unsigned short)ElaIconType::AngleUp));
-    }
-    else
-    {
-        // 未展开
-        painter.drawText(width() * 0.95 - iconFont.pixelSize() - 1, height() / 2 + iconFont.pixelSize() / 2 - 1, QChar((unsigned short)ElaIconType::AngleDown));
-    }
+    painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    QRectF expandIconRect(width() - 25, 0, 20, height());
+    painter.translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2 - 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
+    painter.rotate(d->_pExpandIconRotate);
+    painter.translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2 + 2, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);
+    painter.drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short)ElaIconType::AngleDown));
     painter.restore();
 }
 
@@ -104,6 +106,7 @@ void ElaComboBox::showPopup()
         viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
         viewPosAnimation->setEndValue(viewPos);
         viewPosAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        viewPosAnimation->setDuration(400);
         viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         QPropertyAnimation* opacityAnimation = new QPropertyAnimation(container, "windowOpacity");
         opacityAnimation->setStartValue(0);
@@ -111,6 +114,22 @@ void ElaComboBox::showPopup()
         opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
         opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
+    //指示器动画
+    QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
+    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        update();
+    });
+    rotateAnimation->setDuration(300);
+    rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    rotateAnimation->setStartValue(d->_pExpandIconRotate);
+    rotateAnimation->setEndValue(-180);
+    rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+    markAnimation->setDuration(300);
+    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    markAnimation->setStartValue(d->_pExpandMarkWidth);
+    markAnimation->setEndValue(width() / 2 - d->_pBorderRadius);
+    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void ElaComboBox::hidePopup()
@@ -141,5 +160,21 @@ void ElaComboBox::hidePopup()
             viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
             d->_isHidePopupAnimationFinished = false;
         }
+        //指示器动画
+        QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
+        connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            update();
+        });
+        rotateAnimation->setDuration(300);
+        rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        rotateAnimation->setStartValue(d->_pExpandIconRotate);
+        rotateAnimation->setEndValue(0);
+        rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+        markAnimation->setDuration(300);
+        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        markAnimation->setStartValue(d->_pExpandMarkWidth);
+        markAnimation->setEndValue(0);
+        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }

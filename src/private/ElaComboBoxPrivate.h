@@ -12,6 +12,8 @@ class ElaComboBoxPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(ElaComboBox);
     Q_PROPERTY_CREATE_D(int, BorderRadius)
+    Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
+    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit ElaComboBoxPrivate(QObject* parent = nullptr);
     ~ElaComboBoxPrivate();

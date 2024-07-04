@@ -55,7 +55,7 @@ void ElaComboBoxDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
         }
         //选中Mark
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
         painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() - +optionRect.height() * 0.4), 2, 2);
     }
     else

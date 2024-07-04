@@ -14,7 +14,7 @@ ElaComboBoxView::ElaComboBoxView(bool isMultiSelect, QWidget* parent)
     d->_isMultiSelect = isMultiSelect;
     setMaximumHeight(200);
     setStyleSheet(
-        "QListView{border:2px solid #DFDFDF;border-radius:8px;background-color: #F9F9F9;}"
+        "QListView{margin-top:3px;border:1px solid #DFDFDF;border-radius:8px;background-color: #F9F9F9;}"
         "QListView::item{height: 35px;border:none;}");
     setVerticalScrollBar(new ElaScrollBar(this));
     setHorizontalScrollBar(new ElaScrollBar(this));

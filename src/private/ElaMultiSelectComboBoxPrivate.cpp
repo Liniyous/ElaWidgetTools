@@ -1,8 +1,9 @@
 #include "ElaMultiSelectComboBoxPrivate.h"
 
+#include <QPropertyAnimation>
+
 #include "ElaComboBoxView.h"
 #include "ElaMultiSelectComboBox.h"
-
 ElaMultiSelectComboBoxPrivate::ElaMultiSelectComboBoxPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -14,6 +15,7 @@ ElaMultiSelectComboBoxPrivate::~ElaMultiSelectComboBoxPrivate()
 
 void ElaMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
 {
+    Q_Q(ElaMultiSelectComboBox);
     if (!_comboView->selectionModel()->isSelected(index))
     {
         _itemSelection[index.row()] = true;
@@ -23,6 +25,16 @@ void ElaMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
         _itemSelection[index.row()] = false;
     }
     _refreshCurrentIndexs();
+    QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pExpandMarkWidth");
+    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        q->update();
+    });
+    markAnimation->setDuration(300);
+    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    markAnimation->setStartValue(_pExpandMarkWidth);
+    qreal step = (q->width() / 2 - _pBorderRadius) / q->count();
+    markAnimation->setEndValue(step * _selectedTextList.count());
+    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
@@ -52,7 +64,7 @@ void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
     {
         q->update();
         _currentText = str;
-        _selectedTextList = _currentText.split(",");
+        _selectedTextList = _currentText.split(",", Qt::SkipEmptyParts);
         q->setCurrentIndex(-1);
         Q_EMIT q->currentTextListChanged(_selectedTextList);
     }
