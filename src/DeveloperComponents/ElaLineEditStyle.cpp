@@ -8,8 +8,7 @@
 ElaLineEditStyle::ElaLineEditStyle(QStyle* style)
 {
     _themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { _themeMode = themeMode; });
+    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaLineEditStyle::~ElaLineEditStyle()
@@ -54,14 +53,7 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             painter->drawRoundedRect(QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3), 6, 6);
 
             // 底边线绘制
-            if (fopt->state & QStyle::State_HasFocus)
-            {
-                painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x00, 0x67, 0xC0) : QColor(0x00, 0x67, 0xC0));
-            }
-            else
-            {
-                painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x86, 0x86, 0x86) : QColor(0x86, 0x86, 0x86));
-            }
+            painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x86, 0x86, 0x86) : QColor(0x86, 0x86, 0x86));
             QPainterPath path;
             path.moveTo(6, lineEditRect.height());
             path.lineTo(lineEditRect.width() - 6, lineEditRect.height());
