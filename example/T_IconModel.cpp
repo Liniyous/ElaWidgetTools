@@ -42,13 +42,20 @@ void T_IconModel::setSearchKeyList(QStringList list)
     if (_pIsSearchMode)
     {
         beginResetModel();
-
         int rowCount = this->getSearchKeyList().count() / _columnCount;
         if (this->getSearchKeyList().count() % _columnCount != 0)
         {
             rowCount += 1;
         }
         _rowCount = rowCount;
+    }
+    else
+    {
+        _rowCount = (_metaEnum.keyCount() - 1) / _columnCount;
+        if ((_metaEnum.keyCount() - 1) % _columnCount)
+        {
+            _rowCount += 1;
+        }
     }
     endResetModel();
 }
