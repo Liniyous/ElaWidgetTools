@@ -19,13 +19,6 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
 {
     switch (element)
     {
-    case PE_FrameLineEdit:
-    {
-        if (const QStyleOptionFrame* fopt = qstyleoption_cast<const QStyleOptionFrame*>(option))
-        {
-        }
-        break;
-    }
     case PE_PanelLineEdit:
     {
         if (const QStyleOptionFrame* fopt = qstyleoption_cast<const QStyleOptionFrame*>(option))

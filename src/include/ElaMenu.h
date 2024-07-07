@@ -11,11 +11,13 @@ class ELA_EXPORT ElaMenu : public QMenu
 {
     Q_OBJECT
     Q_Q_CREATE(ElaMenu)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
 public:
     explicit ElaMenu(QWidget* parent = nullptr);
     explicit ElaMenu(const QString& title, QWidget* parent = nullptr);
     ~ElaMenu();
+    void setMenuItemHeight(int menuItemHeight);
+    int getMenuItemHeight() const;
+
     QAction* addMenu(QMenu* menu);
     ElaMenu* addMenu(const QString& title);
     ElaMenu* addMenu(const QIcon& icon, const QString& title);

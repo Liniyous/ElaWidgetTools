@@ -56,7 +56,7 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     connect(d->_searchView, &ElaSuggestView::clicked, d, &ElaSuggestBoxPrivate::onSearchViewClicked);
 
     // 焦点事件
-    connect(d->_searchEdit, &ElaLineEdit::focusOut, this, [d]() {
+    connect(d->_searchEdit, &ElaLineEdit::wmFocusOut, this, [d]() {
         d->_startCloseAnimation();
     });
 }

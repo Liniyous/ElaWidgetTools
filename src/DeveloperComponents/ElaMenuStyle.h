@@ -4,9 +4,12 @@
 #include <QProxyStyle>
 
 #include "Def.h"
+#include "stdafx.h"
 class ElaMenuStyle : public QProxyStyle
 {
     Q_OBJECT
+    Q_PROPERTY_CREATE(int, MenuItemHeight);
+
 public:
     explicit ElaMenuStyle(QStyle* style = nullptr);
     ~ElaMenuStyle();
@@ -22,7 +25,6 @@ private:
     QLinearGradient* _windowLinearGradient{nullptr};
     int _iconLeftPadding{10};
     int _iconWidth{22};
-    int _menuItemHeight{35};
     int _textLeftSpacing{15};
 };
 

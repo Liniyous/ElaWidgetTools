@@ -11,7 +11,6 @@
 #include "DeveloperComponents/ElaMenuStyle.h"
 #include "ElaApplication.h"
 #include "private/ElaMenuPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaMenu, int, BorderRadius)
 ElaMenu::ElaMenu(QWidget* parent)
     : QMenu(parent), d_ptr(new ElaMenuPrivate())
 {
@@ -20,7 +19,8 @@ ElaMenu::ElaMenu(QWidget* parent)
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("ElaMenu");
-    setStyle(new ElaMenuStyle(style()));
+    d->_menuStyle = new ElaMenuStyle(style());
+    setStyle(d->_menuStyle);
 }
 
 ElaMenu::ElaMenu(const QString& title, QWidget* parent)
@@ -31,11 +31,24 @@ ElaMenu::ElaMenu(const QString& title, QWidget* parent)
     setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("ElaMenu");
-    setStyle(new ElaMenuStyle(style()));
+    d->_menuStyle = new ElaMenuStyle(style());
+    setStyle(d->_menuStyle);
 }
 
 ElaMenu::~ElaMenu()
 {
+}
+
+void ElaMenu::setMenuItemHeight(int menuItemHeight)
+{
+    Q_D(ElaMenu);
+    d->_menuStyle->setMenuItemHeight(menuItemHeight);
+}
+
+int ElaMenu::getMenuItemHeight() const
+{
+    Q_D(const ElaMenu);
+    return d->_menuStyle->getMenuItemHeight();
 }
 
 QAction* ElaMenu::addMenu(QMenu* menu)

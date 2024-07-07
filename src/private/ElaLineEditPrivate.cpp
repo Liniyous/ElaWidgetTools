@@ -24,9 +24,8 @@ void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
         {
             return;
         }
-        _isAllowFocusOut = true;
         q->clearFocus();
-        _isAllowFocusOut = false;
+        Q_EMIT q->wmFocusOut(q->text());
     }
 }
 

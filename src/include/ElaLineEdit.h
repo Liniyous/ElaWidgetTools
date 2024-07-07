@@ -21,11 +21,13 @@ public:
 Q_SIGNALS:
     Q_SIGNAL void focusIn(QString text);
     Q_SIGNAL void focusOut(QString text);
+    Q_SIGNAL void wmFocusOut(QString text);
 
 protected:
     void focusInEvent(QFocusEvent* event) override;
     void focusOutEvent(QFocusEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
+    void contextMenuEvent(QContextMenuEvent* event) override;
 };
 
 #endif // ELALINEEDIT_H

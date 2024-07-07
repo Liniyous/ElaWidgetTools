@@ -9,6 +9,7 @@
 #include "ElaMenu.h"
 ElaMenuStyle::ElaMenuStyle(QStyle* style)
 {
+    _pMenuItemHeight = 35;
     _windowLinearGradient = new QLinearGradient(0, 0, 100, 100);
     _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xE7, 0xF5));
     _windowLinearGradient->setColorAt(1, QColor(0xED, 0xF3, 0xF9));
@@ -80,7 +81,7 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(QColor(0xB3, 0xB3, 0xB3));
-                painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.05, separatorRect.y(), separatorRect.width() - separatorRect.width() * 0.1, 1.5), 1, 1);
+                painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.05, separatorRect.center().y(), separatorRect.width() - separatorRect.width() * 0.1, 1.5), 1, 1);
                 painter->restore();
                 return;
             }
@@ -90,7 +91,7 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 painter->save();
                 painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
                 //覆盖效果
-                if (mopt->state.testFlag(QStyle::State_MouseOver) || mopt->state.testFlag(QStyle::State_Selected))
+                if (mopt->state.testFlag(QStyle::State_Enabled) && (mopt->state.testFlag(QStyle::State_MouseOver) || mopt->state.testFlag(QStyle::State_Selected)))
                 {
                     QRect hoverRect = menuRect;
                     hoverRect.setTop(hoverRect.top() + 2);
@@ -119,11 +120,12 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                             if (!iconText.isEmpty())
                             {
                                 painter->save();
-                                painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+                                painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
+                                                                                                                                                  : Qt::white);
                                 QFont iconFont = QFont("ElaAwesome");
-                                iconFont.setPixelSize(20);
+                                iconFont.setPixelSize(_pMenuItemHeight * 0.57);
                                 painter->setFont(iconFont);
-                                painter->drawText(QRect(menuRect.x() + _iconLeftPadding, menuRect.center().y() - _iconWidth / 2, _iconWidth, _iconWidth), iconText);
+                                painter->drawText(QRect(menuRect.x() + _iconLeftPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter, iconText);
                                 painter->restore();
                             }
                         }
@@ -134,7 +136,8 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 if (!mopt->text.isEmpty())
                 {
                     QStringList textList = mopt->text.split("\t");
-                    painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
+                                                                                                                                      : Qt::white);
                     painter->drawText(QRect(menuRect.x() + _iconLeftPadding + _iconWidth + _textLeftSpacing, menuRect.y(), menuRect.width(), menuRect.height()), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, textList[0]);
                     if (textList.count() > 1)
                     {
@@ -205,7 +208,7 @@ QSize ElaMenuStyle::sizeFromContents(ContentsType type, const QStyleOption* opti
                 break;
             }
             QSize menuItemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
-            return QSize(menuItemSize.width() + 20, _menuItemHeight);
+            return QSize(menuItemSize.width() + 20, _pMenuItemHeight);
         }
     }
     default:
