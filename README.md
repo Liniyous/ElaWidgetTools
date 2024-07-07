@@ -58,6 +58,7 @@
 |ElaPushButton|按钮||
 |ElaProgressBar|进度条||
 |ElaSwitchButton|切换按钮||
+|ElaSuggestBox|建议搜索框||
 |ElaRadioButton|单选按钮||
 |ElaNavigationRouter|路由跳转||
 |ElaToggleSwitch|开关按钮||
