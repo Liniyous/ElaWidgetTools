@@ -15,11 +15,22 @@ enum ButtonType
     MinimizeButtonHint = 0x00010,
     MaximizeButtonHint = 0x0020,
     CloseButtonHint = 0x0040,
-
 };
 Q_ENUM_NS(ButtonType)
 Q_DECLARE_FLAGS(ButtonFlags, ButtonType)
 Q_DECLARE_OPERATORS_FOR_FLAGS(ButtonFlags)
+
+enum WMMouseActionType
+{
+    WMLBUTTONDOWN = 0x0001,
+    WMLBUTTONUP = 0x0002,
+    WMLBUTTONDBLCLK = 0x0004,
+    WMNCLBUTTONDOWN = 0x0008,
+};
+Q_ENUM_NS(WMMouseActionType)
+Q_DECLARE_FLAGS(WMMouseActionTypes, WMMouseActionType)
+Q_DECLARE_OPERATORS_FOR_FLAGS(WMMouseActionTypes)
+
 } // namespace ElaAppBarType
 
 namespace ElaApplicationType

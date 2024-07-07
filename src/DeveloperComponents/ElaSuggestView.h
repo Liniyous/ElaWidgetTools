@@ -1,14 +1,14 @@
-#ifndef ELANAVIGATIONSUGGESTVIEW_H
-#define ELANAVIGATIONSUGGESTVIEW_H
+#ifndef ELASUGGESTVIEW_H
+#define ELASUGGESTVIEW_H
 
 #include <QListView>
 
-class ElaNavigationSuggestView : public QListView
+class ElaSuggestView : public QListView
 {
     Q_OBJECT
 public:
-    explicit ElaNavigationSuggestView(QWidget* parent = nullptr);
-    ~ElaNavigationSuggestView();
+    explicit ElaSuggestView(QWidget* parent = nullptr);
+    ~ElaSuggestView();
 };
 
-#endif // ELANAVIGATIONSUGGESTVIEW_H
+#endif // ELASUGGESTVIEW_H

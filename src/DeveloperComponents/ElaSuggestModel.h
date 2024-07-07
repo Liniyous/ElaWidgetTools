@@ -1,25 +1,25 @@
-#ifndef ELANAVIGATIONSUGGESTMODEL_H
-#define ELANAVIGATIONSUGGESTMODEL_H
+#ifndef ELASUGGESTMODEL_H
+#define ELASUGGESTMODEL_H
 
 #include <QAbstractListModel>
 
 #include "Def.h"
 #include "stdafx.h"
-class ElaNavigationNode;
-class ElaNavigationSuggestModel : public QAbstractListModel
+class ElaSuggestion;
+class ElaSuggestModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ElaNavigationSuggestModel(QObject *parent = nullptr);
-    ~ElaNavigationSuggestModel();
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    void setSearchNode(QVector<ElaNavigationNode *> node);
+    explicit ElaSuggestModel(QObject* parent = nullptr);
+    ~ElaSuggestModel();
+    int rowCount(const QModelIndex& parent) const;
+    QVariant data(const QModelIndex& index, int role) const;
+    void setSearchSuggestion(QVector<ElaSuggestion*> suggestionVector);
     void clearSearchNode();
-    ElaNavigationNode *getSearchNode(int row);
+    ElaSuggestion* getSearchSuggestion(int row);
 
 private:
-    QVector<ElaNavigationNode *> _nodesVector;  //符合搜索的节点
+    QVector<ElaSuggestion*> _suggestionVector; //符合搜索的节点
 };
 
-#endif  // ELANAVIGATIONSUGGESTMODEL_H
+#endif // ELASUGGESTMODEL_H

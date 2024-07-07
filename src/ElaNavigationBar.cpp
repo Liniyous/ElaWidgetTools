@@ -18,11 +18,10 @@
 #include "ElaNavigationDelegate.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
-#include "ElaNavigationSuggestBox.h"
-#include "ElaNavigationSuggestView.h"
 #include "ElaNavigationView.h"
+#include "ElaSuggestBox.h"
 #include "private/ElaNavigationBarPrivate.h"
-#include "private/ElaNavigationSuggestBoxPrivate.h"
+#include "private/ElaSuggestBoxPrivate.h"
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaNavigationBarPrivate())
 {
@@ -41,17 +40,25 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_navigationView->setItemDelegateForColumn(0, d->_navigationDelegate);
     connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
 
-    d->_navigationSuggestBox = new ElaNavigationSuggestBox(this);
-    d->_navigationSuggestBox->setFixedSize(280, 35);
+    d->_navigationSuggestBox = new ElaSuggestBox(this);
     // 搜索跳转
-    connect(d->_navigationSuggestBox, &ElaNavigationSuggestBox::searchNodeClicked, this, [=](ElaNavigationNode* node, bool isLogClicked = true) {
-        if (node->getIsFooterNode())
+    connect(d->_navigationSuggestBox, &ElaSuggestBox::suggestionClicked, this, [=](QString suggestText, QVariantMap suggestData) {
+        ElaNavigationNode* node = nullptr;
+        if (suggestData.value("ElaNodeType").toString() == "Stacked")
         {
-            d->onFooterViewClicked(node->getModelIndex());
+            node = d->_navigationModel->getNavigationNode(suggestData.value("ElaPageKey").toString());
+            if (node)
+            {
+                d->onTreeViewClicked(node->getModelIndex());
+            }
         }
         else
         {
-            d->onTreeViewClicked(node->getModelIndex());
+            node = d->_footerModel->getNavigationNode(suggestData.value("ElaPageKey").toString());
+            if (node)
+            {
+                d->onFooterViewClicked(node->getModelIndex());
+            }
         }
     });
 
@@ -133,14 +140,6 @@ void ElaNavigationBar::setUserInfoCardVisible(bool isVisible)
 {
     Q_D(ElaNavigationBar);
     d->_userCard->setVisible(isVisible);
-    if (isVisible)
-    {
-        d->_navigationSuggestBox->d_ptr->_searchView->move(16, 174);
-    }
-    else
-    {
-        d->_navigationSuggestBox->d_ptr->_searchView->move(16, 86);
-    }
 }
 
 void ElaNavigationBar::setUserInfoCardPixmap(QPixmap pix)

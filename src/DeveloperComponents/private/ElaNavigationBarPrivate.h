@@ -19,7 +19,7 @@ class ElaNavigationNode;
 class ElaNavigationModel;
 class ElaNavigationView;
 class ElaNavigationDelegate;
-class ElaNavigationSuggestBox;
+class ElaSuggestBox;
 class ElaInteractiveCard;
 
 class ElaListView;
@@ -59,7 +59,7 @@ private:
     ElaListView* _footerView{nullptr};
     ElaFooterModel* _footerModel{nullptr};
     ElaFooterDelegate* _footerDelegate{nullptr};
-    ElaNavigationSuggestBox* _navigationSuggestBox{nullptr};
+    ElaSuggestBox* _navigationSuggestBox{nullptr};
     ElaInteractiveCard* _userCard{nullptr};
 
     ElaNavigationType::NavigationDisplayMode _currentDisplayMode{ElaNavigationType::NavigationDisplayMode::Maximal};

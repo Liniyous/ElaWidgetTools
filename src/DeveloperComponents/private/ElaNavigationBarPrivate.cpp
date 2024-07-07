@@ -15,10 +15,10 @@
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationRouter.h"
-#include "ElaNavigationSuggestBox.h"
-#include "ElaNavigationSuggestBoxPrivate.h"
 #include "ElaNavigationView.h"
 #include "ElaScrollPagePrivate.h"
+#include "ElaSuggestBox.h"
+#include "ElaSuggestBoxPrivate.h"
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -353,7 +353,11 @@ void ElaNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
     page->setProperty("ElaPageKey", pageKey);
     Q_EMIT q->navigationNodeAdded(ElaNavigationType::PageNode, pageKey, page);
     _initNodeModelIndex(QModelIndex());
-    _navigationSuggestBox->d_ptr->_appendPageNode(_navigationModel->getNavigationNode(pageKey));
+    ElaNavigationNode* node = _navigationModel->getNavigationNode(pageKey);
+    QVariantMap suggestData;
+    suggestData.insert("ElaNodeType", "Stacked");
+    suggestData.insert("ElaPageKey", pageKey);
+    _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
     static bool isFirstAdd = true;
     if (isFirstAdd)
     {
@@ -371,14 +375,17 @@ void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
         page->setProperty("ElaPageKey", footKey);
     }
     _footerView->setFixedHeight(40 * _footerModel->getFooterNodeCount());
-    _navigationSuggestBox->d_ptr->_appendPageNode(_footerModel->getNavigationNode(footKey));
+    ElaNavigationNode* node = _footerModel->getNavigationNode(footKey);
+    QVariantMap suggestData;
+    suggestData.insert("ElaNodeType", "Footer");
+    suggestData.insert("ElaPageKey", footKey);
+    _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
 }
 
 void ElaNavigationBarPrivate::_raiseNavigationBar()
 {
     Q_Q(ElaNavigationBar);
     q->raise();
-    _navigationSuggestBox->d_ptr->_raiseSearchView();
 }
 
 void ElaNavigationBarPrivate::_switchContentLayout(bool direction)

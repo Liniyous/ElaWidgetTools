@@ -46,8 +46,8 @@ void ElaWindowPrivate::onNavigationButtonClicked()
 
 void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
-    QString clickType = data.value("WMClickType").toString();
-    if (clickType == "WM_LBUTTONDBLCLK" || clickType == "WM_LBUTTONUP" || clickType == "WM_NCLBUTTONDOWN")
+    ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
+    if (actionType == ElaAppBarType::WMLBUTTONDBLCLK || actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
     {
         if (ElaApplication::containsCursorToItem(_navigationBar))
         {

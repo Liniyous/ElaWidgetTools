@@ -22,6 +22,7 @@ public:
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
+    bool _isAllowFocusOut{false};
     ElaApplicationType::ThemeMode _themeMode;
     ElaEvent* _focusEvent{nullptr};
     qreal _textSpacing{0.5};

@@ -1,14 +1,14 @@
-#ifndef ELANAVIGATIONSUGGESTDELEGATE_H
-#define ELANAVIGATIONSUGGESTDELEGATE_H
+#ifndef ELASUGGESTDELEGATE_H
+#define ELASUGGESTDELEGATE_H
 
 #include <QStyledItemDelegate>
 
-class ElaNavigationSuggestDelegate : public QStyledItemDelegate
+class ElaSuggestDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    explicit ElaNavigationSuggestDelegate(QObject* parent = nullptr);
-    ~ElaNavigationSuggestDelegate();
+    explicit ElaSuggestDelegate(QObject* parent = nullptr);
+    ~ElaSuggestDelegate();
 
 protected:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
@@ -19,4 +19,4 @@ private:
     QLinearGradient* _selectedHovergradient{nullptr};
 };
 
-#endif // ELANAVIGATIONSUGGESTDELEGATE_H
+#endif // ELASUGGESTDELEGATE_H

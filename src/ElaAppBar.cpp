@@ -410,28 +410,28 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     case WM_LBUTTONDBLCLK:
     {
         QVariantMap postData;
-        postData.insert("WMClickType", "WM_LBUTTONDBLCLK");
+        postData.insert("WMClickType", ElaAppBarType::WMLBUTTONDBLCLK);
         ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         return false;
     }
     case WM_LBUTTONDOWN:
     {
         QVariantMap postData;
-        postData.insert("WMClickType", "WM_LBUTTONDOWN");
+        postData.insert("WMClickType", ElaAppBarType::WMLBUTTONDOWN);
         ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         return false;
     }
     case WM_LBUTTONUP:
     {
         QVariantMap postData;
-        postData.insert("WMClickType", "WM_LBUTTONUP");
+        postData.insert("WMClickType", ElaAppBarType::WMLBUTTONUP);
         ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         return false;
     }
     case WM_NCLBUTTONDOWN:
     {
         QVariantMap postData;
-        postData.insert("WMClickType", "WM_NCLBUTTONDOWN");
+        postData.insert("WMClickType", ElaAppBarType::WMNCLBUTTONDOWN);
         ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         if (d->_containsCursorToItem(d->_maxButton) || d->_pIsOnlyAllowMinAndClose)
         {
@@ -442,7 +442,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     case WM_NCLBUTTONUP:
     {
         QVariantMap postData;
-        postData.insert("WMClickType", "WM_NCLBUTTONDOWN");
+        postData.insert("WMClickType", ElaAppBarType::WMNCLBUTTONDOWN);
         ElaEventBus::getInstance()->post("WMWindowClicked", postData);
         if (d->_containsCursorToItem(d->_maxButton) && !d->_pIsOnlyAllowMinAndClose)
         {

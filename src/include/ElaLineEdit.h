@@ -15,7 +15,7 @@ class ELA_EXPORT ElaLineEdit : public QLineEdit
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
 public:
     explicit ElaLineEdit(QWidget* parent = nullptr);
-    ElaLineEdit(ElaIconType awesome, QWidget* parent = nullptr);
+    explicit ElaLineEdit(ElaIconType awesome, QWidget* parent = nullptr);
     ~ElaLineEdit();
 
 Q_SIGNALS:

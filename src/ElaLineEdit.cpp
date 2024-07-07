@@ -19,6 +19,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     d->_pAwesome = ElaIconType::None;
     d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;
+    setFocusPolicy(Qt::StrongFocus);
     // 事件总线
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
     d->_focusEvent->registerAndInit();
@@ -35,6 +36,7 @@ ElaLineEdit::ElaLineEdit(ElaIconType awesome, QWidget* parent)
     d->_pAwesome = awesome;
     d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;
+    setFocusPolicy(Qt::StrongFocus);
     // 事件总线
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
     d->_focusEvent->registerAndInit();
@@ -64,17 +66,25 @@ void ElaLineEdit::focusInEvent(QFocusEvent* event)
 void ElaLineEdit::focusOutEvent(QFocusEvent* event)
 {
     Q_D(ElaLineEdit);
-    Q_EMIT focusOut(this->text());
-    QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    if (d->_isAllowFocusOut)
+    {
+        Q_EMIT focusOut(this->text());
+        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            update();
+        });
+        markAnimation->setDuration(300);
+        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        markAnimation->setStartValue(d->_pExpandMarkWidth);
+        markAnimation->setEndValue(0);
+        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        QLineEdit::focusOutEvent(event);
+    }
+    else
+    {
+        setFocus();
         update();
-    });
-    markAnimation->setDuration(300);
-    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    markAnimation->setStartValue(d->_pExpandMarkWidth);
-    markAnimation->setEndValue(0);
-    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    QLineEdit::focusOutEvent(event);
+    }
 }
 
 void ElaLineEdit::paintEvent(QPaintEvent* event)

@@ -17,14 +17,16 @@ ElaLineEditPrivate::~ElaLineEditPrivate()
 void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_Q(ElaLineEdit);
-    QString clickType = data.value("WMClickType").toString();
-    if (clickType == "WM_LBUTTONDOWN" || clickType == "WM_NCLBUTTONDOWN")
+    ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
+    if (actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
     {
-        if (ElaApplication::containsCursorToItem(q))
+        if (ElaApplication::containsCursorToItem(q) || q->hasSelectedText())
         {
             return;
         }
+        _isAllowFocusOut = true;
         q->clearFocus();
+        _isAllowFocusOut = false;
     }
 }
 

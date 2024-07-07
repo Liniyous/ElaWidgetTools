@@ -27,8 +27,9 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setSelectionMode(QAbstractItemView::NoSelection);
     header()->setSectionResizeMode(QHeaderView::Stretch);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBar(new ElaScrollBar(this));
-    verticalScrollBar()->setObjectName("NavigationScrollBar");
+    ElaScrollBar* vScrollBar = new ElaScrollBar(this);
+    vScrollBar->setisAnimation(true);
+    setVerticalScrollBar(vScrollBar);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     QScroller::grabGesture(this->viewport(), QScroller::LeftMouseButtonGesture);

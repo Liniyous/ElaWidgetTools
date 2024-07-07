@@ -1,39 +1,56 @@
-#ifndef ELANAVIGATIONSUGGESTBOXPRIVATE_H
-#define ELANAVIGATIONSUGGESTBOXPRIVATE_H
+#ifndef ELASUGGESTBOXPRIVATE_H
+#define ELASUGGESTBOXPRIVATE_H
 
 #include <QObject>
+#include <QSize>
+#include <QVariantMap>
 
+#include "Def.h"
 #include "stdafx.h"
-class ElaEvent;
-class ElaLineEdit;
-class ElaNavigationNode;
-class ElaNavigationSuggestModel;
-class ElaNavigationSuggestView;
-class ElaNavigationSuggestDelegate;
-class ElaNavigationSuggestBox;
-class ElaNavigationSuggestBoxPrivate : public QObject
+class ElaSuggestion : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaNavigationSuggestBox)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
+    Q_PROPERTY_CREATE(ElaIconType, ElaIcon)
+    Q_PROPERTY_CREATE(QString, SuggestText)
+    Q_PROPERTY_CREATE(QVariantMap, SuggestData)
 public:
-    explicit ElaNavigationSuggestBoxPrivate(QObject* parent = nullptr);
-    ~ElaNavigationSuggestBoxPrivate();
-    Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
-    Q_SLOT void onSearchEditTextEdit(const QString& searchText);
-    Q_SLOT void onSearchViewPressed(const QModelIndex& index);
-
-private:
-    friend class ElaNavigationBar;
-    friend class ElaNavigationBarPrivate;
-    ElaEvent* _focusEvent{nullptr};
-    ElaLineEdit* _searchEdit{nullptr};
-    ElaNavigationSuggestModel* _searchModel{nullptr};
-    ElaNavigationSuggestView* _searchView{nullptr};
-    ElaNavigationSuggestDelegate* _searchDelegate{nullptr};
-    QVector<ElaNavigationNode*> _pageNodeList; //所有页面节点
-    void _raiseSearchView();
-    void _appendPageNode(ElaNavigationNode* node);
+    explicit ElaSuggestion(QObject* parent = nullptr);
+    ~ElaSuggestion();
 };
 
-#endif // ELANAVIGATIONSUGGESTBOXPRIVATE_H
+class ElaLineEdit;
+class ElaNavigationNode;
+class ElaSuggestModel;
+class ElaSuggestView;
+class ElaSuggestDelegate;
+class ElaSuggestBox;
+class ElaShadowWidget;
+class ElaSuggestBoxPrivate : public QObject
+{
+    Q_OBJECT
+    Q_D_CREATE(ElaSuggestBox)
+    Q_PROPERTY_CREATE_D(int, BorderRadius)
+    Q_PROPERTY_CREATE_D(Qt::CaseSensitivity, CaseSensitivity)
+public:
+    explicit ElaSuggestBoxPrivate(QObject* parent = nullptr);
+    ~ElaSuggestBoxPrivate();
+    Q_SLOT void onSearchEditTextEdit(const QString& searchText);
+    Q_SLOT void onSearchViewClicked(const QModelIndex& index);
+
+private:
+    QVector<ElaSuggestion*> _suggestionVector;
+    ElaShadowWidget* _shadowWidget{nullptr};
+    ElaLineEdit* _searchEdit{nullptr};
+    ElaSuggestModel* _searchModel{nullptr};
+    ElaSuggestView* _searchView{nullptr};
+    ElaSuggestDelegate* _searchDelegate{nullptr};
+    //QVector<ElaNavigationNode*> _pageNodeList; //所有页面节点
+    QSize _lastSize{-1, -1};
+    bool _isExpandAnimationFinished{true};
+    bool _isCloseAnimationFinished{true};
+    void _startSizeAnimation(QSize newSize);
+    void _startExpandAnimation();
+    void _startCloseAnimation();
+};
+
+#endif // ELASUGGESTBOXPRIVATE_H

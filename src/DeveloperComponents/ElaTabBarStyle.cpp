@@ -71,7 +71,8 @@ void ElaTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt,
 
 void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
 {
-    int margin = 10;
+    int margin = 9;
+    int topRadius = 7;
     switch (element)
     {
     case QStyle::CE_TabBarTabShape:
@@ -87,15 +88,18 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             {
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
-                tabRect.setRight(tabRect.right() + margin);
+                if (topt->position != QStyleOptionTab::End)
+                {
+                    tabRect.setRight(tabRect.right() + margin + 1);
+                }
                 painter->setBrush(_themeMode == ElaApplicationType::Light ? Qt::white : QColor(0x2D, 0x2D, 0x2D));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
-                path.lineTo(tabRect.x() + margin, tabRect.y() + margin);
-                path.arcTo(QRectF(tabRect.x() + margin, tabRect.y(), margin * 2, margin * 2), 180, -90);
-                path.lineTo(tabRect.right() - 2 * margin, tabRect.y());
-                path.arcTo(QRectF(tabRect.right() - 3 * margin, tabRect.y(), margin * 2, margin * 2), 90, -90);
+                path.lineTo(tabRect.x() + margin, tabRect.y() + topRadius);
+                path.arcTo(QRectF(tabRect.x() + margin, tabRect.y(), topRadius * 2, topRadius * 2), 180, -90);
+                path.lineTo(tabRect.right() - margin - topRadius, tabRect.y());
+                path.arcTo(QRectF(tabRect.right() - margin - 2 * topRadius, tabRect.y(), topRadius * 2, topRadius * 2), 90, -90);
                 path.lineTo(tabRect.right() - margin, tabRect.bottom() - margin);
                 path.arcTo(QRectF(tabRect.right() - margin, tabRect.bottom() - 2 * margin + 1, margin * 2, margin * 2), -180, 90);
                 path.lineTo(tabRect.right(), tabRect.bottom() + 10);

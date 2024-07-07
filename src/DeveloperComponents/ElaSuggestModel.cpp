@@ -1,46 +1,46 @@
-#include "ElaNavigationSuggestModel.h"
+#include "ElaSuggestModel.h"
 
-ElaNavigationSuggestModel::ElaNavigationSuggestModel(QObject* parent)
+ElaSuggestModel::ElaSuggestModel(QObject* parent)
     : QAbstractListModel{parent}
 {
 }
 
-ElaNavigationSuggestModel::~ElaNavigationSuggestModel()
+ElaSuggestModel::~ElaSuggestModel()
 {
 }
 
-int ElaNavigationSuggestModel::rowCount(const QModelIndex& parent) const
+int ElaSuggestModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
-    return _nodesVector.count();
+    return _suggestionVector.count();
 }
 
-QVariant ElaNavigationSuggestModel::data(const QModelIndex& index, int role) const
+QVariant ElaSuggestModel::data(const QModelIndex& index, int role) const
 {
     return QVariant();
 }
 
-void ElaNavigationSuggestModel::setSearchNode(QVector<ElaNavigationNode*> node)
+void ElaSuggestModel::setSearchSuggestion(QVector<ElaSuggestion*> suggestionVector)
 {
-    if (node.count() == 0)
+    if (suggestionVector.count() == 0)
     {
         return;
     }
     beginResetModel();
-    this->_nodesVector = node;
+    _suggestionVector = suggestionVector;
     endResetModel();
 }
 
-void ElaNavigationSuggestModel::clearSearchNode()
+void ElaSuggestModel::clearSearchNode()
 {
-    this->_nodesVector.clear();
+    this->_suggestionVector.clear();
 }
 
-ElaNavigationNode* ElaNavigationSuggestModel::getSearchNode(int row)
+ElaSuggestion* ElaSuggestModel::getSearchSuggestion(int row)
 {
-    if (row >= _nodesVector.count())
+    if (row >= _suggestionVector.count())
     {
         return nullptr;
     }
-    return _nodesVector[row];
+    return _suggestionVector[row];
 }
