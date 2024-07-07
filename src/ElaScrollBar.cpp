@@ -4,13 +4,24 @@
 #include <QPropertyAnimation>
 #include <QWheelEvent>
 
+#include "ElaScrollBarStyle.h"
 #include "private/ElaScrollBarPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, bool, isAnimation)
 ElaScrollBar::ElaScrollBar(QWidget* parent)
     : QScrollBar(parent), d_ptr(new ElaScrollBarPrivate())
 {
     Q_D(ElaScrollBar);
     d->q_ptr = this;
-    d->_initStyle();
+    setSingleStep(1);
+    setAttribute(Qt::WA_OpaquePaintEvent, false);
+    d->_pTargetMaximum = 0;
+    d->_pisAnimation = false;
+    connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
+    setStyle(new ElaScrollBarStyle(style()));
+    d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
+    d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
+    d->_slideSmoothAnimation->setDuration(300);
+    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
 }
 
 ElaScrollBar::ElaScrollBar(Qt::Orientation orientation, QWidget* parent)
@@ -18,7 +29,16 @@ ElaScrollBar::ElaScrollBar(Qt::Orientation orientation, QWidget* parent)
 {
     Q_D(ElaScrollBar);
     d->q_ptr = this;
-    d->_initStyle();
+    setSingleStep(1);
+    setAttribute(Qt::WA_OpaquePaintEvent, false);
+    d->_pTargetMaximum = 0;
+    d->_pisAnimation = false;
+    connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
+    setStyle(new ElaScrollBarStyle(style()));
+    d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
+    d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
+    d->_slideSmoothAnimation->setDuration(300);
+    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
 }
 
 ElaScrollBar::~ElaScrollBar()
@@ -72,29 +92,4 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
         }
         d->_scroll(verticalDelta);
     }
-}
-
-void ElaScrollBar::sliderChange(SliderChange change)
-{
-    Q_D(ElaScrollBar);
-    if (change == SliderRangeChange && this->objectName() == "NavigationScrollBar")
-    {
-        if (abs(maximum() - d->_lastMaximum) > 35)
-        {
-            if (d->_isRangeAnimationFinished)
-            {
-                d->_rangeSmoothAnimation->setStartValue(d->_lastMaximum);
-                d->_rangeSmoothAnimation->setEndValue(maximum());
-                d->_isRangeAnimationFinished = false;
-                d->_lastMaximum = maximum();
-                d->_rangeSmoothAnimation->start();
-                return;
-            }
-        }
-        else
-        {
-            d->_lastMaximum = maximum();
-        }
-    }
-    QScrollBar::sliderChange(change);
 }

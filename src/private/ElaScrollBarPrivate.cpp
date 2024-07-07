@@ -3,27 +3,37 @@
 #include <QPropertyAnimation>
 
 #include "ElaScrollBar.h"
-#include "ElaScrollBarStyle.h"
 ElaScrollBarPrivate::ElaScrollBarPrivate(QObject* parent)
     : QObject{parent}
 {
 }
 
-void ElaScrollBarPrivate::_initStyle()
+ElaScrollBarPrivate::~ElaScrollBarPrivate()
+{
+}
+
+void ElaScrollBarPrivate::onRangeChanged(int min, int max)
 {
     Q_Q(ElaScrollBar);
-    q->setSingleStep(1);
-    q->setAttribute(Qt::WA_OpaquePaintEvent, false);
-    _slideSmoothAnimation = new QPropertyAnimation(q, "value");
-    _slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
-    _slideSmoothAnimation->setDuration(300);
-    connect(_slideSmoothAnimation, &QPropertyAnimation::finished, q, [=]() { _scrollValue = q->value(); });
-    _rangeSmoothAnimation = new QPropertyAnimation(q, "maximum");
-    _rangeSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
-    _rangeSmoothAnimation->setDuration(300);
-    connect(_rangeSmoothAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) { q->update(); });
-    connect(_rangeSmoothAnimation, &QPropertyAnimation::finished, q, [=]() { _isRangeAnimationFinished = true; });
-    q->setStyle(new ElaScrollBarStyle(q->style()));
+    if (q->isVisible() && _pisAnimation)
+    {
+        QPropertyAnimation* rangeSmoothAnimation = new QPropertyAnimation(this, "pTargetMaximum");
+        connect(rangeSmoothAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            q->blockSignals(true);
+            q->setMaximum(value.toUInt());
+            q->blockSignals(false);
+            q->update();
+        });
+        rangeSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
+        rangeSmoothAnimation->setDuration(250);
+        rangeSmoothAnimation->setStartValue(_pTargetMaximum);
+        rangeSmoothAnimation->setEndValue(max);
+        rangeSmoothAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+    else
+    {
+        _pTargetMaximum = max;
+    }
 }
 
 void ElaScrollBarPrivate::_scroll(int value)
