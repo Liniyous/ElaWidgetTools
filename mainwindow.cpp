@@ -16,6 +16,7 @@
 #include "example/T_ElaScreen.h"
 #include "example/T_Home.h"
 #include "example/T_Icon.h"
+#include "example/T_Popup.h"
 #include "example/T_TabWidget.h"
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
@@ -36,6 +37,7 @@ MainWindow::MainWindow(QWidget* parent)
     _iconPage = new T_Icon(this);
     _baseComponentsPage = new T_BaseComponents(this);
     _tabWidgetPage = new T_TabWidget(this);
+    _popupPage = new T_Popup(this);
 
     // GraphicsView
     ElaGraphicsScene* scene = new ElaGraphicsScene(this);
@@ -67,6 +69,7 @@ MainWindow::MainWindow(QWidget* parent)
     addPageNode("ElaGraphics", view, 9, ElaIconType::KeySkeleton);
     addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
     addPageNode("ElaTabWidget", _tabWidgetPage, ElaIconType::Table);
+    addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
     addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
     addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);
     addPageNode("Third Level", new QWidget(this), testKey_1, ElaIconType::Acorn);

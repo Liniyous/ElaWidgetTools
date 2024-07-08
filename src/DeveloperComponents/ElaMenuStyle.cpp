@@ -94,10 +94,7 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 if (mopt->state.testFlag(QStyle::State_Enabled) && (mopt->state.testFlag(QStyle::State_MouseOver) || mopt->state.testFlag(QStyle::State_Selected)))
                 {
                     QRect hoverRect = menuRect;
-                    hoverRect.setTop(hoverRect.top() + 2);
-                    hoverRect.setLeft(hoverRect.left() + 4);
-                    hoverRect.setRight(hoverRect.right() - 4);
-                    hoverRect.setBottom(hoverRect.bottom() - 2);
+                    hoverRect.adjust(0, 2, 0, -2);
                     painter->setPen(Qt::NoPen);
                     painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE5, 0xE3, 0xE6) : QColor(0x46, 0x46, 0x46));
                     painter->drawRoundedRect(hoverRect, 5, 5);

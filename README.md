@@ -64,6 +64,7 @@
 |ElaToggleSwitch|开关按钮||
 |ElaTabBar|选项卡|谷歌浏览器风格|
 |ElaTabWidget|选项卡页面|谷歌浏览器风格|
+|ElaToolButton|带下拉菜单的工具按钮||
 |ElaReminderCard|带图片的提醒卡片||
 |ElaScrollbar|滚动条||
 |ElaScrollArea|滚动区域|可设置鼠标拖动|

@@ -9,6 +9,7 @@ class T_Icon;
 class T_ElaScreen;
 class T_BaseComponents;
 class T_TabWidget;
+class T_Popup;
 class MainWindow : public ElaWindow
 {
     Q_OBJECT
@@ -24,6 +25,7 @@ private:
     T_Icon* _iconPage{nullptr};
     T_BaseComponents* _baseComponentsPage{nullptr};
     T_TabWidget* _tabWidgetPage{nullptr};
+    T_Popup* _popupPage{nullptr};
     QString _elaDxgiKey{""};
     QString _aboutKey{""};
     QString _settingKey{""};

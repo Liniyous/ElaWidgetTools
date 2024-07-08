@@ -106,10 +106,10 @@ bool ElaMenu::event(QEvent* event)
         if (mouseEvent)
         {
             d->_mousePressPoint = mapToGlobal(mouseEvent->pos());
-            if (ElaApplication::containsCursorToItem(this) && mouseEvent->button() == Qt::LeftButton)
+            if (ElaApplication::containsCursorToItem(this))
             {
                 QAction* action = actionAt(mouseEvent->pos());
-                if (action && !action->menu())
+                if (action && !action->menu() && action->isEnabled())
                 {
                     d->_isCloseAnimation = true;
                 }
@@ -133,26 +133,20 @@ void ElaMenu::showEvent(QShowEvent* event)
 void ElaMenu::closeEvent(QCloseEvent* event)
 {
     Q_D(ElaMenu);
-    if (d->_isCloseAnimation)
+    if (d->_isCloseAnimation && windowOpacity() == 1)
     {
         d->_isCloseAnimation = false;
         event->ignore();
-        QPropertyAnimation* sizeAnimation = new QPropertyAnimation(this, "geometry");
-        connect(sizeAnimation, &QPropertyAnimation::finished, this, [=]() {
+        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "windowOpacity");
+        connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
             close();
+            setWindowOpacity(1);
         });
-        sizeAnimation->setEasingCurve(QEasingCurve::InOutExpo);
-        sizeAnimation->setDuration(250);
-        sizeAnimation->setStartValue(geometry());
-        if (QRect(mapToGlobal(QPoint(0, 0)), QSize(width(), height())).contains(d->_mousePressPoint))
-        {
-            sizeAnimation->setEndValue(QRect(d->_mousePressPoint, QSize(0, 0)));
-        }
-        else
-        {
-            sizeAnimation->setEndValue(QRect(QPoint(x() - 15, y()), QSize(0, 0)));
-        }
-        sizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        opacityAnimation->setDuration(300);
+        opacityAnimation->setStartValue(1);
+        opacityAnimation->setEndValue(0);
+        opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
     else
     {
