@@ -142,7 +142,8 @@ void ElaLineEdit::contextMenuEvent(QContextMenuEvent* event)
     {
         menu->addSeparator();
     }
-    action = menu->addAction("全选", QKeySequence::SelectAll);
+    action = menu->addAction("全选");
+    action->setShortcut(QKeySequence::SelectAll);
     action->setEnabled(!text().isEmpty() && !(selectedText() == text()));
     connect(action, &QAction::triggered, this, &ElaLineEdit::selectAll);
     menu->popup(event->globalPos());
