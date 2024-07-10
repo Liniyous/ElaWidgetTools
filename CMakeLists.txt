@@ -44,7 +44,7 @@ else()
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        qt_add_resources(PROJECT_SOURCES
+        qt5_add_resources(PROJECT_SOURCES
             src/include/ElaWidgetTools.qrc
         )
         add_executable(ElaWidgetTools

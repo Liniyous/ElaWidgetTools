@@ -44,7 +44,6 @@ private:
     ElaSuggestModel* _searchModel{nullptr};
     ElaSuggestView* _searchView{nullptr};
     ElaSuggestDelegate* _searchDelegate{nullptr};
-    //QVector<ElaNavigationNode*> _pageNodeList; //所有页面节点
     QSize _lastSize{-1, -1};
     bool _isExpandAnimationFinished{true};
     bool _isCloseAnimationFinished{true};

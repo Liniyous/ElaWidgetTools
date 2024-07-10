@@ -2,7 +2,9 @@
 
 #include <QPainter>
 #include <QPixmap>
-
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include <cmath>
+#endif
 int ElaExponentialBlur::_aprec = 12;
 int ElaExponentialBlur::_zprec = 7;
 Q_SINGLETON_CREATE_CPP(ElaExponentialBlur)

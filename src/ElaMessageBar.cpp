@@ -64,21 +64,14 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     }
     }
     d->_closeButton->setBorderRadius(5);
-    connect(d->_closeButton, &ElaIconButton::clicked, d, &ElaMessageBarPrivate::_onCloseButtonClicked);
+    connect(d->_closeButton, &ElaIconButton::clicked, d, &ElaMessageBarPrivate::onCloseButtonClicked);
     QHBoxLayout* mainLayout = new QHBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 10, 0);
     mainLayout->addStretch();
     mainLayout->addWidget(d->_closeButton);
     setObjectName("ElaMessageBar");
     setStyleSheet("#ElaMessageBar{background-color:transparent;}");
-
-    d->_messageBarStartAnimation(displayMsec);
-
-    QList<ElaMessageBar*>* messageBarList = d->_messageBarActiveMap.value(d->_policy);
-    for (auto otherMessageBar : *messageBarList)
-    {
-        connect(otherMessageBar->d_func(), &ElaMessageBarPrivate::messageBarClosed, d, &ElaMessageBarPrivate::onOtherMessageBarClosed);
-    }
+    d->_messageBarCreate(displayMsec);
 }
 
 ElaMessageBar::~ElaMessageBar()

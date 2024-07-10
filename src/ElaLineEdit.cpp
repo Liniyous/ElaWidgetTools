@@ -136,7 +136,14 @@ void ElaLineEdit::contextMenuEvent(QContextMenuEvent* event)
     {
         action = menu->addElaIconAction(ElaIconType::DeleteLeft, "删除");
         action->setEnabled(!isReadOnly() && !text().isEmpty() && hasSelectedText());
-        // connect(action,&QAction::triggered, this, &ElaLineEdit::sel);
+        connect(action, &QAction::triggered, this, [=](bool checked) {
+            if (hasSelectedText())
+            {
+                int startIndex = selectionStart();
+                int endIndex = selectionEnd();
+                setText(text().remove(startIndex, endIndex - startIndex));
+            }
+        });
     }
     if (!menu->isEmpty())
     {

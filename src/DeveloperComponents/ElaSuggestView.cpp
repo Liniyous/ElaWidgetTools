@@ -17,6 +17,9 @@ ElaSuggestView::ElaSuggestView(QWidget* parent)
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setSelectionMode(QAbstractItemView::NoSelection);
+    setAcceptDrops(false);
+    setAutoScroll(false);
 }
 
 ElaSuggestView::~ElaSuggestView()

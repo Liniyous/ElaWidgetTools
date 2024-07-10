@@ -23,6 +23,7 @@ protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
+    friend class ElaMessageBarManager;
     explicit ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessageBarType::MessageMode messageMode, QString& title, QString& text, int displayMsec, QWidget* parent = nullptr);
     ~ElaMessageBar();
 };

@@ -206,7 +206,7 @@ void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeTy
 
 qreal ElaWindowPrivate::_distance(QPoint point1, QPoint point2)
 {
-    return sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) + (point1.y() - point2.y()) * (point1.y() - point2.y()));
+    return std::sqrt((point1.x() - point2.x()) * (point1.x() - point2.x()) + (point1.y() - point2.y()) * (point1.y() - point2.y()));
 }
 
 void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
