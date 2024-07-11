@@ -9,6 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
 add_definitions(-DELAWIDGETTOOLS_LIBRARY)
 option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." OFF)
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
@@ -48,6 +50,8 @@ add_library(${PROJECT_NAME} ${LIB_TYPE}
     ${sources_files}
 )
 endif()
+
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 #遍历所有资源文件
 file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)

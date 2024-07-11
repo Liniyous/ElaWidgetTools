@@ -12,12 +12,12 @@
 #include "ElaGraphicsView.h"
 #include "ElaLog.h"
 #include "ElaWidget.h"
-#include "example/T_BaseComponents.h"
-#include "example/T_ElaScreen.h"
-#include "example/T_Home.h"
-#include "example/T_Icon.h"
-#include "example/T_Popup.h"
-#include "example/T_TabWidget.h"
+#include "ExamplePage/T_BaseComponents.h"
+#include "ExamplePage/T_ElaScreen.h"
+#include "ExamplePage/T_Home.h"
+#include "ExamplePage/T_Icon.h"
+#include "ExamplePage/T_Popup.h"
+#include "ExamplePage/T_TabWidget.h"
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
