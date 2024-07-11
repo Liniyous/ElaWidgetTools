@@ -5,6 +5,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class QLabel;
+class QScreen;
 class ElaEvent;
 class ElaAppBar;
 class ElaIconButton;
@@ -33,6 +34,7 @@ private:
     ElaIconButton* _minButton{nullptr};
     ElaIconButton* _maxButton{nullptr};
     ElaIconButton* _closeButton{nullptr};
+    QScreen* _lastScreen{nullptr};
     QLabel* _titleLabel{nullptr};
     qint64 _currentWinID{0};
     int _margins{8};

@@ -124,6 +124,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
     if (d->_pIsFixedSize)
     {
+        //切换DPI处理
         ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_THICKFRAME);
         for (int i = 0; i < qApp->screens().count(); ++i)
         {
@@ -135,6 +136,13 @@ ElaAppBar::ElaAppBar(QWidget* parent)
         ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
     }
     SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+
+    //主屏幕变更处理
+    connect(qApp, &QApplication::primaryScreenChanged, this, [=]() {
+        ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+        ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+    });
+    d->_lastScreen = qApp->screenAt(window()->geometry().center());
 }
 
 ElaAppBar::~ElaAppBar()
@@ -325,6 +333,16 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         *result = WVR_REDRAW;
         return true;
 #endif
+    }
+    case WM_MOVE:
+    {
+        QScreen* currentScreen = qApp->screenAt(window()->geometry().center());
+        if (currentScreen && currentScreen != d->_lastScreen)
+        {
+            ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+            d->_lastScreen = currentScreen;
+        }
+        break;
     }
     case WM_NCHITTEST:
     {
