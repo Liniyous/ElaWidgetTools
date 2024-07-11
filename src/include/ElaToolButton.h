@@ -16,7 +16,6 @@ public:
     ~ElaToolButton();
     void setMenu(ElaMenu* menu);
     void setElaIcon(ElaIconType icon);
-    void paintEvent(QPaintEvent*) override;
 };
 
 #endif // ELATOOLBUTTON_H

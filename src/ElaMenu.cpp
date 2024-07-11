@@ -21,6 +21,7 @@ ElaMenu::ElaMenu(QWidget* parent)
     setObjectName("ElaMenu");
     d->_menuStyle = new ElaMenuStyle(style());
     setStyle(d->_menuStyle);
+    d->_pAnimationImagePosY = 0;
 }
 
 ElaMenu::ElaMenu(const QString& title, QWidget* parent)
@@ -33,6 +34,7 @@ ElaMenu::ElaMenu(const QString& title, QWidget* parent)
     setObjectName("ElaMenu");
     d->_menuStyle = new ElaMenuStyle(style());
     setStyle(d->_menuStyle);
+    d->_pAnimationImagePosY = 0;
 }
 
 ElaMenu::~ElaMenu()
@@ -121,11 +123,36 @@ bool ElaMenu::event(QEvent* event)
 
 void ElaMenu::showEvent(QShowEvent* event)
 {
-    QPropertyAnimation* posAnimation = new QPropertyAnimation(this, "geometry");
-    posAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    posAnimation->setDuration(250);
-    posAnimation->setStartValue(QRect(QPoint(x() - 15, y()), QSize(1, 1)));
-    posAnimation->setEndValue(geometry());
+    Q_D(ElaMenu);
+    if (!d->_animationImage.isNull())
+    {
+        d->_animationImage = QImage();
+    }
+    d->_animationImage = this->grab(this->rect()).toImage();
+    QPropertyAnimation* posAnimation = new QPropertyAnimation(d, "pAnimationImagePosY");
+    connect(posAnimation, &QPropertyAnimation::finished, this, [=]() {
+        d->_animationImage = QImage();
+        update();
+    });
+    connect(posAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        update();
+    });
+    posAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    posAnimation->setDuration(400);
+    int targetPosY = height();
+    if (targetPosY > 160)
+    {
+        if (targetPosY < 320)
+        {
+            targetPosY = 160;
+        }
+        else
+        {
+            targetPosY /= 2;
+        }
+    }
+    posAnimation->setStartValue(-targetPosY);
+    posAnimation->setEndValue(0);
     posAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     QMenu::showEvent(event);
 }
@@ -143,7 +170,7 @@ void ElaMenu::closeEvent(QCloseEvent* event)
             setWindowOpacity(1);
         });
         opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        opacityAnimation->setDuration(300);
+        opacityAnimation->setDuration(200);
         opacityAnimation->setStartValue(1);
         opacityAnimation->setEndValue(0);
         opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -151,5 +178,20 @@ void ElaMenu::closeEvent(QCloseEvent* event)
     else
     {
         QMenu::closeEvent(event);
+    }
+}
+
+void ElaMenu::paintEvent(QPaintEvent* event)
+{
+    Q_D(ElaMenu);
+    QPainter painter(this);
+    painter.setRenderHints(QPainter::SmoothPixmapTransform);
+    if (!d->_animationImage.isNull())
+    {
+        painter.drawImage(QRect(0, d->_pAnimationImagePosY, width(), height()), d->_animationImage);
+    }
+    else
+    {
+        QMenu::paintEvent(event);
     }
 }

@@ -33,8 +33,3 @@ void ElaToolButton::setElaIcon(ElaIconType icon)
     setProperty("ElaIconType", QChar((unsigned short)icon));
     setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
 }
-
-void ElaToolButton::paintEvent(QPaintEvent* event)
-{
-    QToolButton::paintEvent(event);
-}
