@@ -16,10 +16,10 @@ ElaToggleSwitch::ElaToggleSwitch(QWidget* parent)
     setFixedSize(44, 22);
     d->_circleCenterX = 0;
     d->_isToggled = false;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     setProperty("circleCenterX", 0.01);
     setProperty("circleRadius", 0.01);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
             { d->_themeMode = themeMode; });
 }
 

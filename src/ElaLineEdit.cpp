@@ -19,7 +19,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
 {
     Q_D(ElaLineEdit);
     d->q_ptr = this;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     d->_pAwesome = ElaIconType::None;
     d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;
@@ -28,7 +28,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
     d->_focusEvent->registerAndInit();
     d->_initStyle();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
 }
 
 ElaLineEdit::ElaLineEdit(ElaIconType awesome, QWidget* parent)
@@ -36,7 +36,7 @@ ElaLineEdit::ElaLineEdit(ElaIconType awesome, QWidget* parent)
 {
     Q_D(ElaLineEdit);
     d->q_ptr = this;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     d->_pAwesome = awesome;
     d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;

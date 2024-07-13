@@ -128,7 +128,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_compactWidget->setVisible(false);
 
     //主题设置
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
     parent->installEventFilter(this);
 }
 

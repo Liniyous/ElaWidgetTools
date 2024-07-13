@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 #endif
 #endif
     QApplication a(argc, argv);
-    ElaApplication::getInstance()->init();
+    eApp->init();
     MainWindow w;
     w.show();
     // HWND handle = FindWindowA(NULL, "ElaWidgetTools");

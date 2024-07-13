@@ -25,8 +25,8 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->_pBorderRadius = 3;
     d->_pExpandIconRotate = 0;
     d->_pExpandMarkWidth = 0;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    setMaximumHeight(35);
+    d->_themeMode = eApp->getThemeMode();
+    setFixedHeight(35);
     setMouseTracking(true);
     setInsertPolicy(QComboBox::NoInsert);
     setModel(new QStandardItemModel(this));
@@ -48,7 +48,7 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->_itemSelection.fill(false);
     d->_itemSelection[0] = true;
     QComboBox::setMaxVisibleItems(5);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaMultiSelectComboBox::~ElaMultiSelectComboBox()
@@ -187,40 +187,43 @@ void ElaMultiSelectComboBox::showPopup()
     QComboBox::showPopup();
     qApp->setEffectEnabled(Qt::UI_AnimateCombo, oldAnimationEffects);
 
-    QWidget* container = this->findChild<QFrame*>();
-    if (container)
+    if (count() > 0)
     {
-        container->move(container->pos().x(), container->pos().y() + 3);
-        QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
-        QPoint viewPos = QPoint(0, 0);
-        viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
-        viewPosAnimation->setEndValue(viewPos);
-        viewPosAnimation->setEasingCurve(QEasingCurve::OutCubic);
-        viewPosAnimation->setDuration(400);
-        viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(container, "windowOpacity");
-        opacityAnimation->setStartValue(0);
-        opacityAnimation->setEndValue(1);
-        opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
-        opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        QWidget* container = this->findChild<QFrame*>();
+        if (container)
+        {
+            container->move(container->pos().x(), container->pos().y() + 3);
+            QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
+            QPoint viewPos = QPoint(0, 0);
+            viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
+            viewPosAnimation->setEndValue(viewPos);
+            viewPosAnimation->setEasingCurve(QEasingCurve::OutCubic);
+            viewPosAnimation->setDuration(400);
+            viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            QPropertyAnimation* opacityAnimation = new QPropertyAnimation(container, "windowOpacity");
+            opacityAnimation->setStartValue(0);
+            opacityAnimation->setEndValue(1);
+            opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
+            opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        }
+        //指示器动画
+        QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
+        connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            update();
+        });
+        rotateAnimation->setDuration(300);
+        rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        rotateAnimation->setStartValue(d->_pExpandIconRotate);
+        rotateAnimation->setEndValue(-180);
+        rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+        markAnimation->setDuration(300);
+        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        markAnimation->setStartValue(d->_pExpandMarkWidth);
+        qreal step = (width() / 2 - d->_pBorderRadius) / count();
+        markAnimation->setEndValue(step * d->_selectedTextList.count());
+        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
-    //指示器动画
-    QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
-    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        update();
-    });
-    rotateAnimation->setDuration(300);
-    rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    rotateAnimation->setStartValue(d->_pExpandIconRotate);
-    rotateAnimation->setEndValue(-180);
-    rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    markAnimation->setDuration(300);
-    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    markAnimation->setStartValue(d->_pExpandMarkWidth);
-    qreal step = (width() / 2 - d->_pBorderRadius) / count();
-    markAnimation->setEndValue(step * d->_selectedTextList.count());
-    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     d->_refreshCurrentIndexs();
 }
 

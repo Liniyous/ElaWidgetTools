@@ -88,7 +88,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_themeChangeButton = new ElaIconButton(ElaIconType::MoonStars, 15, 40, 30, this);
     d->_themeChangeButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
     connect(d->_themeChangeButton, &ElaIconButton::clicked, this, [this]() { Q_EMIT themeChangeButtonClicked(); });
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
 
     d->_minButton = new ElaIconButton(ElaIconType::Dash, 12, 40, 30, this);
     d->_minButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
@@ -201,7 +201,7 @@ void ElaAppBar::setRouteBackButtonEnable(bool isEnable)
 void ElaAppBar::closeWindow()
 {
     Q_D(const ElaAppBar);
-    ElaApplication::getInstance()->setIsApplicationClosed(true);
+    eApp->setIsApplicationClosed(true);
     QRect windowRect = window()->geometry();
     // 抵消setFixedSize导致的移动偏航
     window()->setMinimumSize(0, 0);

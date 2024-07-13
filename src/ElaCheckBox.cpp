@@ -16,7 +16,7 @@ ElaCheckBox::ElaCheckBox(QWidget* parent)
     QFont font = this->font();
     font.setPointSize(11);
     setFont(font);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
@@ -31,7 +31,7 @@ ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
     setFont(font);
     int textWidth = fontMetrics().horizontalAdvance(text);
     setFixedSize(textWidth + 25 * 0.8 + _textLeftSpacing, 25);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaCheckBox::~ElaCheckBox()

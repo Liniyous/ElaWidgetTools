@@ -7,7 +7,7 @@
 T_IconDelegate::T_IconDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 T_IconDelegate::~T_IconDelegate()

@@ -13,9 +13,9 @@ ElaMenuStyle::ElaMenuStyle(QStyle* style)
     _windowLinearGradient = new QLinearGradient(0, 0, 100, 100);
     _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xE7, 0xF5));
     _windowLinearGradient->setColorAt(1, QColor(0xED, 0xF3, 0xF9));
-    _themeMode = ElaApplication::getInstance()->getThemeMode();
-    onThemeChanged(ElaApplication::getInstance()->getThemeMode());
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaMenuStyle::onThemeChanged);
+    _themeMode = eApp->getThemeMode();
+    onThemeChanged(eApp->getThemeMode());
+    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaMenuStyle::onThemeChanged);
 }
 
 ElaMenuStyle::~ElaMenuStyle()

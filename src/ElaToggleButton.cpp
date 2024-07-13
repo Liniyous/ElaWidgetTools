@@ -51,7 +51,7 @@ void ElaToggleButton::paintEvent(QPaintEvent* event)
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? eApp->getLightShadowEffectColor() : eApp->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;

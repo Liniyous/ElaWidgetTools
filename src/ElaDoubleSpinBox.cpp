@@ -11,7 +11,7 @@ ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
     setStyle(new ElaSpinBoxStyle(style()));
     lineEdit()->setAlignment(Qt::AlignCenter);
     lineEdit()->setStyleSheet("background-color:transparent");
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
         QPalette palette;
         palette.setColor(QPalette::Base, Qt::transparent);
         palette.setColor(QPalette::Text, themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);

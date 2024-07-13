@@ -59,5 +59,5 @@ void ElaLineEditPrivate::_initStyle()
     q->setStyle(new ElaLineEditStyle(q->style()));
     q->setStyleSheet(
         "QLineEdit{padding-left: 10px;}");
-    onThemeChanged(ElaApplication::getInstance()->getThemeMode());
+    onThemeChanged(eApp->getThemeMode());
 }

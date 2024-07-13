@@ -13,8 +13,8 @@ ElaScrollPageArea::ElaScrollPageArea(QWidget* parent)
     d->q_ptr = this;
     d->_pBorderRadius = 6;
     setMinimumSize(300, 80);
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    d->_themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaScrollPageArea::~ElaScrollPageArea()

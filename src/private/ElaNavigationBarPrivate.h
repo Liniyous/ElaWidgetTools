@@ -32,6 +32,7 @@ class ElaNavigationBarPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaNavigationBar)
+    Q_PROPERTY_CREATE_D(bool, IsTransparent)
 public:
     explicit ElaNavigationBarPrivate(QObject* parent = nullptr);
     ~ElaNavigationBarPrivate();
@@ -44,6 +45,7 @@ public:
     void onCompactViewClicked(const QModelIndex& index);
 
 private:
+    ElaApplicationType::ThemeMode _themeMode;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
     QWidget* _maximalWidget{nullptr};
     QWidget* _compactWidget{nullptr};

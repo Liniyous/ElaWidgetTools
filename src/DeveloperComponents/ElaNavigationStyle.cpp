@@ -19,7 +19,7 @@ ElaNavigationStyle::ElaNavigationStyle(QStyle* style)
     _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
     _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
     _pOpacity = 1;
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaNavigationStyle::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaNavigationStyle::onThemeChanged);
 }
 
 ElaNavigationStyle::~ElaNavigationStyle()

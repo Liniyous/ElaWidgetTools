@@ -6,7 +6,7 @@
 #include "ElaApplication.h"
 ElaScrollBarStyle::ElaScrollBarStyle(QStyle* style)
 {
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaScrollBarStyle::~ElaScrollBarStyle()

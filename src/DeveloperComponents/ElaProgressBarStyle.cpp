@@ -9,8 +9,8 @@ ElaProgressBarStyle::ElaProgressBarStyle(QStyle* style)
 {
     setProperty("busyStartValue", 0);
     setProperty("busyEndValue", 0);
-    _themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaProgressBarStyle::~ElaProgressBarStyle()

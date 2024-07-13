@@ -7,7 +7,7 @@
 ElaComboBoxDelegate::ElaComboBoxDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    _themeMode = ElaApplication::getInstance()->getThemeMode();
+    _themeMode = eApp->getThemeMode();
     _hovergradient = new QLinearGradient(0, 0, 290, 38);
     _hovergradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
     _hovergradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
@@ -17,7 +17,7 @@ ElaComboBoxDelegate::ElaComboBoxDelegate(QObject* parent)
     _selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
     _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
     _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaComboBoxDelegate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaComboBoxDelegate::onThemeChanged);
 }
 
 ElaComboBoxDelegate::~ElaComboBoxDelegate()

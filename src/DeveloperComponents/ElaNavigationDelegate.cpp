@@ -21,8 +21,8 @@ ElaNavigationDelegate::ElaNavigationDelegate(QObject* parent)
     d->_pOpacity = 1;
     d->_pRotate = 0;
     d->_pNavigationView = nullptr;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    d->_themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
     setProperty("lastSelectMarkTop", 10.0);
     setProperty("lastSelectMarkBottom", 10.0);
     setProperty("selectMarkTop", 10.0);

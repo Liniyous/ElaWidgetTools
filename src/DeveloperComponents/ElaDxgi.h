@@ -18,6 +18,7 @@ class ElaDxgi : public QObject
     Q_PROPERTY_CREATE_Q_H(QRect, GrabArea);
     Q_PROPERTY_CREATE_Q_H(int, GrabFrameRate);  // 截图帧数
     Q_PROPERTY_CREATE_Q_H(int, TimeoutMsValue); // 超时等待
+    Q_PROPERTY_CREATE_Q_H(bool, IsInitSuccess);
 
 public:
     explicit ElaDxgi(QObject* parent = nullptr);

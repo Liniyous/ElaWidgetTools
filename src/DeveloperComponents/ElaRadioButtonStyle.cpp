@@ -7,8 +7,8 @@
 #include "ElaApplication.h"
 ElaRadioButtonStyle::ElaRadioButtonStyle(QStyle* style)
 {
-    _themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaRadioButtonStyle::~ElaRadioButtonStyle()

@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
     // ElaLog::getInstance()->initMessageLog(true);
-    // ElaApplication::getInstance()->setThemeMode(ElaApplicationType::Dark);
+    // eApp->setThemeMode(ElaApplicationType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);

@@ -8,6 +8,7 @@
 #include "Def.h"
 #include "singleton.h"
 #include "stdafx.h"
+#define eApp ElaApplication::getInstance()
 class ElaApplicationPrivate;
 class ELA_EXPORT ElaApplication : public QObject
 {

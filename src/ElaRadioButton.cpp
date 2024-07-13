@@ -10,8 +10,8 @@ ElaRadioButton::ElaRadioButton(QWidget* parent)
     font.setPointSize(11);
     setFont(font);
     setStyle(new ElaRadioButtonStyle(style()));
-    onThemeChanged(ElaApplication::getInstance()->getThemeMode());
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaRadioButton::onThemeChanged);
+    onThemeChanged(eApp->getThemeMode());
+    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaRadioButton::onThemeChanged);
 }
 
 ElaRadioButton::ElaRadioButton(const QString& text, QWidget* parent)
@@ -22,8 +22,8 @@ ElaRadioButton::ElaRadioButton(const QString& text, QWidget* parent)
     font.setPointSize(11);
     setFont(font);
     setStyle(new ElaRadioButtonStyle(style()));
-    onThemeChanged(ElaApplication::getInstance()->getThemeMode());
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaRadioButton::onThemeChanged);
+    onThemeChanged(eApp->getThemeMode());
+    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaRadioButton::onThemeChanged);
 }
 
 ElaRadioButton::~ElaRadioButton()

@@ -17,7 +17,7 @@ ElaTableViewStyle::ElaTableViewStyle(QStyle* style)
     _selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
     _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
     _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, &ElaTableViewStyle::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaTableViewStyle::onThemeChanged);
 }
 
 ElaTableViewStyle::~ElaTableViewStyle()

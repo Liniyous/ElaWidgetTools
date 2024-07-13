@@ -10,13 +10,13 @@
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
-#include "DeveloperComponents/private/ElaNavigationBarPrivate.h"
 #include "ElaAppBar.h"
 #include "ElaApplication.h"
 #include "ElaEventBus.h"
 #include "ElaNavigationBar.h"
 #include "ElaNavigationRouter.h"
 #include "private/ElaAppBarPrivate.h"
+#include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaWindowPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
@@ -81,7 +81,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::navigationButtonClicked, d, &ElaWindowPrivate::onNavigationButtonClicked);
 
     // 主题变更动画
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
 }
 
@@ -270,7 +270,7 @@ void ElaWindow::paintEvent(QPaintEvent* event)
 void ElaWindow::resizeEvent(QResizeEvent* event)
 {
     Q_D(ElaWindow);
-    if (ElaApplication::getInstance()->getIsApplicationClosed() || !d->_isNavigationEnable)
+    if (eApp->getIsApplicationClosed() || !d->_isNavigationEnable)
     {
         return;
     }

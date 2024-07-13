@@ -13,12 +13,13 @@ Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsGrabActive)
 Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, QRect, GrabArea);
 Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, GrabFrameRate);  // 截图帧数
 Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, TimeoutMsValue); // 超时等待
-
+Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsInitSuccess);
 ElaDxgi::ElaDxgi(QObject* parent)
     : QObject(parent), d_ptr(new ElaDxgiPrivate())
 {
     Q_D(ElaDxgi);
     d->q_ptr = this;
+    d->_pIsInitSuccess = false;
     d->_pIsGrabActive = false;
     d->_pGrabFrameRate = 120;
     d->_pTimeoutMsValue = 50;
@@ -161,6 +162,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     }
     d->_device = d3dDevice;
     d->_context = d3dContext;
+    d->_pIsInitSuccess = true;
     return true;
 }
 

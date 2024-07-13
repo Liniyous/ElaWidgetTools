@@ -16,8 +16,8 @@ ElaText::ElaText(QWidget* parent)
     textFont.setPixelSize(d->_textSize);
     setWordWrap(true);
     setFont(textFont);
-    d->onThemeChanged(ElaApplication::getInstance()->getThemeMode());
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
+    d->onThemeChanged(eApp->getThemeMode());
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
 }
 
 ElaText::ElaText(QString text, QWidget* parent)
@@ -32,8 +32,8 @@ ElaText::ElaText(QString text, QWidget* parent)
     textFont.setPixelSize(d->_textSize);
     setWordWrap(true);
     setFont(textFont);
-    d->onThemeChanged(ElaApplication::getInstance()->getThemeMode());
-    connect(ElaApplication::getInstance(), &::ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
+    d->onThemeChanged(eApp->getThemeMode());
+    connect(eApp, &::ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
 }
 
 ElaText::~ElaText()

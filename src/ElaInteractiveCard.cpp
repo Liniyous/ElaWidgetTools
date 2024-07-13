@@ -28,9 +28,9 @@ ElaInteractiveCard::ElaInteractiveCard(QWidget* parent)
     d->_pTitleSpacing = 3;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     setMouseTracking(true);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
             { d->_themeMode = themeMode; });
 }
 

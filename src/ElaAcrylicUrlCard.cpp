@@ -39,9 +39,9 @@ ElaAcrylicUrlCard::ElaAcrylicUrlCard(QWidget* parent)
     d->_pTitleSpacing = 10;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     connect(this, &ElaAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaAcrylicUrlCard::~ElaAcrylicUrlCard()
@@ -63,7 +63,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? eApp->getLightShadowEffectColor() : eApp->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;

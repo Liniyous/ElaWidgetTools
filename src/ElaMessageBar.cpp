@@ -22,7 +22,7 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     d->_text = text;
     d->_policy = policy;
     d->_messageMode = messageMode;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     setFixedHeight(60);
     setMouseTracking(true);
     QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(this);
@@ -173,7 +173,7 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? eApp->getLightShadowEffectColor() : eApp->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;

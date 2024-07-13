@@ -34,7 +34,7 @@ ElaWidget::ElaWidget(QWidget* parent)
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
     d->_mainLayout->addWidget(d->_appBar);
     d->_mainLayout->addStretch();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
 }
 
 ElaWidget::~ElaWidget()

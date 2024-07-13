@@ -22,7 +22,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, QWidget* parent)
     d->_pDarkIconColor = Qt::white;
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(15);
     this->setFont(iconFont);
@@ -30,7 +30,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, QWidget* parent)
     this->setText(QChar((unsigned short)awesome));
     connect(this, &ElaIconButton::pIsSelectedChanged, this, [=]()
             { update(); });
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
             { d->_themeMode = themeMode; });
 }
 
@@ -45,7 +45,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, QWidget* parent
     d->_pDarkIconColor = Qt::white;
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(pixelSize);
     this->setFont(iconFont);
@@ -53,7 +53,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, QWidget* parent
     this->setText(QChar((unsigned short)awesome));
     connect(this, &ElaIconButton::pIsSelectedChanged, this, [=]()
             { update(); });
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
             { d->_themeMode = themeMode; });
 }
 
@@ -68,7 +68,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, int fixedWidth,
     d->_pDarkIconColor = Qt::white;
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(pixelSize);
     this->setFont(iconFont);
@@ -77,7 +77,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, int fixedWidth,
     this->setFixedSize(fixedWidth, fixedHeight);
     connect(this, &ElaIconButton::pIsSelectedChanged, this, [=]()
             { update(); });
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
             { d->_themeMode = themeMode; });
 }
 

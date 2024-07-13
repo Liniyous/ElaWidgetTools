@@ -25,8 +25,8 @@ ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
     d->_selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
     d->_selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
     d->_selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaFooterDelegatePrivate::onThemeChanged);
+    d->_themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaFooterDelegatePrivate::onThemeChanged);
     setProperty("lastSelectMarkTop", 10.0);
     setProperty("lastSelectMarkBottom", 10.0);
     setProperty("selectMarkTop", 10.0);

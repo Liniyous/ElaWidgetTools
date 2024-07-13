@@ -23,7 +23,7 @@ ElaComboBoxView::ElaComboBoxView(bool isMultiSelect, QWidget* parent)
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaComboBoxViewPrivate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaComboBoxViewPrivate::onThemeChanged);
 }
 
 ElaComboBoxView::~ElaComboBoxView()

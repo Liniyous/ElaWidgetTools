@@ -126,8 +126,8 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     d->_mainLayout->addWidget(d->_centralWidget);
     d->_mainLayout->addLayout(d->_buttonLayout);
 
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    d->_themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaContentDialog::~ElaContentDialog()

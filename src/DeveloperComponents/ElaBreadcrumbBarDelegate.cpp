@@ -6,8 +6,8 @@
 ElaBreadcrumbBarDelegate::ElaBreadcrumbBarDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    _themeMode = ElaApplication::getInstance()->getThemeMode();
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    _themeMode = eApp->getThemeMode();
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }

@@ -18,7 +18,7 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     Q_D(ElaPushButton);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     d->onThemeChanged(d->_themeMode);
     d->_pLightDefaultColor = QColor(0xFE, 0xFE, 0xFE);
     d->_pDarkDefaultColor = QColor(0x3E, 0x3E, 0x3E);
@@ -36,7 +36,7 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     setFont(font);
     setObjectName("ElaPushButton");
     setStyleSheet("#ElaPushButton{background-color:transparent;}");
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaPushButtonPrivate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaPushButtonPrivate::onThemeChanged);
 }
 
 ElaPushButton::ElaPushButton(QString text, QWidget* parent)
@@ -45,7 +45,7 @@ ElaPushButton::ElaPushButton(QString text, QWidget* parent)
     Q_D(ElaPushButton);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
-    d->_themeMode = ElaApplication::getInstance()->getThemeMode();
+    d->_themeMode = eApp->getThemeMode();
     d->onThemeChanged(d->_themeMode);
     d->_pLightDefaultColor = QColor(0xFE, 0xFE, 0xFE);
     d->_pDarkDefaultColor = QColor(0x3E, 0x3E, 0x3E);
@@ -68,7 +68,7 @@ ElaPushButton::ElaPushButton(QString text, QWidget* parent)
     setFont(font);
     setObjectName("ElaPushButton");
     setStyleSheet("#ElaPushButton{background-color:transparent;}");
-    connect(ElaApplication::getInstance(), &ElaApplication::themeModeChanged, d, &ElaPushButtonPrivate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaPushButtonPrivate::onThemeChanged);
 }
 
 ElaPushButton::~ElaPushButton()
@@ -136,7 +136,7 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     painter.save();
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
-    QColor color = d->_themeMode == ElaApplicationType::Light ? ElaApplication::getInstance()->getLightShadowEffectColor() : ElaApplication::getInstance()->getDarkShadowEffectColor();
+    QColor color = d->_themeMode == ElaApplicationType::Light ? eApp->getLightShadowEffectColor() : eApp->getDarkShadowEffectColor();
     for (int i = 0; i < d->_shadowBorderWidth; i++)
     {
         QPainterPath path;

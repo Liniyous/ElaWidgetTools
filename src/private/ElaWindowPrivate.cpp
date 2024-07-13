@@ -82,7 +82,7 @@ void ElaWindowPrivate::onThemeReadyChange()
             _animationWidget = nullptr;
         });
         _animationWidget->move(0, 0);
-        ElaApplication* app = ElaApplication::getInstance();
+        ElaApplication* app = eApp;
         _animationWidget->setOldWindowBackground(q->grab(q->rect()).toImage());
         if (app->getThemeMode() == ElaApplicationType::Light)
         {
@@ -144,7 +144,7 @@ void ElaWindowPrivate::onDisplayModeChanged()
 
 void ElaWindowPrivate::onThemeModeChanged(ElaApplicationType::ThemeMode themeMode)
 {
-    if (ElaApplication::getInstance()->getThemeMode() == ElaApplicationType::Light)
+    if (eApp->getThemeMode() == ElaApplicationType::Light)
     {
         _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
         _windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));

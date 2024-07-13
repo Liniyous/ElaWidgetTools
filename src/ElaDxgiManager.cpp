@@ -35,8 +35,6 @@ ElaDxgiManager::ElaDxgiManager(QObject* parent)
     }
     if (!ret)
     {
-        delete d->_dxgi;
-        d->_dxgi = nullptr;
         qCritical() << "No available screenshot devices";
         return;
     }
@@ -67,7 +65,7 @@ ElaDxgiManager::~ElaDxgiManager()
 QStringList ElaDxgiManager::getDxDeviceList() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return QStringList();
     }
@@ -77,7 +75,7 @@ QStringList ElaDxgiManager::getDxDeviceList() const
 QStringList ElaDxgiManager::getOutputDeviceList() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return QStringList();
     }
@@ -87,7 +85,7 @@ QStringList ElaDxgiManager::getOutputDeviceList() const
 QImage ElaDxgiManager::grabScreenToImage() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return QImage();
     }
@@ -97,7 +95,7 @@ QImage ElaDxgiManager::grabScreenToImage() const
 void ElaDxgiManager::startGrabScreen()
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return;
     }
@@ -111,7 +109,7 @@ void ElaDxgiManager::startGrabScreen()
 void ElaDxgiManager::stopGrabScreen()
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return;
     }
@@ -121,7 +119,7 @@ void ElaDxgiManager::stopGrabScreen()
 bool ElaDxgiManager::setDxDeviceID(int dxID)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return false;
     }
@@ -146,7 +144,7 @@ bool ElaDxgiManager::setDxDeviceID(int dxID)
 int ElaDxgiManager::getDxDeviceID() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return -1;
     }
@@ -156,7 +154,7 @@ int ElaDxgiManager::getDxDeviceID() const
 bool ElaDxgiManager::setOutputDeviceID(int deviceID)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return false;
     }
@@ -181,7 +179,7 @@ bool ElaDxgiManager::setOutputDeviceID(int deviceID)
 int ElaDxgiManager::getOutputDeviceID() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return -1;
     }
@@ -191,7 +189,7 @@ int ElaDxgiManager::getOutputDeviceID() const
 void ElaDxgiManager::setGrabArea(int width, int height)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return;
     }
@@ -211,7 +209,7 @@ void ElaDxgiManager::setGrabArea(int width, int height)
 void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return;
     }
@@ -231,7 +229,7 @@ void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 QRect ElaDxgiManager::getGrabArea() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return QRect();
     }
@@ -241,7 +239,7 @@ QRect ElaDxgiManager::getGrabArea() const
 void ElaDxgiManager::setGrabFrameRate(int frameRateValue)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return;
     }
@@ -254,7 +252,7 @@ void ElaDxgiManager::setGrabFrameRate(int frameRateValue)
 int ElaDxgiManager::getGrabFrameRate() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return -1;
     }
@@ -264,7 +262,7 @@ int ElaDxgiManager::getGrabFrameRate() const
 void ElaDxgiManager::setTimeoutMsValue(int timeoutValue)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return;
     }
@@ -277,7 +275,7 @@ void ElaDxgiManager::setTimeoutMsValue(int timeoutValue)
 int ElaDxgiManager::getTimeoutMsValue() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi)
+    if (!d->_dxgi->getIsInitSuccess())
     {
         return -1;
     }
