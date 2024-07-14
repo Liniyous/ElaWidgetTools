@@ -19,6 +19,7 @@
 #include "ElaEventBus.h"
 #include "ElaIconButton.h"
 #include "private/ElaAppBarPrivate.h"
+#include "qdebug.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsFixedSize)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsDefaultClosed)
@@ -339,7 +340,11 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         QScreen* currentScreen = qApp->screenAt(window()->geometry().center());
         if (currentScreen && currentScreen != d->_lastScreen)
         {
-            ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+            if (d->_lastScreen)
+            {
+                ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+                ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+            }
             d->_lastScreen = currentScreen;
         }
         break;

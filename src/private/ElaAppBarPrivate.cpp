@@ -5,10 +5,12 @@
 #include <QGuiApplication>
 #include <QLabel>
 #include <QPropertyAnimation>
+#include <QScreen>
 #include <QWidget>
 
 #include "ElaAppBar.h"
 #include "ElaIconButton.h"
+#include "qdebug.h"
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -74,9 +76,18 @@ void ElaAppBarPrivate::_showSystemMenu(QPoint point)
 {
     Q_Q(const ElaAppBar);
 #ifdef Q_OS_WIN
+    QScreen* screen = qApp->screenAt(QCursor::pos());
+    if (!screen)
+    {
+        screen = QGuiApplication::primaryScreen();
+    }
+    if (!screen)
+    {
+        return;
+    }
+    const QPoint origin = screen->geometry().topLeft();
+    auto nativePos = QPointF(QPointF(point - origin) * screen->devicePixelRatio()).toPoint() + origin;
     HWND hwnd = reinterpret_cast<HWND>(q->window()->winId());
-    DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-    ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_SYSMENU);
     const HMENU hMenu = ::GetSystemMenu(hwnd, FALSE);
     if (q->window()->isMaximized() || q->window()->isFullScreen())
     {
@@ -98,12 +109,12 @@ void ElaAppBarPrivate::_showSystemMenu(QPoint point)
         ::EnableMenuItem(hMenu, SC_SIZE, MFS_DISABLED);
         ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_DISABLED);
     }
-    const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), point.x() * q->window()->devicePixelRatio(), point.y() * q->window()->devicePixelRatio(), 0, hwnd, nullptr);
+    const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), nativePos.x(),
+                                        nativePos.y(), 0, hwnd, nullptr);
     if (result != FALSE)
     {
         ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
     }
-    ::SetWindowLongPtr(hwnd, GWL_STYLE, style & ~WS_SYSMENU);
 #endif
 }
 
@@ -114,8 +125,8 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
     {
         return false;
     }
-    auto point = QCursor::pos();
-    QRectF rect = QRectF(item->mapToGlobal(QPoint(0, 0)), item->size());
+    auto point = item->window()->mapFromGlobal(QCursor::pos());
+    QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
     if (item == q)
     {
         if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
