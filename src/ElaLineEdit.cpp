@@ -55,15 +55,18 @@ void ElaLineEdit::focusInEvent(QFocusEvent* event)
 {
     Q_D(ElaLineEdit);
     Q_EMIT focusIn(this->text());
-    QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        update();
-    });
-    markAnimation->setDuration(300);
-    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    markAnimation->setStartValue(d->_pExpandMarkWidth);
-    markAnimation->setEndValue(width() / 2 - d->_pBorderRadius / 2);
-    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    if (event->reason() == Qt::MouseFocusReason)
+    {
+        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            update();
+        });
+        markAnimation->setDuration(300);
+        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        markAnimation->setStartValue(d->_pExpandMarkWidth);
+        markAnimation->setEndValue(width() / 2 - d->_pBorderRadius / 2);
+        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
     QLineEdit::focusInEvent(event);
 }
 
@@ -71,15 +74,18 @@ void ElaLineEdit::focusOutEvent(QFocusEvent* event)
 {
     Q_D(ElaLineEdit);
     Q_EMIT focusOut(this->text());
-    QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        update();
-    });
-    markAnimation->setDuration(300);
-    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    markAnimation->setStartValue(d->_pExpandMarkWidth);
-    markAnimation->setEndValue(0);
-    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    if (event->reason() != Qt::PopupFocusReason)
+    {
+        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+            update();
+        });
+        markAnimation->setDuration(300);
+        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        markAnimation->setStartValue(d->_pExpandMarkWidth);
+        markAnimation->setEndValue(0);
+        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
     QLineEdit::focusOutEvent(event);
 }
 
