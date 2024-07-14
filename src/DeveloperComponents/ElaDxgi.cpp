@@ -14,6 +14,7 @@ Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, QRect, GrabArea);
 Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, GrabFrameRate);  // 截图帧数
 Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, TimeoutMsValue); // 超时等待
 Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsInitSuccess);
+Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsGrabStoped);
 ElaDxgi::ElaDxgi(QObject* parent)
     : QObject(parent), d_ptr(new ElaDxgiPrivate())
 {
@@ -23,6 +24,7 @@ ElaDxgi::ElaDxgi(QObject* parent)
     d->_pIsGrabActive = false;
     d->_pGrabFrameRate = 120;
     d->_pTimeoutMsValue = 50;
+    d->_pIsGrabStoped = true;
 }
 
 ElaDxgi::~ElaDxgi()
@@ -33,6 +35,7 @@ ElaDxgi::~ElaDxgi()
 bool ElaDxgi::initialize(int dxID, int outputID)
 {
     Q_D(ElaDxgi);
+    d->_pIsInitSuccess = false;
     d->_pDxDeviceID = dxID;
     d->_pOutputDeviceID = outputID;
     releaseInterface();
@@ -178,8 +181,10 @@ void ElaDxgi::onGrabScreen()
     qreal endTime = 0;
     if (!d->_duplication || !d->_device || !d->_context)
     {
+        setIsGrabStoped(true);
         return;
     }
+    d->_pIsGrabStoped = false;
     while (d->_pIsGrabActive)
     {
         IDXGIResource* desktopRes = nullptr;
@@ -198,8 +203,13 @@ void ElaDxgi::onGrabScreen()
                         desktopRes->Release();
                         desktopRes = nullptr;
                     }
-                    while (1)
+                    while (true)
                     {
+                        if (!d->_duplication || !d->_device || !d->_context)
+                        {
+                            setIsGrabStoped(true);
+                            return;
+                        }
                         if (initialize(d->_pDxDeviceID, d->_pOutputDeviceID))
                         {
                             break;
@@ -269,6 +279,7 @@ void ElaDxgi::onGrabScreen()
         cpuSleep(d->_cpuSleepTime * 1000);
         // qDebug() << _cpuSleepTime << _lastGrabTime;
     }
+    setIsGrabStoped(true);
 }
 
 void ElaDxgi::releaseInterface()

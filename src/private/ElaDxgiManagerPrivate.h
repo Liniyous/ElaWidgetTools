@@ -15,6 +15,7 @@ public:
 
 private:
     Q_SIGNAL void grabScreen();
+    bool _isAllowedGrabScreen{false};
     ElaDxgi* _dxgi{nullptr};
     QThread* _dxgiThread{nullptr};
 };

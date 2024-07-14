@@ -12,6 +12,7 @@
 
 #include "ElaDxgi.h"
 #include "ElaDxgiManagerPrivate.h"
+#include "qapplication.h"
 Q_SINGLETON_CREATE_CPP(ElaDxgiManager);
 ElaDxgiManager::ElaDxgiManager(QObject* parent)
     : QObject{parent}, d_ptr(new ElaDxgiManagerPrivate())
@@ -35,16 +36,13 @@ ElaDxgiManager::ElaDxgiManager(QObject* parent)
     }
     if (!ret)
     {
+        d->_dxgi->initialize(0, 0);
         qCritical() << "No available screenshot devices";
-        return;
     }
-    else
-    {
-        d->_dxgi->moveToThread(d->_dxgiThread);
-        d->_dxgiThread->start();
-        connect(d, &ElaDxgiManagerPrivate::grabScreen, d->_dxgi, &ElaDxgi::onGrabScreen);
-        connect(d->_dxgi, &ElaDxgi::grabScreenOver, this, &ElaDxgiManager::grabImageUpdate);
-    }
+    d->_dxgi->moveToThread(d->_dxgiThread);
+    d->_dxgiThread->start();
+    connect(d, &ElaDxgiManagerPrivate::grabScreen, d->_dxgi, &ElaDxgi::onGrabScreen);
+    connect(d->_dxgi, &ElaDxgi::grabScreenOver, this, &ElaDxgiManager::grabImageUpdate);
 }
 
 ElaDxgiManager::~ElaDxgiManager()
@@ -65,20 +63,12 @@ ElaDxgiManager::~ElaDxgiManager()
 QStringList ElaDxgiManager::getDxDeviceList() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return QStringList();
-    }
     return d->_dxgi->getDxDeviceList();
 }
 
 QStringList ElaDxgiManager::getOutputDeviceList() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return QStringList();
-    }
     return d->_dxgi->getOutputDeviceList();
 }
 
@@ -95,10 +85,7 @@ QImage ElaDxgiManager::grabScreenToImage() const
 void ElaDxgiManager::startGrabScreen()
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return;
-    }
+    d->_isAllowedGrabScreen = true;
     if (!d->_dxgi->getIsGrabActive())
     {
         d->_dxgi->setIsGrabActive(true);
@@ -109,90 +96,76 @@ void ElaDxgiManager::startGrabScreen()
 void ElaDxgiManager::stopGrabScreen()
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return;
-    }
+    d->_isAllowedGrabScreen = false;
     d->_dxgi->setIsGrabActive(false);
 }
 
 bool ElaDxgiManager::setDxDeviceID(int dxID)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return false;
-    }
     if (dxID < 0 || d->_dxgi->getDxDeviceList().count() <= dxID)
     {
         return false;
     }
-    if (d->_dxgi->getIsGrabActive())
+    d->_dxgi->setIsGrabActive(false);
+    while (!d->_dxgi->getIsGrabStoped())
     {
-        d->_dxgi->setIsGrabActive(false);
-        d->_dxgi->initialize(dxID, d->_dxgi->getOutputDeviceID());
-        d->_dxgi->setIsGrabActive(true);
-        Q_EMIT d->grabScreen();
+        //等待任务结束
+        QApplication::processEvents();
     }
-    else
+    if (d->_dxgi->initialize(dxID, d->_dxgi->getOutputDeviceID()))
     {
-        d->_dxgi->initialize(dxID, d->_dxgi->getOutputDeviceID());
+        if (d->_isAllowedGrabScreen)
+        {
+            d->_dxgi->setIsGrabActive(true);
+            Q_EMIT d->grabScreen();
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 int ElaDxgiManager::getDxDeviceID() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return -1;
-    }
     return d->_dxgi->getDxDeviceID();
 }
 
 bool ElaDxgiManager::setOutputDeviceID(int deviceID)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return false;
-    }
     if (deviceID < 0 || d->_dxgi->getOutputDeviceList().count() <= deviceID)
     {
         return false;
     }
-    if (d->_dxgi->getIsGrabActive())
+
+    d->_dxgi->setIsGrabActive(false);
+    while (!d->_dxgi->getIsGrabStoped())
     {
-        d->_dxgi->setIsGrabActive(false);
-        d->_dxgi->initialize(d->_dxgi->getDxDeviceID(), deviceID);
-        d->_dxgi->setIsGrabActive(true);
-        Q_EMIT d->grabScreen();
+        //等待任务结束
+        QApplication::processEvents();
     }
-    else
+    if (d->_dxgi->initialize(d->_dxgi->getDxDeviceID(), deviceID))
     {
-        d->_dxgi->initialize(d->_dxgi->getDxDeviceID(), deviceID);
+        if (d->_isAllowedGrabScreen)
+        {
+            d->_dxgi->setIsGrabActive(true);
+            Q_EMIT d->grabScreen();
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 int ElaDxgiManager::getOutputDeviceID() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return -1;
-    }
     return d->_dxgi->getOutputDeviceID();
 }
 
 void ElaDxgiManager::setGrabArea(int width, int height)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return;
-    }
     int maxWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     int maxHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
     if (width <= 0 || width > maxWidth)
@@ -209,10 +182,6 @@ void ElaDxgiManager::setGrabArea(int width, int height)
 void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return;
-    }
     int maxWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
     int maxHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
     if (width <= 0 || width > maxWidth)
@@ -229,20 +198,12 @@ void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 QRect ElaDxgiManager::getGrabArea() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return QRect();
-    }
     return d->_dxgi->getGrabArea();
 }
 
 void ElaDxgiManager::setGrabFrameRate(int frameRateValue)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return;
-    }
     if (frameRateValue > 0)
     {
         d->_dxgi->setGrabFrameRate(frameRateValue);
@@ -252,20 +213,12 @@ void ElaDxgiManager::setGrabFrameRate(int frameRateValue)
 int ElaDxgiManager::getGrabFrameRate() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return -1;
-    }
     return d->_dxgi->getGrabFrameRate();
 }
 
 void ElaDxgiManager::setTimeoutMsValue(int timeoutValue)
 {
     Q_D(ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return;
-    }
     if (timeoutValue > 0)
     {
         d->_dxgi->setTimeoutMsValue(timeoutValue);
@@ -275,10 +228,6 @@ void ElaDxgiManager::setTimeoutMsValue(int timeoutValue)
 int ElaDxgiManager::getTimeoutMsValue() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return -1;
-    }
     return d->_dxgi->getTimeoutMsValue();
 }
 

@@ -23,6 +23,7 @@ class ElaDxgiPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, GrabFrameRate);  //截图帧数
     Q_PROPERTY_CREATE_D(int, TimeoutMsValue); //超时等待
     Q_PROPERTY_CREATE_D(bool, IsInitSuccess);
+    Q_PROPERTY_CREATE_D(bool, IsGrabStoped);
 
 public:
     explicit ElaDxgiPrivate(QObject* parent = nullptr);

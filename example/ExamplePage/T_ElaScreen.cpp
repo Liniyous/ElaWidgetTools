@@ -27,15 +27,18 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
     _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
     _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());
 
-    connect(_dxComboBox, &ElaComboBox::currentIndexChanged, this, [=](int index) {
+    connect(_dxComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [=](int index) {
         dxgiManager->setDxDeviceID(index);
         _outputComboBox->blockSignals(true);
         _outputComboBox->clear();
         _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
+        _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());
         _outputComboBox->blockSignals(false);
+        _dxgiScreen->update();
     });
-    connect(_outputComboBox, &ElaComboBox::currentIndexChanged, this, [=](int index) {
+    connect(_outputComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [=](int index) {
         dxgiManager->setOutputDeviceID(index);
+        _dxgiScreen->update();
     });
 
     QHBoxLayout* comboBoxLayout = new QHBoxLayout();
