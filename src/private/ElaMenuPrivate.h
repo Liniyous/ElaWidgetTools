@@ -1,8 +1,8 @@
 #ifndef ELAMENUPRIVATE_H
 #define ELAMENUPRIVATE_H
 
-#include <QImage>
 #include <QObject>
+#include <QPixmap>
 #include <QPoint>
 
 #include "stdafx.h"
@@ -18,7 +18,7 @@ public:
     ~ElaMenuPrivate();
 
 private:
-    QImage _animationImage{nullptr};
+    QPixmap _animationPix;
     bool _isCloseAnimation{false};
     QPoint _mousePressPoint;
     ElaMenuStyle* _menuStyle{nullptr};

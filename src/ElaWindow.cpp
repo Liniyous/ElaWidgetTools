@@ -42,7 +42,6 @@ ElaWindow::ElaWindow(QWidget* parent)
         ElaNavigationRouter::getInstance()->navigationRouteBack();
     });
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWindow::closeButtonClicked);
-
     // 导航栏
     d->_navigationBar = new ElaNavigationBar(this);
     // 返回按钮状态变更
@@ -83,6 +82,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     // 主题变更动画
     connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
+    d->_isInitFinished = true;
 }
 
 ElaWindow::~ElaWindow()
@@ -270,7 +270,7 @@ void ElaWindow::paintEvent(QPaintEvent* event)
 void ElaWindow::resizeEvent(QResizeEvent* event)
 {
     Q_D(ElaWindow);
-    if (eApp->getIsApplicationClosed() || !d->_isNavigationEnable)
+    if (eApp->getIsApplicationClosed() || !d->_isNavigationEnable || !d->_isInitFinished)
     {
         return;
     }

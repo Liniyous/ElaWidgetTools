@@ -98,6 +98,43 @@ QAction* ElaMenu::addElaIconAction(ElaIconType icon, const QString& text, const 
     return action;
 }
 
+bool ElaMenu::isHasChildMenu() const
+{
+    for (auto action : this->actions())
+    {
+        if (action->isSeparator())
+        {
+            continue;
+        }
+        if (action->menu())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool ElaMenu::isHasIcon() const
+{
+    for (auto action : this->actions())
+    {
+        if (action->isSeparator())
+        {
+            continue;
+        }
+        QMenu* menu = action->menu();
+        if (menu && (!menu->icon().isNull() || !menu->property("ElaIconType").toString().isEmpty()))
+        {
+            return true;
+        }
+        if (!action->icon().isNull() || !action->property("ElaIconType").toString().isEmpty())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool ElaMenu::event(QEvent* event)
 {
     Q_D(ElaMenu);
@@ -123,15 +160,16 @@ bool ElaMenu::event(QEvent* event)
 
 void ElaMenu::showEvent(QShowEvent* event)
 {
+    Q_EMIT menuShow();
     Q_D(ElaMenu);
-    if (!d->_animationImage.isNull())
+    if (!d->_animationPix.isNull())
     {
-        d->_animationImage = QImage();
+        d->_animationPix = QPixmap();
     }
-    d->_animationImage = this->grab(this->rect()).toImage();
+    d->_animationPix = this->grab(this->rect());
     QPropertyAnimation* posAnimation = new QPropertyAnimation(d, "pAnimationImagePosY");
     connect(posAnimation, &QPropertyAnimation::finished, this, [=]() {
-        d->_animationImage = QImage();
+        d->_animationPix = QPixmap();
         update();
     });
     connect(posAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
@@ -151,7 +189,16 @@ void ElaMenu::showEvent(QShowEvent* event)
             targetPosY /= 2;
         }
     }
-    posAnimation->setStartValue(-targetPosY);
+
+    if (pos().y() + d->_menuStyle->getMenuItemHeight() + 9 >= QCursor::pos().y())
+    {
+        posAnimation->setStartValue(-targetPosY);
+    }
+    else
+    {
+        posAnimation->setStartValue(targetPosY);
+    }
+
     posAnimation->setEndValue(0);
     posAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     QMenu::showEvent(event);
@@ -170,7 +217,7 @@ void ElaMenu::closeEvent(QCloseEvent* event)
             setWindowOpacity(1);
         });
         opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        opacityAnimation->setDuration(200);
+        opacityAnimation->setDuration(160);
         opacityAnimation->setStartValue(1);
         opacityAnimation->setEndValue(0);
         opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -185,10 +232,10 @@ void ElaMenu::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaMenu);
     QPainter painter(this);
-    painter.setRenderHints(QPainter::SmoothPixmapTransform);
-    if (!d->_animationImage.isNull())
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+    if (!d->_animationPix.isNull())
     {
-        painter.drawImage(QRect(0, d->_pAnimationImagePosY, width(), height()), d->_animationImage);
+        painter.drawPixmap(QRect(0, d->_pAnimationImagePosY, width(), height()), d->_animationPix);
     }
     else
     {

@@ -34,6 +34,7 @@ public:
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
 
 private:
+    bool _isInitFinished{false};
     ElaEvent* _focusEvent{nullptr};
     ElaNavigationBar* _navigationBar{nullptr};
     QStackedWidget* _centerStackedWidget{nullptr};

@@ -81,13 +81,15 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(QColor(0xB3, 0xB3, 0xB3));
-                painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.05, separatorRect.center().y(), separatorRect.width() - separatorRect.width() * 0.1, 1.5), 1, 1);
+                painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.055, separatorRect.center().y(), separatorRect.width() - separatorRect.width() * 0.11, 1.5), 1, 1);
                 painter->restore();
                 return;
             }
             else
             {
                 QRect menuRect = mopt->rect;
+                qreal contentPadding = menuRect.width() * 0.055;
+                qreal textLeftSpacing = menuRect.width() * 0.082;
                 painter->save();
                 painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
                 //覆盖效果
@@ -103,7 +105,7 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 QIcon menuIcon = mopt->icon;
                 if (!menuIcon.isNull())
                 {
-                    painter->drawPixmap(QRect(menuRect.x() + _iconLeftPadding, menuRect.center().y() - _iconWidth / 2, _iconWidth, _iconWidth), menuIcon.pixmap(_iconWidth, _iconWidth));
+                    painter->drawPixmap(QRect(menuRect.x() + contentPadding, menuRect.center().y() - _iconWidth / 2, _iconWidth, _iconWidth), menuIcon.pixmap(_iconWidth, _iconWidth));
                 }
                 else
                 {
@@ -122,23 +124,23 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                                 QFont iconFont = QFont("ElaAwesome");
                                 iconFont.setPixelSize(_pMenuItemHeight * 0.57);
                                 painter->setFont(iconFont);
-                                painter->drawText(QRect(menuRect.x() + _iconLeftPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter, iconText);
+                                painter->drawText(QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter, iconText);
                                 painter->restore();
                             }
                         }
                     }
                 }
                 //文字和快捷键绘制
-                //QString iconText = QChar((unsigned short)icon) + QString("#ElaIconType#") + text;
                 if (!mopt->text.isEmpty())
                 {
                     QStringList textList = mopt->text.split("\t");
                     painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
                                                                                                                                       : Qt::white);
-                    painter->drawText(QRect(menuRect.x() + _iconLeftPadding + _iconWidth + _textLeftSpacing, menuRect.y(), menuRect.width(), menuRect.height()), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, textList[0]);
+
+                    painter->drawText(QRectF(menuRect.x() + (_isAnyoneItemHasIcon ? contentPadding + textLeftSpacing : 0) + _iconWidth, menuRect.y(), menuRect.width(), menuRect.height()), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, textList[0]);
                     if (textList.count() > 1)
                     {
-                        painter->drawText(QRect(menuRect.x() + _iconLeftPadding + _iconWidth + _textLeftSpacing, menuRect.y(), menuRect.width() - (_iconLeftPadding + _iconWidth + _textLeftSpacing + 15), menuRect.height()), Qt::AlignRight | Qt::AlignVCenter | Qt::TextSingleLine, textList[1]);
+                        painter->drawText(QRectF(menuRect.x() + contentPadding + _iconWidth + textLeftSpacing, menuRect.y(), menuRect.width() - (contentPadding * 2 + _iconWidth + textLeftSpacing), menuRect.height()), Qt::AlignRight | Qt::AlignVCenter | Qt::TextSingleLine, textList[1]);
                     }
                 }
                 //展开图标
@@ -205,7 +207,16 @@ QSize ElaMenuStyle::sizeFromContents(ContentsType type, const QStyleOption* opti
                 break;
             }
             QSize menuItemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
-            return QSize(menuItemSize.width() + 20, _pMenuItemHeight);
+            const ElaMenu* menu = dynamic_cast<const ElaMenu*>(widget);
+            _isAnyoneItemHasIcon = menu->isHasIcon();
+            if (menu->isHasChildMenu())
+            {
+                return QSize(menuItemSize.width() + 20, _pMenuItemHeight);
+            }
+            else
+            {
+                return QSize(menuItemSize.width(), _pMenuItemHeight);
+            }
         }
     }
     default:

@@ -20,11 +20,22 @@ ElaToolButton::~ElaToolButton()
 
 void ElaToolButton::setMenu(ElaMenu* menu)
 {
-    if (!menu)
+    if (!menu || menu == this->menu())
     {
         return;
     }
     menu->setMenuItemHeight(27);
+    connect(menu, &ElaMenu::menuShow, this, [=]() {
+        QPoint pos = menu->pos();
+        if (pos.y() + menu->getMenuItemHeight() + 9 >= QCursor::pos().y())
+        {
+            menu->move(pos.x() - abs(menu->width() - this->width()) / 2, pos.y() + 5);
+        }
+        else
+        {
+            menu->move(pos.x() - abs(menu->width() - this->width()) / 2, pos.y() - 5);
+        }
+    });
     QToolButton::setMenu(menu);
 }
 

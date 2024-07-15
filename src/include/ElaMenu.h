@@ -27,6 +27,11 @@ public:
     QAction* addElaIconAction(ElaIconType icon, const QString& text);
     QAction* addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut);
 
+    bool isHasChildMenu() const;
+    bool isHasIcon() const;
+Q_SIGNALS:
+    Q_SIGNAL void menuShow();
+
 protected:
     virtual bool event(QEvent* event) override;
     virtual void showEvent(QShowEvent* event) override;

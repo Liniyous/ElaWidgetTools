@@ -20,12 +20,11 @@ public:
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
+    mutable bool _isAnyoneItemHasIcon{false};
     int _shadowBorderWidth{6};
     ElaApplicationType::ThemeMode _themeMode;
     QLinearGradient* _windowLinearGradient{nullptr};
-    int _iconLeftPadding{10};
     int _iconWidth{22};
-    int _textLeftSpacing{15};
 };
 
 #endif // ELAMENUSTYLE_H
