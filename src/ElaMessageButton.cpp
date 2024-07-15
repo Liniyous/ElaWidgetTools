@@ -11,52 +11,13 @@ Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, QString, BarTitle);
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, QString, BarText);
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, int, DisplayMsec);
+Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, QWidget*, MessageTargetWidget)
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, ElaMessageBarType::MessageMode, MessageMode);
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, ElaMessageBarType::PositionPolicy, PositionPolicy);
 
 ElaMessageButton::ElaMessageButton(QWidget* parent)
-    : QPushButton(parent), d_ptr(new ElaMessageButtonPrivate())
+    : ElaMessageButton("Message", parent)
 {
-    Q_D(ElaMessageButton);
-    d->q_ptr = this;
-    d->_pBorderRadius = 3;
-    setFixedSize(80, 38);
-    QFont font = this->font();
-    font.setPointSize(11);
-    setFont(font);
-    setMouseTracking(true);
-    setText("Message");
-    setObjectName("ElaMessageButton");
-    setStyleSheet("#ElaMessageButton{background-color:transparent;}");
-    d->_pDisplayMsec = 2000;
-    d->_pMessageMode = ElaMessageBarType::Success;
-    d->_pPositionPolicy = ElaMessageBarType::TopRight;
-    d->_themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaMessageButtonPrivate::onThemeChanged);
-    connect(this, &ElaMessageButton::clicked, this, [=]() {
-        switch(d->_pMessageMode)
-        {
-        case ElaMessageBarType::Success:
-        {
-            ElaMessageBar::success(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,window());
-            break;
-        }
-        case ElaMessageBarType::Warning:
-        {
-            ElaMessageBar::warning(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,window());
-            break;
-        }
-        case ElaMessageBarType::Information:
-        {
-            ElaMessageBar::information(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,window());
-            break;
-        }
-        case ElaMessageBarType::Error:
-        {
-            ElaMessageBar::error(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,window());
-            break;
-        }
-        } });
 }
 
 ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
@@ -76,28 +37,29 @@ ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
     d->_pMessageMode = ElaMessageBarType::Success;
     d->_pPositionPolicy = ElaMessageBarType::TopRight;
     d->_themeMode = eApp->getThemeMode();
+    d->_pMessageTargetWidget = nullptr;
     connect(eApp, &ElaApplication::themeModeChanged, d, &ElaMessageButtonPrivate::onThemeChanged);
     connect(this, &ElaMessageButton::clicked, this, [=]() {
                 switch(d->_pMessageMode)
                 {
                 case ElaMessageBarType::Success:
                 {
-                    ElaMessageBar::success(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec);
+                    ElaMessageBar::success(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
                     break;
                 }
                 case ElaMessageBarType::Warning:
                 {
-                    ElaMessageBar::warning(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec);
+                    ElaMessageBar::warning(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
                     break;
                 }
                 case ElaMessageBarType::Information:
                 {
-                    ElaMessageBar::information(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec);
+                    ElaMessageBar::information(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
                     break;
                 }
                 case ElaMessageBarType::Error:
                 {
-                    ElaMessageBar::error(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec);
+                    ElaMessageBar::error(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
                     break;
                 }
                 } });

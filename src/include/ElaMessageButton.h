@@ -15,6 +15,7 @@ class ELA_EXPORT ElaMessageButton : public QPushButton
     Q_PROPERTY_CREATE_Q_H(QString, BarTitle);
     Q_PROPERTY_CREATE_Q_H(QString, BarText);
     Q_PROPERTY_CREATE_Q_H(int, DisplayMsec);
+    Q_PROPERTY_CREATE_Q_H(QWidget*, MessageTargetWidget)
     Q_PROPERTY_CREATE_Q_H(ElaMessageBarType::MessageMode, MessageMode);
     Q_PROPERTY_CREATE_Q_H(ElaMessageBarType::PositionPolicy, PositionPolicy);
 

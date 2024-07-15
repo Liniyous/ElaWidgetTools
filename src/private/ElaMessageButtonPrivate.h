@@ -14,6 +14,7 @@ class ElaMessageButtonPrivate : public QObject
     Q_PROPERTY_CREATE_D(QString, BarTitle);
     Q_PROPERTY_CREATE_D(QString, BarText);
     Q_PROPERTY_CREATE_D(int, DisplayMsec);
+    Q_PROPERTY_CREATE_D(QWidget*, MessageTargetWidget)
     Q_PROPERTY_CREATE_D(ElaMessageBarType::MessageMode, MessageMode);
     Q_PROPERTY_CREATE_D(ElaMessageBarType::PositionPolicy, PositionPolicy);
 
