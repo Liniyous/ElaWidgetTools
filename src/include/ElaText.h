@@ -13,14 +13,20 @@ class ELA_EXPORT ElaText : public QLabel
 public:
     explicit ElaText(QWidget* parent = nullptr);
     explicit ElaText(QString text, QWidget* parent = nullptr);
+    explicit ElaText(QString text, int pixelSize, QWidget* parent = nullptr);
     ~ElaText();
-    void setTextSize(int size);
-    int getTextSize() const;
+    void setIsWrapAnywhere(bool isWrapAnywhere);
+    bool getIsWrapAnywhere() const;
+
+    void setTextPixelSize(int size);
+    int getTextPixelSize() const;
+    void setTextPointSize(int size);
+    int getTextPointSize() const;
     void setTextStyle(ElaTextType::TextStyle textStyle);
     ElaTextType::TextStyle getTextStyle() const;
 
 protected:
-    void paintEvent(QPaintEvent* event) override;
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // ELATEXT_H

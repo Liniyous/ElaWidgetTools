@@ -6,7 +6,7 @@
 #include "stdafx.h"
 
 class ElaContentDialogPrivate;
-class ELA_EXPORT ElaContentDialog : public QDialog, QAbstractNativeEventFilter
+class ELA_EXPORT ElaContentDialog : public QDialog
 {
     Q_OBJECT
     Q_Q_CREATE(ElaContentDialog)
@@ -32,9 +32,9 @@ protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
 #endif
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
+    virtual bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
 #else
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
+    virtual bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
 #endif
 };
 

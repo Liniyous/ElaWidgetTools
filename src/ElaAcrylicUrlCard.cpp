@@ -60,25 +60,11 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    painter.save();
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    QColor color = d->_themeMode == ElaApplicationType::Light ? eApp->getLightShadowEffectColor() : eApp->getDarkShadowEffectColor();
-    for (int i = 0; i < d->_shadowBorderWidth; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRoundedRect(d->_shadowBorderWidth - i, d->_shadowBorderWidth - i, this->width() - (d->_shadowBorderWidth - i) * 2, this->height() - (d->_shadowBorderWidth - i) * 2, d->_pBorderRadius + i, d->_pBorderRadius + i);
-        int alpha = 5 * (d->_shadowBorderWidth - i + 1);
-        color.setAlpha(alpha > 255 ? 255 : alpha);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
-    painter.restore();
+    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 亚克力绘制
     painter.save();
-    painter.setPen(Qt::NoPen);
+    painter.setPen(d->_themeMode == ElaApplicationType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
     QColor brushColor;
     if (d->_themeMode == ElaApplicationType::Light)
     {

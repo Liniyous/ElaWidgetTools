@@ -22,6 +22,8 @@ private:
 
 public:
     void initMessageLog(bool isEnable);
+Q_SIGNALS:
+    void logMessage(QString log);
 };
 
 #endif // ELALOG_H

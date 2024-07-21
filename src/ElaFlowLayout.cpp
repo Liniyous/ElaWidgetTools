@@ -30,7 +30,7 @@ ElaFlowLayout::ElaFlowLayout(int margin, int hSpacing, int vSpacing)
 ElaFlowLayout::~ElaFlowLayout()
 {
     QLayoutItem* item;
-    while ((item = this->takeAt(0)))
+    while ((item = ElaFlowLayout::takeAt(0)))
     {
         delete item;
     }

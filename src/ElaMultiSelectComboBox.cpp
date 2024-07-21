@@ -2,19 +2,14 @@
 
 #include <QApplication>
 #include <QDebug>
-#include <QGraphicsDropShadowEffect>
 #include <QLayout>
-#include <QLineEdit>
-#include <QMouseEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
-#include <QStandardItemModel>
-#include <QTimer>
 
-#include "Def.h"
-#include "DeveloperComponents/ElaComboBoxDelegate.h"
 #include "DeveloperComponents/ElaComboBoxView.h"
 #include "ElaApplication.h"
+#include "ElaComboBoxStyle.h"
+#include "ElaScrollBar.h"
 #include "private/ElaMultiSelectComboBoxPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaMultiSelectComboBox, int, BorderRadius)
 ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
@@ -27,23 +22,42 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->_pExpandMarkWidth = 0;
     d->_themeMode = eApp->getThemeMode();
     setFixedHeight(35);
-    setMouseTracking(true);
-    setInsertPolicy(QComboBox::NoInsert);
-    setModel(new QStandardItemModel(this));
-    d->_comboView = new ElaComboBoxView(true, this);
-    d->_comboView->setItemDelegate(new ElaComboBoxDelegate(this));
+
+    d->_comboBoxStyle = new ElaComboBoxStyle(style());
+    setStyle(d->_comboBoxStyle);
+
+    //调用view 让container初始化
+    d->_comboView = new ElaComboBoxView(this);
     setView(d->_comboView);
-    d->_comboView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    d->_comboView->setSelectionMode(QAbstractItemView::NoSelection);
-    connect(d->_comboView, &ElaComboBoxView::itemPressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
-    connect(this, QOverload<int>::of(&ElaMultiSelectComboBox::currentIndexChanged), d, &ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
+    QAbstractItemView* comboBoxView = this->view();
+    comboBoxView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ElaScrollBar* scrollBar = new ElaScrollBar(this);
+    comboBoxView->setVerticalScrollBar(scrollBar);
+    comboBoxView->setAutoScroll(false);
+    comboBoxView->setSelectionMode(QAbstractItemView::NoSelection);
+    comboBoxView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    comboBoxView->setObjectName("ElaComboBoxView");
+    comboBoxView->setStyleSheet("#ElaComboBoxView{background-color:transparent;}");
+    comboBoxView->setStyle(d->_comboBoxStyle);
     QWidget* container = this->findChild<QFrame*>();
     if (container)
     {
         container->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
         container->setAttribute(Qt::WA_TranslucentBackground);
+        container->setObjectName("ElaComboBoxContainer");
+        container->setStyle(d->_comboBoxStyle);
+        QLayout* layout = container->layout();
+        while (layout->count())
+        {
+            layout->takeAt(0);
+        }
+        layout->addWidget(view());
+        layout->setContentsMargins(6, 0, 6, 6);
     }
-    view()->setAutoScroll(false);
+    QComboBox::setMaxVisibleItems(5);
+    setInsertPolicy(QComboBox::NoInsert);
+    connect(d->_comboView, &ElaComboBoxView::itemPressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
+    connect(this, QOverload<int>::of(&ElaMultiSelectComboBox::currentIndexChanged), d, &ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
     d->_itemSelection.resize(32);
     d->_itemSelection.fill(false);
     d->_itemSelection[0] = true;
@@ -157,26 +171,31 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
         painter.setBrush(underMouse() ? QColor(0x44, 0x44, 0x44) : QColor(0x3B, 0x3B, 0x3B));
     }
 
-    QRect foregroundRect(1, 1, width() - 2, height() - 2);
+    QRect foregroundRect = rect();
+    foregroundRect.adjust(6, 1, -6, -1);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
+    //文字绘制
     painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
     QString currentText = painter.fontMetrics().elidedText(d->_currentText, Qt::ElideRight, foregroundRect.width() - 27 - width() * 0.05);
-    painter.drawText(10, height() / 2 + painter.fontMetrics().ascent() / 2 - 1, currentText);
+    painter.drawText(15, height() / 2 + painter.fontMetrics().ascent() / 2 - 1, currentText);
     //展开指示器绘制
     painter.setPen(Qt::NoPen);
     painter.setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
     painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 3, d->_pExpandMarkWidth * 2, 3), 2, 2);
     // 展开图标绘制
-    QFont iconFont = QFont("ElaAwesome");
-    iconFont.setPixelSize(17);
-    painter.setFont(iconFont);
-    painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
-    QRectF expandIconRect(width() - 25, 0, 20, height());
-    painter.translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2 - 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
-    painter.rotate(d->_pExpandIconRotate);
-    painter.translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2 + 2, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);
-    painter.drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short)ElaIconType::AngleDown));
-    painter.restore();
+    if (count() > 0)
+    {
+        QFont iconFont = QFont("ElaAwesome");
+        iconFont.setPixelSize(17);
+        painter.setFont(iconFont);
+        painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+        QRectF expandIconRect(width() - 25, 0, 20, height());
+        painter.translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2 - 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
+        painter.rotate(d->_pExpandIconRotate);
+        painter.translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2 + 2, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);
+        painter.drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short)ElaIconType::AngleDown));
+        painter.restore();
+    }
 }
 
 void ElaMultiSelectComboBox::showPopup()
@@ -192,19 +211,34 @@ void ElaMultiSelectComboBox::showPopup()
         QWidget* container = this->findChild<QFrame*>();
         if (container)
         {
-            container->move(container->pos().x(), container->pos().y() + 3);
-            QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
-            QPoint viewPos = QPoint(0, 0);
-            viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
+            int containerHeight = container->height();
+            container->move(container->x(), container->y() + 3);
+            QLayout* layout = container->layout();
+            while (layout->count())
+            {
+                layout->takeAt(0);
+            }
+            QPropertyAnimation* fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
+            connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                container->setFixedHeight(value.toUInt());
+            });
+            fixedSizeAnimation->setStartValue(1);
+            fixedSizeAnimation->setEndValue(containerHeight);
+            fixedSizeAnimation->setEasingCurve(QEasingCurve::OutCubic);
+            fixedSizeAnimation->setDuration(400);
+            fixedSizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+            QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
+            connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
+                d->_isAllowHidePopup = true;
+                layout->addWidget(view());
+            });
+            QPoint viewPos = view()->pos();
+            viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
             viewPosAnimation->setEndValue(viewPos);
             viewPosAnimation->setEasingCurve(QEasingCurve::OutCubic);
             viewPosAnimation->setDuration(400);
             viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-            QPropertyAnimation* opacityAnimation = new QPropertyAnimation(container, "windowOpacity");
-            opacityAnimation->setStartValue(0);
-            opacityAnimation->setEndValue(1);
-            opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
-            opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         }
         //指示器动画
         QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
@@ -235,36 +269,49 @@ void ElaMultiSelectComboBox::hidePopup()
         d->_isFirstPopup = false;
         return;
     }
-    if (this->view()->underMouse())
+    if (eApp->containsCursorToItem(d->_comboView))
     {
         return;
     }
     else
     {
-        if (d->_isHidePopupAnimationFinished)
+        if (d->_isAllowHidePopup)
         {
             QWidget* container = this->findChild<QFrame*>();
+            int containerHeight = container->height();
             if (container)
             {
-                QPropertyAnimation* opcaityAnimation = new QPropertyAnimation(container, "windowOpacity");
-                connect(opcaityAnimation, &QPropertyAnimation::finished, this, [=]() {
-                    QComboBox::hidePopup();
-                    container->setWindowOpacity(1);
-                    d->_isHidePopupAnimationFinished = true; });
-                opcaityAnimation->setStartValue(1);
-                opcaityAnimation->setEndValue(0);
-                opcaityAnimation->setEasingCurve(QEasingCurve::InCubic);
-                opcaityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-
-                QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(d->_comboView, "pos");
-                QPoint viewPos = QPoint(0, 0);
-                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { d->_comboView->move(viewPos); });
+                QLayout* layout = container->layout();
+                while (layout->count())
+                {
+                    layout->takeAt(0);
+                }
+                QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
+                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
+                    layout->addWidget(view());
+                });
+                QPoint viewPos = QPoint(7, 1);
+                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
                 viewPosAnimation->setStartValue(viewPos);
-                viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - d->_comboView->height()));
+                viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
                 viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);
                 viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-                d->_isHidePopupAnimationFinished = false;
+
+                QPropertyAnimation* fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
+                connect(fixedSizeAnimation, &QPropertyAnimation::finished, this, [=]() {
+                    QComboBox::hidePopup();
+                    container->setFixedHeight(containerHeight);
+                });
+                connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                    container->setFixedHeight(value.toUInt());
+                });
+                fixedSizeAnimation->setStartValue(container->height());
+                fixedSizeAnimation->setEndValue(1);
+                fixedSizeAnimation->setEasingCurve(QEasingCurve::InCubic);
+                fixedSizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+                d->_isAllowHidePopup = false;
             }
+            //指示器动画
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
             connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
                 update();

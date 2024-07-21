@@ -85,3 +85,27 @@ bool ElaScrollArea::getIsGrabGesture(Qt::Orientation orientation) const
     QScrollerProperties properties = QScroller::scroller(this->viewport())->scrollerProperties();
     return properties.scrollMetric(orientation == Qt::Horizontal ? QScrollerProperties::HorizontalOvershootPolicy : QScrollerProperties::VerticalOvershootPolicy).toBool();
 }
+
+void ElaScrollArea::setIsAnimation(Qt::Orientation orientation, bool isAnimation)
+{
+    if (orientation == Qt::Horizontal)
+    {
+        dynamic_cast<ElaScrollBar*>(this->horizontalScrollBar())->setisAnimation(isAnimation);
+    }
+    else
+    {
+        dynamic_cast<ElaScrollBar*>(this->verticalScrollBar())->setisAnimation(isAnimation);
+    }
+}
+
+bool ElaScrollArea::getIsAnimation(Qt::Orientation orientation) const
+{
+    if (orientation == Qt::Horizontal)
+    {
+        return dynamic_cast<ElaScrollBar*>(this->horizontalScrollBar())->getisAnimation();
+    }
+    else
+    {
+        return dynamic_cast<ElaScrollBar*>(this->verticalScrollBar())->getisAnimation();
+    }
+}

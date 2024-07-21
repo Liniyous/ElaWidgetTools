@@ -1,5 +1,6 @@
 ﻿#include "T_Home.h"
 
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QMouseEvent>
 #include <QVBoxLayout>
@@ -148,6 +149,7 @@ T_Home::T_Home(QWidget* parent)
 
     // 初始化提示
     ElaMessageBar::success(ElaMessageBarType::BottomRight, "Success", "初始化成功!", 2000);
+    qDebug() << "初始化成功";
 }
 
 T_Home::~T_Home()

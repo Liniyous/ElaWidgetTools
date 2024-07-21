@@ -13,9 +13,7 @@ class ELA_EXPORT ElaWidget : public QWidget
 public:
     explicit ElaWidget(QWidget* parent = nullptr);
     ~ElaWidget();
-    void setCentralWidget(QWidget* centralWidget);
 
-    void setWindowTitle(QString title);
     void setIsStayTop(bool isStayTop);
     bool getIsStayTop() const;
     void setIsFixedSize(bool isFixedSize);

@@ -16,13 +16,13 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
     _dxgiScreen->setIsSyncGrabSize(true);
 
     ElaText* dxText = new ElaText("采集设备选择", this);
-    dxText->setTextSize(15);
+    dxText->setTextPixelSize(15);
     _dxComboBox = new ElaComboBox(this);
     _dxComboBox->addItems(dxgiManager->getDxDeviceList());
     _dxComboBox->setCurrentIndex(dxgiManager->getDxDeviceID());
 
     ElaText* outputText = new ElaText("采集对象选择", this);
-    outputText->setTextSize(15);
+    outputText->setTextPixelSize(15);
     _outputComboBox = new ElaComboBox(this);
     _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
     _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());

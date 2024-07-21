@@ -69,7 +69,7 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
     ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
     if (!posNode->getIsExpanderNode())
     {
-        qDebug() << posNode;
+        //qDebug() << posNode;
     }
 }
 

@@ -16,9 +16,10 @@ public:
     Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
+    ElaApplicationType::ThemeMode _themeMode;
+    bool _isWrapAnywhere{false};
     ElaTextType::TextStyle _textStyle{ElaTextType::NoStyle};
     qreal _textSpacing{0.5};
-    int _textSize{28};
 };
 
 #endif // ELATEXTPRIVATE_H

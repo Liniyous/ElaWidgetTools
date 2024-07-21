@@ -13,45 +13,67 @@ ElaText::ElaText(QWidget* parent)
     setStyleSheet("#ElaText{background-color:transparent;}");
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
-    textFont.setPixelSize(d->_textSize);
+    textFont.setPixelSize(28);
     setWordWrap(true);
     setFont(textFont);
+    d->_themeMode = eApp->getThemeMode();
     d->onThemeChanged(eApp->getThemeMode());
     connect(eApp, &ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
 }
 
 ElaText::ElaText(QString text, QWidget* parent)
-    : QLabel(text, parent), d_ptr(new ElaTextPrivate())
+    : ElaText(parent)
 {
-    Q_D(ElaText);
-    d->q_ptr = this;
-    setObjectName("ElaText");
-    setStyleSheet("#ElaText{background-color:transparent;}");
-    QFont textFont = font();
-    textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
-    textFont.setPixelSize(d->_textSize);
-    setWordWrap(true);
-    setFont(textFont);
-    d->onThemeChanged(eApp->getThemeMode());
-    connect(eApp, &::ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
+    setText(text);
+}
+
+ElaText::ElaText(QString text, int pixelSize, QWidget* parent)
+    : ElaText(text, parent)
+{
+    QFont font = this->font();
+    font.setPixelSize(pixelSize);
+    setFont(font);
 }
 
 ElaText::~ElaText()
 {
 }
 
-void ElaText::setTextSize(int size)
+void ElaText::setIsWrapAnywhere(bool isWrapAnywhere)
 {
     Q_D(ElaText);
-    d->_textSize = size;
+    setWordWrap(isWrapAnywhere);
+    d->_isWrapAnywhere = isWrapAnywhere;
+}
+
+bool ElaText::getIsWrapAnywhere() const
+{
+    Q_D(const ElaText);
+    return d->_isWrapAnywhere;
+}
+
+void ElaText::setTextPixelSize(int size)
+{
     QFont font = this->font();
-    font.setPixelSize(d->_textSize);
+    font.setPixelSize(size);
     setFont(font);
 }
 
-int ElaText::getTextSize() const
+int ElaText::getTextPixelSize() const
 {
-    return d_ptr->_textSize;
+    return this->font().pixelSize();
+}
+
+void ElaText::setTextPointSize(int size)
+{
+    QFont font = this->font();
+    font.setPointSize(size);
+    setFont(font);
+}
+
+int ElaText::getTextPointSize() const
+{
+    return this->font().pointSize();
 }
 
 void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
@@ -67,48 +89,41 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
     }
     case ElaTextType::Caption:
     {
-        d->_textSize = 12;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(12);
         break;
     }
     case ElaTextType::Body:
     {
-        d->_textSize = 13;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(13);
         break;
     }
     case ElaTextType::BodyStrong:
     {
-        d->_textSize = 13;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(13);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::Subtitle:
     {
-        d->_textSize = 20;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(20);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::Title:
     {
-        d->_textSize = 28;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(28);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::TitleLarge:
     {
-        d->_textSize = 40;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(40);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
     case ElaTextType::Display:
     {
-        d->_textSize = 68;
-        textFont.setPixelSize(d->_textSize);
+        textFont.setPixelSize(48);
         textFont.setWeight(QFont::DemiBold);
         break;
     }
@@ -118,16 +133,25 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
 
 ElaTextType::TextStyle ElaText::getTextStyle() const
 {
-    return d_ptr->_textStyle;
+    Q_D(const ElaText);
+    return d->_textStyle;
 }
 
 void ElaText::paintEvent(QPaintEvent* event)
 {
-    QPainter painter(this);
-    painter.save();
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(Qt::transparent);
-    painter.drawRect(rect());
-    painter.restore();
-    QLabel::paintEvent(event);
+    Q_D(ElaText);
+    if (wordWrap() && d->_isWrapAnywhere)
+    {
+        Q_D(ElaText);
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+        painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+        painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
+        painter.restore();
+    }
+    else
+    {
+        QLabel::paintEvent(event);
+    }
 }

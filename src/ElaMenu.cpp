@@ -135,33 +135,13 @@ bool ElaMenu::isHasIcon() const
     return false;
 }
 
-bool ElaMenu::event(QEvent* event)
-{
-    Q_D(ElaMenu);
-    if (event->type() == QEvent::MouseButtonPress)
-    {
-        QMouseEvent* mouseEvent = dynamic_cast<QMouseEvent*>(event);
-
-        if (mouseEvent)
-        {
-            d->_mousePressPoint = mapToGlobal(mouseEvent->pos());
-            if (ElaApplication::containsCursorToItem(this))
-            {
-                QAction* action = actionAt(mouseEvent->pos());
-                if (action && !action->menu() && action->isEnabled())
-                {
-                    d->_isCloseAnimation = true;
-                }
-            }
-        }
-    }
-    return QMenu::event(event);
-}
-
 void ElaMenu::showEvent(QShowEvent* event)
 {
     Q_EMIT menuShow();
     Q_D(ElaMenu);
+
+    //消除阴影偏移
+    move(this->pos().x() - 6, this->pos().y());
     if (!d->_animationPix.isNull())
     {
         d->_animationPix = QPixmap();
@@ -202,30 +182,6 @@ void ElaMenu::showEvent(QShowEvent* event)
     posAnimation->setEndValue(0);
     posAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     QMenu::showEvent(event);
-}
-
-void ElaMenu::closeEvent(QCloseEvent* event)
-{
-    Q_D(ElaMenu);
-    if (d->_isCloseAnimation && windowOpacity() == 1)
-    {
-        d->_isCloseAnimation = false;
-        event->ignore();
-        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "windowOpacity");
-        connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
-            close();
-            setWindowOpacity(1);
-        });
-        opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        opacityAnimation->setDuration(160);
-        opacityAnimation->setStartValue(1);
-        opacityAnimation->setEndValue(0);
-        opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-    else
-    {
-        QMenu::closeEvent(event);
-    }
 }
 
 void ElaMenu::paintEvent(QPaintEvent* event)

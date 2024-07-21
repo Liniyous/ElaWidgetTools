@@ -41,7 +41,6 @@ private:
     ElaAppBar* _appBar{nullptr};
     QLinearGradient* _windowLinearGradient{nullptr};
     QHBoxLayout* _centerLayout{nullptr};
-    QVBoxLayout* _mainLayout{nullptr};
     int _contentsMargins{5};
     int _compactBarWidth{45};
     bool _isNavigationEnable{true};
@@ -56,6 +55,7 @@ private:
 
     qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);
+    void _doNavigationDisplayModeChange();
 };
 
 #endif // ELAWINDOWPRIVATE_H

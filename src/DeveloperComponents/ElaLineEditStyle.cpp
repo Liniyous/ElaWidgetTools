@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
+#include <QtMath>
 
 #include "ElaApplication.h"
 ElaLineEditStyle::ElaLineEditStyle(QStyle* style)

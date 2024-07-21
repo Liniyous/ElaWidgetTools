@@ -83,7 +83,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     //Maximal导航栏
     d->_maximalWidget = new QWidget(this);
     QVBoxLayout* maximalLayout = new QVBoxLayout(d->_maximalWidget);
-    maximalLayout->setContentsMargins(10, 10, 10, 0);
+    maximalLayout->setContentsMargins(5, 10, 10, 0);
     maximalLayout->addWidget(d->_userCard);
     maximalLayout->addSpacing(6);
     maximalLayout->addWidget(d->_navigationSuggestBox);

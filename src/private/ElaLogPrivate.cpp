@@ -1,9 +1,9 @@
 #include "ElaLogPrivate.h"
 
 #include <QDateTime>
+#include <QDebug>
 #include <QFile>
 #include <QMutex>
-
 #ifndef QT_NO_DEBUG
 #include <iostream>
 #endif
@@ -53,12 +53,11 @@ void ElaLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& 
         break;
     }
     }
-#ifndef QT_NO_DEBUG
-    std::cout << logInfo.toLocal8Bit().constData() << "\n";
-#endif
+    qDebug() << logInfo;
+    ElaLog* log = ElaLog::getInstance();
+    Q_EMIT log->logMessage(logInfo);
     messageLogMutex->lock();
     QFile logfile;
-    ElaLog* log = ElaLog::getInstance();
     if (log->getIsLogFileNameWithTime())
     {
         logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + *logFileNameTime + ".txt");

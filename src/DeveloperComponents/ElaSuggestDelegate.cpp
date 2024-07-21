@@ -3,8 +3,8 @@
 #include <QPainter>
 #include <QPainterPath>
 
+#include "ElaSuggestBoxPrivate.h"
 #include "ElaSuggestModel.h"
-#include "private/ElaSuggestBoxPrivate.h"
 ElaSuggestDelegate::ElaSuggestDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {

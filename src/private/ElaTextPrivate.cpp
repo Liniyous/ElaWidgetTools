@@ -14,6 +14,7 @@ ElaTextPrivate::~ElaTextPrivate()
 void ElaTextPrivate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
 {
     Q_Q(ElaText);
+    _themeMode = themeMode;
     QPalette palette = q->palette();
     if (themeMode == ElaApplicationType::Light)
     {

@@ -1,20 +1,23 @@
 #include "ElaWindow.h"
 
-#include <QGraphicsOpacityEffect>
+#include <QDockWidget>
 #include <QHBoxLayout>
-#include <QPainter>
-#include <QPainterPath>
-#include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
 #include <QResizeEvent>
+#include <QScreen>
 #include <QStackedWidget>
+#include <QStyleOption>
+#include <QTimer>
+#include <QToolBar>
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
 #include "ElaApplication.h"
 #include "ElaEventBus.h"
+#include "ElaMenu.h"
 #include "ElaNavigationBar.h"
 #include "ElaNavigationRouter.h"
+#include "ElaWindowStyle.h"
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaWindowPrivate.h"
@@ -22,7 +25,7 @@ Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
 
 ElaWindow::ElaWindow(QWidget* parent)
-    : QWidget{parent}, d_ptr(new ElaWindowPrivate())
+    : QMainWindow{parent}, d_ptr(new ElaWindowPrivate())
 {
     Q_D(ElaWindow);
     d->q_ptr = this;
@@ -61,16 +64,12 @@ ElaWindow::ElaWindow(QWidget* parent)
     // 中心堆栈窗口
     d->_centerStackedWidget = new QStackedWidget(this);
     d->_centerStackedWidget->setContentsMargins(0, 10, 0, 0);
-    d->_mainLayout = new QVBoxLayout(this);
-    d->_mainLayout->setSpacing(0);
-    d->_mainLayout->setContentsMargins(0, 0, 0, 0);
-    d->_centerLayout = new QHBoxLayout();
+    QWidget* centralWidget = new QWidget(this);
+    d->_centerLayout = new QHBoxLayout(centralWidget);
     d->_centerLayout->addWidget(d->_navigationBar);
     d->_centerLayout->addWidget(d->_centerStackedWidget);
     int contentMargin = d->_contentsMargins;
     d->_centerLayout->setContentsMargins(contentMargin, contentMargin, contentMargin, contentMargin);
-    d->_mainLayout->addWidget(d->_appBar);
-    d->_mainLayout->addLayout(d->_centerLayout);
 
     // 事件总线
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
@@ -83,10 +82,33 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
     d->_isInitFinished = true;
+    setCentralWidget(centralWidget);
+    centralWidget->installEventFilter(this);
+
+    setObjectName("ElaWindow");
+    setStyleSheet("#ElaWindow{background-color:transparent;}");
+    setStyle(new ElaWindowStyle(style()));
+
+    //延时渲染
+    QTimer::singleShot(20, this, [=] {
+        QPalette palette = this->palette();
+        palette.setBrush(QPalette::Window, *d->_windowLinearGradient);
+        this->setPalette(palette);
+    });
 }
 
 ElaWindow::~ElaWindow()
 {
+}
+
+void ElaWindow::moveToCenter()
+{
+    if (isMaximized() || isFullScreen())
+    {
+        return;
+    }
+    auto geometry = screen()->availableGeometry();
+    setGeometry((geometry.width() - width()) / 2, (geometry.height() - height()) / 2, width(), height());
 }
 
 void ElaWindow::setIsNavigationBarEnable(bool isVisible)
@@ -99,12 +121,6 @@ void ElaWindow::setIsNavigationBarEnable(bool isVisible)
 bool ElaWindow::getIsNavigationBarEnable() const
 {
     return d_ptr->_isNavigationEnable;
-}
-
-void ElaWindow::setWindowTitle(QString title)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setWindowTitle(title);
 }
 
 void ElaWindow::setIsStayTop(bool isStayTop)
@@ -253,56 +269,68 @@ void ElaWindow::closeWindow()
     d->_appBar->closeWindow();
 }
 
-void ElaWindow::paintEvent(QPaintEvent* event)
+bool ElaWindow::eventFilter(QObject* watched, QEvent* event)
 {
     Q_D(ElaWindow);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(Qt::NoPen);
-    d->_windowLinearGradient->setFinalStop(width(), height());
-    painter.setBrush(*d->_windowLinearGradient);
-    painter.drawRect(rect());
-    painter.restore();
-    QWidget::paintEvent(event);
+    switch (event->type())
+    {
+    case QEvent::Resize:
+    {
+        d->_doNavigationDisplayModeChange();
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QMainWindow::eventFilter(watched, event);
 }
 
 void ElaWindow::resizeEvent(QResizeEvent* event)
 {
     Q_D(ElaWindow);
-    if (eApp->getIsApplicationClosed() || !d->_isNavigationEnable || !d->_isInitFinished)
-    {
-        return;
-    }
     d->_windowLinearGradient->setFinalStop(width(), height());
-    if (d->_pNavigationBarDisplayMode == ElaNavigationType::Minimal)
-    {
-        d->_resetWindowLayout(false);
-    }
-    if (d->_pNavigationBarDisplayMode == ElaNavigationType::Auto)
-    {
-        d->_resetWindowLayout(false);
-        if (width() >= 850 && d->_currentNavigationBarDisplayMode != ElaNavigationType::Maximal)
-        {
-            d->_navigationBar->setDisplayMode(ElaNavigationType::Maximal);
-            d->_isNavigationBarExpanded = false;
-            d->_currentNavigationBarDisplayMode = ElaNavigationType::Maximal;
-            d->_appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
-        }
-        else if (width() >= 550 && width() < 850 && d->_currentNavigationBarDisplayMode != ElaNavigationType::Compact)
-        {
-            d->_navigationBar->setDisplayMode(ElaNavigationType::Compact);
-            d->_isNavigationBarExpanded = false;
-            d->_currentNavigationBarDisplayMode = ElaNavigationType::Compact;
-            d->_appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
-        }
-        else if (width() < 550 && d->_currentNavigationBarDisplayMode != ElaNavigationType::Minimal)
-        {
-            d->_navigationBar->setDisplayMode(ElaNavigationType::Minimal);
-            d->_isNavigationBarExpanded = false;
-            d->_currentNavigationBarDisplayMode = ElaNavigationType::Minimal;
-            d->_appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint);
-        }
-    }
     QWidget::resizeEvent(event);
+}
+
+QMenu* ElaWindow::createPopupMenu()
+{
+    ElaMenu* menu = nullptr;
+    QList<QDockWidget*> dockwidgets = findChildren<QDockWidget*>();
+    if (dockwidgets.size())
+    {
+        menu = new ElaMenu(this);
+        for (int i = 0; i < dockwidgets.size(); ++i)
+        {
+            QDockWidget* dockWidget = dockwidgets.at(i);
+            if (dockWidget->parentWidget() == this)
+            {
+                menu->addAction(dockwidgets.at(i)->toggleViewAction());
+            }
+        }
+        menu->addSeparator();
+    }
+
+    QList<QToolBar*> toolbars = findChildren<QToolBar*>();
+    if (toolbars.size())
+    {
+        if (!menu)
+        {
+            menu = new ElaMenu(this);
+        }
+        for (int i = 0; i < toolbars.size(); ++i)
+        {
+            QToolBar* toolBar = toolbars.at(i);
+            if (toolBar->parentWidget() == this)
+            {
+                menu->addAction(toolbars.at(i)->toggleViewAction());
+            }
+        }
+    }
+    if (menu)
+    {
+        menu->setMenuItemHeight(28);
+    }
+    return menu;
 }

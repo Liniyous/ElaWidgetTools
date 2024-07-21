@@ -10,7 +10,6 @@
 
 #include "ElaAppBar.h"
 #include "ElaIconButton.h"
-#include "qdebug.h"
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -146,15 +145,9 @@ void ElaAppBarPrivate::_onThemeModeChange(ElaApplicationType::ThemeMode themeMod
     if (themeMode == ElaApplicationType::Light)
     {
         _themeChangeButton->setAwesome(ElaIconType::MoonStars);
-        QPalette palette = _titleLabel->palette();
-        palette.setColor(QPalette::WindowText, Qt::black);
-        _titleLabel->setPalette(palette);
     }
     else
     {
         _themeChangeButton->setAwesome(ElaIconType::SunBright);
-        QPalette palette = _titleLabel->palette();
-        palette.setColor(QPalette::WindowText, Qt::white);
-        _titleLabel->setPalette(palette);
     }
 }

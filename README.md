@@ -41,6 +41,7 @@
 |ElaComboBox|下拉框||
 |ElaMultiSelectComboBox|多选下拉框||
 |ElaContentDialog|带遮罩的对话框||
+|ElaDockWidget|停靠窗口||
 |ElaSpinBox|微调框||
 |ElaDoubleSpinBox|微调框|浮点数|
 |ElaDxgiManager|DXGI采集器|支持自动选择采集设备 效率远高于原生采集|
@@ -53,6 +54,7 @@
 |ElaLineEdit|输入框||
 |ElaLog|消息日志||
 |ElaMenu|菜单||
+|ElaMenuBar|菜单栏||
 |ElaMessageBar|弹出式信息栏|支持八方向，锚定位置|
 |ElaMessageButton|弹出信息按钮||
 |ElaPushButton|按钮||
@@ -65,12 +67,14 @@
 |ElaTabBar|选项卡|谷歌浏览器风格|
 |ElaTabWidget|选项卡页面|谷歌浏览器风格|
 |ElaToolButton|带下拉菜单的工具按钮||
+|ElaToolBar|工具栏||
 |ElaReminderCard|带图片的提醒卡片||
 |ElaScrollbar|滚动条||
 |ElaScrollArea|滚动区域|可设置鼠标拖动|
 |ElaScrollPage|滚动页面|自带堆栈页面和面包屑导航|
 |ElaScrollPageArea|滚动页面区域组件||
 |ElaSlider|拖动条||
+|ElaStatusBar|状态栏||
 |ElaExponentialBlur|指数模糊||
 |ElaText|Text文本||
 |ElaGraphicsScene|高级场景|大量实用API|

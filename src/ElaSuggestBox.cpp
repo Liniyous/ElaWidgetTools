@@ -34,7 +34,9 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     d->_searchEdit->setClearButtonEnabled(true);
     QAction* searchAction = new QAction(ElaIcon::getInstance()->getElaIcon(ElaIconType::Fingerprint), "Search", this);
     d->_searchEdit->addAction(searchAction, QLineEdit::TrailingPosition);
-    connect(searchAction, &QAction::triggered, this, [=](bool checked) { qDebug() << "Search"; });
+    connect(searchAction, &QAction::triggered, this, [=](bool checked) {
+        //qDebug() << "Search";
+    });
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(0);
     mainLayout->setContentsMargins(0, 0, 0, 0);

@@ -8,7 +8,6 @@
 class ElaWidget;
 class ElaAppBar;
 class QLinearGradient;
-class QVBoxLayout;
 class ElaWidgetPrivate : public QObject
 {
     Q_OBJECT
@@ -21,8 +20,6 @@ public:
 private:
     ElaAppBar* _appBar{nullptr};
     QLinearGradient* _windowLinearGradient{nullptr};
-    QWidget* _centralWidget{nullptr};
-    QVBoxLayout* _mainLayout{nullptr};
 };
 
 #endif // ELAWIDGETPRIVATE_H

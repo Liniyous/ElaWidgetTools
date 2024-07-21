@@ -3,13 +3,13 @@
 #include <QApplication>
 #include <QCursor>
 #include <QFontDatabase>
+#include <QPainter>
+#include <QPainterPath>
 #include <QWidget>
 
 #include "private/ElaApplicationPrivate.h"
 Q_SINGLETON_CREATE_CPP(ElaApplication)
 Q_PROPERTY_CREATE_Q_CPP(ElaApplication, bool, IsApplicationClosed)
-Q_PROPERTY_CREATE_Q_CPP(ElaApplication, QColor, LightShadowEffectColor)
-Q_PROPERTY_CREATE_Q_CPP(ElaApplication, QColor, DarkShadowEffectColor)
 Q_PRIVATE_CREATE_Q_CPP(ElaApplication, QIcon, WindowIcon)
 ElaApplication::ElaApplication(QObject* parent)
     : QObject{parent}, d_ptr(new ElaApplicationPrivate())
@@ -18,8 +18,6 @@ ElaApplication::ElaApplication(QObject* parent)
     d->q_ptr = this;
     d->_pIsApplicationClosed = false;
     d->_pWindowIcon = QIcon(":/include/Image/Cirno.jpg");
-    d->_pLightShadowEffectColor = QColor(165, 165, 165, 155);
-    d->_pDarkShadowEffectColor = QColor(185, 185, 185, 155);
 }
 
 ElaApplication::~ElaApplication()
@@ -37,6 +35,27 @@ ElaApplicationType::ThemeMode ElaApplication::getThemeMode() const
 {
     Q_D(const ElaApplication);
     return d->_themeMode;
+}
+
+void ElaApplication::drawEffectShadow(QPainter* painter, QRect widgetRect, int shadowBorderWidth, int borderRadius)
+{
+    Q_D(ElaApplication);
+    painter->save();
+    painter->setRenderHints(QPainter::Antialiasing);
+    QPainterPath path;
+    path.setFillRule(Qt::WindingFill);
+    QColor color = d->_themeMode == ElaApplicationType::Light ? QColor(0x60, 0x5F, 0x61) : QColor(0x9C, 0x9B, 0x9E);
+    for (int i = 0; i < shadowBorderWidth; i++)
+    {
+        QPainterPath path;
+        path.setFillRule(Qt::WindingFill);
+        path.addRoundedRect(shadowBorderWidth - i, shadowBorderWidth - i, widgetRect.width() - (shadowBorderWidth - i) * 2, widgetRect.height() - (shadowBorderWidth - i) * 2, borderRadius + i, borderRadius + i);
+        int alpha = 5 * (shadowBorderWidth - i + 1);
+        color.setAlpha(alpha > 255 ? 255 : alpha);
+        painter->setPen(color);
+        painter->drawPath(path);
+    }
+    painter->restore();
 }
 
 void ElaApplication::init()

@@ -279,13 +279,13 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     if (d->_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_selectMarkTop, 3, itemRect.height() - d->_selectMarkTop - d->_selectMarkBottom), 3, 3);
     }
     if (node == d->_lastSelectedNode)
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_lastSelectMarkTop, 3, itemRect.height() - d->_lastSelectMarkTop - d->_lastSelectMarkBottom), 3, 3);
     }
     painter->restore();

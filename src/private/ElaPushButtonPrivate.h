@@ -21,7 +21,6 @@ class ElaPushButtonPrivate : public QObject
 public:
     explicit ElaPushButtonPrivate(QObject* parent = nullptr);
     ~ElaPushButtonPrivate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
     QColor _lightTextColor;

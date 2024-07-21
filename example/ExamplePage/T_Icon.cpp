@@ -25,7 +25,7 @@ T_Icon::T_Icon(QWidget* parent)
     _iconView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     ElaText* iconTitle = new ElaText("On this page, you can use the search function to use your favorite icons in the program", this);
-    iconTitle->setTextSize(15);
+    iconTitle->setTextPixelSize(15);
     _searchEdit = new ElaLineEdit(this);
     _searchEdit->setPlaceholderText("搜索图标");
     _searchEdit->setFixedSize(300, 35);

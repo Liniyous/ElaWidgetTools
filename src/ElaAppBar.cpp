@@ -1,8 +1,12 @@
 #include "ElaAppBar.h"
 
+#include "ElaText.h"
+
+#ifdef Q_OS_WIN
 #include <Windows.h>
 #include <dwmapi.h>
 #include <windowsx.h>
+#endif
 
 #include <QApplication>
 #include <QGuiApplication>
@@ -19,7 +23,6 @@
 #include "ElaEventBus.h"
 #include "ElaIconButton.h"
 #include "private/ElaAppBarPrivate.h"
-#include "qdebug.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsFixedSize)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsDefaultClosed)
@@ -48,15 +51,17 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     Q_D(ElaAppBar);
     d->_buttonFlags = ElaAppBarType::RouteBackButtonHint | ElaAppBarType::StayTopButtonHint | ElaAppBarType::ThemeChangeButtonHint | ElaAppBarType::MinimizeButtonHint | ElaAppBarType::MaximizeButtonHint | ElaAppBarType::CloseButtonHint;
     window()->setAttribute(Qt::WA_Mapped);
+    window()->setContentsMargins(0, 30, 0, 0);
+    createWinId();
     d->q_ptr = this;
     d->_pIsStayTop = false;
     d->_pIsFixedSize = false;
     d->_pIsDefaultClosed = true;
     d->_pIsOnlyAllowMinAndClose = false;
     d->_currentWinID = window()->winId();
+    window()->installEventFilter(this);
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
-    window()->installEventFilter(this);
     setShadow((HWND)(window()->winId()));
 #endif
     QGuiApplication::instance()->installNativeEventFilter(this);
@@ -80,10 +85,21 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_stayTopButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
     connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
-    d->_titleLabel = new QLabel(this);
-    QFont textfont("Microsoft YaHei", 10);
-    textfont.setHintingPreference(QFont::PreferNoHinting);
-    d->_titleLabel->setFont(textfont);
+
+    //标题
+    d->_titleLabel = new ElaText(this);
+    d->_titleLabel->setTextPointSize(10);
+    d->_titleLabel->setText(parent->windowTitle());
+    connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title) {
+        d->_titleLabel->setText(title);
+    });
+
+    //图标
+    d->_iconLabel = new QLabel(this);
+    d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+    connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
+        d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+    });
 
     // 主题变更
     d->_themeChangeButton = new ElaIconButton(ElaIconType::MoonStars, 15, 40, 30, this);
@@ -110,6 +126,8 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     operateButtonLayout->setSpacing(0);
     operateButtonLayout->addWidget(d->_routeBackButton);
     operateButtonLayout->addWidget(d->_navigationButton);
+    operateButtonLayout->addSpacing(5);
+    operateButtonLayout->addWidget(d->_iconLabel);
     operateButtonLayout->addSpacing(10);
     operateButtonLayout->addWidget(d->_titleLabel);
     operateButtonLayout->addStretch();
@@ -151,17 +169,6 @@ ElaAppBar::~ElaAppBar()
     QGuiApplication::instance()->removeNativeEventFilter(this);
 }
 
-void ElaAppBar::setWindowTitle(QString title)
-{
-    Q_D(ElaAppBar);
-    d->_titleLabel->setText(title);
-}
-
-QString ElaAppBar::getWindowTitle() const
-{
-    return d_ptr->_titleLabel->text();
-}
-
 void ElaAppBar::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)
 {
     Q_D(ElaAppBar);
@@ -201,33 +208,25 @@ void ElaAppBar::setRouteBackButtonEnable(bool isEnable)
 
 void ElaAppBar::closeWindow()
 {
-    Q_D(const ElaAppBar);
-    eApp->setIsApplicationClosed(true);
-    QRect windowRect = window()->geometry();
     // 抵消setFixedSize导致的移动偏航
     window()->setMinimumSize(0, 0);
     window()->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    QPropertyAnimation* closeGeometryAnimation = new QPropertyAnimation(window(), "geometry");
     QPropertyAnimation* closeOpacityAnimation = new QPropertyAnimation(window(), "windowOpacity");
-    connect(closeGeometryAnimation, &QPropertyAnimation::finished, this, [=]() { window()->close(); });
-    closeGeometryAnimation->setStartValue(windowRect);
-    qreal minmumWidth = (d->_titleLabel->width() + 320);
-    closeGeometryAnimation->setEndValue(QRect(windowRect.x() + (windowRect.width() - minmumWidth) / 2, windowRect.y() + (windowRect.height() / 2) - 145, minmumWidth, 290));
-    closeGeometryAnimation->setDuration(300);
-    closeGeometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
-
+    connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { window()->close(); });
     closeOpacityAnimation->setStartValue(1);
     closeOpacityAnimation->setEndValue(0);
-    closeOpacityAnimation->setDuration(300);
+    closeOpacityAnimation->setDuration(200);
     closeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    closeGeometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     closeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
-[[maybe_unused]] bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
+bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
 {
-    if (event->type() == QEvent::WindowActivate)
+    Q_D(ElaAppBar);
+    switch (event->type())
+    {
+#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+    case QEvent::WindowActivate:
     {
         HWND hwnd = reinterpret_cast<HWND>(window()->winId());
         DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
@@ -236,10 +235,51 @@ void ElaAppBar::closeWindow()
         {
             QTimer::singleShot(15, this, [=] { ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION); });
         }
+        break;
+    }
+#endif
+    case QEvent::Resize:
+    {
+        QResizeEvent* resizeEvent = dynamic_cast<QResizeEvent*>(event);
+#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+        if (::IsZoomed((HWND)d->_currentWinID))
+        {
+            this->resize(resizeEvent->size().width() - 7, this->height());
+        }
+        else
+        {
+            this->resize(resizeEvent->size().width(), this->height());
+        }
+#else
+        this->resize(resizeEvent->size().width(), this->height());
+#endif
+        break;
+    }
+    case QEvent::Close:
+    {
+        QCloseEvent* closeEvent = dynamic_cast<QCloseEvent*>(event);
+        if (!d->_pIsDefaultClosed && closeEvent->spontaneous())
+        {
+            event->ignore();
+            if (window()->isMinimized())
+            {
+                window()->showNormal();
+            }
+            d->onCloseButtonClicked();
+        }
+        else
+        {
+            eApp->setIsApplicationClosed(true);
+        }
+        return true;
+    }
+    default:
+    {
+        break;
+    }
     }
     return QObject::eventFilter(obj, event);
 }
-#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result)
@@ -300,11 +340,13 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         }
         if (::IsZoomed(hwnd))
         {
-            window()->setContentsMargins(8, 8, 8, 8);
+            this->move(0, 7);
+            window()->setContentsMargins(8, 38, 8, 8);
         }
         else
         {
-            window()->setContentsMargins(0, 0, 0, 0);
+            this->move(0, 0);
+            window()->setContentsMargins(0, 30, 0, 0);
         }
         *result = 0;
         return true;
@@ -480,28 +522,6 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         {
             return false;
         }
-        return true;
-    }
-    case WM_GETMINMAXINFO:
-    {
-        MINMAXINFO* minmaxInfo = reinterpret_cast<MINMAXINFO*>(lParam);
-        RECT rect;
-        SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-        minmaxInfo->ptMinTrackSize.x = (d->_titleLabel->width() + 320) * qApp->devicePixelRatio();
-        minmaxInfo->ptMinTrackSize.y = 290 * qApp->devicePixelRatio();
-        minmaxInfo->ptMaxPosition.x = rect.left;
-        minmaxInfo->ptMaxPosition.y = rect.top;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        auto pixelRatio = window()->devicePixelRatio();
-        auto geometry = window()->screen()->availableGeometry();
-        minmaxInfo->ptMaxSize.x = qRound(geometry.width() * pixelRatio);
-        minmaxInfo->ptMaxSize.y = qRound(geometry.height() * pixelRatio);
-#endif
-        return true;
-    }
-    case WM_NCACTIVATE:
-    {
-        *result = TRUE;
         return true;
     }
     case WM_NCRBUTTONDOWN:

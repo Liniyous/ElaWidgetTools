@@ -25,7 +25,7 @@ T_Popup::T_Popup(QWidget* parent)
     ElaScrollPageArea* toolButtonArea = new ElaScrollPageArea(this);
     QHBoxLayout* toolButtonLayout = new QHBoxLayout(toolButtonArea);
     ElaText* toolButtonText = new ElaText("ElaToolButton", this);
-    toolButtonText->setTextSize(15);
+    toolButtonText->setTextPixelSize(15);
     toolButtonLayout->addWidget(toolButtonText);
     toolButtonLayout->addWidget(_toolButton);
     toolButtonLayout->addStretch();

@@ -19,6 +19,10 @@ public:
     ~MainWindow();
     Q_SLOT void onCloseButtonClicked();
 
+    void initWindow();
+    void initEdgeLayout();
+    void initContent();
+
 private:
     T_Home* _homePage{nullptr};
     T_ElaScreen* _elaScreenPage{nullptr};

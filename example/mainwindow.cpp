@@ -3,25 +3,66 @@
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QStackedWidget>
+#include <QStatusBar>
 #include <QVBoxLayout>
 
 #include "ElaContentDialog.h"
+#include "ElaDockWidget.h"
 #include "ElaEventBus.h"
 #include "ElaGraphicsItem.h"
 #include "ElaGraphicsScene.h"
 #include "ElaGraphicsView.h"
 #include "ElaLog.h"
+#include "ElaMenu.h"
+#include "ElaMenuBar.h"
+#include "ElaStatusBar.h"
+#include "ElaText.h"
+#include "ElaToolBar.h"
+#include "ElaToolButton.h"
 #include "ElaWidget.h"
 #include "ExamplePage/T_BaseComponents.h"
 #include "ExamplePage/T_ElaScreen.h"
 #include "ExamplePage/T_Home.h"
 #include "ExamplePage/T_Icon.h"
+#include "ExamplePage/T_LogWidget.h"
 #include "ExamplePage/T_Popup.h"
 #include "ExamplePage/T_TabWidget.h"
+#include "ExamplePage/T_UpdateWidget.h"
 MainWindow::MainWindow(QWidget* parent)
     : ElaWindow(parent)
 {
-    // ElaLog::getInstance()->initMessageLog(true);
+    initWindow();
+
+    //额外布局
+    initEdgeLayout();
+
+    //中心窗口
+    initContent();
+
+    // 拦截默认关闭事件
+    this->setIsDefaultClosed(false);
+    connect(this, &MainWindow::closeButtonClicked, this, &MainWindow::onCloseButtonClicked);
+
+    //移动到中心
+    moveToCenter();
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::onCloseButtonClicked()
+{
+    ElaContentDialog* dialag = new ElaContentDialog(this);
+    connect(dialag, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(dialag, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
+    dialag->show();
+}
+
+void MainWindow::initWindow()
+{
+    resize(1240, 740);
+    ElaLog::getInstance()->initMessageLog(true);
     // eApp->setThemeMode(ElaApplicationType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
@@ -30,8 +71,92 @@ MainWindow::MainWindow(QWidget* parent)
     setUserInfoCardTitle("Ela Tool");
     setUserInfoCardSubTitle("Liniyous@gmail.com");
     setWindowTitle("ElaWidgetTool");
-    setIsStayTop(true);
+    // setIsStayTop(true);
     // setUserInfoCardVisible(false);
+}
+
+void MainWindow::initEdgeLayout()
+{
+    //菜单栏
+    ElaMenuBar* menuBar = new ElaMenuBar(this);
+    this->setMenuBar(menuBar);
+
+    ElaMenu* iconMenu = menuBar->addMenu(ElaIconType::DeerRudolph, "图标菜单");
+    iconMenu->setMenuItemHeight(27);
+    iconMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
+    iconMenu->addElaIconAction(ElaIconType::Copy, "复制");
+    iconMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
+    iconMenu->addSeparator();
+    iconMenu->addElaIconAction(ElaIconType::ArrowRotateRight, "刷新");
+    iconMenu->addElaIconAction(ElaIconType::ArrowRotateLeft, "撤销");
+
+    menuBar->addAction("动作菜单");
+    menuBar->addSeparator();
+    ElaMenu* shortCutMenu = new ElaMenu("快捷菜单(&A)", this);
+    shortCutMenu->setMenuItemHeight(27);
+    shortCutMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
+    shortCutMenu->addElaIconAction(ElaIconType::Copy, "复制");
+    shortCutMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
+    shortCutMenu->addSeparator();
+    shortCutMenu->addElaIconAction(ElaIconType::ArrowRotateRight, "刷新");
+    shortCutMenu->addElaIconAction(ElaIconType::ArrowRotateLeft, "撤销");
+    menuBar->addMenu(shortCutMenu);
+
+    menuBar->addMenu("样例菜单(&B)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
+    menuBar->addMenu("样例菜单(&C)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
+    menuBar->addMenu("样例菜单(&D)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
+    menuBar->addMenu("样例菜单(&E)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
+    menuBar->addMenu("样例菜单(&F)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
+    menuBar->addMenu("样例菜单(&G)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
+
+    //工具栏
+    ElaToolBar* toolBar = new ElaToolBar("工具栏", this);
+    ElaToolButton* toolButton1 = new ElaToolButton(this);
+    toolButton1->setElaIcon(ElaIconType::BadgeCheck);
+    toolBar->addWidget(toolButton1);
+    ElaToolButton* toolButton2 = new ElaToolButton(this);
+    toolButton2->setElaIcon(ElaIconType::BaseballBatBall);
+    toolBar->addWidget(toolButton2);
+    toolBar->addSeparator();
+    ElaToolButton* toolButton3 = new ElaToolButton(this);
+    toolButton3->setElaIcon(ElaIconType::Bluetooth);
+    toolBar->addWidget(toolButton3);
+    ElaToolButton* toolButton4 = new ElaToolButton(this);
+    toolButton4->setElaIcon(ElaIconType::GameBoard);
+    toolBar->addWidget(toolButton4);
+    toolBar->addSeparator();
+    ElaToolButton* toolButton5 = new ElaToolButton(this);
+    toolButton5->setElaIcon(ElaIconType::CircleExclamationCheck);
+    toolBar->addWidget(toolButton5);
+    ElaToolButton* toolButton6 = new ElaToolButton(this);
+    toolButton6->setElaIcon(ElaIconType::FaceClouds);
+    toolBar->addWidget(toolButton6);
+    ElaToolButton* toolButton7 = new ElaToolButton(this);
+    toolButton7->setElaIcon(ElaIconType::SquareThisWayUp);
+    toolBar->addWidget(toolButton7);
+    this->addToolBar(Qt::LeftToolBarArea, toolBar);
+
+    //停靠窗口
+    ElaDockWidget* logDockWidget = new ElaDockWidget("日志信息", this);
+    logDockWidget->setWidget(new T_LogWidget(this));
+    this->addDockWidget(Qt::RightDockWidgetArea, logDockWidget);
+    resizeDocks({logDockWidget}, {200}, Qt::Horizontal);
+
+    ElaDockWidget* updateDockWidget = new ElaDockWidget("更新内容", this);
+    updateDockWidget->setWidget(new T_UpdateWidget(this));
+    this->addDockWidget(Qt::RightDockWidgetArea, updateDockWidget);
+    resizeDocks({updateDockWidget}, {200}, Qt::Horizontal);
+
+    //状态栏
+    ElaStatusBar* statusBar = new ElaStatusBar(this);
+    ElaText* statusText = new ElaText("初始化成功！", this);
+    statusText->setTextPixelSize(14);
+    statusBar->addWidget(statusText);
+    this->setStatusBar(statusBar);
+}
+
+void MainWindow::initContent()
+{
     _homePage = new T_Home(this);
     _elaScreenPage = new T_ElaScreen(this);
     _iconPage = new T_Icon(this);
@@ -89,7 +214,6 @@ MainWindow::MainWindow(QWidget* parent)
     addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
     ElaWidget* widget = new ElaWidget();
     widget->setWindowModality(Qt::ApplicationModal);
-    widget->setCentralWidget(new QWidget());
     widget->hide();
     connect(this, &ElaWindow::navigationNodeClicked, this, [=](ElaNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
@@ -104,18 +228,4 @@ MainWindow::MainWindow(QWidget* parent)
     connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() { this->navigation(view->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaIconNavigation, this, [=]() { this->navigation(_iconPage->property("ElaPageKey").toString()); });
     qDebug() << "已注册的事件列表" << ElaEventBus::getInstance()->getRegisteredEventsName();
-
-    // 拦截默认关闭事件
-    this->setIsDefaultClosed(false);
-    connect(this, &MainWindow::closeButtonClicked, this, &MainWindow::onCloseButtonClicked);
-}
-
-MainWindow::~MainWindow() {}
-
-void MainWindow::onCloseButtonClicked()
-{
-    ElaContentDialog* dialag = new ElaContentDialog(this);
-    connect(dialag, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(dialag, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
-    dialag->show();
 }

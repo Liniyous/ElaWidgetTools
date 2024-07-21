@@ -14,10 +14,8 @@ class ELA_EXPORT ElaComboBox : public QComboBox
 public:
     explicit ElaComboBox(QWidget* parent = nullptr);
     ~ElaComboBox();
-    void setMaxVisibleItems(int maxItems);
 
 protected:
-    void paintEvent(QPaintEvent* e) override;
     virtual void showPopup() override;
     virtual void hidePopup() override;
 };

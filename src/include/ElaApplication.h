@@ -16,8 +16,6 @@ class ELA_EXPORT ElaApplication : public QObject
     Q_Q_CREATE(ElaApplication)
     Q_SINGLETON_CREATE_H(ElaApplication)
     Q_PROPERTY_CREATE_Q_H(bool, IsApplicationClosed)
-    Q_PROPERTY_CREATE_Q_H(QColor, LightShadowEffectColor)
-    Q_PROPERTY_CREATE_Q_H(QColor, DarkShadowEffectColor)
     Q_PRIVATE_CREATE_Q_H(QIcon, WindowIcon)
 private:
     explicit ElaApplication(QObject* parent = nullptr);
@@ -28,6 +26,7 @@ public:
     static bool containsCursorToItem(QWidget* item);
     void setThemeMode(ElaApplicationType::ThemeMode themeMode);
     ElaApplicationType::ThemeMode getThemeMode() const;
+    void drawEffectShadow(QPainter* painter, QRect widgetRect, int shadowBorderWidth, int borderRadius);
 Q_SIGNALS:
     Q_SIGNAL void themeModeChanged(ElaApplicationType::ThemeMode themeMode);
 };

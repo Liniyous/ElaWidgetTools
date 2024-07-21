@@ -4,6 +4,7 @@
 
 #include "Def.h"
 #include "stdafx.h"
+class ElaComboBoxStyle;
 class ElaComboBoxView;
 class ElaMultiSelectComboBox;
 class ElaMultiSelectComboBoxPrivate : public QObject
@@ -19,12 +20,13 @@ public:
     Q_SLOT void onItemPressed(const QModelIndex& index);
 
 private:
+    ElaComboBoxStyle* _comboBoxStyle{nullptr};
+    bool _isAllowHidePopup{false};
     ElaComboBoxView* _comboView{nullptr};
     QVector<bool> _itemSelection;
     bool _isFirstPopup{false};
     QString _currentText;
     QStringList _selectedTextList;
-    bool _isHidePopupAnimationFinished{true};
     void _refreshCurrentIndexs();
     void _adjustSelectedVector();
     ElaApplicationType::ThemeMode _themeMode;

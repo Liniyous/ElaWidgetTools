@@ -34,7 +34,7 @@ void ElaScrollPageArea::paintEvent(QPaintEvent* event)
     else
     {
         painter.setPen(QPen(QColor(0x37, 0x37, 0x37), 1));
-        painter.setBrush(QColor(0x26, 0x2C, 0x36));
+        painter.setBrush(QColor(0x23, 0x22, 0x24));
     }
     QRect foregroundRect(1, 1, width() - 2, height() - 2);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);

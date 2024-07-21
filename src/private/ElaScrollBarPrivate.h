@@ -24,6 +24,7 @@ private:
     int _lastHorizontalDeltaAngle{-120};
     int _lastVerticalDeltaAngle{-120};
     void _scroll(int value);
+    int _pixelPosToRangeValue(int pos) const;
 };
 
 #endif // ELASCROLLBARPRIVATE_H

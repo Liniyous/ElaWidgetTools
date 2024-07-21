@@ -40,14 +40,14 @@ void ElaToolButtonStyle::drawComplexControl(ComplexControl control, const QStyle
             {
                 if (bopt->state.testFlag(QStyle::State_Sunken))
                 {
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xF1, 0xF0, 0xF7) : QColor(0x35, 0x35, 0x35));
+                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xEA, 0xE9, 0xF0) : QColor(0x33, 0x33, 0x33));
                     painter->drawRoundedRect(bopt->rect, 4, 4);
                 }
                 else
                 {
-                    if (bopt->state.testFlag(QStyle::State_MouseOver))
+                    if (bopt->state.testFlag(QStyle::State_MouseOver) || bopt->state.testFlag(QStyle::State_On))
                     {
-                        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xEA, 0xE9, 0xF0) : QColor(0x2F, 0x2F, 0x2F));
+                        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE5, 0xE4, 0xEB) : QColor(0x40, 0x40, 0x40));
                         painter->drawRoundedRect(bopt->rect, 4, 4);
                     }
                 }
@@ -139,7 +139,7 @@ void ElaToolButtonStyle::_drawIndicator(QPainter* painter, const QStyleOptionToo
     }
 }
 
-void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRect iconRect, const QStyleOptionToolButton* bopt, const QWidget* widget) const
+void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QStyleOptionToolButton* bopt, const QWidget* widget) const
 {
     if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
     {
@@ -166,7 +166,7 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRect iconRect, const QSty
                 {
                 case Qt::ToolButtonTextBesideIcon:
                 {
-                    painter->drawPixmap(iconRect.x(), iconRect.y() + bopt->iconSize.height() / 2, iconPix);
+                    painter->drawPixmap(iconRect.x(), iconRect.center().y() - bopt->iconSize.height() / 2, iconPix);
                     break;
                 }
                 case Qt::ToolButtonTextUnderIcon:
@@ -176,7 +176,7 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRect iconRect, const QSty
                 }
                 case Qt::ToolButtonFollowStyle:
                 {
-                    painter->drawPixmap(iconRect.x(), iconRect.y() + bopt->iconSize.height() / 2, iconPix);
+                    painter->drawPixmap(iconRect.x(), iconRect.y() - bopt->iconSize.height() / 2, iconPix);
                     break;
                 }
                 default:
@@ -192,7 +192,7 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRect iconRect, const QSty
             painter->save();
             painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
             QFont iconFont = QFont("ElaAwesome");
-            iconFont.setPixelSize(bopt->iconSize.width());
+            iconFont.setPixelSize(bopt->iconSize.width() * 0.8);
             painter->setFont(iconFont);
             switch (bopt->toolButtonStyle)
             {
@@ -200,12 +200,14 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRect iconRect, const QSty
             case Qt::ToolButtonTextBesideIcon:
             case Qt::ToolButtonFollowStyle:
             {
-                painter->drawText(iconRect, Qt::AlignLeft | Qt::AlignVCenter, widget->property("ElaIconType").toString());
+                QRect adjustIconRect(iconRect.x(), iconRect.y(), bopt->iconSize.width(), iconRect.height());
+                painter->drawText(adjustIconRect, Qt::AlignCenter, widget->property("ElaIconType").toString());
                 break;
             }
             case Qt::ToolButtonTextUnderIcon:
             {
-                painter->drawText(iconRect, Qt::AlignTop | Qt::AlignHCenter, widget->property("ElaIconType").toString());
+                QRect adjustIconRect(iconRect.center().x() - iconFont.pixelSize() / 2, iconRect.y(), bopt->iconSize.width(), iconRect.height());
+                painter->drawText(adjustIconRect, Qt::AlignCenter, widget->property("ElaIconType").toString());
                 break;
             }
             default:

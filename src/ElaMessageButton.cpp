@@ -16,12 +16,7 @@ Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, ElaMessageBarType::MessageMode, Messag
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, ElaMessageBarType::PositionPolicy, PositionPolicy);
 
 ElaMessageButton::ElaMessageButton(QWidget* parent)
-    : ElaMessageButton("Message", parent)
-{
-}
-
-ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
-    : QPushButton(text, parent), d_ptr(new ElaMessageButtonPrivate())
+    : QPushButton(parent), d_ptr(new ElaMessageButtonPrivate())
 {
     Q_D(ElaMessageButton);
     d->q_ptr = this;
@@ -31,6 +26,7 @@ ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
     QFont font = this->font();
     font.setPointSize(11);
     setFont(font);
+    setText("Message");
     setObjectName("ElaMessageButton");
     setStyleSheet("#ElaMessageButton{background-color:transparent;}");
     d->_pDisplayMsec = 2000;
@@ -38,31 +34,39 @@ ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
     d->_pPositionPolicy = ElaMessageBarType::TopRight;
     d->_themeMode = eApp->getThemeMode();
     d->_pMessageTargetWidget = nullptr;
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaMessageButtonPrivate::onThemeChanged);
+    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
     connect(this, &ElaMessageButton::clicked, this, [=]() {
-                switch(d->_pMessageMode)
-                {
-                case ElaMessageBarType::Success:
-                {
-                    ElaMessageBar::success(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-                    break;
-                }
-                case ElaMessageBarType::Warning:
-                {
-                    ElaMessageBar::warning(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-                    break;
-                }
-                case ElaMessageBarType::Information:
-                {
-                    ElaMessageBar::information(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-                    break;
-                }
-                case ElaMessageBarType::Error:
-                {
-                    ElaMessageBar::error(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
-                    break;
-                }
-                } });
+        switch(d->_pMessageMode)
+        {
+        case ElaMessageBarType::Success:
+        {
+            ElaMessageBar::success(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
+            break;
+        }
+        case ElaMessageBarType::Warning:
+        {
+            ElaMessageBar::warning(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
+            break;
+        }
+        case ElaMessageBarType::Information:
+        {
+            ElaMessageBar::information(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
+            break;
+        }
+        case ElaMessageBarType::Error:
+        {
+            ElaMessageBar::error(d->_pPositionPolicy,d->_pBarTitle,d->_pBarText,d->_pDisplayMsec,d->_pMessageTargetWidget);
+            break;
+        }
+        } });
+}
+
+ElaMessageButton::ElaMessageButton(QString text, QWidget* parent)
+    : ElaMessageButton(parent)
+{
+    setText(text);
 }
 
 ElaMessageButton::~ElaMessageButton()
@@ -74,16 +78,7 @@ void ElaMessageButton::mousePressEvent(QMouseEvent* event)
     Q_D(ElaMessageButton);
     if (event->button() == Qt::LeftButton)
     {
-        QPalette palette;
-        if (d->_themeMode == ElaApplicationType::Light)
-        {
-            palette.setColor(QPalette::ButtonText, QColor(0x64, 0x66, 0x73));
-        }
-        else
-        {
-            palette.setColor(QPalette::ButtonText, QColor(0xA1, 0xA2, 0xA2));
-        }
-        setPalette(palette);
+        d->_isLeftButtonPress = true;
     }
     QPushButton::mousePressEvent(event);
 }
@@ -91,19 +86,7 @@ void ElaMessageButton::mousePressEvent(QMouseEvent* event)
 void ElaMessageButton::mouseReleaseEvent(QMouseEvent* event)
 {
     Q_D(ElaMessageButton);
-    if (event->button() == Qt::LeftButton)
-    {
-        QPalette palette;
-        if (d->_themeMode == ElaApplicationType::Light)
-        {
-            palette.setColor(QPalette::ButtonText, Qt::black);
-        }
-        else
-        {
-            palette.setColor(QPalette::ButtonText, QColor(0xFE, 0xFE, 0xFE));
-        }
-        setPalette(palette);
-    }
+    d->_isLeftButtonPress = false;
     QPushButton::mouseReleaseEvent(event);
 }
 
@@ -113,21 +96,7 @@ void ElaMessageButton::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    painter.save();
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-    QColor color = d->_themeMode == ElaApplicationType::Light ? eApp->getLightShadowEffectColor() : eApp->getDarkShadowEffectColor();
-    for (int i = 0; i < d->_shadowBorderWidth; i++)
-    {
-        QPainterPath path;
-        path.setFillRule(Qt::WindingFill);
-        path.addRoundedRect(d->_shadowBorderWidth - i, d->_shadowBorderWidth - i, this->width() - (d->_shadowBorderWidth - i) * 2, this->height() - (d->_shadowBorderWidth - i) * 2, d->_pBorderRadius + i, d->_pBorderRadius + i);
-        int alpha = 5 * (d->_shadowBorderWidth - i + 1);
-        color.setAlpha(alpha > 255 ? 255 : alpha);
-        painter.setPen(color);
-        painter.drawPath(path);
-    }
-    painter.restore();
+    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 背景绘制
     painter.save();
@@ -143,6 +112,9 @@ void ElaMessageButton::paintEvent(QPaintEvent* event)
         painter.setBrush((underMouse() ? QColor(0x44, 0x44, 0x44) : QColor(0x3E, 0x3E, 0x3E)));
     }
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
+
+    //文字绘制
+    painter.setPen(d->_themeMode == ElaApplicationType::Light ? (d->_isLeftButtonPress ? QColor(0x64, 0x66, 0x73) : Qt::black) : (d->_isLeftButtonPress ? QColor(0xA1, 0xA2, 0xA2) : Qt::white));
+    painter.drawText(rect(), Qt::AlignCenter, text());
     painter.restore();
-    QPushButton::paintEvent(event);
 }

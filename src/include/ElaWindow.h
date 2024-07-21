@@ -1,16 +1,13 @@
 ﻿#ifndef ELAWINDOW_H
 #define ELAWINDOW_H
 
-#include <Windows.h>
-
-#include <QAbstractNativeEventFilter>
-#include <QWidget>
+#include <QMainWindow>
 
 #include "Def.h"
 #include "stdafx.h"
 class ElaWindowPrivate;
 class QStackedWidget;
-class ELA_EXPORT ElaWindow : public QWidget
+class ELA_EXPORT ElaWindow : public QMainWindow
 {
     Q_OBJECT
     Q_Q_CREATE(ElaWindow)
@@ -21,9 +18,10 @@ public:
     explicit ElaWindow(QWidget* parent = nullptr);
     ~ElaWindow();
 
+    void moveToCenter();
+
     void setIsNavigationBarEnable(bool isEnable);
     bool getIsNavigationBarEnable() const;
-    void setWindowTitle(QString title);
     void setIsStayTop(bool isStayTop);
     bool getIsStayTop() const;
     void setIsFixedSize(bool isFixedSize);
@@ -58,8 +56,9 @@ Q_SIGNALS:
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
 
 protected:
-    virtual void paintEvent(QPaintEvent* event) override;
+    virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual void resizeEvent(QResizeEvent* event) override;
+    virtual QMenu* createPopupMenu() override;
 };
 
 #endif // ELAWINDOW_H

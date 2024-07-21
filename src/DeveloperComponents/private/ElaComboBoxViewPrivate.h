@@ -13,10 +13,6 @@ class ElaComboBoxViewPrivate : public QObject
 public:
     explicit ElaComboBoxViewPrivate(QObject* parent = nullptr);
     ~ElaComboBoxViewPrivate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
-
-private:
-    bool _isMultiSelect{false};
 };
 
 #endif // ELACOMBOBOXVIEWPRIVATE_H

@@ -1,6 +1,7 @@
 #include "ElaScrollBarPrivate.h"
 
 #include <QPropertyAnimation>
+#include <QStyleOption>
 
 #include "ElaScrollBar.h"
 ElaScrollBarPrivate::ElaScrollBarPrivate(QObject* parent)
@@ -44,4 +45,34 @@ void ElaScrollBarPrivate::_scroll(int value)
     _slideSmoothAnimation->setStartValue(q->value());
     _slideSmoothAnimation->setEndValue(_scrollValue);
     _slideSmoothAnimation->start();
+}
+
+int ElaScrollBarPrivate::_pixelPosToRangeValue(int pos) const
+{
+    Q_Q(const ElaScrollBar);
+    QStyleOptionSlider opt;
+    q->initStyleOption(&opt);
+    QRect gr = q->style()->subControlRect(QStyle::CC_ScrollBar, &opt,
+                                          QStyle::SC_ScrollBarGroove, q);
+    QRect sr = q->style()->subControlRect(QStyle::CC_ScrollBar, &opt,
+                                          QStyle::SC_ScrollBarSlider, q);
+    int sliderMin, sliderMax, sliderLength;
+    if (q->orientation() == Qt::Horizontal)
+    {
+        sliderLength = sr.width();
+        sliderMin = gr.x();
+        sliderMax = gr.right() - sliderLength + 1;
+        if (q->layoutDirection() == Qt::RightToLeft)
+        {
+            opt.upsideDown = !opt.upsideDown;
+        }
+    }
+    else
+    {
+        sliderLength = sr.height();
+        sliderMin = gr.y();
+        sliderMax = gr.bottom() - sliderLength + 1;
+    }
+    return QStyle::sliderValueFromPosition(q->minimum(), q->maximum(), pos - sliderMin,
+                                           sliderMax - sliderMin, opt.upsideDown);
 }

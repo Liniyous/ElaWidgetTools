@@ -18,6 +18,7 @@ public:
     ~ElaContentDialogPrivate();
 
 private:
+    bool _isHandleNativeEvent{false};
     ElaApplicationType::ThemeMode _themeMode;
     QWidget* _shadowWidget{nullptr};
     QWidget* _centralWidget{nullptr};

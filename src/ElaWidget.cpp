@@ -13,6 +13,7 @@ ElaWidget::ElaWidget(QWidget* parent)
     Q_D(ElaWidget);
     d->q_ptr = this;
     resize(500, 500); // 默认宽高
+    setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
 
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
@@ -23,41 +24,16 @@ ElaWidget::ElaWidget(QWidget* parent)
     d->_appBar = new ElaAppBar(this);
     d->_appBar->setIsStayTop(true);
     d->_appBar->setWindowButtonFlags(ElaAppBarType::StayTopButtonHint | ElaAppBarType::MinimizeButtonHint | ElaAppBarType::MaximizeButtonHint | ElaAppBarType::CloseButtonHint);
-    d->_appBar->setWindowTitle("ElaWidget");
     d->_appBar->setIsDefaultClosed(false);
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, [=]() {
         hide();
     });
     setAttribute(Qt::WA_DeleteOnClose);
-    d->_mainLayout = new QVBoxLayout(this);
-    d->_mainLayout->setSpacing(0);
-    d->_mainLayout->setContentsMargins(0, 0, 0, 0);
-    d->_mainLayout->addWidget(d->_appBar);
-    d->_mainLayout->addStretch();
     connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
 }
 
 ElaWidget::~ElaWidget()
 {
-}
-
-void ElaWidget::setCentralWidget(QWidget* centralWidget)
-{
-    Q_D(ElaWidget);
-    d->_mainLayout->takeAt(0);
-    d->_mainLayout->takeAt(0);
-    if (d->_centralWidget)
-    {
-        delete d->_centralWidget;
-    }
-    d->_mainLayout->addWidget(d->_appBar);
-    d->_mainLayout->addWidget(centralWidget);
-}
-
-void ElaWidget::setWindowTitle(QString title)
-{
-    Q_D(ElaWidget);
-    d->_appBar->setWindowTitle(title);
 }
 
 void ElaWidget::setIsStayTop(bool isStayTop)

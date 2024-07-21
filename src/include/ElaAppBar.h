@@ -18,8 +18,6 @@ class ELA_EXPORT ElaAppBar : public QWidget, QAbstractNativeEventFilter
 public:
     explicit ElaAppBar(QWidget* parent = nullptr);
     ~ElaAppBar();
-    void setWindowTitle(QString title);
-    QString getWindowTitle() const;
 
     void setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
@@ -40,10 +38,7 @@ protected:
 #else
     virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
 #endif
-
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
-    [[maybe_unused]] bool eventFilter(QObject* obj, QEvent* event) override;
-#endif
+    virtual bool eventFilter(QObject* obj, QEvent* event) override;
 };
 
 #endif // ELAAPPBAR_H

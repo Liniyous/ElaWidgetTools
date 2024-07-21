@@ -68,7 +68,7 @@ int ElaFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
                     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(item->widget(), "geometry");
                     geometryAnimation->setStartValue(item->widget()->geometry());
                     geometryAnimation->setEndValue(QRect(QPoint(x, y), item->sizeHint()));
-                    geometryAnimation->setDuration(225);
+                    geometryAnimation->setDuration(300);
                     geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
                     geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
                     _lastGeometryMap[item] = QPoint(x, y);

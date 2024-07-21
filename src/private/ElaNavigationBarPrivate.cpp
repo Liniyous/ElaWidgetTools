@@ -18,7 +18,7 @@
 #include "ElaNavigationView.h"
 #include "ElaScrollPagePrivate.h"
 #include "ElaSuggestBox.h"
-#include "private/ElaSuggestBoxPrivate.h"
+#include "ElaSuggestBoxPrivate.h"
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {

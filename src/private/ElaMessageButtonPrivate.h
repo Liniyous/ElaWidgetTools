@@ -21,9 +21,9 @@ class ElaMessageButtonPrivate : public QObject
 public:
     explicit ElaMessageButtonPrivate(QObject* parent = nullptr);
     ~ElaMessageButtonPrivate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
+    bool _isLeftButtonPress{false};
     int _shadowBorderWidth{3};
     int _penBorderWidth{1};
     ElaApplicationType::ThemeMode _themeMode;

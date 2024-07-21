@@ -6,7 +6,7 @@
 #include "stdafx.h"
 class QLabel;
 class QScreen;
-class ElaEvent;
+class ElaText;
 class ElaAppBar;
 class ElaIconButton;
 class ElaAppBarPrivate : public QObject
@@ -35,7 +35,8 @@ private:
     ElaIconButton* _maxButton{nullptr};
     ElaIconButton* _closeButton{nullptr};
     QScreen* _lastScreen{nullptr};
-    QLabel* _titleLabel{nullptr};
+    ElaText* _titleLabel{nullptr};
+    QLabel* _iconLabel{nullptr};
     qint64 _currentWinID{0};
     int _margins{8};
     bool _isHoverMaxButton{false};
