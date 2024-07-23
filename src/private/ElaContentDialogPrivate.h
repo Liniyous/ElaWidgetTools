@@ -19,7 +19,7 @@ public:
 
 private:
     bool _isHandleNativeEvent{false};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     QWidget* _shadowWidget{nullptr};
     QWidget* _centralWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};

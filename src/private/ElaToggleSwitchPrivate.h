@@ -24,7 +24,7 @@ private:
     bool _isLeftButtonPress{false};
     bool _isMousePressMove{false};
     int _lastMouseX{0};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     void _startPosAnimation(qreal startX, qreal endX, bool isToggle);
     void _startRadiusAnimation(qreal startRadius, qreal endRadius);
     void _adjustCircleCenterX();

@@ -30,7 +30,7 @@ public:
 
 private:
     int _shadowBorderWidth{6};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAREMINDERCARDPRIVATE_H

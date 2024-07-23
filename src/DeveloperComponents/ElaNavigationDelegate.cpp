@@ -5,10 +5,10 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
-#include "ElaApplication.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationView.h"
+#include "ElaTheme.h"
 #include "private/ElaNavigationDelegatePrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationDelegate, qreal, Opacity);
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationDelegate, qreal, Rotate);
@@ -21,8 +21,8 @@ ElaNavigationDelegate::ElaNavigationDelegate(QObject* parent)
     d->_pOpacity = 1;
     d->_pRotate = 0;
     d->_pNavigationView = nullptr;
-    d->_themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
     setProperty("lastSelectMarkTop", 10.0);
     setProperty("lastSelectMarkBottom", 10.0);
     setProperty("selectMarkTop", 10.0);
@@ -189,7 +189,7 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
         painter->setOpacity(d->_pOpacity);
     }
     // 图标绘制
-    painter->setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
     if (node->getAwesome() != ElaIconType::None)
     {
         QFont iconFont = QFont("ElaAwesome");
@@ -230,7 +230,7 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
         {
             painter->save();
             painter->setPen(Qt::NoPen);
-            painter->setBrush(QColor(0xFF, 0x4D, 0x4F));
+            painter->setBrush(ElaThemeColor(d->_themeMode, NavigationExpanderNodeKeyPoint));
             painter->drawEllipse(QPoint(264, itemRect.y() + 12), 3, 3);
             painter->restore();
         }
@@ -243,11 +243,11 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
             // KeyPoints
             painter->save();
             painter->setPen(Qt::NoPen);
-            painter->setBrush(Qt::white);
+            painter->setBrush(ElaThemeColor(d->_themeMode, NavigationKeyPointBase));
             painter->drawEllipse(QPoint(255, itemRect.y() + itemRect.height() / 2), 10, 10);
-            painter->setBrush(QColor(0xFF, 0x4D, 0x4F));
+            painter->setBrush(ElaThemeColor(d->_themeMode, NavigationKeyPointCenter));
             painter->drawEllipse(QPoint(255, itemRect.y() + itemRect.height() / 2), 9, 9);
-            painter->setPen(QPen(Qt::white, 2));
+            painter->setPen(QPen(ElaThemeColor(d->_themeMode, NavigationKeyPointText), 2));
             QFont font = QFont("Microsoft YaHei", 10);
             font.setHintingPreference(QFont::PreferNoHinting);
             font.setBold(true);
@@ -273,19 +273,19 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     QFont titlefont("Microsoft YaHei", 10);
     titlefont.setHintingPreference(QFont::PreferNoHinting);
     painter->setFont(titlefont);
-    painter->setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
     painter->drawText(itemRect.x() + 37, itemRect.y() + 25, node->getNodeTitle());
     // 选中特效
     if (d->_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+        painter->setBrush(ElaThemeColor(d->_themeMode, NavigationMark));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_selectMarkTop, 3, itemRect.height() - d->_selectMarkTop - d->_selectMarkBottom), 3, 3);
     }
     if (node == d->_lastSelectedNode)
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+        painter->setBrush(ElaThemeColor(d->_themeMode, NavigationMark));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_lastSelectMarkTop, 3, itemRect.height() - d->_lastSelectMarkTop - d->_lastSelectMarkBottom), 3, 3);
     }
     painter->restore();

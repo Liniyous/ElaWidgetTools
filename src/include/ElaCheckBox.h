@@ -26,7 +26,7 @@ private:
     bool _isLeftButtonPress{false};
     bool _isHoverButton{false};
     int _textLeftSpacing{10};
-    ElaApplicationType::ThemeMode _themeMode{ElaApplicationType::Light};
+    ElaThemeType::ThemeMode _themeMode{ElaThemeType::Light};
 };
 
 #endif // ELACHECKBOX_H

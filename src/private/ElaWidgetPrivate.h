@@ -15,7 +15,7 @@ class ElaWidgetPrivate : public QObject
 public:
     explicit ElaWidgetPrivate(QObject* parent = nullptr);
     ~ElaWidgetPrivate();
-    Q_SLOT void onThemeModeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
     ElaAppBar* _appBar{nullptr};

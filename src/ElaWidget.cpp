@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "private/ElaWidgetPrivate.h"
 ElaWidget::ElaWidget(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaWidgetPrivate())
@@ -17,8 +17,8 @@ ElaWidget::ElaWidget(QWidget* parent)
     setObjectName("ElaWidget");
 
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
-    d->_windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
+    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
+    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
@@ -29,7 +29,7 @@ ElaWidget::ElaWidget(QWidget* parent)
         hide();
     });
     setAttribute(Qt::WA_DeleteOnClose);
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
 }
 
 ElaWidget::~ElaWidget()

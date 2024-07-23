@@ -22,6 +22,7 @@
 #include "ElaApplication.h"
 #include "ElaEventBus.h"
 #include "ElaIconButton.h"
+#include "ElaTheme.h"
 #include "private/ElaAppBarPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsFixedSize)
@@ -105,7 +106,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_themeChangeButton = new ElaIconButton(ElaIconType::MoonStars, 15, 40, 30, this);
     d->_themeChangeButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
     connect(d->_themeChangeButton, &ElaIconButton::clicked, this, [this]() { Q_EMIT themeChangeButtonClicked(); });
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
 
     d->_minButton = new ElaIconButton(ElaIconType::Dash, 12, 40, 30, this);
     d->_minButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));

@@ -4,12 +4,12 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
 #include "ElaMenuBar.h"
+#include "ElaTheme.h"
 ElaMenuBarStyle::ElaMenuBarStyle(QStyle* style)
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -47,12 +47,12 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->setPen(Qt::NoPen);
             if (topt->state.testFlag(QStyle::State_Enabled) && topt->state.testFlag(QStyle::State_MouseOver))
             {
-                painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE9, 0xE9, 0xF0) : QColor(0x40, 0x40, 0x40));
+                painter->setBrush(ElaThemeColor(_themeMode, MenuBarExpandButtonHover));
                 painter->drawRect(topt->rect);
             }
             //展开图标
-            painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                              : Qt::white);
+            painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
+                                                                                                                        : Qt::white);
             QFont iconFont = QFont("ElaAwesome");
             iconFont.setPixelSize(18);
             painter->setFont(iconFont);
@@ -82,11 +82,11 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             {
                 if (mopt->state.testFlag(QStyle::State_Sunken))
                 {
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xEA, 0xE9, 0xF0) : QColor(0x33, 0x33, 0x33));
+                    painter->setBrush(ElaThemeColor(_themeMode, MenuBarItemPress));
                 }
                 else if (mopt->state.testFlag(QStyle::State_Selected))
                 {
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE5, 0xE4, 0xEB) : QColor(0x40, 0x40, 0x40));
+                    painter->setBrush(ElaThemeColor(_themeMode, MenuBarItemSelected));
                 }
                 painter->drawRoundedRect(menuItemRect, 3, 3);
             }
@@ -110,8 +110,7 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
                 if (!iconText.isEmpty())
                 {
                     painter->save();
-                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                                      : Qt::white);
+                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowTextDisable) : ElaThemeColor(_themeMode, WindowText));
                     QFont iconFont = QFont("ElaAwesome");
                     iconFont.setPixelSize(_menuBarHeight * 0.7);
                     painter->setFont(iconFont);
@@ -127,8 +126,7 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             else
             {
                 //图标 + 文字
-                painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                                  : Qt::white);
+                painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowTextDisable) : ElaThemeColor(_themeMode, WindowText));
                 if (icon.isNull() && iconText.isEmpty())
                 {
                     painter->drawText(menuItemRect, Qt::AlignCenter, menuText);

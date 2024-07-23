@@ -17,12 +17,9 @@ public:
     void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w) const override;
     void drawPanelItemViewItem(const QStyleOption* opt, QPainter* p, const QWidget* w) const;
     void navigationNodeStateChange(QVariantMap data);
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
-    QLinearGradient* _hovergradient{nullptr};
-    QLinearGradient* _selectedgradient{nullptr};
-    QLinearGradient* _selectedHovergradient{nullptr};
+    ElaThemeType::ThemeMode _themeMode;
     ElaNavigationNode* _animationTargetNode{nullptr};
 };
 

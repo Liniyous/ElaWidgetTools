@@ -2,7 +2,7 @@
 
 #include <QLayout>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "ElaToolBarPrivate.h"
 #include "ElaToolBarStyle.h"
 ElaToolBar::ElaToolBar(QWidget* parent)
@@ -14,7 +14,7 @@ ElaToolBar::ElaToolBar(QWidget* parent)
     setStyleSheet("#ElaToolBar{background-color:transparent;}");
     setStyle(new ElaToolBarStyle(style()));
     layout()->setSpacing(10);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         if (this->isFloating())
         {
             update();

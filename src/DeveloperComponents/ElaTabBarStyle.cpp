@@ -5,11 +5,11 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaTabBarStyle::ElaTabBarStyle(QStyle* style)
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaTabBarStyle::~ElaTabBarStyle()
@@ -50,13 +50,13 @@ void ElaTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt,
         if (opt->state.testFlag(QStyle::State_MouseOver))
         {
             p->setPen(Qt::NoPen);
-            p->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xDC, 0xDC, 0xDD) : QColor(0x5C, 0x5A, 0x56));
+            p->setBrush(ElaThemeColor(_themeMode, TabBarCloseButtonHover));
             p->drawRoundedRect(opt->rect, 2, 2);
         }
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(16);
         p->setFont(iconFont);
-        p->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+        p->setPen(ElaThemeColor(_themeMode, WindowText));
         p->drawText(opt->rect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::Xmark));
         p->restore();
         return;
@@ -92,7 +92,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 {
                     tabRect.setRight(tabRect.right() + margin + 1);
                 }
-                painter->setBrush(_themeMode == ElaApplicationType::Light ? Qt::white : QColor(0x2D, 0x2D, 0x2D));
+                painter->setBrush(ElaThemeColor(_themeMode, TabBarTabSelected));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
@@ -111,11 +111,11 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             {
                 if (topt->state.testFlag(QStyle::State_MouseOver))
                 {
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xFC, 0xF8, 0xFF) : QColor(0x27, 0x27, 0x27));
+                    painter->setBrush(ElaThemeColor(_themeMode, TabBarTabHover));
                 }
                 else
                 {
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xF5, 0xF1, 0xF8) : QColor(0x1A, 0x1A, 0x1A));
+                    painter->setBrush(ElaThemeColor(_themeMode, TabBarTabBase));
                 }
                 tabRect.setHeight(tabRect.height() + 10);
                 painter->drawRoundedRect(tabRect, 0, 0);
@@ -126,7 +126,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             if (!topt->state.testFlag(QStyle::State_Selected) && topt->position != QStyleOptionTab::End && topt->selectedPosition != QStyleOptionTab::NextIsSelected)
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+                painter->setBrush(ElaThemeColor(_themeMode, TabBarTabMark));
                 painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             painter->restore();
@@ -163,7 +163,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 painter->drawPixmap(iconRect.x(), iconRect.y(), iconPix);
             }
             //文字绘制
-            painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+            painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
             QString text = painter->fontMetrics().elidedText(topt->text, Qt::ElideRight, textRect.width());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextDontClip, text);
             painter->restore();

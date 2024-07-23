@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "private/ElaReminderCardPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, QString, Title);
@@ -30,9 +30,9 @@ ElaReminderCard::ElaReminderCard(QWidget* parent)
     d->_pTitleSpacing = 3;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Default;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     setMouseTracking(true);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaReminderCard::~ElaReminderCard()
@@ -51,22 +51,13 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
+    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 背景绘制
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(underMouse() ? QColor(0xE9, 0xE9, 0xF0) : QColor(0xFB, 0xFB, 0xFD));
-    }
-    else
-    {
-        painter.setPen(QColor(0x43, 0x43, 0x43));
-        painter.setBrush(underMouse() ? QColor(0x47, 0x46, 0x47) : QColor(0x23, 0x22, 0x24));
-    }
-
+    painter.setPen(ElaThemeColor(d->_themeMode, ReminderCardBorder));
+    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, ReminderCardHover) : ElaThemeColor(d->_themeMode, ReminderCardBase));
     QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
     int width = foregroundRect.width();
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
@@ -97,14 +88,7 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
 
     // 焦点圆型绘制
     painter.save();
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setBrush(QColor(0x00, 0x67, 0xC0));
-    }
-    else
-    {
-        painter.setBrush(QColor(0x4C, 0xA0, 0xE0));
-    }
+    painter.setBrush(ElaThemeColor(d->_themeMode, ReminderCardMark));
     painter.drawEllipse(QPointF(width * 0.95 + d->_shadowBorderWidth, height() * 0.25), height() / 17, height() / 17);
     painter.restore();
 
@@ -112,28 +96,14 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     QFont font = this->font();
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(QPen(Qt::black));
-    }
-    else
-    {
-        painter.setPen(QPen(Qt::white));
-    }
+    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
     painter.setFont(font);
     // 计算换行 width() / 28 图片左间距 文字右边距  width() / 11 文字左间距
     painter.drawText(d->_pCardPixmapSize.width() + width / 11 + d->_shadowBorderWidth, this->height() / 2 - d->_pTitleSpacing, d->_pTitle);
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(QPen(Qt::black));
-    }
-    else
-    {
-        painter.setPen(QPen(QColor(0x79, 0x72, 0x68)));
-    }
+    painter.setPen(ElaThemeColor(d->_themeMode, ReminderCardSubTitleText));
     qreal rowTextWidth = (this->width() - this->width() / 11 - this->width() / 28 - d->_pCardPixmapSize.width() - 2 * d->_shadowBorderWidth);
     painter.drawText(QRect(d->_pCardPixmapSize.width() + width / 11 + d->_shadowBorderWidth, height() / 2 + d->_pTitleSpacing, rowTextWidth, height() / 2), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap | Qt::TextWrapAnywhere, d->_pSubTitle);
     painter.restore();

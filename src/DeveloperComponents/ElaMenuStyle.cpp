@@ -5,17 +5,15 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
 #include "ElaMenu.h"
+#include "ElaTheme.h"
 ElaMenuStyle::ElaMenuStyle(QStyle* style)
 {
     _pMenuItemHeight = 32;
     _windowLinearGradient = new QLinearGradient(0, 0, 100, 100);
-    _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xE7, 0xF5));
-    _windowLinearGradient->setColorAt(1, QColor(0xED, 0xF3, 0xF9));
-    _themeMode = eApp->getThemeMode();
-    onThemeChanged(eApp->getThemeMode());
-    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaMenuStyle::onThemeChanged);
+    _themeMode = eTheme->getThemeMode();
+    onThemeChanged(eTheme->getThemeMode());
+    connect(eTheme, &ElaTheme::themeModeChanged, this, &ElaMenuStyle::onThemeChanged);
 }
 
 ElaMenuStyle::~ElaMenuStyle()
@@ -31,10 +29,10 @@ void ElaMenuStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* o
         // 高性能阴影
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
-        eApp->drawEffectShadow(painter, option->rect, _shadowBorderWidth, 6);
-        //内容色
+        eTheme->drawEffectShadow(painter, option->rect, _shadowBorderWidth, 6);
+        // 背景绘制
         QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, option->rect.width() - 2 * _shadowBorderWidth, option->rect.height() - 2 * _shadowBorderWidth);
-        painter->setPen(_themeMode == ElaApplicationType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
+        painter->setPen(ElaThemeColor(_themeMode, MenuBorder));
         _windowLinearGradient->setFinalStop(foregroundRect.bottomRight());
         painter->setBrush(*_windowLinearGradient);
         painter->drawRoundedRect(foregroundRect, 6, 6);
@@ -68,7 +66,7 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 painter->save();
                 painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(QColor(0xB3, 0xB3, 0xB3));
+                painter->setBrush(ElaThemeColor(_themeMode, MenuSeparator));
                 painter->drawRoundedRect(QRectF(separatorRect.x() + separatorRect.width() * 0.055, separatorRect.center().y(), separatorRect.width() - separatorRect.width() * 0.11, 1.5), 1, 1);
                 painter->restore();
                 return;
@@ -86,7 +84,7 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                     QRect hoverRect = menuRect;
                     hoverRect.adjust(0, 2, 0, -2);
                     painter->setPen(Qt::NoPen);
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE5, 0xE3, 0xE6) : QColor(0x46, 0x46, 0x46));
+                    painter->setBrush(ElaThemeColor(_themeMode, MenuHover));
                     painter->drawRoundedRect(hoverRect, 5, 5);
                 }
                 //Icon绘制
@@ -95,8 +93,8 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 if (mopt->menuHasCheckableItems)
                 {
                     painter->save();
-                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                                      : Qt::white);
+                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
+                                                                                                                                : Qt::white);
                     QFont iconFont = QFont("ElaAwesome");
                     iconFont.setPixelSize(_pMenuItemHeight * 0.57);
                     painter->setFont(iconFont);
@@ -121,8 +119,8 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                                 if (!iconText.isEmpty())
                                 {
                                     painter->save();
-                                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                                                      : Qt::white);
+                                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
+                                                                                                                                                : Qt::white);
                                     QFont iconFont = QFont("ElaAwesome");
                                     iconFont.setPixelSize(_pMenuItemHeight * 0.57);
                                     painter->setFont(iconFont);
@@ -137,8 +135,8 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 if (!mopt->text.isEmpty())
                 {
                     QStringList textList = mopt->text.split("\t");
-                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                                      : Qt::white);
+                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
+                                                                                                                                : Qt::white);
 
                     painter->drawText(QRectF(menuRect.x() + (_isAnyoneItemHasIcon ? contentPadding + textLeftSpacing : 0) + _iconWidth, menuRect.y(), menuRect.width(), menuRect.height()), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, textList[0]);
                     if (textList.count() > 1)
@@ -150,8 +148,8 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 if (mopt->menuItemType == QStyleOptionMenuItem::SubMenu)
                 {
                     painter->save();
-                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                                      : Qt::white);
+                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
+                                                                                                                                : Qt::white);
                     QFont iconFont = QFont("ElaAwesome");
                     iconFont.setPixelSize(18);
                     painter->setFont(iconFont);
@@ -234,17 +232,9 @@ QSize ElaMenuStyle::sizeFromContents(ContentsType type, const QStyleOption* opti
     return QProxyStyle::sizeFromContents(type, option, size, widget);
 }
 
-void ElaMenuStyle::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
+void ElaMenuStyle::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
     _themeMode = themeMode;
-    if (themeMode == ElaApplicationType::Light)
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xE7, 0xF5));
-        _windowLinearGradient->setColorAt(1, QColor(0xED, 0xF3, 0xF9));
-    }
-    else
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0x2D, 0x2D, 0x2D));
-        _windowLinearGradient->setColorAt(1, QColor(0x3D, 0x3D, 0x3D));
-    }
+    _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, MenuBaseStart));
+    _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, MenuBaseEnd));
 }

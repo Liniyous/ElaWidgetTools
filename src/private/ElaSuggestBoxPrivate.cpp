@@ -1,12 +1,13 @@
 #include "ElaSuggestBoxPrivate.h"
 
+#include <QLayout>
 #include <QPropertyAnimation>
 
 #include "ElaLineEdit.h"
-#include "ElaShadowWidget.h"
+#include "ElaListView.h"
 #include "ElaSuggestBox.h"
+#include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestModel.h"
-#include "ElaSuggestView.h"
 
 ElaSuggestion::ElaSuggestion(QObject* parent)
     : QObject(parent)
@@ -53,22 +54,22 @@ void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
         {
             rowCount = 4;
         }
-        if (!_shadowWidget->isVisible())
+        if (!_searchViewBaseWidget->isVisible())
         {
             q->raise();
-            _shadowWidget->show();
-            _shadowWidget->raise();
-            QPoint cyclePoint = _shadowWidget->mapFromGlobal(q->mapToGlobal(QPoint(1, q->height())));
+            _searchViewBaseWidget->show();
+            _searchViewBaseWidget->raise();
+            QPoint cyclePoint = _searchViewBaseWidget->mapFromGlobal(q->mapToGlobal(QPoint(-5, q->height())));
             if (cyclePoint != QPoint(0, 0))
             {
-                _shadowWidget->move(cyclePoint);
+                _searchViewBaseWidget->move(cyclePoint);
             }
-            _shadowWidget->resize(q->width(), 40 * rowCount + 16);
-            _searchView->move(_searchView->x(), -_shadowWidget->height());
+            _startSizeAnimation(QSize(q->width() + 10, 0), QSize(q->width() + 10, 40 * rowCount + 16));
+            _searchView->move(_searchView->x(), -(40 * rowCount + 16));
         }
         else
         {
-            _startSizeAnimation(QSize(q->width(), 40 * rowCount + 16));
+            _startSizeAnimation(_searchViewBaseWidget->size(), QSize(q->width() + 12, 40 * rowCount + 16));
         }
         _startExpandAnimation();
     }
@@ -92,17 +93,12 @@ void ElaSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
     _startCloseAnimation();
 }
 
-void ElaSuggestBoxPrivate::_startSizeAnimation(QSize newSize)
+void ElaSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
 {
-    if (_lastSize == newSize)
-    {
-        return;
-    }
-    _lastSize = newSize;
-    QPropertyAnimation* expandAnimation = new QPropertyAnimation(_shadowWidget, "size");
+    QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
     expandAnimation->setDuration(300);
     expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    expandAnimation->setStartValue(_shadowWidget->size());
+    expandAnimation->setStartValue(oldSize);
     expandAnimation->setEndValue(newSize);
     expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
@@ -123,7 +119,7 @@ void ElaSuggestBoxPrivate::_startExpandAnimation()
     expandAnimation->setDuration(300);
     expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
     expandAnimation->setStartValue(_searchView->pos());
-    expandAnimation->setEndValue(QPoint(0, 0));
+    expandAnimation->setEndValue(QPoint(8, 8));
     expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
@@ -135,11 +131,17 @@ void ElaSuggestBoxPrivate::_startCloseAnimation()
     }
     _isExpandAnimationFinished = true;
     _isCloseAnimationFinished = false;
+    QPropertyAnimation* baseWidgetsAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
+    baseWidgetsAnimation->setDuration(300);
+    baseWidgetsAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    baseWidgetsAnimation->setStartValue(_searchViewBaseWidget->size());
+    baseWidgetsAnimation->setEndValue(QSize(_searchViewBaseWidget->width(), 0));
+    baseWidgetsAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     QPropertyAnimation* closeAnimation = new QPropertyAnimation(_searchView, "pos");
     connect(closeAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isCloseAnimationFinished = true;
         _searchModel->clearSearchNode();
-        _shadowWidget->hide();
+        _searchViewBaseWidget->hide();
     });
     closeAnimation->setDuration(300);
     closeAnimation->setEasingCurve(QEasingCurve::InOutSine);

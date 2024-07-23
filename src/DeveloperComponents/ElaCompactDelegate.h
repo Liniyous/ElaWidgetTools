@@ -16,7 +16,6 @@ class ElaCompactDelegate : public QStyledItemDelegate
 public:
     explicit ElaCompactDelegate(QObject* parent = nullptr);
     ~ElaCompactDelegate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
     void navigationNodeStateChange(QVariantMap data);
 
 protected:
@@ -30,10 +29,7 @@ private:
     qreal _selectMarkBottom{10};
     bool _isSelectMarkDisplay{true};
     ElaNavigationNode* _lastSelectedNode{nullptr};
-    QLinearGradient* _hovergradient{nullptr};
-    QLinearGradient* _selectedgradient{nullptr};
-    QLinearGradient* _selectedHovergradient{nullptr};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     QPropertyAnimation* _lastSelectMarkTopAnimation{nullptr};
     QPropertyAnimation* _lastSelectMarkBottomAnimation{nullptr};
     QPropertyAnimation* _selectMarkTopAnimation{nullptr};

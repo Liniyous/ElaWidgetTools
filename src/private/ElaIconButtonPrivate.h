@@ -24,7 +24,7 @@ public:
     ~ElaIconButtonPrivate();
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAICONBUTTONPRIVATE_H

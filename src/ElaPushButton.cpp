@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "private/ElaPushButtonPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaPushButton, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaPushButton, QColor, LightDefaultColor)
@@ -18,15 +18,15 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     Q_D(ElaPushButton);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
-    d->_themeMode = eApp->getThemeMode();
-    d->_pLightDefaultColor = QColor(0xFE, 0xFE, 0xFE);
-    d->_pDarkDefaultColor = QColor(0x3E, 0x3E, 0x3E);
-    d->_pLightHoverColor = QColor(0xF6, 0xF6, 0xF6);
-    d->_pDarkHoverColor = QColor(0x4F, 0x4F, 0x4F);
-    d->_pLightPressColor = QColor(0xF2, 0xF2, 0xF2);
-    d->_pDarkPressColor = QColor(0x1C, 0x1C, 0x1C);
-    d->_lightTextColor = Qt::black;
-    d->_darkTextColor = Qt::white;
+    d->_themeMode = eTheme->getThemeMode();
+    d->_pLightDefaultColor = ElaThemeColor(ElaThemeType::Light, PushButtonDefaultBase);
+    d->_pDarkDefaultColor = ElaThemeColor(ElaThemeType::Dark, PushButtonDefaultBase);
+    d->_pLightHoverColor = ElaThemeColor(ElaThemeType::Light, PushButtonDefaultHover);
+    d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, PushButtonDefaultHover);
+    d->_pLightPressColor = ElaThemeColor(ElaThemeType::Light, PushButtonDefaultPress);
+    d->_pDarkPressColor = ElaThemeColor(ElaThemeType::Dark, PushButtonDefaultPress);
+    d->_lightTextColor = ElaThemeColor(ElaThemeType::Light, PushButtonDefaultText);
+    d->_darkTextColor = ElaThemeColor(ElaThemeType::Dark, PushButtonDefaultText);
     setMouseTracking(true);
     setFixedSize(90, 38);
     setText("PushButton");
@@ -35,7 +35,7 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     setFont(font);
     setObjectName("ElaPushButton");
     setStyleSheet("#ElaPushButton{background-color:transparent;}");
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
 }
@@ -95,30 +95,30 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
+    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 背景绘制
     painter.save();
     QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * (d->_shadowBorderWidth), height() - 2 * d->_shadowBorderWidth);
-    if (d->_themeMode == ElaApplicationType::Light)
+    if (d->_themeMode == ElaThemeType::Light)
     {
-        painter.setPen(QPen(QColor(0xDF, 0xDF, 0xDF), 1));
+        painter.setPen(ElaThemeColor(ElaThemeType::Light, PushButtonBorder));
         painter.setBrush(d->_isPressed ? d->_pLightPressColor : (underMouse() ? d->_pLightHoverColor : d->_pLightDefaultColor));
     }
     else
     {
-        painter.setPen(Qt::NoPen);
+        painter.setPen(ElaThemeColor(ElaThemeType::Dark, PushButtonBorder));
         painter.setBrush(d->_isPressed ? d->_pDarkPressColor : (underMouse() ? d->_pDarkHoverColor : d->_pDarkDefaultColor));
     }
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     // 底边线绘制
     if (!d->_isPressed)
     {
-        painter.setPen(QPen(QColor(0xBC, 0xBC, 0xBC), 1));
+        painter.setPen(ElaThemeColor(ElaThemeType::Light, PushButtonHemline));
         painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(), height() - d->_shadowBorderWidth);
     }
     //文字绘制
-    painter.setPen(d->_themeMode == ElaApplicationType::Light ? d->_lightTextColor : d->_darkTextColor);
+    painter.setPen(d->_themeMode == ElaThemeType::Light ? d->_lightTextColor : d->_darkTextColor);
     painter.drawText(foregroundRect, Qt::AlignCenter, text());
     painter.restore();
 }

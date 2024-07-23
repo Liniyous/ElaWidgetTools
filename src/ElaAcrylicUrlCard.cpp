@@ -6,7 +6,7 @@
 #include <QPainterPath>
 #include <QUrl>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "private/ElaAcrylicUrlCardPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaAcrylicUrlCard, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaAcrylicUrlCard, qreal, MainOpacity)
@@ -39,9 +39,9 @@ ElaAcrylicUrlCard::ElaAcrylicUrlCard(QWidget* parent)
     d->_pTitleSpacing = 10;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     connect(this, &ElaAcrylicUrlCard::clicked, this, [=]() { QDesktopServices::openUrl(QUrl(d->_pUrl)); });
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaAcrylicUrlCard::~ElaAcrylicUrlCard()
@@ -60,20 +60,13 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
+    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 亚克力绘制
     painter.save();
-    painter.setPen(d->_themeMode == ElaApplicationType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
+    painter.setPen(ElaThemeColor(d->_themeMode, AcrylicUrlCardBorder));
     QColor brushColor;
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        brushColor = underMouse() ? QColor(0xE9, 0xE9, 0xF0) : QColor(0xFB, 0xFB, 0xFD);
-    }
-    else
-    {
-        brushColor = underMouse() ? QColor(0x17, 0x17, 0x17) : QColor(0x04, 0x09, 0x11);
-    }
+    brushColor = underMouse() ? ElaThemeColor(d->_themeMode, AcrylicUrlCardHover) : ElaThemeColor(d->_themeMode, AcrylicUrlCardBase);
     brushColor.setAlpha(d->_pBrushAlpha);
     painter.setBrush(brushColor);
     QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
@@ -116,26 +109,12 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setFont(font);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(Qt::black);
-    }
-    else
-    {
-        painter.setPen(Qt::white);
-    }
+    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
     painter.drawText(QRect(width / 7, height() / 4 + d->_pCardPixmapSize.height() / 2 + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pTitle);
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(Qt::black);
-    }
-    else
-    {
-        painter.setPen(QPen(QColor(0x79, 0x72, 0x68)));
-    }
+    painter.setPen(ElaThemeColor(d->_themeMode, AcrylicUrlCardSubTitleText));
     int titleHeight = painter.fontMetrics().boundingRect(d->_pTitle).height() * 1.8;
     painter.drawText(QRect(width / 7, titleHeight + height() / 4 + d->_pCardPixmapSize.height() / 2 + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
     painter.restore();
@@ -145,14 +124,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(13);
     painter.setFont(iconFont);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(Qt::black);
-    }
-    else
-    {
-        painter.setPen(Qt::white);
-    }
+    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
     painter.drawText(width - iconFont.pixelSize() - 1, height() - iconFont.pixelSize(), QChar((unsigned short)ElaIconType::UpRightFromSquare));
     painter.restore();
 }

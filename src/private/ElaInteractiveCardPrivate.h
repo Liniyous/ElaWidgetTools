@@ -29,7 +29,7 @@ public:
     ~ElaInteractiveCardPrivate();
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAINTERACTIVECARDPRIVATE_H

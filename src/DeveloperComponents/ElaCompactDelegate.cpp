@@ -4,28 +4,17 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
-#include "ElaApplication.h"
 #include "ElaCompactModel.h"
 #include "ElaListView.h"
 #include "ElaNavigationNode.h"
+#include "ElaTheme.h"
 ElaCompactDelegate::ElaCompactDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
     _pElaListView = nullptr;
-    _hovergradient = new QLinearGradient(0, 0, 290, 38);
-    _hovergradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-    _hovergradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-    _selectedgradient = new QLinearGradient(0, 0, 290, 38);
-    _selectedgradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-    _selectedgradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-    _selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
-    _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
-    _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    _themeMode = eApp->getThemeMode();
-
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
-        onThemeChanged(themeMode);
     });
     setProperty("lastSelectMarkTop", 10.0);
     setProperty("lastSelectMarkBottom", 10.0);
@@ -76,28 +65,6 @@ ElaCompactDelegate::ElaCompactDelegate(QObject* parent)
 
 ElaCompactDelegate::~ElaCompactDelegate()
 {
-}
-
-void ElaCompactDelegate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
-{
-    if (themeMode == ElaApplicationType::Light)
-    {
-        _hovergradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-        _hovergradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-        _selectedgradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-        _selectedgradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-        _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
-        _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    }
-    else
-    {
-        _hovergradient->setColorAt(0, QColor(0x27, 0x27, 0x27));
-        _hovergradient->setColorAt(1, QColor(0x27, 0x27, 0x27));
-        _selectedgradient->setColorAt(0, QColor(0x35, 0x35, 0x35));
-        _selectedgradient->setColorAt(1, QColor(0x35, 0x35, 0x35));
-        _selectedHovergradient->setColorAt(0, QColor(0x2F, 0x2F, 0x2F));
-        _selectedHovergradient->setColorAt(1, QColor(0x2F, 0x2F, 0x2F));
-    }
 }
 
 void ElaCompactDelegate::navigationNodeStateChange(QVariantMap data)
@@ -156,12 +123,12 @@ void ElaCompactDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         if (option.state & QStyle::State_MouseOver)
         {
             // 选中时覆盖
-            painter->fillPath(path, *_selectedHovergradient);
+            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
         }
         else
         {
             // 选中
-            painter->fillPath(path, *_selectedgradient);
+            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelected));
         }
     }
     else
@@ -169,7 +136,7 @@ void ElaCompactDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         if (option.state & QStyle::State_MouseOver)
         {
             // 覆盖时颜色
-            painter->fillPath(path, *_hovergradient);
+            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
         }
     }
     painter->restore();
@@ -178,7 +145,7 @@ void ElaCompactDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
     itemRect = option.rect;
     // 图标绘制
-    painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(ElaThemeColor(_themeMode, WindowText));
     if (node->getAwesome() != ElaIconType::None)
     {
         QFont iconFont = QFont("ElaAwesome");
@@ -191,13 +158,13 @@ void ElaCompactDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     if (_isSelectMarkDisplay && (node == model->getSelectedNode()))
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _selectMarkTop, 3, itemRect.height() - _selectMarkTop - _selectMarkBottom), 3, 3);
     }
     if (node == _lastSelectedNode)
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _lastSelectMarkTop, 3, itemRect.height() - _lastSelectMarkTop - _lastSelectMarkBottom), 3, 3);
     }
     painter->restore();

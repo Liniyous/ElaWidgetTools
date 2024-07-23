@@ -10,6 +10,7 @@
 
 #include "ElaAppBar.h"
 #include "ElaIconButton.h"
+#include "ElaText.h"
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -140,9 +141,9 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
     return false;
 }
 
-void ElaAppBarPrivate::_onThemeModeChange(ElaApplicationType::ThemeMode themeMode)
+void ElaAppBarPrivate::_onThemeModeChange(ElaThemeType::ThemeMode themeMode)
 {
-    if (themeMode == ElaApplicationType::Light)
+    if (themeMode == ElaThemeType::Light)
     {
         _themeChangeButton->setAwesome(ElaIconType::MoonStars);
     }

@@ -27,7 +27,7 @@ private:
     QColor _darkTextColor;
     bool _isPressed{false};
     int _shadowBorderWidth{3};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAPUSHBUTTONPRIVATE_H

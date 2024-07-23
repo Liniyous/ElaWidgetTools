@@ -3,10 +3,11 @@
 #include <QHBoxLayout>
 #include <QPainter>
 
-#include "ElaApplication.h"
 #include "ElaDockWidget.h"
 #include "ElaIconButton.h"
 #include "ElaText.h"
+#include "ElaTheme.h"
+#include "qdebug.h"
 ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     : QWidget{parent}
 {
@@ -18,11 +19,12 @@ ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     _titleLabel->setTextPixelSize(13);
 
     _floatButton = new ElaIconButton(ElaIconType::WindowRestore, 13, 32, 26, this);
-    _floatButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    _floatButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, DockWidgetTitleBarFloatButtonHover));
+    _floatButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, DockWidgetTitleBarFloatButtonHover));
     connect(_floatButton, &ElaIconButton::clicked, this, &ElaDockWidgetTitleBar::onFloatButtonClicked);
     _closeButton = new ElaIconButton(ElaIconType::Xmark, 17, 32, 26, this);
-    _closeButton->setLightHoverColor(QColor(0xC4, 0x2B, 0x1C));
-    _closeButton->setDarkHoverColor(QColor(0xC4, 0x2B, 0x1C));
+    _closeButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, DockWidgetTitleBarCloseButtonHover));
+    _closeButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, DockWidgetTitleBarCloseButtonHover));
     connect(_closeButton, &ElaIconButton::clicked, this, &ElaDockWidgetTitleBar::onCloseButtonClicked);
 
     _setVisibleFromFeatures(_dockWidget->features());
@@ -49,8 +51,8 @@ ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     mainLayout->addWidget(_closeButton);
 
     //主题变更
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -75,8 +77,7 @@ void ElaDockWidgetTitleBar::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(_dockWidget->isFloating() ? Qt::transparent : _themeMode == ElaApplicationType::Light ? QColor(0xF5, 0xF1, 0xFF)
-                                                                                                           : QColor(0x40, 0x40, 0x40));
+    painter.setBrush(_dockWidget->isFloating() ? Qt::transparent : ElaThemeColor(_themeMode, DockWidgetTitleBarBase));
     painter.drawRect(rect());
     painter.restore();
 }

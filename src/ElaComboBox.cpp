@@ -6,11 +6,10 @@
 #include <QListView>
 #include <QPropertyAnimation>
 
-#include "ElaApplication.h"
 #include "ElaComboBoxStyle.h"
 #include "ElaScrollBar.h"
+#include "ElaTheme.h"
 #include "private/ElaComboBoxPrivate.h"
-#include "qdebug.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaComboBox, int, BorderRadius)
 ElaComboBox::ElaComboBox(QWidget* parent)
     : QComboBox(parent), d_ptr(new ElaComboBoxPrivate())
@@ -18,7 +17,7 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     Q_D(ElaComboBox);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     setObjectName("ElaComboBox");
     setFixedHeight(35);
     d->_comboBoxStyle = new ElaComboBoxStyle(style());
@@ -51,7 +50,7 @@ ElaComboBox::ElaComboBox(QWidget* parent)
         layout->setContentsMargins(6, 0, 6, 6);
     }
     QComboBox::setMaxVisibleItems(5);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaComboBox::~ElaComboBox()

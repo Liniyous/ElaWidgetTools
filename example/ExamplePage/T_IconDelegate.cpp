@@ -3,11 +3,11 @@
 #include <QPainter>
 
 #include "Def.h"
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 T_IconDelegate::T_IconDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 T_IconDelegate::~T_IconDelegate()
@@ -36,7 +36,7 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(22);
     painter->setFont(iconFont);
-    if (_themeMode == ElaApplicationType::Light)
+    if (_themeMode == ElaThemeType::Light)
     {
         painter->setPen(Qt::black);
     }

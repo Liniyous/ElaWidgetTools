@@ -8,8 +8,8 @@
 #include <QPropertyAnimation>
 #include <QResizeEvent>
 
-#include "ElaApplication.h"
 #include "ElaIconButton.h"
+#include "ElaTheme.h"
 #include "private/ElaMessageBarPrivate.h"
 
 ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessageBarType::MessageMode messageMode, QString& title, QString& text, int displayMsec, QWidget* parent)
@@ -22,7 +22,7 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     d->_text = text;
     d->_policy = policy;
     d->_messageMode = messageMode;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     setFixedHeight(60);
     setMouseTracking(true);
     QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(this);
@@ -170,11 +170,11 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_borderRadius);
+    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_borderRadius);
 
     // 背景和图标绘制
     painter.save();
-    painter.setPen(d->_themeMode == ElaApplicationType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
+    painter.setPen(d->_themeMode == ElaThemeType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
     switch (d->_messageMode)
     {
     case ElaMessageBarType::Success:

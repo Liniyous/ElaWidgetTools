@@ -26,7 +26,7 @@ private:
     bool _isLeftButtonPress{false};
     int _shadowBorderWidth{3};
     int _penBorderWidth{1};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAMESSAGEBUTTONPRIVATE_H

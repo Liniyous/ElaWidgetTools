@@ -29,7 +29,7 @@ private:
     QStringList _selectedTextList;
     void _refreshCurrentIndexs();
     void _adjustSelectedVector();
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAMULTISELECTCOMBOBOXPRIVATE_H

@@ -3,6 +3,7 @@
 
 #include <QStyledItemDelegate>
 
+#include "Def.h"
 class ElaSuggestDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -12,11 +13,10 @@ public:
 
 protected:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    QLinearGradient* _hovergradient{nullptr};
-    QLinearGradient* _selectedgradient{nullptr};
-    QLinearGradient* _selectedHovergradient{nullptr};
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELASUGGESTDELEGATE_H

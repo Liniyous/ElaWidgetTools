@@ -15,10 +15,10 @@ class ElaDockWidgetPrivate : public QObject
 public:
     explicit ElaDockWidgetPrivate(QObject* parent = nullptr);
     ~ElaDockWidgetPrivate();
-    Q_SLOT void onThemeModeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     int _shadowBorderWidth{6};
     QLinearGradient* _windowLinearGradient{nullptr};
     ElaDockWidgetTitleBar* _titleBar{nullptr};

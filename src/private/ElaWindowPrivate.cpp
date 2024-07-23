@@ -11,6 +11,7 @@
 #include "ElaAppBarPrivate.h"
 #include "ElaApplication.h"
 #include "ElaNavigationBar.h"
+#include "ElaTheme.h"
 #include "ElaThemeAnimationWidget.h"
 #include "ElaWindow.h"
 ElaWindowPrivate::ElaWindowPrivate(QObject* parent)
@@ -82,19 +83,18 @@ void ElaWindowPrivate::onThemeReadyChange()
             _animationWidget = nullptr;
         });
         _animationWidget->move(0, 0);
-        ElaApplication* app = eApp;
         _animationWidget->setOldWindowBackground(q->grab(q->rect()).toImage());
-        if (app->getThemeMode() == ElaApplicationType::Light)
+        if (eTheme->getThemeMode() == ElaThemeType::Light)
         {
-            _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
-            _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
-            app->setThemeMode(ElaApplicationType::Dark);
+            _windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Dark, WindowBaseStart));
+            _windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Dark, WindowBaseEnd));
+            eTheme->setThemeMode(ElaThemeType::Dark);
         }
         else
         {
-            _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
-            _windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
-            app->setThemeMode(ElaApplicationType::Light);
+            _windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
+            _windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
+            eTheme->setThemeMode(ElaThemeType::Light);
         }
         _animationWidget->setNewWindowBackground(q->grab(q->rect()).toImage());
         QPoint centerPos = q->mapFromGlobal(QCursor::pos());
@@ -142,19 +142,11 @@ void ElaWindowPrivate::onDisplayModeChanged()
     }
 }
 
-void ElaWindowPrivate::onThemeModeChanged(ElaApplicationType::ThemeMode themeMode)
+void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaWindow);
-    if (eApp->getThemeMode() == ElaApplicationType::Light)
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
-        _windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
-    }
-    else
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
-        _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
-    }
+    _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, WindowBaseStart));
+    _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, WindowBaseEnd));
     QPalette palette = q->palette();
     palette.setBrush(QPalette::Window, *_windowLinearGradient);
     q->setPalette(palette);

@@ -31,7 +31,7 @@ private:
     bool _isSelectMarkDisplay{true};
     ElaNavigationNode* _opacityAnimationTargetNode{nullptr};
     ElaNavigationNode* _expandAnimationTargetNode{nullptr};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     ElaNavigationNode* _lastSelectedNode{nullptr};
     bool _compareItemY(ElaNavigationNode* node1, ElaNavigationNode* node2);
     QPropertyAnimation* _lastSelectMarkTopAnimation{nullptr};

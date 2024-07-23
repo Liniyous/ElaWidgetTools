@@ -4,12 +4,12 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "ElaToolBar.h"
 ElaToolBarStyle::ElaToolBarStyle(QStyle* style)
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaToolBarStyle::~ElaToolBarStyle()
@@ -31,7 +31,7 @@ void ElaToolBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         QPen handlePen(Qt::DotLine);
-        handlePen.setColor(_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+        handlePen.setColor(ElaThemeColor(_themeMode, ToolBarHandle));
         handlePen.setWidthF(1.8);
         painter->setPen(handlePen);
         const ElaToolBar* toolBar = dynamic_cast<const ElaToolBar*>(widget);
@@ -53,7 +53,7 @@ void ElaToolBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+        painter->setBrush(ElaThemeColor(_themeMode, ToolBarSeparator));
         const ElaToolBar* toolBar = dynamic_cast<const ElaToolBar*>(widget);
         if (toolBar->orientation() == Qt::Vertical)
         {
@@ -88,12 +88,11 @@ void ElaToolBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->setPen(Qt::NoPen);
             if (topt->state.testFlag(QStyle::State_Enabled) && topt->state.testFlag(QStyle::State_MouseOver))
             {
-                painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE9, 0xE9, 0xF0) : QColor(0x40, 0x40, 0x40));
+                painter->setBrush(ElaThemeColor(_themeMode, ToolBarExpandButtonHover));
                 painter->drawRect(topt->rect);
             }
             //展开图标
-            painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaApplicationType::Light ? Qt::black
-                                                                                                                              : Qt::white);
+            painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowTextDisable) : ElaThemeColor(_themeMode, WindowText));
             QFont iconFont = QFont("ElaAwesome");
             iconFont.setPixelSize(18);
             painter->setFont(iconFont);
@@ -111,13 +110,13 @@ void ElaToolBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->setRenderHint(QPainter::Antialiasing);
             if (topt->state.testFlag(QStyle::State_Window))
             {
-                painter->setPen(_themeMode == ElaApplicationType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
+                painter->setPen(ElaThemeColor(_themeMode, ToolBarWindowBorder));
             }
             else
             {
                 painter->setPen(Qt::NoPen);
             }
-            painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xF5, 0xF1, 0xF8) : QColor(0x1A, 0x1A, 0x1A));
+            painter->setBrush(ElaThemeColor(_themeMode, ToolBarWindowBase));
             painter->drawRect(topt->rect);
             painter->restore();
         }

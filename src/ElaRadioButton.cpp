@@ -1,47 +1,28 @@
 #include "ElaRadioButton.h"
 
 #include "DeveloperComponents/ElaRadioButtonStyle.h"
-#include "ElaApplication.h"
+#include "ElaTheme.h"
+#include "private/ElaRadioButtonPrivate.h"
 ElaRadioButton::ElaRadioButton(QWidget* parent)
-    : QRadioButton(parent)
+    : QRadioButton(parent), d_ptr(new ElaRadioButtonPrivate())
 {
+    Q_D(ElaRadioButton);
+    d->q_ptr = this;
     setFixedHeight(20);
     QFont font = this->font();
     font.setPointSize(11);
     setFont(font);
     setStyle(new ElaRadioButtonStyle(style()));
-    onThemeChanged(eApp->getThemeMode());
-    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaRadioButton::onThemeChanged);
+    d->onThemeChanged(eTheme->getThemeMode());
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaRadioButtonPrivate::onThemeChanged);
 }
 
 ElaRadioButton::ElaRadioButton(const QString& text, QWidget* parent)
-    : QRadioButton(text, parent)
+    : ElaRadioButton(parent)
 {
-    setFixedHeight(20);
-    QFont font = this->font();
-    font.setPointSize(11);
-    setFont(font);
-    setStyle(new ElaRadioButtonStyle(style()));
-    onThemeChanged(eApp->getThemeMode());
-    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaRadioButton::onThemeChanged);
+    setText(text);
 }
 
 ElaRadioButton::~ElaRadioButton()
 {
-}
-
-void ElaRadioButton::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
-{
-    if (themeMode == ElaApplicationType::Light)
-    {
-        QPalette palette = this->palette();
-        palette.setColor(QPalette::WindowText, Qt::black);
-        setPalette(palette);
-    }
-    else
-    {
-        QPalette palette = this->palette();
-        palette.setColor(QPalette::WindowText, Qt::white);
-        setPalette(palette);
-    }
 }

@@ -5,7 +5,6 @@
 ElaListView::ElaListView(QWidget* parent)
     : QListView(parent)
 {
-    setMinimumHeight(200);
     setStyleSheet(
         "QListView{background-color: transparent;border:0px;}"
         "QListView::item{border:none;}");

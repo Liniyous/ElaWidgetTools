@@ -19,13 +19,12 @@ public:
     explicit ElaLineEditPrivate(QObject* parent = nullptr);
     ~ElaLineEditPrivate();
     Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     ElaEvent* _focusEvent{nullptr};
     qreal _textSpacing{0.5};
-    void _initStyle();
 };
 
 #endif // ELALINEEDITPRIVATE_H

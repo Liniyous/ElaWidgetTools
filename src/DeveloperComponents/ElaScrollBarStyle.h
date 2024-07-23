@@ -3,7 +3,6 @@
 #include <QProxyStyle>
 
 #include "Def.h"
-
 class ElaScrollBarStyle : public QProxyStyle
 {
     Q_OBJECT
@@ -14,7 +13,7 @@ public:
     int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;
 
 private:
-    ElaApplicationType::ThemeMode _themeMode{ElaApplicationType::Light};
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELASCROLLBARSTYLE_H

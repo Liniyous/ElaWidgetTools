@@ -29,7 +29,7 @@ public:
     Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
-    Q_SLOT void onThemeModeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
     Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
 

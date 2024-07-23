@@ -4,10 +4,10 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
-#include "ElaApplication.h"
 #include "ElaFooterModel.h"
 #include "ElaListView.h"
 #include "ElaNavigationNode.h"
+#include "ElaTheme.h"
 #include "private/ElaFooterDelegatePrivate.h"
 Q_PRIVATE_CREATE_Q_CPP(ElaFooterDelegate, ElaListView*, ElaListView);
 ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
@@ -16,17 +16,10 @@ ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
     Q_D(ElaFooterDelegate);
     d->q_ptr = this;
     d->_pElaListView = nullptr;
-    d->_hovergradient = new QLinearGradient(0, 0, 290, 38);
-    d->_hovergradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-    d->_hovergradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-    d->_selectedgradient = new QLinearGradient(0, 0, 290, 38);
-    d->_selectedgradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-    d->_selectedgradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-    d->_selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
-    d->_selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
-    d->_selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    d->_themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaFooterDelegatePrivate::onThemeChanged);
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
     setProperty("lastSelectMarkTop", 10.0);
     setProperty("lastSelectMarkBottom", 10.0);
     setProperty("selectMarkTop", 10.0);
@@ -136,12 +129,12 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
         if (option.state & QStyle::State_MouseOver)
         {
             // 选中时覆盖
-            painter->fillPath(path, *d->_selectedHovergradient);
+            painter->fillPath(path, ElaThemeColor(d->_themeMode, NavigationSelectedHover));
         }
         else
         {
             // 选中
-            painter->fillPath(path, *d->_selectedgradient);
+            painter->fillPath(path, ElaThemeColor(d->_themeMode, NavigationSelected));
         }
     }
     else
@@ -149,7 +142,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
         if (option.state & QStyle::State_MouseOver)
         {
             // 覆盖时颜色
-            painter->fillPath(path, *d->_hovergradient);
+            painter->fillPath(path, ElaThemeColor(d->_themeMode, NavigationHover));
         }
     }
     painter->restore();
@@ -157,14 +150,15 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
     itemRect = option.rect;
-    // 图标绘制
+
+    //顶边线绘制
     if (index.row() == 0)
     {
-        painter->setPen(d->_themeMode == ElaApplicationType::Light ? QColor(0xD2, 0xD2, 0xD2) : QColor(0x50, 0x50, 0x50));
-
+        painter->setPen(ElaThemeColor(d->_themeMode, NavigationFooterBaseLine));
         painter->drawLine(itemRect.x(), itemRect.y() + 1, itemRect.x() + itemRect.width(), itemRect.y() + 1);
     }
-    painter->setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    // 图标绘制
+    painter->setPen(ElaThemeColor(d->_themeMode, WindowText));
     if (node->getAwesome() != ElaIconType::None)
     {
         QFont iconFont = QFont("ElaAwesome");
@@ -192,7 +186,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
         {
             painter->save();
             painter->setPen(Qt::NoPen);
-            painter->setBrush(QColor(0xFF, 0x4D, 0x4F));
+            painter->setBrush(ElaThemeColor(d->_themeMode, NavigationExpanderNodeKeyPoint));
             painter->drawEllipse(QPoint(264, itemRect.y() + 12), 3, 3);
             painter->restore();
         }
@@ -205,11 +199,11 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
             // KeyPoints
             painter->save();
             painter->setPen(Qt::NoPen);
-            painter->setBrush(Qt::white);
+            painter->setBrush(ElaThemeColor(d->_themeMode, NavigationKeyPointBase));
             painter->drawEllipse(QPoint(255, itemRect.y() + itemRect.height() / 2), 10, 10);
-            painter->setBrush(QColor(0xFF, 0x4D, 0x4F));
+            painter->setBrush(ElaThemeColor(d->_themeMode, NavigationKeyPointCenter));
             painter->drawEllipse(QPoint(255, itemRect.y() + itemRect.height() / 2), 9, 9);
-            painter->setPen(QPen(Qt::white, 2));
+            painter->setPen(QPen(ElaThemeColor(d->_themeMode, NavigationKeyPointText), 2));
             QFont font = QFont("Microsoft YaHei", 10);
             font.setHintingPreference(QFont::PreferNoHinting);
             font.setBold(true);
@@ -235,19 +229,19 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     QFont titlefont("Microsoft YaHei", 10);
     titlefont.setHintingPreference(QFont::PreferNoHinting);
     painter->setFont(titlefont);
-    painter->setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(ElaThemeColor(d->_themeMode, WindowText));
     painter->drawText(itemRect.x() + 37, itemRect.y() + 25, node->getNodeTitle());
     // 选中特效
     if (d->_isSelectMarkDisplay && (node == model->getSelectedNode()))
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(ElaThemeColor(d->_themeMode, NavigationMark));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_selectMarkTop, 3, itemRect.height() - d->_selectMarkTop - d->_selectMarkBottom), 3, 3);
     }
     if (node == d->_lastSelectedNode)
     {
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x0E, 0x6F, 0xC3));
+        painter->setBrush(ElaThemeColor(d->_themeMode, NavigationMark));
         painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + d->_lastSelectMarkTop, 3, itemRect.height() - d->_lastSelectMarkTop - d->_lastSelectMarkBottom), 3, 3);
     }
     painter->restore();

@@ -11,12 +11,12 @@ ElaTextPrivate::~ElaTextPrivate()
 {
 }
 
-void ElaTextPrivate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
+void ElaTextPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaText);
     _themeMode = themeMode;
     QPalette palette = q->palette();
-    if (themeMode == ElaApplicationType::Light)
+    if (themeMode == ElaThemeType::Light)
     {
         palette.setColor(QPalette::WindowText, Qt::black);
         q->setPalette(palette);

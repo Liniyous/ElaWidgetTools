@@ -14,7 +14,7 @@ public:
     QRect subElementRect(SubElement element, const QStyleOption* option, const QWidget* widget) const override;
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAPROGRESSBARSTYLE_H

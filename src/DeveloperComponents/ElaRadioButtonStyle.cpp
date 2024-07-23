@@ -4,11 +4,11 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaRadioButtonStyle::ElaRadioButtonStyle(QStyle* style)
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaRadioButtonStyle::~ElaRadioButtonStyle()
@@ -32,26 +32,26 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
 
         if (bopt->state & QStyle::State_Off)
         {
-            painter->setPen(QPen(QColor(0x94, 0x94, 0x94), 1.5));
+            painter->setPen(QPen(ElaThemeColor(_themeMode, RadioButtonStateOffBorder), 1.5));
             if (bopt->state & QStyle::State_MouseOver)
             {
-                painter->setBrush(QColor(0xDE, 0xDE, 0xDE));
+                painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOffHover));
             }
             else
             {
-                painter->setBrush(Qt::white);
+                painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOffBase));
             }
             painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 8.5, 8.5);
         }
         else
         {
-            painter->setPen(Qt::NoPen);
+            painter->setPen(ElaThemeColor(_themeMode, RadioButtonStateOnBorder));
             // 外圆形
-            painter->setBrush(QColor(0x00, 0x66, 0xB4));
+            painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOnBase));
             painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 2, buttonRect.width() / 2);
             // 内圆形
             painter->setPen(Qt::NoPen);
-            painter->setBrush(QColor(0xEA, 0xEA, 0xEB));
+            painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOnCenter));
             if (bopt->state & QStyle::State_Sunken)
             {
                 if (bopt->state & QStyle::State_MouseOver)

@@ -5,7 +5,7 @@
 #include <QPainterPath>
 #include <QStyleOptionViewItem>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaTableViewStyle::ElaTableViewStyle(QStyle* style)
 {
     _hovergradient = new QLinearGradient(0, 0, 290, 38);
@@ -17,7 +17,7 @@ ElaTableViewStyle::ElaTableViewStyle(QStyle* style)
     _selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
     _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
     _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
-    connect(eApp, &ElaApplication::themeModeChanged, this, &ElaTableViewStyle::onThemeChanged);
+    connect(eTheme, &ElaTheme::themeModeChanged, this, &ElaTableViewStyle::onThemeChanged);
 }
 
 ElaTableViewStyle::~ElaTableViewStyle()
@@ -77,9 +77,9 @@ void ElaTableViewStyle::drawPanelItemViewRow(const QStyleOption* opt, QPainter* 
     p->restore();
 }
 
-void ElaTableViewStyle::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
+void ElaTableViewStyle::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
-    if (themeMode == ElaApplicationType::Light)
+    if (themeMode == ElaThemeType::Light)
     {
         _hovergradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
         _hovergradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));

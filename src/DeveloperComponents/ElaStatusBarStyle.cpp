@@ -4,11 +4,11 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaStatusBarStyle::ElaStatusBarStyle(QStyle* style)
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaStatusBarStyle::~ElaStatusBarStyle()
@@ -26,7 +26,7 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xF5, 0xF1, 0xFF) : QColor(0x40, 0x40, 0x40));
+        painter->setBrush(ElaThemeColor(_themeMode, StatusBarBase));
         painter->drawRect(statusBarRect);
         painter->restore();
         return;
@@ -38,7 +38,7 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+        painter->setBrush(ElaThemeColor(_themeMode, StatusBarSeparator));
         painter->drawRoundedRect(QRectF(statusBarItemRect.right() - 3, statusBarItemRect.y() + statusBarItemRect.height() * 0.1, 3, statusBarItemRect.height() - statusBarItemRect.height() * 0.2), 2, 2);
         painter->restore();
         return;

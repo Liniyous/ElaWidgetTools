@@ -4,8 +4,8 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaApplication.h"
 #include "ElaMessageBar.h"
+#include "ElaTheme.h"
 #include "private/ElaMessageButtonPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, QString, BarTitle);
@@ -32,9 +32,9 @@ ElaMessageButton::ElaMessageButton(QWidget* parent)
     d->_pDisplayMsec = 2000;
     d->_pMessageMode = ElaMessageBarType::Success;
     d->_pPositionPolicy = ElaMessageBarType::TopRight;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     d->_pMessageTargetWidget = nullptr;
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
     });
     connect(this, &ElaMessageButton::clicked, this, [=]() {
@@ -96,25 +96,17 @@ void ElaMessageButton::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
+    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 背景绘制
     painter.save();
     QRect foregroundRect(d->_penBorderWidth + d->_shadowBorderWidth, d->_penBorderWidth + d->_shadowBorderWidth, width() - 2 * (d->_penBorderWidth + d->_shadowBorderWidth), height() - 2 * (d->_penBorderWidth + d->_shadowBorderWidth));
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setPen(QPen(QColor(0xDF, 0xDF, 0xDF), d->_penBorderWidth));
-        painter.setBrush((underMouse() ? QColor(0xF6, 0xF6, 0xF6) : QColor(0xFD, 0xFD, 0xFD)));
-    }
-    else
-    {
-        painter.setPen(QPen(QColor(0x50, 0x50, 0x50), d->_penBorderWidth));
-        painter.setBrush((underMouse() ? QColor(0x44, 0x44, 0x44) : QColor(0x3E, 0x3E, 0x3E)));
-    }
+    painter.setPen(QPen(ElaThemeColor(d->_themeMode, MessageButtonBorder), d->_penBorderWidth));
+    painter.setBrush((underMouse() ? ElaThemeColor(d->_themeMode, MessageButtonHover) : ElaThemeColor(d->_themeMode, MessageButtonBase)));
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
 
     //文字绘制
-    painter.setPen(d->_themeMode == ElaApplicationType::Light ? (d->_isLeftButtonPress ? QColor(0x64, 0x66, 0x73) : Qt::black) : (d->_isLeftButtonPress ? QColor(0xA1, 0xA2, 0xA2) : Qt::white));
+    painter.setPen(d->_isLeftButtonPress ? ElaThemeColor(d->_themeMode, MessageButtonTextPress) : ElaThemeColor(d->_themeMode, WindowText));
     painter.drawText(rect(), Qt::AlignCenter, text());
     painter.restore();
 }

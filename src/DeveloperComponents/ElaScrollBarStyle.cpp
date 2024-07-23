@@ -3,10 +3,11 @@
 #include <QPainter>
 #include <QStyleOptionSlider>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaScrollBarStyle::ElaScrollBarStyle(QStyle* style)
 {
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaScrollBarStyle::~ElaScrollBarStyle()
@@ -40,14 +41,7 @@ void ElaScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleO
         }
         if ((sopt->orientation == Qt::Horizontal && sopt->rect.width() != sliderRect.width()) || (sopt->orientation == Qt::Vertical && sopt->rect.height() != sliderRect.height()))
         {
-            if (_themeMode == ElaApplicationType::Light)
-            {
-                painter->setBrush(QColor(0x8A, 0x84, 0x89));
-            }
-            else
-            {
-                painter->setBrush(QColor(0x9F, 0x9F, 0x9F));
-            }
+            painter->setBrush(ElaThemeColor(_themeMode, ScrollBarHandle));
             if (sopt->state & QStyle::State_MouseOver)
             {
                 painter->drawRoundedRect(sliderRect, 3, 3);

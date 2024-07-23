@@ -1,0 +1,34 @@
+#ifndef ELATHEME_H
+#define ELATHEME_H
+
+#include <QObject>
+
+#include "Def.h"
+#include "singleton.h"
+#include "stdafx.h"
+
+#define eTheme ElaTheme::getInstance()
+#define ElaThemeColor(themeMode, themmColor) eTheme->getThemeColor(themeMode, ElaThemeType::themmColor)
+class QPainter;
+class ElaThemePrivate;
+class ELA_EXPORT ElaTheme : public QObject
+{
+    Q_OBJECT
+    Q_Q_CREATE(ElaTheme)
+    Q_SINGLETON_CREATE_H(ElaTheme)
+private:
+    explicit ElaTheme(QObject* parent = nullptr);
+    ~ElaTheme();
+
+public:
+    void setThemeMode(ElaThemeType::ThemeMode themeMode);
+    ElaThemeType::ThemeMode getThemeMode() const;
+
+    void drawEffectShadow(QPainter* painter, QRect widgetRect, int shadowBorderWidth, int borderRadius);
+
+    const QColor& getThemeColor(ElaThemeType::ThemeMode themeMode, ElaThemeType::ThemeColor themeColor);
+Q_SIGNALS:
+    Q_SIGNAL void themeModeChanged(ElaThemeType::ThemeMode themeMode);
+};
+
+#endif // ELATHEME_H

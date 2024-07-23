@@ -43,7 +43,7 @@ private:
     void _changeMaxButtonAwesome(bool isMaximized);
     void _showSystemMenu(QPoint point);
     bool _containsCursorToItem(QWidget* item);
-    void _onThemeModeChange(ElaApplicationType::ThemeMode themeMode);
+    void _onThemeModeChange(ElaThemeType::ThemeMode themeMode);
 };
 
 #endif // ELAAPPBARPRIVATE_H

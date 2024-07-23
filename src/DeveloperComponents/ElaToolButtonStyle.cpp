@@ -6,11 +6,11 @@
 #include <QStyleOption>
 #include <QtMath>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaToolButtonStyle::ElaToolButtonStyle(QStyle* style)
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -40,14 +40,14 @@ void ElaToolButtonStyle::drawComplexControl(ComplexControl control, const QStyle
             {
                 if (bopt->state.testFlag(QStyle::State_Sunken))
                 {
-                    painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xEA, 0xE9, 0xF0) : QColor(0x33, 0x33, 0x33));
+                    painter->setBrush(ElaThemeColor(_themeMode, ToolButtonPress));
                     painter->drawRoundedRect(bopt->rect, 4, 4);
                 }
                 else
                 {
                     if (bopt->state.testFlag(QStyle::State_MouseOver) || bopt->state.testFlag(QStyle::State_On))
                     {
-                        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE5, 0xE4, 0xEB) : QColor(0x40, 0x40, 0x40));
+                        painter->setBrush(ElaThemeColor(_themeMode, ToolButtonHover));
                         painter->drawRoundedRect(bopt->rect, 4, 4);
                     }
                 }
@@ -116,7 +116,7 @@ void ElaToolButtonStyle::_drawIndicator(QPainter* painter, const QStyleOptionToo
         //指示器区域
         if (bopt->state.testFlag(QStyle::State_Enabled) && bopt->activeSubControls.testFlag(QStyle::SC_ScrollBarSubLine))
         {
-            painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xE0, 0xE0, 0xE0) : QColor(0x40, 0x40, 0x40));
+            painter->setBrush(ElaThemeColor(_themeMode, ToolButtonIndicator));
             QPainterPath path;
             path.moveTo(indicatorRect.topLeft());
             path.lineTo(indicatorRect.right() - 4, indicatorRect.y());
@@ -128,7 +128,7 @@ void ElaToolButtonStyle::_drawIndicator(QPainter* painter, const QStyleOptionToo
             painter->drawPath(path);
         }
         //指示器
-        painter->setBrush(bopt->state.testFlag(QStyle::State_Enabled) ? _themeMode == ElaApplicationType::Light ? Qt::black : Qt::white : Qt::gray);
+        painter->setBrush(bopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
         QPainterPath indicatorPath;
         qreal indicatorHeight = qCos(30 * M_PI / 180.0) * indicatorRect.width() * 0.85;
         indicatorPath.moveTo(indicatorRect.x() + indicatorRect.width() * 0.15, indicatorRect.center().y());
@@ -190,7 +190,7 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
         {
             //绘制ElaIcon
             painter->save();
-            painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+            painter->setPen(ElaThemeColor(_themeMode, WindowText));
             QFont iconFont = QFont("ElaAwesome");
             iconFont.setPixelSize(bopt->iconSize.width() * 0.8);
             painter->setFont(iconFont);
@@ -224,23 +224,20 @@ void ElaToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const Q
 {
     if (!bopt->text.isEmpty())
     {
+        painter->setPen(ElaThemeColor(_themeMode, WindowText));
         switch (bopt->toolButtonStyle)
         {
         case Qt::ToolButtonTextOnly:
         {
-            painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
-            painter->drawText(contentRect, Qt::AlignCenter, bopt->text);
             break;
         }
         case Qt::ToolButtonTextBesideIcon:
         {
-            painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
             painter->drawText(QRect(contentRect.x() + bopt->iconSize.width() + 12, contentRect.y(), contentRect.width() - bopt->iconSize.width(), contentRect.height()), Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             break;
         }
         case Qt::ToolButtonTextUnderIcon:
         {
-            painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
             painter->drawText(contentRect, Qt::AlignBottom | Qt::AlignHCenter, bopt->text);
             break;
         }

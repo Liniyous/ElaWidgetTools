@@ -4,7 +4,6 @@
 #include <QProxyStyle>
 
 #include "Def.h"
-#include "stdafx.h"
 class ElaWindowStyle : public QProxyStyle
 {
     Q_OBJECT
@@ -15,7 +14,7 @@ public:
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAWINDOWSTYLE_H

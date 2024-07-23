@@ -3,6 +3,7 @@
 #include <QLinearGradient>
 
 #include "ElaDockWidget.h"
+#include "ElaTheme.h"
 ElaDockWidgetPrivate::ElaDockWidgetPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -12,19 +13,11 @@ ElaDockWidgetPrivate::~ElaDockWidgetPrivate()
 {
 }
 
-void ElaDockWidgetPrivate::onThemeModeChanged(ElaApplicationType::ThemeMode themeMode)
+void ElaDockWidgetPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaDockWidget);
     q->update();
     _themeMode = themeMode;
-    if (themeMode == ElaApplicationType::Light)
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0xF3, 0xF2, 0xF9));
-        _windowLinearGradient->setColorAt(1, QColor(0xF4, 0xF1, 0xF8));
-    }
-    else
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
-        _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
-    }
+    _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, DockWidgetBaseStart));
+    _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, DockWidgetBaseEnd));
 }

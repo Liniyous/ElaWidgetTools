@@ -7,7 +7,6 @@
 #include <QScroller>
 #include <QVBoxLayout>
 
-#include "ElaApplication.h"
 #include "ElaCompactDelegate.h"
 #include "ElaCompactModel.h"
 #include "ElaFooterDelegate.h"
@@ -20,6 +19,7 @@
 #include "ElaNavigationNode.h"
 #include "ElaNavigationView.h"
 #include "ElaSuggestBox.h"
+#include "ElaTheme.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaSuggestBoxPrivate.h"
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
@@ -29,8 +29,8 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->q_ptr = this;
     setFixedWidth(300);
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, QColor(0xF3, 0xF2, 0xF9));
-    d->_windowLinearGradient->setColorAt(1, QColor(0xF4, 0xF1, 0xF8));
+    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, NavigationBaseStart));
+    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, NavigationBaseEnd));
 
     d->_navigationModel = new ElaNavigationModel(this);
     d->_navigationView = new ElaNavigationView(this);
@@ -128,7 +128,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_compactWidget->setVisible(false);
 
     //主题设置
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
     parent->installEventFilter(this);
 }
 

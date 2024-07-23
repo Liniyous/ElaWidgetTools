@@ -36,7 +36,7 @@ class ElaNavigationBarPrivate : public QObject
 public:
     explicit ElaNavigationBarPrivate(QObject* parent = nullptr);
     ~ElaNavigationBarPrivate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
     //核心跳转逻辑
@@ -45,7 +45,7 @@ public:
     void onCompactViewClicked(const QModelIndex& index);
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
     QWidget* _maximalWidget{nullptr};
     QWidget* _compactWidget{nullptr};

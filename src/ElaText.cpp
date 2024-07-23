@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "private/ElaTextPrivate.h"
 ElaText::ElaText(QWidget* parent)
     : QLabel(parent), d_ptr(new ElaTextPrivate())
@@ -16,9 +16,9 @@ ElaText::ElaText(QWidget* parent)
     textFont.setPixelSize(28);
     setWordWrap(true);
     setFont(textFont);
-    d->_themeMode = eApp->getThemeMode();
-    d->onThemeChanged(eApp->getThemeMode());
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
+    d->_themeMode = eTheme->getThemeMode();
+    d->onThemeChanged(eTheme->getThemeMode());
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);
 }
 
 ElaText::ElaText(QString text, QWidget* parent)
@@ -146,7 +146,7 @@ void ElaText::paintEvent(QPaintEvent* event)
         QPainter painter(this);
         painter.save();
         painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-        painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+        painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
         painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
         painter.restore();
     }

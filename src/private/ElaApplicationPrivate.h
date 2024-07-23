@@ -19,7 +19,6 @@ public:
     ~ElaApplicationPrivate();
 
 private:
-    ElaApplicationType::ThemeMode _themeMode{ElaApplicationType::Light};
     void _init();
 };
 

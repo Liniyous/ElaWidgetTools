@@ -2,12 +2,12 @@
 
 #include <QPainter>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaBreadcrumbBarDelegate::ElaBreadcrumbBarDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
 }
@@ -20,7 +20,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
 {
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-    painter->setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
     QRect itemRect = option.rect;
     QString breadcrumbDisplayData = index.data(Qt::DisplayRole).toString();
     QString breadcrumbUserData = index.data(Qt::UserRole).toString();
@@ -29,14 +29,14 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
         if (option.state & QStyle::State_HasFocus)
         {
             //鼠标按下
-            painter->setPen(QColor(0x86, 0x86, 0x8A));
+            painter->setPen(ElaThemeColor(_themeMode, BreadcrumbBarTextHasFocus));
         }
         else
         {
             //不为最后一个 且没有被鼠标覆盖
             if (!(option.state & QStyle::State_MouseOver))
             {
-                painter->setPen(_themeMode == ElaApplicationType::Light ? QColor(0x5B, 0x5B, 0x5E) : QColor(0xDE, 0xDE, 0xDE));
+                painter->setPen(ElaThemeColor(_themeMode, BreadcrumbBarText));
             }
         }
     }

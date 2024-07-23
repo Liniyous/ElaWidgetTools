@@ -62,8 +62,8 @@ void MainWindow::onCloseButtonClicked()
 void MainWindow::initWindow()
 {
     resize(1240, 740);
-    ElaLog::getInstance()->initMessageLog(true);
-    // eApp->setThemeMode(ElaApplicationType::Dark);
+    // ElaLog::getInstance()->initMessageLog(true);
+    // eApp->setThemeMode(ElaThemeType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);

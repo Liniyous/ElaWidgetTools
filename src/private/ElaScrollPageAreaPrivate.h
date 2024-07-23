@@ -16,7 +16,7 @@ public:
     ~ElaScrollPageAreaPrivate();
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELASCROLLPAGEAREAPRIVATE_H

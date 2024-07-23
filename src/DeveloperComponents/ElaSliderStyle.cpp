@@ -3,9 +3,13 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
+
+#include "ElaTheme.h"
 ElaSliderStyle::ElaSliderStyle(QStyle* style)
 {
     setProperty("circleRadius", 0.01);
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaSliderStyle::~ElaSliderStyle()
@@ -30,13 +34,13 @@ void ElaSliderStyle::drawComplexControl(ComplexControl control, const QStyleOpti
         QRect sliderHandleRect = subControlRect(control, sopt, SC_SliderHandle, widget);
         // 滑槽
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0x8A, 0x8A, 0x8A));
+        painter->setBrush(ElaThemeColor(_themeMode, SliderBaseNoValue));
         if (sopt->orientation == Qt::Horizontal)
         {
             // 未滑过
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.height() / 8, sliderRect.y() + sliderRect.height() * 0.375, sliderRect.width() - sliderRect.height() / 4, sliderRect.height() / 4), sliderRect.height() / 8, sliderRect.height() / 8);
             // 已滑过
-            painter->setBrush(QColor(0x00, 0x66, 0xB4));
+            painter->setBrush(ElaThemeColor(_themeMode, SliderBaseHasValue));
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.height() / 8, sliderRect.y() + sliderRect.height() * 0.375, sliderHandleRect.x(), sliderRect.height() / 4), sliderRect.height() / 8, sliderRect.height() / 8);
         }
         else
@@ -44,16 +48,16 @@ void ElaSliderStyle::drawComplexControl(ComplexControl control, const QStyleOpti
             // 未滑过
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375, sliderRect.y() + sliderRect.width() / 8, sliderRect.width() / 4, sliderRect.height() - sliderRect.width() / 4), sliderRect.width() / 8, sliderRect.width() / 8);
             // 已滑过
-            painter->setBrush(QColor(0x00, 0x66, 0xB4));
+            painter->setBrush(ElaThemeColor(_themeMode, SliderBaseHasValue));
             painter->drawRoundedRect(QRect(sliderRect.x() + sliderRect.width() * 0.375, sliderHandleRect.y(), sliderRect.width() / 4, sliderRect.height() - sliderRect.width() / 8 - sliderHandleRect.y()), sliderRect.width() / 8, sliderRect.width() / 8);
         }
         // 滑块
         // 外圆形
-        painter->setBrush(QColor(0x00, 0x66, 0xB4));
+        painter->setBrush(ElaThemeColor(_themeMode, SliderHandleBase));
         painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), sliderHandleRect.width() / 2, sliderHandleRect.width() / 2);
         // 内圆形
         painter->setPen(Qt::NoPen);
-        painter->setBrush(QColor(0xEA, 0xEA, 0xEB));
+        painter->setBrush(ElaThemeColor(_themeMode, SliderHandleCenter));
         if (_lastState == 0)
         {
             _lastState = sopt->state;

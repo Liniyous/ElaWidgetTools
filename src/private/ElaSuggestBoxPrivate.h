@@ -21,10 +21,10 @@ public:
 class ElaLineEdit;
 class ElaNavigationNode;
 class ElaSuggestModel;
-class ElaSuggestView;
+class ElaListView;
 class ElaSuggestDelegate;
 class ElaSuggestBox;
-class ElaShadowWidget;
+class ElaSuggestBoxSearchViewContainer;
 class ElaSuggestBoxPrivate : public QObject
 {
     Q_OBJECT
@@ -39,15 +39,14 @@ public:
 
 private:
     QVector<ElaSuggestion*> _suggestionVector;
-    ElaShadowWidget* _shadowWidget{nullptr};
+    ElaSuggestBoxSearchViewContainer* _searchViewBaseWidget{nullptr};
     ElaLineEdit* _searchEdit{nullptr};
     ElaSuggestModel* _searchModel{nullptr};
-    ElaSuggestView* _searchView{nullptr};
+    ElaListView* _searchView{nullptr};
     ElaSuggestDelegate* _searchDelegate{nullptr};
-    QSize _lastSize{-1, -1};
     bool _isExpandAnimationFinished{true};
     bool _isCloseAnimationFinished{true};
-    void _startSizeAnimation(QSize newSize);
+    void _startSizeAnimation(QSize oldSize, QSize newSize);
     void _startExpandAnimation();
     void _startCloseAnimation();
 };

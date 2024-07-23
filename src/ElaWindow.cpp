@@ -12,11 +12,11 @@
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
-#include "ElaApplication.h"
 #include "ElaEventBus.h"
 #include "ElaMenu.h"
 #include "ElaNavigationBar.h"
 #include "ElaNavigationRouter.h"
+#include "ElaTheme.h"
 #include "ElaWindowStyle.h"
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
@@ -37,8 +37,8 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(this, &ElaWindow::pNavigationBarDisplayModeChanged, d, &ElaWindowPrivate::onDisplayModeChanged);
 
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, QColor(0xF2, 0xF2, 0xF9));
-    d->_windowLinearGradient->setColorAt(1, QColor(0xF9, 0xEF, 0xF6));
+    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
+    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
     connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
@@ -79,7 +79,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::navigationButtonClicked, d, &ElaWindowPrivate::onNavigationButtonClicked);
 
     // 主题变更动画
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
     d->_isInitFinished = true;
     setCentralWidget(centralWidget);

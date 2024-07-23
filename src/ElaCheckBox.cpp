@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaCheckBox::ElaCheckBox(QWidget* parent)
     : QCheckBox(parent)
 {
@@ -16,7 +16,7 @@ ElaCheckBox::ElaCheckBox(QWidget* parent)
     QFont font = this->font();
     font.setPointSize(11);
     setFont(font);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
@@ -31,7 +31,7 @@ ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
     setFont(font);
     int textWidth = fontMetrics().horizontalAdvance(text);
     setFixedSize(textWidth + 25 * 0.8 + _textLeftSpacing, 25);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaCheckBox::~ElaCheckBox()
@@ -103,7 +103,7 @@ void ElaCheckBox::paintEvent(QPaintEvent* event)
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
 
     // 框选绘制
-    if (_themeMode == ElaApplicationType::Light)
+    if (_themeMode == ElaThemeType::Light)
     {
         painter.setPen(isChecked() ? QColor(0x00, 0x66, 0xB4) : _isLeftButtonPress ? QColor(0xBF, 0xBF, 0xBF)
                                                                                    : QColor(0x87, 0x87, 0x87));
@@ -130,13 +130,13 @@ void ElaCheckBox::paintEvent(QPaintEvent* event)
                              : QColor(0x2D, 0x2D, 0x2D));
     }
     painter.drawRoundedRect(QRect(1, height() / 2 - height() * 0.4, height() * 0.8, height() * 0.8), 2, 2);
-    painter.setPen(_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter.setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
     painter.drawText(QRect(height() * 0.8 + _textLeftSpacing, 0, width(), height()), Qt::AlignVCenter, text());
 
     //图标绘制
     if (isChecked())
     {
-        painter.setPen(_themeMode == ElaApplicationType::Light ? Qt::white : Qt::black);
+        painter.setPen(_themeMode == ElaThemeType::Light ? Qt::white : Qt::black);
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(height() / 2);
         painter.setFont(iconFont);

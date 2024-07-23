@@ -3,7 +3,7 @@
 #include <QLineEdit>
 
 #include "DeveloperComponents/ElaSpinBoxStyle.h"
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
     : QDoubleSpinBox(parent)
 {
@@ -11,10 +11,10 @@ ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
     setStyle(new ElaSpinBoxStyle(style()));
     lineEdit()->setAlignment(Qt::AlignCenter);
     lineEdit()->setStyleSheet("background-color:transparent");
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) {
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         QPalette palette;
         palette.setColor(QPalette::Base, Qt::transparent);
-        palette.setColor(QPalette::Text, themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+        palette.setColor(QPalette::Text, themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
         lineEdit()->setPalette(palette);
     });
 }

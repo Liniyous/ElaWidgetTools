@@ -15,7 +15,7 @@ protected:
     void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
-    ElaApplicationType::ThemeMode _themeMode{ElaApplicationType::Light};
+    ElaThemeType::ThemeMode _themeMode{ElaThemeType::Light};
 };
 
 #endif // T_ICONDELEGATE_H

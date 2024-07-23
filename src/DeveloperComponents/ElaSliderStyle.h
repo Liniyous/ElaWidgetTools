@@ -3,6 +3,7 @@
 
 #include <QProxyStyle>
 
+#include "Def.h"
 class ElaSliderStyle : public QProxyStyle
 {
     Q_OBJECT
@@ -14,9 +15,10 @@ public:
     int styleHint(StyleHint hint, const QStyleOption* option = nullptr, const QWidget* widget = nullptr, QStyleHintReturn* returnData = nullptr) const override;
 
 private:
+    ElaThemeType::ThemeMode _themeMode;
     mutable QStyle::State _lastState{0};
     mutable qreal _circleRadius{0};
-    void _startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget *widget) const;
+    void _startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget* widget) const;
 };
 
 #endif // ELASLIDERSTYLE_H

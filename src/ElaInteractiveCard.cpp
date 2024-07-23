@@ -3,7 +3,7 @@
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "private/ElaInteractiveCardPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, QString, Title);
@@ -28,10 +28,9 @@ ElaInteractiveCard::ElaInteractiveCard(QWidget* parent)
     d->_pTitleSpacing = 3;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     setMouseTracking(true);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode)
-            { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaInteractiveCard::~ElaInteractiveCard()
@@ -51,14 +50,7 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    if (d->_themeMode == ElaApplicationType::Light)
-    {
-        painter.setBrush(underMouse() ? QColor(0xE9, 0xE9, 0xF0) : Qt::transparent);
-    }
-    else
-    {
-        painter.setBrush(underMouse() ? QColor(0x27, 0x27, 0x27) : Qt::transparent);
-    }
+    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, InteractiveCardHover) : Qt::transparent);
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
     // 图片绘制
     if (!d->_pCardPixmap.isNull())
@@ -84,7 +76,7 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
         painter.restore();
     }
     // 文字绘制
-    if (d->_themeMode == ElaApplicationType::Light)
+    if (d->_themeMode == ElaThemeType::Light)
     {
         painter.setPen(Qt::black);
     }

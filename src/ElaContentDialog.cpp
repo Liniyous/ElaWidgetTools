@@ -13,8 +13,8 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
-#include "ElaApplication.h"
 #include "ElaText.h"
+#include "ElaTheme.h"
 #include "private/ElaContentDialogPrivate.h"
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
@@ -97,14 +97,14 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
         d->_isHandleNativeEvent = false;
         close();
     });
-    d->_rightButton->setLightDefaultColor(QColor(0x00, 0x66, 0xB4));
-    d->_rightButton->setLightHoverColor(QColor(0x00, 0x70, 0xC6));
-    d->_rightButton->setLightPressColor(QColor(0x00, 0x7A, 0xD8));
-    d->_rightButton->setLightTextColor(Qt::white);
-    d->_rightButton->setDarkDefaultColor(QColor(0x4C, 0xA0, 0xE0));
-    d->_rightButton->setDarkHoverColor(QColor(0x45, 0x91, 0xCC));
-    d->_rightButton->setDarkPressColor(QColor(0x3F, 0x85, 0xBB));
-    d->_rightButton->setDarkTextColor(Qt::black);
+    d->_rightButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonBase));
+    d->_rightButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonHover));
+    d->_rightButton->setLightPressColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonPress));
+    d->_rightButton->setLightTextColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonText));
+    d->_rightButton->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonBase));
+    d->_rightButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonHover));
+    d->_rightButton->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonPress));
+    d->_rightButton->setDarkTextColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonText));
     d->_rightButton->setMinimumSize(0, 0);
     d->_rightButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     d->_rightButton->setFixedHeight(38);
@@ -129,8 +129,8 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     d->_mainLayout->addWidget(d->_centralWidget);
     d->_mainLayout->addLayout(d->_buttonLayout);
 
-    d->_themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
     d->_isHandleNativeEvent = true;
 }
 
@@ -193,11 +193,11 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(d->_themeMode == ElaApplicationType::Light ? Qt::white : QColor(0x2B, 0x2B, 0x2B));
+    painter.setBrush(ElaThemeColor(d->_themeMode, ContentDialogBase));
     // 背景绘制
     painter.drawRect(rect());
     // 按钮栏背景绘制
-    painter.setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0xF3, 0xF3, 0xF3) : QColor(0x20, 0x20, 0x20));
+    painter.setBrush(ElaThemeColor(d->_themeMode, ContentDialogButtonAreaBase));
     painter.drawRoundedRect(QRectF(0, height() - 60, width(), 60), 8, 8);
     painter.restore();
 }

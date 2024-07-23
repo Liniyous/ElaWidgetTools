@@ -19,7 +19,7 @@ private:
     bool _isToggled{false};
     bool _isPressed{false};
     int _shadowBorderWidth{3};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     void _initStyle();
 };
 

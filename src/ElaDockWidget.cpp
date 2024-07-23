@@ -10,9 +10,9 @@
 #include <dwmapi.h>
 #include <windowsx.h>
 #endif
-#include "ElaApplication.h"
 #include "ElaDockWidgetPrivate.h"
 #include "ElaDockWidgetTitleBar.h"
+#include "ElaTheme.h"
 ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
     : QDockWidget(parent, flags), d_ptr(new ElaDockWidgetPrivate())
 {
@@ -34,13 +34,14 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
         }
     });
 
-    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, QColor(0xF3, 0xF2, 0xF9));
-    d->_windowLinearGradient->setColorAt(1, QColor(0xF4, 0xF1, 0xF8));
-
     // 主题变更动画
-    d->_themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, d, &ElaDockWidgetPrivate::onThemeModeChanged);
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaDockWidgetPrivate::onThemeModeChanged);
+
+    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
+    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, DockWidgetBaseStart));
+    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, DockWidgetBaseEnd));
+
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
@@ -74,9 +75,9 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
     if (isFloating())
     {
         // 高性能阴影
-        eApp->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
+        eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
         //背景
-        painter.setPen(d->_themeMode == ElaApplicationType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
+        painter.setPen(ElaThemeColor(ElaThemeType::Light, DockWidgetFloatBorder));
         painter.setBrush(*d->_windowLinearGradient);
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRoundedRect(foregroundRect, 5, 5);

@@ -5,18 +5,12 @@
 
 #include "ElaSuggestBoxPrivate.h"
 #include "ElaSuggestModel.h"
+#include "ElaTheme.h"
 ElaSuggestDelegate::ElaSuggestDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    _hovergradient = new QLinearGradient(0, 0, 290, 38);
-    _hovergradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-    _hovergradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-    _selectedgradient = new QLinearGradient(0, 0, 290, 38);
-    _selectedgradient->setColorAt(0, QColor(0xE9, 0xE9, 0xF0));
-    _selectedgradient->setColorAt(1, QColor(0xEA, 0xE9, 0xF0));
-    _selectedHovergradient = new QLinearGradient(0, 0, 290, 38);
-    _selectedHovergradient->setColorAt(0, QColor(0xEC, 0xEC, 0xF3));
-    _selectedHovergradient->setColorAt(1, QColor(0xED, 0xEC, 0xF3));
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaSuggestDelegate::~ElaSuggestDelegate()
@@ -39,20 +33,19 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     QPainterPath path;
     QRect optionRect = option.rect;
-    optionRect.setTopLeft(QPoint(optionRect.left() + margin, optionRect.top() + margin));
-    optionRect.setBottomRight(QPoint(optionRect.right() - margin, optionRect.bottom() - margin));
+    optionRect.adjust(margin * 2, margin, -margin * 2, -margin);
     path.addRoundedRect(optionRect, 8, 8);
     if (option.showDecorationSelected && (option.state & QStyle::State_Selected))
     {
         if (option.state & QStyle::State_MouseOver)
         {
             //选中时覆盖
-            painter->fillPath(path, *_selectedHovergradient);
+            painter->fillPath(path, ElaThemeColor(_themeMode, SuggestBoxViewItemSelectedHover));
         }
         else
         {
             //选中
-            painter->fillPath(path, *_selectedgradient);
+            painter->fillPath(path, ElaThemeColor(_themeMode, SuggestBoxViewItemSelected));
         }
     }
     else
@@ -60,9 +53,16 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         if (option.state & QStyle::State_MouseOver)
         {
             //覆盖时颜色
-            painter->fillPath(path, *_hovergradient);
+            painter->fillPath(path, ElaThemeColor(_themeMode, SuggestBoxViewItemHover));
         }
     }
+    //文字绘制
+    QFont titlefont("Microsoft YaHei", 10);
+    titlefont.setHintingPreference(QFont::PreferNoHinting);
+    painter->setFont(titlefont);
+    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());
+
     //图标绘制
     if (suggest->getElaIcon() != ElaIconType::None)
     {
@@ -71,10 +71,12 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         painter->setFont(iconFont);
         painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar((unsigned short)suggest->getElaIcon()));
     }
-    //文字绘制
-    QFont titlefont("Microsoft YaHei", 10);
-    titlefont.setHintingPreference(QFont::PreferNoHinting);
-    painter->setFont(titlefont);
-    painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());
     painter->restore();
+}
+
+QSize ElaSuggestDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    QSize size = QStyledItemDelegate::sizeHint(option, index);
+    size.setHeight(40);
+    return size;
 }

@@ -24,7 +24,7 @@ protected:
 
 private:
     int _margins{8};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     ElaDockWidget* _dockWidget{nullptr};
     QLabel* _iconLabel{nullptr};
     ElaText* _titleLabel{nullptr};

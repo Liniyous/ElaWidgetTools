@@ -3,6 +3,166 @@
 #include <QObject>
 
 #include "stdafx.h"
+
+namespace ElaThemeType
+{
+Q_NAMESPACE_EXPORT(ELA_EXPORT)
+enum ThemeMode
+{
+    Light = 0x0000,
+    Dark = 0x0001,
+};
+Q_ENUM_NS(ThemeMode)
+
+enum ThemeColor
+{
+    AcrylicUrlCardBorder = 0x0000,
+    AcrylicUrlCardBase = 0x0001,
+    AcrylicUrlCardHover,
+    AcrylicUrlCardSubTitleText,
+    BreadcrumbBarText,
+    BreadcrumbBarTextHasFocus,
+    ComboBoxMark,
+    ComboBoxBorder,
+    ComboBoxBase,
+    ComboBoxHover,
+    ComboBoxShapedFrameBorder,
+    ComboBoxShapedFrameBase,
+    ComboBoxItemViewItemHover,
+    ComboBoxItemViewItemSelected,
+    ComboBoxItemViewItemSelectedHover,
+    ContentDialogBase,
+    ContentDialogButtonAreaBase,
+    ContentDialogRightButtonBase,
+    ContentDialogRightButtonText,
+    ContentDialogRightButtonHover,
+    ContentDialogRightButtonPress,
+    DockWidgetFloatBorder,
+    DockWidgetBaseStart,
+    DockWidgetBaseEnd,
+    DockWidgetTitleBarBase,
+    DockWidgetTitleBarFloatButtonHover,
+    DockWidgetTitleBarCloseButtonHover,
+    IconButtonDefaultHover,
+    IconButtonDefaultIconText,
+    InteractiveCardHover,
+    LineEditMark,
+    LineEditBorder,
+    LineEditBase,
+    LineEditHover,
+    LineEditHasFocus,
+    LineEditHemline,
+    ListViewItemHover,
+    ListViewItemSelected,
+    ListViewItemSelectedHover,
+    MenuBaseStart,
+    MenuBaseEnd,
+    MenuBorder,
+    MenuSeparator,
+    MenuHover,
+    MenuBarExpandButtonHover,
+    MenuBarItemSelected,
+    MenuBarItemPress,
+    MessageButtonBorder,
+    MessageButtonBase,
+    MessageButtonHover,
+    MessageButtonTextPress,
+    NavigationBaseStart,
+    NavigationBaseEnd,
+    NavigationHover,
+    NavigationSelected,
+    NavigationSelectedHover,
+    NavigationExpanderNodeKeyPoint,
+    NavigationKeyPointBase,
+    NavigationKeyPointCenter,
+    NavigationKeyPointText,
+    NavigationMark,
+    NavigationFooterBaseLine,
+    ProgressBarBase,
+    ProgressBarContentsBase,
+    PushButtonBorder,
+    PushButtonHemline,
+    PushButtonDefaultBase,
+    PushButtonDefaultHover,
+    PushButtonDefaultPress,
+    PushButtonDefaultText,
+    RadioButtonStateOffBorder,
+    RadioButtonStateOffBase,
+    RadioButtonStateOffHover,
+    RadioButtonStateOnBorder,
+    RadioButtonStateOnBase,
+    RadioButtonStateOnCenter,
+    ReminderCardBorder,
+    ReminderCardBase,
+    ReminderCardHover,
+    ReminderCardMark,
+    ReminderCardSubTitleText,
+    ScrollBarHandle,
+    ScrollPageAreaBorder,
+    ScrollPageAreaBase,
+    SliderBaseNoValue,
+    SliderBaseHasValue,
+    SliderHandleBase,
+    SliderHandleCenter,
+    SpinBoxBase,
+    SpinBoxButtonBase,
+    SpinBoxButtonHover,
+    SpinBoxButtonPress,
+    SpinBoxMarkNoFocus,
+    SpinBoxMarkHasFocus,
+    StatusBarBase,
+    StatusBarSeparator,
+    SuggestBoxViewItemHover,
+    SuggestBoxViewItemSelected,
+    SuggestBoxViewItemSelectedHover,
+    SuggestBoxSearchViewContainerBorder,
+    SuggestBoxSearchViewContainerBase,
+    TabBarCloseButtonHover,
+    TabBarTabBase,
+    TabBarTabHover,
+    TabBarTabSelected,
+    TabBarTabMark,
+    ToggleButtonNoToggledBorder,
+    ToggleButtonNoToggledBase,
+    ToggleButtonNoToggledPress,
+    ToggleButtonNoToggledHover,
+    ToggleButtonNoToggledText,
+    ToggleButtonToggledBorder,
+    ToggleButtonToggledBase,
+    ToggleButtonToggledPress,
+    ToggleButtonToggledHover,
+    ToggleButtonToggledText,
+    ToggleButtonHemline,
+    ToggleSwitchNoToggledBorder,
+    ToggleSwitchNoToggledBase,
+    ToggleSwitchNoToggledHover,
+    ToggleSwitchNoToggledCenter,
+    ToggleSwitchToggledBorder,
+    ToggleSwitchToggledBase,
+    ToggleSwitchToggledCenter,
+    ToolBarExpandButtonHover,
+    ToolBarWindowBorder,
+    ToolBarWindowBase,
+    ToolBarSeparator,
+    ToolBarHandle,
+    ToolButtonHover,
+    ToolButtonPress,
+    ToolButtonIndicator,
+    WindowText,
+    WindowTextDisable,
+    WindowBaseStart,
+    WindowBaseEnd,
+    WindowDockWidgetResizeHandle,
+    WindowDockWidgetResizeHandleHover,
+    WindowRubberBand,
+    WindowTabBarBase,
+    WindowTabBarHover,
+    WindowTabBarSelected,
+    windowTabBarSeparator,
+};
+Q_ENUM_NS(ThemeColor)
+} // namespace ElaThemeType
+
 namespace ElaAppBarType
 {
 Q_NAMESPACE_EXPORT(ELA_EXPORT)
@@ -32,17 +192,6 @@ Q_DECLARE_FLAGS(WMMouseActionTypes, WMMouseActionType)
 Q_DECLARE_OPERATORS_FOR_FLAGS(WMMouseActionTypes)
 
 } // namespace ElaAppBarType
-
-namespace ElaApplicationType
-{
-Q_NAMESPACE_EXPORT(ELA_EXPORT)
-enum ThemeMode
-{
-    Light = 0x0000,
-    Dark = 0x0001,
-};
-Q_ENUM_NS(ThemeMode)
-} // namespace ElaApplicationType
 
 namespace ElaTextType
 {

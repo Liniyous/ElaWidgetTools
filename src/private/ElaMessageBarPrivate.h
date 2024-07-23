@@ -61,7 +61,7 @@ public:
 
 private:
     friend class ElaMessageBarManager;
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     int _borderRadius{6};
     QString _title{""};
     QString _text{""};

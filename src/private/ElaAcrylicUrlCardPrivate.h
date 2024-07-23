@@ -34,7 +34,7 @@ public:
 private:
     int _shadowBorderWidth{6};
     QPixmap _noisePix;
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELAACRYLICURLCARDPRIVATE_H

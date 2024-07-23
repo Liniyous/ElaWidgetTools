@@ -13,10 +13,10 @@ class ElaTextPrivate : public QObject
 public:
     explicit ElaTextPrivate(QObject* parent = nullptr);
     ~ElaTextPrivate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
+    Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     bool _isWrapAnywhere{false};
     ElaTextType::TextStyle _textStyle{ElaTextType::NoStyle};
     qreal _textSpacing{0.5};

@@ -9,7 +9,6 @@
 #include <QVBoxLayout>
 
 #include "DeveloperComponents/ElaMenuStyle.h"
-#include "ElaApplication.h"
 #include "private/ElaMenuPrivate.h"
 ElaMenu::ElaMenu(QWidget* parent)
     : QMenu(parent), d_ptr(new ElaMenuPrivate())
@@ -100,7 +99,8 @@ QAction* ElaMenu::addElaIconAction(ElaIconType icon, const QString& text, const 
 
 bool ElaMenu::isHasChildMenu() const
 {
-    for (auto action : this->actions())
+    QList<QAction*> actionList = this->actions();
+    for (auto action : actionList)
     {
         if (action->isSeparator())
         {
@@ -116,7 +116,8 @@ bool ElaMenu::isHasChildMenu() const
 
 bool ElaMenu::isHasIcon() const
 {
-    for (auto action : this->actions())
+    QList<QAction*> actionList = this->actions();
+    for (auto action : actionList)
     {
         if (action->isSeparator())
         {

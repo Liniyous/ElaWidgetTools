@@ -1,11 +1,9 @@
 #ifndef ELAAPPLICATION_H
 #define ELAAPPLICATION_H
 
-#include <QColor>
 #include <QIcon>
 #include <QObject>
 
-#include "Def.h"
 #include "singleton.h"
 #include "stdafx.h"
 #define eApp ElaApplication::getInstance()
@@ -24,11 +22,6 @@ private:
 public:
     void init();
     static bool containsCursorToItem(QWidget* item);
-    void setThemeMode(ElaApplicationType::ThemeMode themeMode);
-    ElaApplicationType::ThemeMode getThemeMode() const;
-    void drawEffectShadow(QPainter* painter, QRect widgetRect, int shadowBorderWidth, int borderRadius);
-Q_SIGNALS:
-    Q_SIGNAL void themeModeChanged(ElaApplicationType::ThemeMode themeMode);
 };
 
 #endif // ELAAPPLICATION_H

@@ -19,7 +19,6 @@ class ElaFooterDelegatePrivate : public QObject
 public:
     explicit ElaFooterDelegatePrivate(QObject* parent = nullptr);
     ~ElaFooterDelegatePrivate();
-    Q_SLOT void onThemeChanged(ElaApplicationType::ThemeMode themeMode);
 
 private:
     qreal _lastSelectMarkTop{10};
@@ -28,10 +27,7 @@ private:
     qreal _selectMarkBottom{10};
     bool _isSelectMarkDisplay{true};
     ElaNavigationNode* _lastSelectedNode{nullptr};
-    QLinearGradient* _hovergradient{nullptr};
-    QLinearGradient* _selectedgradient{nullptr};
-    QLinearGradient* _selectedHovergradient{nullptr};
-    ElaApplicationType::ThemeMode _themeMode;
+    ElaThemeType::ThemeMode _themeMode;
     QPropertyAnimation* _lastSelectMarkTopAnimation{nullptr};
     QPropertyAnimation* _lastSelectMarkBottomAnimation{nullptr};
     QPropertyAnimation* _selectMarkTopAnimation{nullptr};

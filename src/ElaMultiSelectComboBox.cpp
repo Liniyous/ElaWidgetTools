@@ -10,6 +10,7 @@
 #include "ElaApplication.h"
 #include "ElaComboBoxStyle.h"
 #include "ElaScrollBar.h"
+#include "ElaTheme.h"
 #include "private/ElaMultiSelectComboBoxPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaMultiSelectComboBox, int, BorderRadius)
 ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
@@ -20,7 +21,7 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->_pBorderRadius = 3;
     d->_pExpandIconRotate = 0;
     d->_pExpandMarkWidth = 0;
-    d->_themeMode = eApp->getThemeMode();
+    d->_themeMode = eTheme->getThemeMode();
     setFixedHeight(35);
 
     d->_comboBoxStyle = new ElaComboBoxStyle(style());
@@ -62,7 +63,7 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->_itemSelection.fill(false);
     d->_itemSelection[0] = true;
     QComboBox::setMaxVisibleItems(5);
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaMultiSelectComboBox::~ElaMultiSelectComboBox()
@@ -160,7 +161,7 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    if (d->_themeMode == ElaApplicationType::Light)
+    if (d->_themeMode == ElaThemeType::Light)
     {
         painter.setPen(QPen(QColor(0xDF, 0xDF, 0xDF), 1));
         painter.setBrush(underMouse() ? QColor(0xF6, 0xF6, 0xF6) : QColor(0xFD, 0xFD, 0xFD));
@@ -175,12 +176,12 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
     foregroundRect.adjust(6, 1, -6, -1);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     //文字绘制
-    painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+    painter.setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
     QString currentText = painter.fontMetrics().elidedText(d->_currentText, Qt::ElideRight, foregroundRect.width() - 27 - width() * 0.05);
     painter.drawText(15, height() / 2 + painter.fontMetrics().ascent() / 2 - 1, currentText);
     //展开指示器绘制
     painter.setPen(Qt::NoPen);
-    painter.setBrush(d->_themeMode == ElaApplicationType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
+    painter.setBrush(d->_themeMode == ElaThemeType::Light ? QColor(0x0E, 0x6F, 0xC3) : QColor(0x4C, 0xA0, 0xE0));
     painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 3, d->_pExpandMarkWidth * 2, 3), 2, 2);
     // 展开图标绘制
     if (count() > 0)
@@ -188,7 +189,7 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(17);
         painter.setFont(iconFont);
-        painter.setPen(d->_themeMode == ElaApplicationType::Light ? Qt::black : Qt::white);
+        painter.setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
         QRectF expandIconRect(width() - 25, 0, 20, height());
         painter.translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2 - 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
         painter.rotate(d->_pExpandIconRotate);

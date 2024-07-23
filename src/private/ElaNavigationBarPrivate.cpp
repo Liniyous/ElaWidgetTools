@@ -19,6 +19,7 @@
 #include "ElaScrollPagePrivate.h"
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxPrivate.h"
+#include "ElaTheme.h"
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -28,18 +29,10 @@ ElaNavigationBarPrivate::~ElaNavigationBarPrivate()
 {
 }
 
-void ElaNavigationBarPrivate::onThemeChanged(ElaApplicationType::ThemeMode themeMode)
+void ElaNavigationBarPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
-    if (themeMode == ElaApplicationType::Light)
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0xF3, 0xF2, 0xF9));
-        _windowLinearGradient->setColorAt(1, QColor(0xF4, 0xF1, 0xF8));
-    }
-    else
-    {
-        _windowLinearGradient->setColorAt(0, QColor(0x1A, 0x1A, 0x1A));
-        _windowLinearGradient->setColorAt(1, QColor(0x1A, 0x1A, 0x1A));
-    }
+    _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, NavigationBaseStart));
+    _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, NavigationBaseEnd));
 }
 
 void ElaNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)

@@ -4,13 +4,13 @@
 #include <QPainter>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 ElaProgressBarStyle::ElaProgressBarStyle(QStyle* style)
 {
     setProperty("busyStartValue", 0);
     setProperty("busyEndValue", 0);
-    _themeMode = eApp->getThemeMode();
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
 
 ElaProgressBarStyle::~ElaProgressBarStyle()
@@ -27,7 +27,7 @@ void ElaProgressBarStyle::drawControl(ControlElement element, const QStyleOption
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0xD6, 0xD6, 0xD6) : QColor(0x63, 0x63, 0x63));
+        painter->setBrush(ElaThemeColor(_themeMode, ProgressBarBase));
         painter->drawRoundedRect(option->rect, 3, 3);
         painter->restore();
         return;
@@ -44,7 +44,7 @@ void ElaProgressBarStyle::drawControl(ControlElement element, const QStyleOption
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(_themeMode == ElaApplicationType::Light ? QColor(0x00, 0x66, 0xB4) : QColor(0x4C, 0xA0, 0xE0));
+        painter->setBrush(ElaThemeColor(_themeMode, ProgressBarContentsBase));
         const bool inverted = popt->invertedAppearance;
         bool reverse = popt->direction == Qt::RightToLeft;
         if (inverted)

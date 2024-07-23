@@ -1,6 +1,6 @@
 #include "ElaToggleButtonPrivate.h"
 
-#include "ElaApplication.h"
+#include "ElaTheme.h"
 #include "ElaToggleButton.h"
 ElaToggleButtonPrivate::ElaToggleButtonPrivate(QObject* parent)
     : QObject{parent}
@@ -15,7 +15,7 @@ void ElaToggleButtonPrivate::_initStyle()
 {
     Q_Q(ElaToggleButton);
     _pBorderRadius = 3;
-    _themeMode = eApp->getThemeMode();
+    _themeMode = eTheme->getThemeMode();
     q->setMouseTracking(true);
     q->setFixedSize(80, 38);
     QFont font = q->font();
@@ -23,5 +23,5 @@ void ElaToggleButtonPrivate::_initStyle()
     q->setFont(font);
     q->setObjectName("ElaToggleButton");
     q->setStyleSheet("#ElaToggleButton{background-color:transparent;}");
-    connect(eApp, &ElaApplication::themeModeChanged, this, [=](ElaApplicationType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
