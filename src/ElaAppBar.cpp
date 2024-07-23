@@ -1,5 +1,6 @@
 #include "ElaAppBar.h"
 
+#include "ElaNavigationBar.h"
 #include "ElaText.h"
 
 #ifdef Q_OS_WIN
@@ -77,6 +78,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
     // 导航栏展开按钮
     d->_navigationButton = new ElaIconButton(ElaIconType::Bars, 16, 40, 30, this);
+    d->_navigationButton->setObjectName("NavigationButton");
     d->_navigationButton->setVisible(false);
     // 展开导航栏
     connect(d->_navigationButton, &ElaIconButton::clicked, this, [this]() { Q_EMIT navigationButtonClicked(); });
@@ -471,6 +473,25 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
             return true;
         }
         *result = HTCLIENT;
+        return true;
+    }
+    case WM_GETMINMAXINFO:
+    {
+        MINMAXINFO* minmaxInfo = reinterpret_cast<MINMAXINFO*>(lParam);
+        RECT rect;
+        SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
+        if (parentWidget()->findChild<ElaNavigationBar*>())
+        {
+            minmaxInfo->ptMinTrackSize.x = (d->_calculateMinimumWidth() + 305) * qApp->devicePixelRatio();
+        }
+        else
+        {
+            minmaxInfo->ptMinTrackSize.x = (d->_calculateMinimumWidth() + 5) * qApp->devicePixelRatio();
+        }
+
+        minmaxInfo->ptMinTrackSize.y = parentWidget()->minimumHeight() * qApp->devicePixelRatio();
+        minmaxInfo->ptMaxPosition.x = rect.left;
+        minmaxInfo->ptMaxPosition.y = rect.top;
         return true;
     }
     case WM_LBUTTONDBLCLK:

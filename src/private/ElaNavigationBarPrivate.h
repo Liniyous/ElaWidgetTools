@@ -3,7 +3,6 @@
 
 #include <QMap>
 #include <QObject>
-#include <QQueue>
 
 #include "Def.h"
 #include "stdafx.h"
@@ -11,7 +10,6 @@ class QLayout;
 class ElaMenu;
 class QVBoxLayout;
 class QHBoxLayout;
-class QStackedWidget;
 class QLinearGradient;
 
 class ElaNavigationBar;

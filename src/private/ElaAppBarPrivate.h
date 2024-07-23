@@ -44,6 +44,7 @@ private:
     void _showSystemMenu(QPoint point);
     bool _containsCursorToItem(QWidget* item);
     void _onThemeModeChange(ElaThemeType::ThemeMode themeMode);
+    int _calculateMinimumWidth();
 };
 
 #endif // ELAAPPBARPRIVATE_H

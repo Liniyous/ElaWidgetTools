@@ -152,3 +152,21 @@ void ElaAppBarPrivate::_onThemeModeChange(ElaThemeType::ThemeMode themeMode)
         _themeChangeButton->setAwesome(ElaIconType::SunBright);
     }
 }
+
+int ElaAppBarPrivate::_calculateMinimumWidth()
+{
+    Q_Q(ElaAppBar);
+    int width = 0;
+    width += _titleLabel->width();
+    width += _iconLabel->width();
+    width += 15;
+    QList<ElaIconButton*> buttonList = q->findChildren<ElaIconButton*>();
+    for (auto button : buttonList)
+    {
+        if (button->isVisible() && button->objectName() != "NavigationButton")
+        {
+            width += button->width();
+        }
+    }
+    return width;
+}
