@@ -51,8 +51,6 @@ add_library(${PROJECT_NAME} ${LIB_TYPE}
 )
 endif()
 
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-
 #遍历所有资源文件
 file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
 foreach(filepath ${RES_PATHS})
