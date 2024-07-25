@@ -54,9 +54,9 @@ endif()
 include_directories(
     ../src/include
 )
-#set(EXECUTABLE_OUTPUT_PATH  ${CMAKE_BINARY_DIR})
+set(EXECUTABLE_OUTPUT_PATH  ${CMAKE_BINARY_DIR})
 target_link_libraries(ElaWidgetToolsExample PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-     ${CMAKE_BINARY_DIR}/src/elawidgettools.lib
+    elawidgettools
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -79,7 +79,6 @@ install(TARGETS ElaWidgetToolsExample
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
 
 
 if(QT_VERSION_MAJOR EQUAL 6)
