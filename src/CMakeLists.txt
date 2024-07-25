@@ -9,13 +9,15 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(COMPILE_DESIGNER_PLUGIN ON)
+
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_definitions(-DELAWIDGETTOOLS_LIBRARY)
 option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." OFF)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets UiPlugin)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets UiPlugin)
 
 file(GLOB_RECURSE CPP_FILES *.cpp *.h)
 foreach(filepath ${CPP_FILES})
@@ -81,3 +83,37 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     DXGI
 )
 message(${CMAKE_INSTALL_PREFIX})
+
+if(COMPILE_DESIGNER_PLUGIN)
+    qt_add_plugin(ElaWidgetPlugin)
+    target_sources(ElaWidgetPlugin PRIVATE
+            ${sources_files}
+    )
+    set_target_properties(ElaWidgetPlugin PROPERTIES
+            WIN32_EXECUTABLE TRUE
+            MACOSX_BUNDLE TRUE
+    )
+    target_link_libraries(ElaWidgetPlugin PUBLIC
+            Qt::Core
+            Qt::Gui
+            Qt::UiPlugin
+            Qt::Widgets
+    )
+
+    if(QT6_INSTALL_PREFIX)
+        #! [3]
+        set(INSTALL_EXAMPLEDIR "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_PLUGINS}/designer")
+        #! [3]
+    else()
+        if(NOT DEFINED INSTALL_EXAMPLESDIR)
+            set(INSTALL_EXAMPLESDIR "examples")
+        endif()
+        set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/plugins/designer")
+    endif()
+
+    install(TARGETS ElaWidgetPlugin
+            RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
+            BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
+            LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
+    )
+endif ()
