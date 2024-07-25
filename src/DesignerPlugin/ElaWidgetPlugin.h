@@ -2,7 +2,7 @@
 #define ELAWIDGETPLUGIN_H
 
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
-
+#include "ElaFlowLayout.h"
 
 
 class ElaWidgetPlugin: public QObject, public QDesignerCustomWidgetCollectionInterface
@@ -60,7 +60,19 @@ class ElaDockWidgetPlugin : public QObject, public QDesignerCustomWidgetInterfac
 public: explicit ElaDockWidgetPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
 private: bool initialized = false;};
 
+class ElaDoubleSpinBoxPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaDoubleSpinBoxPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
+class ElaFlowLayoutPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaFlowLayoutPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;
+
+    QWidget * createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
 class ElaLineEditPlugin : public QObject, public QDesignerCustomWidgetInterface
 {   Q_OBJECT

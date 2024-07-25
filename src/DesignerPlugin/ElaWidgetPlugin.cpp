@@ -9,7 +9,8 @@
 #include "ElaContentDialog.h"
 #include "ElaDockWidget.h"
 #include "ElaLineEdit.h"
-
+#include "ElaDoubleSpinBox.h"
+#include "ElaFlowLayout.h"
 
 
 ElaWidgetPlugin::ElaWidgetPlugin(QObject *parent) : QObject(parent)
@@ -18,6 +19,14 @@ ElaWidgetPlugin::ElaWidgetPlugin(QObject *parent) : QObject(parent)
     widgets.append(new ElaCheckBoxPlugin(this));
     widgets.append(new ElaAcrylicUrlCardPlugin(this));
     widgets.append(new ElaAppBarPlugin(this));
+    widgets.append(new ElaAcrylicUrlCardPlugin(this));
+    widgets.append(new ElaBreadcrumbBarPlugin(this));
+    widgets.append(new ElaComboBoxPlugin(this));
+    widgets.append(new ElaContentDialogPlugin(this));
+    widgets.append(new ElaDockWidgetPlugin(this));
+    widgets.append(new ElaDoubleSpinBoxPlugin(this));
+    widgets.append(new ElaFlowLayoutPlugin(this));
+
 }
 QList<QDesignerCustomWidgetInterface *> ElaWidgetPlugin::customWidgets() const
 {
@@ -279,6 +288,79 @@ R"(
 </ui>
 )"_s;}
 QString ElaDockWidgetPlugin::includeFile() const{ return u"ElaDockWidget.h"_s; }
+
+ElaDoubleSpinBoxPlugin::ElaDoubleSpinBoxPlugin(QObject *parent) : QObject(parent){}
+void ElaDoubleSpinBoxPlugin::initialize(QDesignerFormEditorInterface *){ if (initialized) return; initialized = true;}
+bool ElaDoubleSpinBoxPlugin::isInitialized() const { return initialized; }
+QWidget *ElaDoubleSpinBoxPlugin::createWidget(QWidget *parent){ return new ElaDoubleSpinBox(parent); }
+QString ElaDoubleSpinBoxPlugin::name() const { return u"ElaDoubleSpinBox"_s; }
+QString ElaDoubleSpinBoxPlugin::group() const { return u"Ela Widgets"_s; }
+QIcon ElaDoubleSpinBoxPlugin::icon() const{ return {}; }
+QString ElaDoubleSpinBoxPlugin::toolTip() const{ return {}; }
+QString ElaDoubleSpinBoxPlugin::whatsThis() const { return {}; }
+bool ElaDoubleSpinBoxPlugin::isContainer() const { return false; }
+QString ElaDoubleSpinBoxPlugin::domXml() const { return uR"(
+<ui language="c++">
+  <widget class="ElaDoubleSpinBox" name="elaDoubleSpinBox">
+)"
+                                                   R"(
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>100</height>
+      </rect>
+    </property>
+")
+R"(
+    <property name="toolTip">
+      <string>The current time</string>
+    </property>
+    <property name="whatsThis">
+      <string>The analog clock widget displays the current time.</string>
+    </property>
+  </widget>
+</ui>
+)"_s;}
+QString ElaDoubleSpinBoxPlugin::includeFile() const{ return u"ElaDoubleSpinBox.h"_s; }
+
+ElaFlowLayoutPlugin::ElaFlowLayoutPlugin(QObject *parent) : QObject(parent){}
+void ElaFlowLayoutPlugin::initialize(QDesignerFormEditorInterface *){ if (initialized) return; initialized = true;}
+bool ElaFlowLayoutPlugin::isInitialized() const { return initialized; }
+QWidget * ElaFlowLayoutPlugin::createWidget(QWidget *parent){ return reinterpret_cast<QWidget *>(new ElaFlowLayout(
+            parent)); }
+QString ElaFlowLayoutPlugin::name() const { return u"ElaFlowLayout"_s; }
+QString ElaFlowLayoutPlugin::group() const { return u"Ela Widgets"_s; }
+QIcon ElaFlowLayoutPlugin::icon() const{ return {}; }
+QString ElaFlowLayoutPlugin::toolTip() const{ return {}; }
+QString ElaFlowLayoutPlugin::whatsThis() const { return {}; }
+bool ElaFlowLayoutPlugin::isContainer() const { return false; }
+QString ElaFlowLayoutPlugin::domXml() const { return uR"(
+<ui language="c++">
+  <widget class="ElaFlowLayout" name="elaFlowLayout">
+)"
+                                                   R"(
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>100</height>
+      </rect>
+    </property>
+")
+R"(
+    <property name="toolTip">
+      <string>The current time</string>
+    </property>
+    <property name="whatsThis">
+      <string>The analog clock widget displays the current time.</string>
+    </property>
+  </widget>
+</ui>
+)"_s;}
+QString ElaFlowLayoutPlugin::includeFile() const{ return u"ElaFlowLayout.h"_s; }
 
 ElaLineEditPlugin::ElaLineEditPlugin(QObject *parent) : QObject(parent){}
 void ElaLineEditPlugin::initialize(QDesignerFormEditorInterface *){ if (initialized) return; initialized = true;}
