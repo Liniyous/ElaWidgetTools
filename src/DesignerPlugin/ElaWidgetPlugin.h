@@ -17,52 +17,56 @@ private:
     QList<QDesignerCustomWidgetInterface*> widgets;
 };
 
-class ElaLineEditPlugin : public QObject, public QDesignerCustomWidgetInterface
-{
-    Q_OBJECT
+class ElaAcrylicUrlCardPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
-public:
-    explicit ElaLineEditPlugin(QObject *parent = nullptr);
+public: explicit ElaAcrylicUrlCardPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
-    bool isContainer() const override;
-    bool isInitialized() const override;
-    QIcon icon() const override;
-    QString domXml() const override;
-    QString group() const override;
-    QString includeFile() const override;
-    QString name() const override;
-    QString toolTip() const override;
-    QString whatsThis() const override;
-    QWidget *createWidget(QWidget *parent) override;
-    void initialize(QDesignerFormEditorInterface *core) override;
+class ElaAppBarPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaAppBarPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
-private:
-    bool initialized = false;
-};
+class ElaBreadcrumbBarPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaBreadcrumbBarPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
 class ElaCheckBoxPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
-public:
-    explicit ElaCheckBoxPlugin(QObject *parent = nullptr);
+public: explicit ElaCheckBoxPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false; };
 
-    bool isContainer() const override;
-    bool isInitialized() const override;
-    QIcon icon() const override;
-    QString domXml() const override;
-    QString group() const override;
-    QString includeFile() const override;
-    QString name() const override;
-    QString toolTip() const override;
-    QString whatsThis() const override;
-    QWidget *createWidget(QWidget *parent) override;
-    void initialize(QDesignerFormEditorInterface *core) override;
+class ElaComboBoxPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaComboBoxPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
-private:
-    bool initialized = false;
-};
+class ElaContentDialogPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaContentDialogPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
+class ElaDockWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaDockWidgetPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
+
+
+
+class ElaLineEditPlugin : public QObject, public QDesignerCustomWidgetInterface
+{   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+public: explicit ElaLineEditPlugin(QObject *parent = nullptr);bool isContainer() const override;bool isInitialized() const override;QIcon icon() const override;QString domXml() const override;QString group() const override;QString includeFile() const override;QString name() const override;QString toolTip() const override;QString whatsThis() const override;QWidget *createWidget(QWidget *parent) override;void initialize(QDesignerFormEditorInterface *core) override;
+private: bool initialized = false;};
 
 
 #endif // ELAWIDGETPLUGIN_H
