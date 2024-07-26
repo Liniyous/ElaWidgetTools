@@ -26,7 +26,9 @@ public:
     ElaIconType getAwesome() const;
 
 protected:
-    void paintEvent(QPaintEvent* event) override;
+    virtual void enterEvent(QEnterEvent* event) override;
+    virtual void leaveEvent(QEvent* event) override;
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // ELAICONBUTTON_H
