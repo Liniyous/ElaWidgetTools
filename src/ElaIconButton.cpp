@@ -95,7 +95,11 @@ ElaIconType ElaIconButton::getAwesome() const
     return this->d_ptr->_pAwesome;
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 void ElaIconButton::enterEvent(QEnterEvent* event)
+#else
+void ElaIconButton::enterEvent(QEvent* event)
+#endif
 {
     Q_D(ElaIconButton);
     if (isEnabled())
