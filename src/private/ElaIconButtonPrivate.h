@@ -18,12 +18,13 @@ class ElaIconButtonPrivate : public QObject
     Q_PROPERTY_CREATE_D(QColor, LightIconColor);
     Q_PROPERTY_CREATE_D(QColor, DarkIconColor);
     Q_PROPERTY_CREATE_D(bool, IsSelected);
-
+    Q_PROPERTY_CREATE(int, HoverAlpha)
 public:
     explicit ElaIconButtonPrivate(QObject* parent = nullptr);
     ~ElaIconButtonPrivate();
 
 private:
+    bool _isAlphaAnimationFinished{true};
     ElaThemeType::ThemeMode _themeMode;
 };
 
