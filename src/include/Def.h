@@ -210,6 +210,23 @@ enum TextStyle
 Q_ENUM_NS(TextStyle)
 } // namespace ElaTextType
 
+namespace ElaTextEditType
+{
+    Q_NAMESPACE_EXPORT(ELA_EXPORT)
+    enum TextStyle
+    {
+        NoStyle = 0x0000,
+        Caption = 0x0001,
+        Body = 0x0002,
+        BodyStrong = 0x0003,
+        Subtitle = 0x0004,
+        Title = 0x0005,
+        TitleLarge = 0x0006,
+        Display = 0x0007,
+    };
+    Q_ENUM_NS(TextStyle)
+    } // namespace ElaTextEditType
+
 namespace ElaNavigationType
 {
 Q_NAMESPACE_EXPORT(ELA_EXPORT)

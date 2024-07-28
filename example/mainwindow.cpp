@@ -17,6 +17,7 @@
 #include "ElaMenuBar.h"
 #include "ElaStatusBar.h"
 #include "ElaText.h"
+#include "ElaTextEdit.h"
 #include "ElaToolBar.h"
 #include "ElaToolButton.h"
 #include "ElaWidget.h"
@@ -184,6 +185,8 @@ void MainWindow::initContent()
     ElaGraphicsView* view = new ElaGraphicsView(scene);
     view->setScene(scene);
 
+    auto *textedit = new ElaTextEdit("hello!",this);
+
     QString testKey_1;
     QString testKey_2;
     addPageNode("HOME", _homePage, ElaIconType::House);
@@ -210,6 +213,7 @@ void MainWindow::initContent()
     addExpanderNode("TEST15", testKey_1, ElaIconType::Acorn);
     addExpanderNode("TEST16", testKey_1, ElaIconType::Acorn);
     addExpanderNode("TEST17", testKey_1, ElaIconType::Acorn);
+    addPageNode("ElaTextEdit", textedit, ElaIconType::Acorn);
 
     addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
     ElaWidget* widget = new ElaWidget();

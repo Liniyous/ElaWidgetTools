@@ -6,6 +6,7 @@
 #include "Def.h"
 #include "stdafx.h"
 class ElaTextPrivate;
+// #include "ElaTextPrivate.h"
 class ELA_EXPORT ElaText : public QLabel
 {
     Q_OBJECT
