@@ -80,6 +80,13 @@ ElaMenu* ElaMenu::addMenu(ElaIconType icon, const QString& title)
     return menu;
 }
 
+QAction* ElaMenu::addElaIconAction(ElaIconType icon, QAction* action)
+{
+    action->setProperty("ElaIconType", QChar((unsigned short)icon));
+    QMenu::addAction(action);
+    return action;
+}
+
 QAction* ElaMenu::addElaIconAction(ElaIconType icon, const QString& text)
 {
     QAction* action = new QAction(text, this);

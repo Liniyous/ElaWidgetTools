@@ -24,6 +24,7 @@ public:
     ElaMenu* addMenu(const QIcon& icon, const QString& title);
     ElaMenu* addMenu(ElaIconType icon, const QString& title);
 
+    QAction* addElaIconAction(ElaIconType icon, QAction* action);
     QAction* addElaIconAction(ElaIconType icon, const QString& text);
     QAction* addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut);
 
