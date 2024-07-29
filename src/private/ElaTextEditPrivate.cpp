@@ -18,12 +18,12 @@ void ElaTextEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
     QPalette palette = q->palette();
     if (themeMode == ElaThemeType::Light)
     {
-        palette.setColor(QPalette::WindowText, Qt::black);
+        palette.setColor(QPalette::Text, Qt::black);
         q->setPalette(palette);
     }
     else
     {
-        palette.setColor(QPalette::WindowText, Qt::white);
+        palette.setColor(QPalette::Text, Qt::white);
         q->setPalette(palette);
     }
 }
