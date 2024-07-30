@@ -90,7 +90,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     setStyle(new ElaWindowStyle(style()));
 
     //延时渲染
-    QTimer::singleShot(20, this, [=] {
+    QTimer::singleShot(1, this, [=] {
         QPalette palette = this->palette();
         palette.setBrush(QPalette::Window, *d->_windowLinearGradient);
         this->setPalette(palette);

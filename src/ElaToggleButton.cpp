@@ -7,8 +7,9 @@
 #include "ElaTheme.h"
 #include "private/ElaToggleButtonPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaToggleButton, int, BorderRadius)
+Q_PROPERTY_CREATE_Q_CPP(ElaToggleButton, QString, Text)
 ElaToggleButton::ElaToggleButton(QWidget* parent)
-    : QPushButton(parent), d_ptr(new ElaToggleButtonPrivate())
+    : QWidget(parent), d_ptr(new ElaToggleButtonPrivate())
 {
     Q_D(ElaToggleButton);
     d->q_ptr = this;
@@ -28,18 +29,32 @@ ElaToggleButton::ElaToggleButton(QWidget* parent)
 ElaToggleButton::ElaToggleButton(QString text, QWidget* parent)
     : ElaToggleButton(parent)
 {
-    setText(text);
+    Q_D(ElaToggleButton);
+    d->_pText = text;
 }
 
 ElaToggleButton::~ElaToggleButton()
 {
 }
 
+void ElaToggleButton::setIsToggled(bool isToggled)
+{
+    Q_D(ElaToggleButton);
+    d->_isToggled = isToggled;
+    update();
+}
+
+bool ElaToggleButton::getIsToggled() const
+{
+    Q_D(const ElaToggleButton);
+    return d->_isToggled;
+}
+
 void ElaToggleButton::mousePressEvent(QMouseEvent* event)
 {
     Q_D(ElaToggleButton);
     d->_isPressed = true;
-    QPushButton::mouseReleaseEvent(event);
+    QWidget::mouseReleaseEvent(event);
 }
 
 void ElaToggleButton::mouseReleaseEvent(QMouseEvent* event)
@@ -67,7 +82,7 @@ void ElaToggleButton::mouseReleaseEvent(QMouseEvent* event)
     }
     alphaAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     Q_EMIT this->toggled(d->_isToggled);
-    QPushButton::mouseReleaseEvent(event);
+    QWidget::mouseReleaseEvent(event);
 }
 
 void ElaToggleButton::paintEvent(QPaintEvent* event)
@@ -110,6 +125,6 @@ void ElaToggleButton::paintEvent(QPaintEvent* event)
 
     //文字绘制
     painter.setPen((d->_isToggled ? ElaThemeColor(d->_themeMode, ToggleButtonToggledText) : ElaThemeColor(d->_themeMode, ToggleButtonNoToggledText)));
-    painter.drawText(foregroundRect, Qt::AlignCenter, text());
+    painter.drawText(foregroundRect, Qt::AlignCenter, d->_pText);
     painter.restore();
 }

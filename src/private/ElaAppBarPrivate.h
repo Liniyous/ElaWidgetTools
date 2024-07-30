@@ -38,6 +38,7 @@ private:
     ElaText* _titleLabel{nullptr};
     QLabel* _iconLabel{nullptr};
     qint64 _currentWinID{0};
+    int _lastMinTrackWidth{0};
     int _margins{8};
     bool _isHoverMaxButton{false};
     void _changeMaxButtonAwesome(bool isMaximized);

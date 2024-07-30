@@ -4,7 +4,6 @@
 #include <QPushButton>
 
 #include "Def.h"
-#include "stdafx.h"
 class ElaReminderCardPrivate;
 class ELA_EXPORT ElaReminderCard : public QPushButton
 {

@@ -52,19 +52,18 @@ endif()
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-#遍历所有资源文件
-file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
-foreach(filepath ${RES_PATHS})
-        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
-        list(APPEND resource_files ${filename})
-endforeach(filepath)
-
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    #遍历所有资源文件
+    file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
+    foreach(filepath ${RES_PATHS})
+            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
+            list(APPEND resource_files ${filename})
+    endforeach(filepath)
     qt_add_resources(${PROJECT_NAME} "ElaWidgetTools"
         RESOURCES PREFIX "/"
         FILES
         ${resource_files}
-)
+    )
 endif()
 
 if(MINGW)
