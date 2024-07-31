@@ -29,6 +29,24 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[BreadcrumbBarTextHasFocus] = QColor(0x86, 0x86, 0x8A);
     _darkThemeColorList[BreadcrumbBarTextHasFocus] = QColor(0x86, 0x86, 0x8A);
 
+    //ElaCheckBox
+    _lightThemeColorList[CheckBoxBorder] = QColor(0x87, 0x87, 0x87);
+    _darkThemeColorList[CheckBoxBorder] = QColor(0xA0, 0xA0, 0xA0);
+    _lightThemeColorList[CheckBoxCheckedBorder] = QColor(0x00, 0x66, 0xB4);
+    _darkThemeColorList[CheckBoxCheckedBorder] = QColor(0x4C, 0xA0, 0xE0);
+    _lightThemeColorList[CheckBoxPressBorder] = QColor(0xBF, 0xBF, 0xBF);
+    _darkThemeColorList[CheckBoxPressBorder] = QColor(0x5A, 0x5A, 0x5A);
+    _lightThemeColorList[CheckBoxBase] = QColor(0xF7, 0xF7, 0xF7);
+    _darkThemeColorList[CheckBoxBase] = QColor(0x2D, 0x2D, 0x2D);
+    _lightThemeColorList[CheckBoxHover] = QColor(0xEC, 0xEC, 0xEC);
+    _darkThemeColorList[CheckBoxHover] = QColor(0x48, 0x48, 0x48);
+    _lightThemeColorList[CheckBoxCheckedBase] = QColor(0x00, 0x66, 0xB4);
+    _darkThemeColorList[CheckBoxCheckedBase] = QColor(0x4C, 0xA0, 0xE0);
+    _lightThemeColorList[CheckBoxCheckedHover] = QColor(0x00, 0x75, 0xCF);
+    _darkThemeColorList[CheckBoxCheckedHover] = QColor(0x42, 0x8B, 0xC3);
+    _lightThemeColorList[CheckBoxCheckedPress] = QColor(0x00, 0x85, 0xEA);
+    _darkThemeColorList[CheckBoxCheckedPress] = QColor(0x3A, 0x7B, 0xAC);
+
     //ElaComboBox ElaMultiComboBoxs
     _lightThemeColorList[ComboBoxMark] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[ComboBoxMark] = QColor(0x4C, 0xA0, 0xE0);
@@ -168,6 +186,16 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ProgressBarBase] = QColor(0x63, 0x63, 0x63);
     _lightThemeColorList[ProgressBarContentsBase] = QColor(0x00, 0x66, 0xB4);
     _darkThemeColorList[ProgressBarContentsBase] = QColor(0x4C, 0xA0, 0xE0);
+
+    //ElaPromotionCard
+    _lightThemeColorList[PromotionCardDefaultHighlightStart] = QColor(0xFF, 0xFF, 0xFF, 40);
+    _darkThemeColorList[PromotionCardDefaultHighlightStart] = QColor(0xFF, 0xFF, 0xFF, 40);
+    _lightThemeColorList[PromotionCardDefaultHighlightEnd] = QColor(0xFF, 0xFF, 0xFF, 0);
+    _darkThemeColorList[PromotionCardDefaultHighlightEnd] = QColor(0xFF, 0xFF, 0xFF, 0);
+
+    //ElaPromotionView
+    _lightThemeColorList[PromotionViewIndicator] = QColor(0x75, 0x7C, 0x87);
+    _darkThemeColorList[PromotionViewIndicator] = QColor(0x75, 0x7C, 0x87);
 
     //ElaPushButton
     _lightThemeColorList[PushButtonBorder] = QColor(0xDF, 0xDF, 0xDF);

@@ -28,7 +28,20 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ElaWidgetToolsExample
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-)
+    )
+
+    #遍历所有资源文件
+    file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
+    foreach(filepath ${RES_PATHS})
+            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
+            list(APPEND resource_files ${filename})
+    endforeach(filepath)
+
+    qt_add_resources(${PROJECT_NAME} "ElaWidgetToolsExample"
+        RESOURCES PREFIX "/"
+        FILES
+        ${resource_files}
+    )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ElaWidgetToolsExample APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -43,10 +56,12 @@ else()
     else()
         qt5_add_resources(PROJECT_SOURCES
             ../src/include/ElaWidgetTools.qrc
+            ElaWidgetToolsExample.qrc
         )
         add_executable(ElaWidgetToolsExample
             ${PROJECT_SOURCES}
             ../src/include/ElaWidgetTools.qrc
+            ElaWidgetToolsExample.qrc
         )
     endif()
 endif()

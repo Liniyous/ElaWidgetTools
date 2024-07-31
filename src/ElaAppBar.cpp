@@ -211,16 +211,20 @@ void ElaAppBar::setRouteBackButtonEnable(bool isEnable)
 
 void ElaAppBar::closeWindow()
 {
+    Q_D(ElaAppBar);
     // 抵消setFixedSize导致的移动偏航
-    window()->setMinimumSize(0, 0);
-    window()->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     QPropertyAnimation* closeOpacityAnimation = new QPropertyAnimation(window(), "windowOpacity");
     connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { window()->close(); });
     closeOpacityAnimation->setStartValue(1);
     closeOpacityAnimation->setEndValue(0);
-    closeOpacityAnimation->setDuration(200);
     closeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     closeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    QPropertyAnimation* geometryAnimation = new QPropertyAnimation(window(), "geometry");
+    QRect geometry = window()->geometry();
+    geometryAnimation->setStartValue(geometry);
+    geometryAnimation->setEndValue(QRect(geometry.center().x() - d->_lastMinTrackWidth / 2, geometry.center().y() - window()->minimumHeight() / 2, d->_lastMinTrackWidth, window()->minimumHeight()));
+    geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
@@ -243,18 +247,18 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
 #endif
     case QEvent::Resize:
     {
-        QResizeEvent* resizeEvent = dynamic_cast<QResizeEvent*>(event);
+        QSize size = parentWidget()->size();
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
         if (::IsZoomed((HWND)d->_currentWinID))
         {
-            this->resize(resizeEvent->size().width() - 7, this->height());
+            this->resize(size.width() - 7, this->height());
         }
         else
         {
-            this->resize(resizeEvent->size().width(), this->height());
+            this->resize(size.width(), this->height());
         }
 #else
-        this->resize(resizeEvent->size().width(), this->height());
+        this->resize(size.width(), this->height());
 #endif
         break;
     }
@@ -482,13 +486,14 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
         if (parentWidget()->findChild<ElaNavigationBar*>())
         {
-            minmaxInfo->ptMinTrackSize.x = (d->_calculateMinimumWidth() + 305) * qApp->devicePixelRatio();
+            d->_lastMinTrackWidth = d->_calculateMinimumWidth() + 305;
+            minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
         }
         else
         {
-            minmaxInfo->ptMinTrackSize.x = (d->_calculateMinimumWidth() + 5) * qApp->devicePixelRatio();
+            d->_lastMinTrackWidth = d->_calculateMinimumWidth() + 5;
+            minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
         }
-
         minmaxInfo->ptMinTrackSize.y = parentWidget()->minimumHeight() * qApp->devicePixelRatio();
         minmaxInfo->ptMaxPosition.x = rect.left;
         minmaxInfo->ptMaxPosition.y = rect.top;

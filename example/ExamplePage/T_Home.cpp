@@ -24,7 +24,7 @@ T_Home::T_Home(QWidget* parent)
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
     ElaImageCard* backgroundCard = new ElaImageCard(this);
-    backgroundCard->setCardImage(QImage(":/include/Image/Home_Background.png"));
+    backgroundCard->setCardImage(QImage(":/Resource/Image/Home_Background.png"));
 
     ElaText* flowLayoutText = new ElaText("Flow Layout", this);
     // ElaFlowLayout
@@ -32,31 +32,31 @@ T_Home::T_Home(QWidget* parent)
     connect(homeCard1, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaScreenNavigation(); });
     homeCard1->setTitle("ElaScreen");
     homeCard1->setSubTitle("Use ElaDxgiManager To Grab Screen");
-    homeCard1->setCardPixmap(QPixmap(":/include/Image/control/AutomationProperties.png"));
+    homeCard1->setCardPixmap(QPixmap(":/Resource/Image/control/AutomationProperties.png"));
 
     ElaReminderCard* homeCard2 = new ElaReminderCard(this);
     connect(homeCard2, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaSceneNavigation(); });
     homeCard2->setTitle("ElaScene");
     homeCard2->setSubTitle("Use ElaScene To Create Link Work");
-    homeCard2->setCardPixmap(QPixmap(":/include/Image/control/BreadcrumbBar.png"));
+    homeCard2->setCardPixmap(QPixmap(":/Resource/Image/control/BreadcrumbBar.png"));
 
     ElaReminderCard* homeCard3 = new ElaReminderCard(this);
     connect(homeCard3, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaBaseComponentNavigation(); });
     homeCard3->setTitle("ElaBaseComponent");
     homeCard3->setSubTitle("Use ElaBaseComponent To Start Project");
-    homeCard3->setCardPixmap(QPixmap(":/include/Image/control/StandardUICommand.png"));
+    homeCard3->setCardPixmap(QPixmap(":/Resource/Image/control/StandardUICommand.png"));
 
     ElaReminderCard* homeCard4 = new ElaReminderCard(this);
     connect(homeCard4, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaSceneNavigation(); });
     homeCard4->setTitle("ElaButton");
     homeCard4->setSubTitle("Use ElaButton To Trigger Action");
-    homeCard4->setCardPixmap(QPixmap(":/include/Image/control/MenuFlyout.png"));
+    homeCard4->setCardPixmap(QPixmap(":/Resource/Image/control/MenuFlyout.png"));
 
     ElaReminderCard* homeCard5 = new ElaReminderCard(this);
     connect(homeCard5, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaIconNavigation(); });
     homeCard5->setTitle("ElaIcon");
     homeCard5->setSubTitle("Use ElaIcon To Create A Light Icon");
-    homeCard5->setCardPixmap(QPixmap(":/include/Image/control/Canvas.png"));
+    homeCard5->setCardPixmap(QPixmap(":/Resource/Image/control/Canvas.png"));
     ElaFlowLayout* flowLayout = new ElaFlowLayout(0, 5, 5);
     flowLayout->setIsAnimation(true);
     flowLayout->addWidget(homeCard1);
@@ -86,12 +86,12 @@ T_Home::T_Home(QWidget* parent)
 
     ElaAcrylicUrlCard* urlCard1 = new ElaAcrylicUrlCard(this);
     urlCard1->setUrl("https://github.com/Liniyous/ElaWidgetTools");
-    urlCard1->setCardPixmap(QPixmap(":/include/Image/github.png"));
+    urlCard1->setCardPixmap(QPixmap(":/Resource/Image/github.png"));
     urlCard1->setTitle("ElaTool Github");
     urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
     ElaAcrylicUrlCard* urlCard2 = new ElaAcrylicUrlCard(this);
     urlCard2->setUrl("https://space.bilibili.com/21256707");
-    urlCard2->setCardPixmap(QPixmap(":/include/Image/Moon.jpg"));
+    urlCard2->setCardPixmap(QPixmap(":/Resource/Image/Moon.jpg"));
     urlCard2->setTitle("ElaWidgetTool");
     urlCard2->setSubTitle("8009963@qq.com");
 

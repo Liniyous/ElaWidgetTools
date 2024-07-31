@@ -2,6 +2,7 @@
 #define ELATHEMEPRIVATE_H
 
 #include <QColor>
+#include <QMap>
 #include <QObject>
 
 #include "Def.h"
@@ -17,8 +18,8 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode{ElaThemeType::Light};
-    QColor _lightThemeColorList[143];
-    QColor _darkThemeColorList[143];
+    QColor _lightThemeColorList[154];
+    QColor _darkThemeColorList[154];
     void _initThemeColor();
 };
 

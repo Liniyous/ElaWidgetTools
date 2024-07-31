@@ -22,6 +22,7 @@
 #include "ElaToolButton.h"
 #include "ElaWidget.h"
 #include "ExamplePage/T_BaseComponents.h"
+#include "ExamplePage/T_Card.h"
 #include "ExamplePage/T_ElaScreen.h"
 #include "ExamplePage/T_Home.h"
 #include "ExamplePage/T_Icon.h"
@@ -68,7 +69,7 @@ void MainWindow::initWindow()
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);
-    setUserInfoCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
+    setUserInfoCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
     setUserInfoCardTitle("Ela Tool");
     setUserInfoCardSubTitle("Liniyous@gmail.com");
     setWindowTitle("ElaWidgetTool");
@@ -164,6 +165,7 @@ void MainWindow::initContent()
     _baseComponentsPage = new T_BaseComponents(this);
     _tabWidgetPage = new T_TabWidget(this);
     _popupPage = new T_Popup(this);
+    _cardPage = new T_Card(this);
 
     // GraphicsView
     ElaGraphicsScene* scene = new ElaGraphicsScene(this);
@@ -195,9 +197,10 @@ void MainWindow::initContent()
     // navigation(elaScreenWidget->property("ElaPageKey").toString());
     addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
     addPageNode("ElaGraphics", view, 9, ElaIconType::KeySkeleton);
-    addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
     addPageNode("ElaTabWidget", _tabWidgetPage, ElaIconType::Table);
     addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
+    addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
+    addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
     addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
     addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);
     addPageNode("Third Level", new QWidget(this), testKey_1, ElaIconType::Acorn);
