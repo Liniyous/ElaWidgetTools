@@ -1,13 +1,14 @@
 #ifndef ELATEXTEDIT_H
 #define ELATEXTEDIT_H
 
+#include <QPlainTextEdit>
 #include <QTextEdit>
 
 #include "Def.h"
 #include "stdafx.h"
 // #include "ElaTextEditPrivate.h"
 class ElaTextEditPrivate;
-class ELA_EXPORT ElaTextEdit : public QTextEdit
+class ELA_EXPORT ElaTextEdit : public QPlainTextEdit
 {
     Q_OBJECT
     Q_Q_CREATE(ElaTextEdit)

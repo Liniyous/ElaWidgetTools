@@ -4,7 +4,7 @@
 #include "ElaTheme.h"
 #include "private/ElaTextEditPrivate.h"
 ElaTextEdit::ElaTextEdit(QWidget* parent)
-    : QTextEdit(parent), d_ptr(new ElaTextEditPrivate())
+    : QPlainTextEdit(parent), d_ptr(new ElaTextEditPrivate())
 {
     Q_D(ElaTextEdit);
     d->q_ptr = this;
@@ -22,7 +22,7 @@ ElaTextEdit::ElaTextEdit(QWidget* parent)
 ElaTextEdit::ElaTextEdit(QString text, QWidget* parent)
     : ElaTextEdit(parent)
 {
-    setText(text);
+    setPlainText(text);
 }
 
 ElaTextEdit::ElaTextEdit(QString text, int pixelSize, QWidget* parent)
@@ -126,5 +126,5 @@ ElaTextType::TextStyle ElaTextEdit::getTextStyle() const
 void ElaTextEdit::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaTextEdit);
-    QTextEdit::paintEvent(event);
+    QPlainTextEdit::paintEvent(event);
 }
