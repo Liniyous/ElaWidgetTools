@@ -370,10 +370,10 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[WindowBaseStart] = QColor::fromString("#282c34");//QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[WindowBaseEnd] = QColor(0xF9, 0xEF, 0xF6);
     _darkThemeColorList[WindowBaseEnd] = QColor::fromString("#282c34");
-    _lightThemeColorList[WindowDockWidgetResizeHandle] = QColor::fromString("#4895ef");//QColor(0x0E, 0x6F, 0xC3);
+    _lightThemeColorList[WindowDockWidgetResizeHandle] = QColor::fromString("#829cbc");//QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[WindowDockWidgetResizeHandle] = QColor::fromString("#6c757d");////QColor(0x4C, 0xA0, 0xE0);457b9d
     _lightThemeColorList[WindowDockWidgetResizeHandleHover] = QColor::fromString("#4cc9f0");//QColor(0x6F, 0xAA, 0xDE);
-    _darkThemeColorList[WindowDockWidgetResizeHandleHover] = QColor(0x6F, 0xAA, 0xDE);
+    _darkThemeColorList[WindowDockWidgetResizeHandleHover] = QColor::fromString("#84d2f6");//QColor(0x6F, 0xAA, 0xDE);
     _lightThemeColorList[WindowRubberBand] = QColor(0xFF, 0xFF, 0xFF, 128);
     _darkThemeColorList[WindowRubberBand] = QColor(0x85, 0x85, 0x85, 128);
     _lightThemeColorList[WindowTabBarBase] = QColor(0xF5, 0xF1, 0xF8);

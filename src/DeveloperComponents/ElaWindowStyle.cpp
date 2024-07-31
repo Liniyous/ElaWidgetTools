@@ -34,8 +34,19 @@ void ElaWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption*
         }
         else
         {
+            auto center = handleRect.center();
+            if(handleRect.width() < handleRect.height()) {
+                handleRect.setWidth(handleRect.width() - 3);
+                handleRect.setHeight(handleRect.height() + 1);
+            }
+            else {
+                handleRect.setHeight(handleRect.height() - 3);
+                handleRect.setWidth(handleRect.width() + 1);
+            }
+            handleRect.moveCenter(center);
             painter->setBrush(ElaThemeColor(_themeMode, WindowDockWidgetResizeHandle));
         }
+
         painter->drawRect(handleRect);
         painter->restore();
         return;
