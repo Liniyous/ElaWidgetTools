@@ -6,6 +6,8 @@
 #include "ElaIcon.h"
 #include "ElaMenu.h"
 #include "ElaMenuBarStyle.h"
+#include "ElaTheme.h"
+
 ElaMenuBar::ElaMenuBar(QWidget* parent)
     : QMenuBar(parent)
 {
@@ -80,4 +82,17 @@ void ElaMenuBar::resizeEvent(QResizeEvent* event)
             tool->setMenu(menu);
         }
     }
+}
+
+void ElaMenuBar::paintEvent(QPaintEvent *event) {
+    QMenuBar::paintEvent(event);
+
+    QPainter painter(this);
+    QPen pen;
+    pen.setWidth(4);
+    painter.setPen(pen);
+    if(eTheme->getThemeMode() == ElaThemeType::Light)
+        painter.setPen(QColor::fromString("#e0e1dd"));
+    else painter.setPen(QColor::fromString("#343a40"));
+    painter.drawLine(0,27,this->width(),27);
 }

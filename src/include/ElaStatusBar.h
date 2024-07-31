@@ -10,6 +10,8 @@ class ELA_EXPORT ElaStatusBar : public QStatusBar
 public:
     explicit ElaStatusBar(QWidget* parent = nullptr);
     ~ElaStatusBar();
+protected:
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // ELASTATUSBAR_H
