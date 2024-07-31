@@ -83,13 +83,13 @@ void ElaThemePrivate::_initThemeColor()
 
     //ElaDockWidget
     _lightThemeColorList[DockWidgetBaseStart] = QColor(0xF3, 0xF2, 0xF9);
-    _darkThemeColorList[DockWidgetBaseStart] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[DockWidgetBaseStart] = QColor::fromString("#282c34"); //QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[DockWidgetBaseEnd] = QColor(0xF4, 0xF1, 0xF8);
-    _darkThemeColorList[DockWidgetBaseEnd] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[DockWidgetBaseEnd] = QColor::fromString("#282c34");
     _lightThemeColorList[DockWidgetTitleBarBase] = QColor(0xF5, 0xF1, 0xFF);
-    _darkThemeColorList[DockWidgetTitleBarBase] = QColor(0x40, 0x40, 0x40);
+    _darkThemeColorList[DockWidgetTitleBarBase] = QColor(0x40, 0x40, 0x40);//QColor::fromString("#415a77");//
     _lightThemeColorList[DockWidgetTitleBarFloatButtonHover] = QColor(0xEF, 0xE6, 0xED);
-    _darkThemeColorList[DockWidgetTitleBarFloatButtonHover] = QColor(0x2F, 0x2E, 0x2C);
+    _darkThemeColorList[DockWidgetTitleBarFloatButtonHover] = QColor::fromString("#6c757d");//QColor(0x2F, 0x2E, 0x2C);
     _lightThemeColorList[DockWidgetTitleBarCloseButtonHover] = QColor(0xC4, 0x2B, 0x1C);
     _darkThemeColorList[DockWidgetTitleBarCloseButtonHover] = QColor(0xC4, 0x2B, 0x1C);
     _lightThemeColorList[DockWidgetFloatBorder] = QColor(0xBE, 0xBA, 0xBE);
@@ -129,9 +129,9 @@ void ElaThemePrivate::_initThemeColor()
 
     //ElaMenu
     _lightThemeColorList[MenuBaseStart] = QColor(0xF2, 0xE7, 0xF5);
-    _darkThemeColorList[MenuBaseStart] = QColor(0x2D, 0x2D, 0x2D);
+    _darkThemeColorList[MenuBaseStart] = QColor::fromString("#20242a");
     _lightThemeColorList[MenuBaseEnd] = QColor(0xED, 0xF3, 0xF9);
-    _darkThemeColorList[MenuBaseEnd] = QColor(0x3D, 0x3D, 0x3D);
+    _darkThemeColorList[MenuBaseEnd] = QColor::fromString("#21252b");//QColor(0x3D, 0x3D, 0x3D);
     _lightThemeColorList[MenuBorder] = QColor(0xBE, 0xBA, 0xBE);
     _darkThemeColorList[MenuBorder] = QColor(0x52, 0x50, 0x52);
     _lightThemeColorList[MenuSeparator] = QColor(0xB3, 0xB3, 0xB3);
@@ -273,7 +273,7 @@ void ElaThemePrivate::_initThemeColor()
 
     //ElaStatusBar
     _lightThemeColorList[StatusBarBase] = QColor(0xF5, 0xF1, 0xFF);
-    _darkThemeColorList[StatusBarBase] = QColor(0x40, 0x40, 0x40);
+    _darkThemeColorList[StatusBarBase] = QColor::fromString("#21252b");//QColor(0x40, 0x40, 0x40);
     _lightThemeColorList[StatusBarSeparator] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[StatusBarSeparator] = QColor(0x4C, 0xA0, 0xE0);
 
@@ -293,11 +293,11 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[TabBarCloseButtonHover] = QColor(0xDC, 0xDC, 0xDD);
     _darkThemeColorList[TabBarCloseButtonHover] = QColor(0x5C, 0x5A, 0x56);
     _lightThemeColorList[TabBarTabBase] = QColor(0xF5, 0xF1, 0xF8);
-    _darkThemeColorList[TabBarTabBase] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[TabBarTabBase] = QColor::fromString("#343a40");//QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[TabBarTabHover] = QColor(0xFC, 0xF8, 0xFF);
-    _darkThemeColorList[TabBarTabHover] = QColor(0x27, 0x27, 0x27);
+    _darkThemeColorList[TabBarTabHover] = QColor::fromString("#6c757d");//QColor(0x27, 0x27, 0x27);
     _lightThemeColorList[TabBarTabSelected] = Qt::white;
-    _darkThemeColorList[TabBarTabSelected] = QColor(0x2D, 0x2D, 0x2D);
+    _darkThemeColorList[TabBarTabSelected] = QColor::fromString("#829cbc");//QColor(0x2D, 0x2D, 0x2D);
     _lightThemeColorList[TabBarTabMark] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[TabBarTabMark] = QColor(0x4C, 0xA0, 0xE0);
 
@@ -367,21 +367,21 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[WindowTextDisable] = Qt::gray;
     _darkThemeColorList[WindowTextDisable] = Qt::gray;
     _lightThemeColorList[WindowBaseStart] = QColor(0xF2, 0xF2, 0xF9);
-    _darkThemeColorList[WindowBaseStart] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[WindowBaseStart] = QColor::fromString("#282c34");//QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[WindowBaseEnd] = QColor(0xF9, 0xEF, 0xF6);
-    _darkThemeColorList[WindowBaseEnd] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[WindowBaseEnd] = QColor::fromString("#282c34");
     _lightThemeColorList[WindowDockWidgetResizeHandle] = QColor(0x0E, 0x6F, 0xC3);
-    _darkThemeColorList[WindowDockWidgetResizeHandle] = QColor(0x4C, 0xA0, 0xE0);
+    _darkThemeColorList[WindowDockWidgetResizeHandle] = QColor::fromString("#457b9d");////QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[WindowDockWidgetResizeHandleHover] = QColor(0x6F, 0xAA, 0xDE);
     _darkThemeColorList[WindowDockWidgetResizeHandleHover] = QColor(0x6F, 0xAA, 0xDE);
     _lightThemeColorList[WindowRubberBand] = QColor(0xFF, 0xFF, 0xFF, 128);
     _darkThemeColorList[WindowRubberBand] = QColor(0x85, 0x85, 0x85, 128);
     _lightThemeColorList[WindowTabBarBase] = QColor(0xF5, 0xF1, 0xF8);
-    _darkThemeColorList[WindowTabBarBase] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[WindowTabBarBase] = QColor::fromString("#282c34");//QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[WindowTabBarHover] = QColor(0xFC, 0xF8, 0xFF);
-    _darkThemeColorList[WindowTabBarHover] = QColor(0x27, 0x27, 0x27);
+    _darkThemeColorList[WindowTabBarHover] = QColor::fromString("#6c757d");//QColor(0x27, 0x27, 0x27);
     _lightThemeColorList[WindowTabBarSelected] = Qt::white;
-    _darkThemeColorList[WindowTabBarSelected] = QColor(0x2D, 0x2D, 0x2D);
+    _darkThemeColorList[WindowTabBarSelected] = QColor::fromString("#adb5bd");//QColor(0x2D, 0x2D, 0x2D);
     _lightThemeColorList[windowTabBarSeparator] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[windowTabBarSeparator] = QColor(0x4C, 0xA0, 0xE0);
 }

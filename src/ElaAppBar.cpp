@@ -86,6 +86,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     // 设置置顶
     d->_stayTopButton = new ElaIconButton(ElaIconType::ArrowUpToArc, 15, 40, 30, this);
     d->_stayTopButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_stayTopButton->setDarkHoverColor(QColor::fromString("#353840"));
     connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
 
@@ -107,14 +108,17 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     // 主题变更
     d->_themeChangeButton = new ElaIconButton(ElaIconType::MoonStars, 15, 40, 30, this);
     d->_themeChangeButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_themeChangeButton->setDarkHoverColor(QColor::fromString("#353840"));
     connect(d->_themeChangeButton, &ElaIconButton::clicked, this, [this]() { Q_EMIT themeChangeButtonClicked(); });
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
 
     d->_minButton = new ElaIconButton(ElaIconType::Dash, 12, 40, 30, this);
     d->_minButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_minButton->setDarkHoverColor(QColor::fromString("#353840"));
     connect(d->_minButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onMinButtonClicked);
     d->_maxButton = new ElaIconButton(ElaIconType::Square, 13, 40, 30, this);
     d->_maxButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_maxButton->setDarkHoverColor(QColor::fromString("#353840"));
     connect(d->_maxButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onMaxButtonClicked);
     d->_closeButton = new ElaIconButton(ElaIconType::Xmark, 17, 40, 30, this);
     d->_closeButton->setLightHoverColor(QColor(0xC4, 0x2B, 0x1C));
