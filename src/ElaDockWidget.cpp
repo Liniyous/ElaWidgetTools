@@ -43,12 +43,6 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
     d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, DockWidgetBaseEnd));
 
     setAttribute(Qt::WA_TranslucentBackground);
-    setStyleSheet(R"(
-    ElaDockWidget
-        {
-        border-radius: 10px;
-        }
-        )");
 
 
 }
@@ -89,25 +83,6 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
         painter.setBrush(*d->_windowLinearGradient);
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRoundedRect(foregroundRect, 5, 5);
-    }
-    else {
-        auto rect = this->rect();
-        int radius = 10;
-        // rect.setWidth(rect.width() - 1); rect.setHeight(rect.height() - 1);
-        auto squareRect = rect.adjusted(radius,radius,-radius,-radius);
-        QPainterPath squarePath;
-        squarePath.addRect(squareRect);
-
-        QPainterPath cornerCuts;
-        cornerCuts.arcTo(rect.topLeft().x(), rect.topLeft().y(), radius * 2, radius * 2, 90, -90);
-        cornerCuts.arcTo(rect.topRight().x(), rect.topRight().y(), radius * 2, radius * 2, 0, -90);
-        cornerCuts.arcTo(rect.bottomRight().x(), rect.bottomLeft().y(), radius * 2, radius * 2, 270, -90);
-        cornerCuts.arcTo(rect.bottomLeft().x(), rect.bottomRight().y(), radius * 2, radius * 2, 180,-90);
-
-        auto finalPath = squarePath.subtracted(cornerCuts);
-        painter.fillPath(finalPath, QColor::fromString("#457b9d"));
-
-        // painter.drawRoundedRect(rect,radius,radius);
     }
     painter.restore();
 }
