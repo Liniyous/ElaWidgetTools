@@ -59,6 +59,8 @@
 |ElaMessageButton|弹出信息按钮||
 |ElaPushButton|按钮||
 |ElaProgressBar|进度条||
+|ElaPromotionCard|促销卡片||
+|ElaPromotionView|促销卡片视窗||
 |ElaSwitchButton|切换按钮||
 |ElaSuggestBox|建议搜索框||
 |ElaRadioButton|单选按钮||
@@ -68,6 +70,7 @@
 |ElaTabWidget|选项卡页面|谷歌浏览器风格|
 |ElaToolButton|带下拉菜单的工具按钮||
 |ElaToolBar|工具栏||
+|ElaTheme|主题管理器||
 |ElaReminderCard|带图片的提醒卡片||
 |ElaScrollbar|滚动条||
 |ElaScrollArea|滚动区域|可设置鼠标拖动|

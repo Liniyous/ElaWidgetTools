@@ -6,17 +6,17 @@
 T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     : QWidget{parent}
 {
-    setMinimumSize(200, 245);
+    setMinimumSize(200, 255);
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setSizeConstraint(QLayout::SetMaximumSize);
     mainLayout->setContentsMargins(5, 10, 5, 5);
-    mainLayout->setSpacing(5);
-    ElaText* updateTitle = new ElaText("2024-7-21更新", 15, this);
-    ElaText* update1 = new ElaText("1、ElaWindow已升格为QMainWindow", 13, this);
-    ElaText* update2 = new ElaText("2、ElaMenu ElaToolButton ElaComboBox动画重做", 13, this);
-    ElaText* update3 = new ElaText("3、新增ElaStatusBar ElaMenuBar ElaToolBar ElaDockWidget", 13, this);
-    ElaText* update4 = new ElaText("4、重做了ElaComboBox动画", 13, this);
-    ElaText* update5 = new ElaText("5、黑色主题整体风格优化", 13, this);
+    mainLayout->setSpacing(4);
+    ElaText* updateTitle = new ElaText("2024-7-30更新", 15, this);
+    ElaText* update1 = new ElaText("1、新增ElaPromotionCard 促销卡片、ElaPromotionView 促销卡片视窗", 13, this);
+    ElaText* update2 = new ElaText("2、ElaToggleButton API调整", 13, this);
+    ElaText* update3 = new ElaText("3、ElaWindow关闭动画回调", 13, this);
+    ElaText* update4 = new ElaText("4、ElaCheckBox 新增三态支持", 13, this);
+    ElaText* update5 = new ElaText("5、QRC文件拆分，库QRC只保留必要资源", 13, this);
     update1->setIsWrapAnywhere(true);
     update2->setIsWrapAnywhere(true);
     update3->setIsWrapAnywhere(true);
