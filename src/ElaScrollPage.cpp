@@ -14,9 +14,8 @@
 #include "ElaScrollArea.h"
 #include "private/ElaScrollPagePrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaScrollPage, int, BorderRadius)
-ElaScrollPage::ElaScrollPage(QWidget* parent)
-    : QWidget(parent), d_ptr(new ElaScrollPagePrivate())
-{
+ElaScrollPage::ElaScrollPage(QWidget* parent, bool haveTitle)
+    : QWidget(parent), d_ptr(new ElaScrollPagePrivate()) {
     Q_D(ElaScrollPage);
     setProperty("ElaBaseClassName", "ElaScrollPage");
     d->q_ptr = this;
@@ -42,8 +41,10 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->addLayout(d->_pageTitleLayout);
-    mainLayout->addSpacing(10);
+    if(haveTitle) {
+        mainLayout->addLayout(d->_pageTitleLayout);
+        mainLayout->addSpacing(10);
+    }
     mainLayout->addWidget(d->_centralStackedWidget);
 }
 
