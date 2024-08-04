@@ -3,8 +3,8 @@
 #include <QLayout>
 #include <QPropertyAnimation>
 
+#include "ElaBaseListView.h"
 #include "ElaLineEdit.h"
-#include "ElaListView.h"
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestModel.h"

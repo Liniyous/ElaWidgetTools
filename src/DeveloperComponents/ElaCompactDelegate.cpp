@@ -4,8 +4,8 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
+#include "ElaBaseListView.h"
 #include "ElaCompactModel.h"
-#include "ElaListView.h"
 #include "ElaNavigationNode.h"
 #include "ElaTheme.h"
 ElaCompactDelegate::ElaCompactDelegate(QObject* parent)

@@ -13,6 +13,7 @@ Q_SIGNALS:
     Q_SIGNAL void elaScreenNavigation();
     Q_SIGNAL void elaBaseComponentNavigation();
     Q_SIGNAL void elaSceneNavigation();
+    Q_SIGNAL void elaCardNavigation();
     Q_SIGNAL void elaIconNavigation();
 
 protected:

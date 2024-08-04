@@ -21,7 +21,7 @@ public:
 class ElaLineEdit;
 class ElaNavigationNode;
 class ElaSuggestModel;
-class ElaListView;
+class ElaBaseListView;
 class ElaSuggestDelegate;
 class ElaSuggestBox;
 class ElaSuggestBoxSearchViewContainer;
@@ -42,7 +42,7 @@ private:
     ElaSuggestBoxSearchViewContainer* _searchViewBaseWidget{nullptr};
     ElaLineEdit* _searchEdit{nullptr};
     ElaSuggestModel* _searchModel{nullptr};
-    ElaListView* _searchView{nullptr};
+    ElaBaseListView* _searchView{nullptr};
     ElaSuggestDelegate* _searchDelegate{nullptr};
     bool _isExpandAnimationFinished{true};
     bool _isCloseAnimationFinished{true};

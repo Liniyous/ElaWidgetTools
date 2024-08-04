@@ -3,7 +3,7 @@
 
 #include <QToolBar>
 
-#include "stdafx.h"
+#include "Def.h"
 class ElaToolBarPrivate;
 class ELA_EXPORT ElaToolBar : public QToolBar
 {
@@ -16,6 +16,12 @@ public:
 
     void setToolBarSpacing(int spacing);
     int getToolBarSpacing() const;
+
+    QAction* addElaIconAction(ElaIconType icon, const QString& text);
+    QAction* addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut);
+
+protected:
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // ELATOOLBAR_H

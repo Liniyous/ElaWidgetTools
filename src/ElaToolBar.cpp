@@ -1,7 +1,9 @@
 #include "ElaToolBar.h"
 
 #include <QLayout>
+#include <QPainter>
 
+#include "ElaIcon.h"
 #include "ElaTheme.h"
 #include "ElaToolBarPrivate.h"
 #include "ElaToolBarStyle.h"
@@ -14,10 +16,26 @@ ElaToolBar::ElaToolBar(QWidget* parent)
     setStyleSheet("#ElaToolBar{background-color:transparent;}");
     setStyle(new ElaToolBarStyle(style()));
     layout()->setSpacing(10);
+    layout()->setContentsMargins(3, 3, 3, 3);
+
+    d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
         if (this->isFloating())
         {
             update();
+        }
+    });
+    setAttribute(Qt::WA_TranslucentBackground);
+
+    connect(this, &ElaToolBar::topLevelChanged, this, [=](bool topLevel) {
+        if (topLevel)
+        {
+            layout()->setContentsMargins(d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3, d->_shadowBorderWidth + 3);
+        }
+        else
+        {
+            layout()->setContentsMargins(3, 3, 3, 3);
         }
     });
 }
@@ -40,4 +58,49 @@ void ElaToolBar::setToolBarSpacing(int spacing)
 int ElaToolBar::getToolBarSpacing() const
 {
     return layout()->spacing();
+}
+
+QAction* ElaToolBar::addElaIconAction(ElaIconType icon, const QString& text)
+{
+    QAction* action = new QAction(text, this);
+    action->setProperty("ElaIconType", QChar((unsigned short)icon));
+    action->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
+    addAction(action);
+    return action;
+}
+
+QAction* ElaToolBar::addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut)
+{
+    QAction* action = new QAction(text, this);
+    action->setShortcut(shortcut);
+    action->setProperty("ElaIconType", QChar((unsigned short)icon));
+    action->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
+    addAction(action);
+    return action;
+}
+
+void ElaToolBar::paintEvent(QPaintEvent* event)
+{
+    Q_D(ElaToolBar);
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHints(QPainter::Antialiasing);
+    if (isFloating())
+    {
+        // 高性能阴影
+        eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
+        //背景
+        painter.setPen(ElaThemeColor(d->_themeMode, ToolBarWindowBorder));
+        painter.setBrush(ElaThemeColor(d->_themeMode, ToolBarWindowBase));
+        QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
+        painter.drawRoundedRect(foregroundRect, 5, 5);
+    }
+    else
+    {
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(Qt::transparent);
+        painter.drawRoundedRect(rect(), 5, 5);
+    }
+    painter.restore();
+    QToolBar::paintEvent(event);
 }

@@ -11,6 +11,8 @@ Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightHoverColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkHoverColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkIconColor);
+Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightHoverIconColor);
+Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkHoverIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, bool, IsSelected);
 ElaIconButton::ElaIconButton(ElaIconType awesome, QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaIconButtonPrivate())
@@ -22,6 +24,8 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, QWidget* parent)
     d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
     d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
     d->_pDarkIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
+    d->_pLightHoverIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
+    d->_pDarkHoverIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = eTheme->getThemeMode();
@@ -44,6 +48,8 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, QWidget* parent
     d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
     d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
     d->_pDarkIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
+    d->_pLightHoverIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
+    d->_pDarkHoverIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = eTheme->getThemeMode();
@@ -66,6 +72,8 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, int fixedWidth,
     d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
     d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
     d->_pDarkIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
+    d->_pLightHoverIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
+    d->_pDarkHoverIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
     d->_pIsSelected = false;
     d->_pBorderRadius = 0;
     d->_themeMode = eTheme->getThemeMode();
@@ -162,7 +170,12 @@ void ElaIconButton::paintEvent(QPaintEvent* event)
     }
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
     // 图标绘制
-    painter.setPen(isEnabled() ? d->_themeMode == ElaThemeType::Light ? d->_pLightIconColor : d->_pDarkIconColor : ElaThemeColor(d->_themeMode, WindowTextDisable));
+    painter.setPen(isEnabled() ? d->_themeMode == ElaThemeType::Light ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor : underMouse() ? d->_pDarkHoverIconColor
+                                                                                                                                                     : d->_pDarkIconColor
+                               : ElaThemeColor(d->_themeMode, WindowTextDisable));
+    QColor color = isEnabled() ? d->_themeMode == ElaThemeType::Light ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor : underMouse() ? d->_pDarkHoverIconColor
+                                                                                                                                                     : d->_pDarkIconColor
+                               : ElaThemeColor(d->_themeMode, WindowTextDisable);
     painter.drawText(0, 0, width(), height(), Qt::AlignVCenter | Qt::AlignHCenter, QChar((unsigned short)d->_pAwesome));
     painter.restore();
 }

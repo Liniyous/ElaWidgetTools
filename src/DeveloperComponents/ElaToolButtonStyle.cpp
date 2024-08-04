@@ -58,10 +58,11 @@ void ElaToolButtonStyle::drawComplexControl(ComplexControl control, const QStyle
             //图标绘制
             QRect contentRect = subControlRect(control, bopt, QStyle::SC_ScrollBarAddLine, widget);
             QRect iconRect = contentRect;
-            iconRect.adjust(3, 3, -3, -3);
+            int heightOffset = iconRect.height() * 0.05;
+            iconRect.adjust(3, heightOffset, -3, -heightOffset);
             _drawIcon(painter, iconRect, bopt, widget);
-
             //文字绘制
+            contentRect.adjust(0, heightOffset, 0, -heightOffset);
             _drawText(painter, contentRect, bopt);
             painter->restore();
         }
@@ -73,23 +74,6 @@ void ElaToolButtonStyle::drawComplexControl(ComplexControl control, const QStyle
     }
     }
     QProxyStyle::drawComplexControl(control, option, painter, widget);
-}
-
-int ElaToolButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QWidget* widget) const
-{
-    switch (metric)
-    {
-    case QStyle::PM_ButtonIconSize:
-    {
-        //Icon大小 adjust 3
-        return 22;
-    }
-    default:
-    {
-        break;
-    }
-    }
-    return QProxyStyle::pixelMetric(metric, option, widget);
 }
 
 QSize ElaToolButtonStyle::sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const
@@ -143,40 +127,33 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
 {
     if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
     {
+        QSize iconSize = bopt->iconSize;
         if (widget->property("ElaIconType").toString().isEmpty())
         {
             //绘制QIcon
             QIcon icon = bopt->icon;
             if (!icon.isNull())
             {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-                QPixmap iconPix = icon.pixmap(bopt->iconSize, painter->device()->devicePixelRatio(),
+                QPixmap iconPix = icon.pixmap(iconSize,
                                               (bopt->state & State_Enabled) ? QIcon::Normal
                                                                             : QIcon::Disabled,
                                               (bopt->state & State_Selected) ? QIcon::On
                                                                              : QIcon::Off);
-#else
-                QPixmap iconPix = icon.pixmap(bopt->iconSize,
-                                              (bopt->state & State_Enabled) ? QIcon::Normal
-                                                                            : QIcon::Disabled,
-                                              (bopt->state & State_Selected) ? QIcon::On
-                                                                             : QIcon::Off);
-#endif
                 switch (bopt->toolButtonStyle)
                 {
                 case Qt::ToolButtonTextBesideIcon:
                 {
-                    painter->drawPixmap(iconRect.x(), iconRect.center().y() - bopt->iconSize.height() / 2, iconPix);
+                    painter->drawPixmap(QRect(QPoint(iconRect.x(), iconRect.center().y() - iconSize.height() / 2), iconSize), iconPix);
                     break;
                 }
                 case Qt::ToolButtonTextUnderIcon:
                 {
-                    painter->drawPixmap(iconRect.center().x() - bopt->iconSize.width() / 2, iconRect.y(), iconPix);
+                    painter->drawPixmap(QRect(QPoint(iconRect.center().x() - iconSize.width() / 2, iconRect.y()), iconSize), iconPix);
                     break;
                 }
                 case Qt::ToolButtonFollowStyle:
                 {
-                    painter->drawPixmap(iconRect.x(), iconRect.y() - bopt->iconSize.height() / 2, iconPix);
+                    painter->drawPixmap(iconRect.x(), iconRect.y() - iconSize.height() / 2, iconPix);
                     break;
                 }
                 default:
@@ -192,22 +169,24 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
             painter->save();
             painter->setPen(ElaThemeColor(_themeMode, WindowText));
             QFont iconFont = QFont("ElaAwesome");
-            iconFont.setPixelSize(bopt->iconSize.width() * 0.8);
-            painter->setFont(iconFont);
             switch (bopt->toolButtonStyle)
             {
             case Qt::ToolButtonIconOnly:
             case Qt::ToolButtonTextBesideIcon:
             case Qt::ToolButtonFollowStyle:
             {
-                QRect adjustIconRect(iconRect.x(), iconRect.y(), bopt->iconSize.width(), iconRect.height());
+                QRect adjustIconRect(iconRect.x(), iconRect.y(), iconSize.width(), iconRect.height());
+                iconFont.setPixelSize(0.8 * std::min(iconSize.width(), iconSize.height()));
+                painter->setFont(iconFont);
                 painter->drawText(adjustIconRect, Qt::AlignCenter, widget->property("ElaIconType").toString());
                 break;
             }
             case Qt::ToolButtonTextUnderIcon:
             {
-                QRect adjustIconRect(iconRect.center().x() - iconFont.pixelSize() / 2, iconRect.y(), bopt->iconSize.width(), iconRect.height());
-                painter->drawText(adjustIconRect, Qt::AlignCenter, widget->property("ElaIconType").toString());
+                QRect adjustIconRect(iconRect.center().x() - iconSize.width() / 2, iconRect.y() + 0.2 * std::min(iconSize.width(), iconSize.height()), iconSize.width(), iconSize.height());
+                iconFont.setPixelSize(0.8 * std::min(iconSize.width(), iconSize.height()));
+                painter->setFont(iconFont);
+                painter->drawText(adjustIconRect, Qt::AlignHCenter, widget->property("ElaIconType").toString());
                 break;
             }
             default:
@@ -229,6 +208,7 @@ void ElaToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const Q
         {
         case Qt::ToolButtonTextOnly:
         {
+            painter->drawText(contentRect, Qt::AlignCenter, bopt->text);
             break;
         }
         case Qt::ToolButtonTextBesideIcon:

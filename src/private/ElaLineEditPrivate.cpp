@@ -4,8 +4,7 @@
 
 #include "ElaApplication.h"
 #include "ElaLineEdit.h"
-#include "ElaLineEditStyle.h"
-#include "ElaTheme.h"
+
 ElaLineEditPrivate::ElaLineEditPrivate(QObject* parent)
     : QObject{parent}
 {

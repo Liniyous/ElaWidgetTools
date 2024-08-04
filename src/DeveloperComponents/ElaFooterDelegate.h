@@ -6,13 +6,13 @@
 #include "stdafx.h"
 class ElaNavigationNode;
 class QPropertyAnimation;
-class ElaListView;
+class ElaBaseListView;
 class ElaFooterDelegatePrivate;
 class ElaFooterDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
     Q_Q_CREATE(ElaFooterDelegate)
-    Q_PRIVATE_CREATE_Q_H(ElaListView*, ElaListView);
+    Q_PRIVATE_CREATE_Q_H(ElaBaseListView*, ElaListView);
 
 public:
     explicit ElaFooterDelegate(QObject* parent = nullptr);

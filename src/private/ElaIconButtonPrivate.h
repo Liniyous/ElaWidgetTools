@@ -17,6 +17,8 @@ class ElaIconButtonPrivate : public QObject
     Q_PROPERTY_CREATE_D(QColor, DarkHoverColor);
     Q_PROPERTY_CREATE_D(QColor, LightIconColor);
     Q_PROPERTY_CREATE_D(QColor, DarkIconColor);
+    Q_PROPERTY_CREATE_D(QColor, LightHoverIconColor);
+    Q_PROPERTY_CREATE_D(QColor, DarkHoverIconColor);
     Q_PROPERTY_CREATE_D(bool, IsSelected);
     Q_PROPERTY_CREATE(int, HoverAlpha)
 public:

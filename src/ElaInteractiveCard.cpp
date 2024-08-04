@@ -76,15 +76,7 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
         painter.restore();
     }
     // 文字绘制
-    if (d->_themeMode == ElaThemeType::Light)
-    {
-        painter.setPen(Qt::black);
-    }
-    else
-    {
-        painter.setPen(Qt::white);
-    }
-
+    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
     QFont font = this->font();
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);

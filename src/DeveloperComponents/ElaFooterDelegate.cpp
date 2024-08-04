@@ -4,12 +4,12 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 
+#include "ElaBaseListView.h"
 #include "ElaFooterModel.h"
-#include "ElaListView.h"
 #include "ElaNavigationNode.h"
 #include "ElaTheme.h"
 #include "private/ElaFooterDelegatePrivate.h"
-Q_PRIVATE_CREATE_Q_CPP(ElaFooterDelegate, ElaListView*, ElaListView);
+Q_PRIVATE_CREATE_Q_CPP(ElaFooterDelegate, ElaBaseListView*, ElaListView);
 ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
     : QStyledItemDelegate{parent}, d_ptr(new ElaFooterDelegatePrivate())
 {
@@ -155,7 +155,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     if (index.row() == 0)
     {
         painter->setPen(ElaThemeColor(d->_themeMode, NavigationFooterBaseLine));
-        painter->drawLine(itemRect.x(), itemRect.y() + 1, itemRect.x() + itemRect.width(), itemRect.y() + 1);
+        painter->drawLine(option.rect.x(), itemRect.y() + 1, option.rect.x() + option.rect.width(), itemRect.y() + 1);
     }
     // 图标绘制
     painter->setPen(ElaThemeColor(d->_themeMode, WindowText));

@@ -135,7 +135,7 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
                 {
                     if (!iconText.isEmpty())
                     {
-                        QRect menuIconRect(menuItemRect.x() + _menuBarHeight * 0.1 + _menuBarItemMargin, _menuBarHeight * 0.1, _menuBarHeight * 0.8, _menuBarHeight * 0.8);
+                        QRectF menuIconRect(menuItemRect.x() + _menuBarHeight * 0.1 + _menuBarItemMargin, _menuBarHeight * 0.1, _menuBarHeight * 0.8, _menuBarHeight * 0.8);
                         painter->save();
                         QFont iconFont = QFont("ElaAwesome");
                         iconFont.setPixelSize(_menuBarHeight * 0.7);

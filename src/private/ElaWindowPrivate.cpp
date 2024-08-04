@@ -2,7 +2,6 @@
 
 #include <QImage>
 #include <QPropertyAnimation>
-#include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QtMath>
@@ -10,6 +9,7 @@
 #include "ElaAppBar.h"
 #include "ElaAppBarPrivate.h"
 #include "ElaApplication.h"
+#include "ElaCentralStackedWidget.h"
 #include "ElaNavigationBar.h"
 #include "ElaTheme.h"
 #include "ElaThemeAnimationWidget.h"
@@ -29,6 +29,7 @@ void ElaWindowPrivate::onNavigationButtonClicked()
     if (_isWMClickedAnimationFinished)
     {
         _resetWindowLayout(true);
+        _navigationBar->setIsTransparent(false);
         _navigationBar->setDisplayMode(ElaNavigationType::Maximal, false);
         _navigationBar->move(-_navigationBar->width(), _navigationBar->pos().y());
         _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height());
@@ -39,7 +40,7 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
         navigationMoveAnimation->setDuration(300);
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
-        navigationMoveAnimation->setEndValue(QPoint(contentMargin, contentMargin));
+        navigationMoveAnimation->setEndValue(QPoint(contentMargin, 0));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         _isWMClickedAnimationFinished = false;
     }
@@ -58,12 +59,13 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
         {
             QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
             connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
+                _navigationBar->setIsTransparent(true);
                 _isWMClickedAnimationFinished = true;
             });
             navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
             navigationMoveAnimation->setDuration(300);
             navigationMoveAnimation->setStartValue(_navigationBar->pos());
-            navigationMoveAnimation->setEndValue(QPoint(-_navigationBar->width() - _contentsMargins, _contentsMargins));
+            navigationMoveAnimation->setEndValue(QPoint(-_navigationBar->width() - _contentsMargins, 0));
             navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
             _isNavigationBarExpanded = false;
         }
@@ -171,7 +173,6 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
         currentWidgetAnimation->setEasingCurve(QEasingCurve::InOutCubic);
         currentWidgetAnimation->setDuration(280);
         QPoint currentWidgetPos = currentWidget->pos();
-        currentWidgetPos.setY(10);
         currentWidgetAnimation->setEndValue(currentWidgetPos);
         currentWidgetPos.setY(currentWidgetPos.y() + 60);
         currentWidgetAnimation->setStartValue(currentWidgetPos);

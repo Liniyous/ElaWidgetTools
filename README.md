@@ -58,6 +58,7 @@
 |ElaMessageBar|弹出式信息栏|支持八方向，锚定位置|
 |ElaMessageButton|弹出信息按钮||
 |ElaPushButton|按钮||
+|ElaPopularCard|热门卡片||
 |ElaProgressBar|进度条||
 |ElaPromotionCard|促销卡片||
 |ElaPromotionView|促销卡片视窗||

@@ -9,6 +9,7 @@ ElaToolButton::ElaToolButton(QWidget* parent)
 {
     Q_D(ElaToolButton);
     d->q_ptr = this;
+    setIconSize(QSize(22, 22));
     setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     setPopupMode(QToolButton::InstantPopup);
     setStyle(new ElaToolButtonStyle(style()));

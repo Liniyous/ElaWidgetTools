@@ -1,6 +1,5 @@
 #include "ElaAppBar.h"
 
-#include "ElaNavigationBar.h"
 #include "ElaText.h"
 
 #ifdef Q_OS_WIN
@@ -53,14 +52,19 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     Q_D(ElaAppBar);
     d->_buttonFlags = ElaAppBarType::RouteBackButtonHint | ElaAppBarType::StayTopButtonHint | ElaAppBarType::ThemeChangeButtonHint | ElaAppBarType::MinimizeButtonHint | ElaAppBarType::MaximizeButtonHint | ElaAppBarType::CloseButtonHint;
     window()->setAttribute(Qt::WA_Mapped);
-    window()->setContentsMargins(0, 30, 0, 0);
+    d->_pAppBarHeight = 45;
+    setFixedHeight(d->_pAppBarHeight);
+    window()->setContentsMargins(0, this->height(), 0, 0);
     createWinId();
     d->q_ptr = this;
     d->_pIsStayTop = false;
     d->_pIsFixedSize = false;
     d->_pIsDefaultClosed = true;
     d->_pIsOnlyAllowMinAndClose = false;
+    d->_pCustomWidget = nullptr;
+    d->_pCustomWidgetMaximumWidth = 550;
     d->_currentWinID = window()->winId();
+
     window()->installEventFilter(this);
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
@@ -68,7 +72,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 #endif
     QGuiApplication::instance()->installNativeEventFilter(this);
     setMouseTracking(true);
-    setFixedHeight(30);
     setObjectName("ElaAppBar");
     setStyleSheet("#ElaAppBar{background-color:transparent;}");
     d->_routeBackButton = new ElaIconButton(ElaIconType::ArrowLeft, 18, 40, 30, this);
@@ -89,6 +92,13 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
 
+    //图标
+    d->_iconLabel = new QLabel(this);
+    d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+    connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
+        d->_iconLabel->setPixmap(icon.pixmap(18, 18));
+    });
+
     //标题
     d->_titleLabel = new ElaText(this);
     d->_titleLabel->setTextPointSize(10);
@@ -97,49 +107,41 @@ ElaAppBar::ElaAppBar(QWidget* parent)
         d->_titleLabel->setText(title);
     });
 
-    //图标
-    d->_iconLabel = new QLabel(this);
-    d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
-    connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
-        d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
-    });
-
     // 主题变更
     d->_themeChangeButton = new ElaIconButton(ElaIconType::MoonStars, 15, 40, 30, this);
-    d->_themeChangeButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_themeChangeButton->setLightHoverColor(QColor(0xE9, 0xE9, 0xF0));
     connect(d->_themeChangeButton, &ElaIconButton::clicked, this, [this]() { Q_EMIT themeChangeButtonClicked(); });
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
 
     d->_minButton = new ElaIconButton(ElaIconType::Dash, 12, 40, 30, this);
-    d->_minButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_minButton->setLightHoverColor(QColor(0xE9, 0xE9, 0xF0));
     connect(d->_minButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onMinButtonClicked);
     d->_maxButton = new ElaIconButton(ElaIconType::Square, 13, 40, 30, this);
-    d->_maxButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
+    d->_maxButton->setLightHoverColor(QColor(0xE9, 0xE9, 0xF0));
     connect(d->_maxButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onMaxButtonClicked);
     d->_closeButton = new ElaIconButton(ElaIconType::Xmark, 17, 40, 30, this);
     d->_closeButton->setLightHoverColor(QColor(0xC4, 0x2B, 0x1C));
     d->_closeButton->setDarkHoverColor(QColor(0xC4, 0x2B, 0x1C));
+    d->_closeButton->setLightHoverIconColor(Qt::white);
+    d->_closeButton->setDarkHoverIconColor(Qt::white);
     connect(d->_closeButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onCloseButtonClicked);
 
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->setSpacing(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    QHBoxLayout* operateButtonLayout = new QHBoxLayout();
-    operateButtonLayout->setContentsMargins(0, 0, 0, 0);
-    operateButtonLayout->setSpacing(0);
-    operateButtonLayout->addWidget(d->_routeBackButton);
-    operateButtonLayout->addWidget(d->_navigationButton);
-    operateButtonLayout->addSpacing(5);
-    operateButtonLayout->addWidget(d->_iconLabel);
-    operateButtonLayout->addSpacing(10);
-    operateButtonLayout->addWidget(d->_titleLabel);
-    operateButtonLayout->addStretch();
-    operateButtonLayout->addWidget(d->_stayTopButton);
-    operateButtonLayout->addWidget(d->_themeChangeButton);
-    operateButtonLayout->addWidget(d->_minButton);
-    operateButtonLayout->addWidget(d->_maxButton);
-    operateButtonLayout->addWidget(d->_closeButton);
-    mainLayout->addLayout(operateButtonLayout);
+    d->_mainLayout = new QHBoxLayout(this);
+    d->_mainLayout->setContentsMargins(0, 0, 0, 0);
+    d->_mainLayout->setSpacing(0);
+    d->_mainLayout->addLayout(d->_createVLayout(d->_routeBackButton));
+    d->_mainLayout->addLayout(d->_createVLayout(d->_navigationButton));
+    d->_mainLayout->addSpacing(5);
+    d->_mainLayout->addLayout(d->_createVLayout(d->_iconLabel));
+    d->_mainLayout->addSpacing(10);
+    d->_mainLayout->addLayout(d->_createVLayout(d->_titleLabel));
+    d->_mainLayout->addStretch();
+    d->_mainLayout->addStretch();
+    d->_mainLayout->addLayout(d->_createVLayout(d->_stayTopButton));
+    d->_mainLayout->addLayout(d->_createVLayout(d->_themeChangeButton));
+    d->_mainLayout->addLayout(d->_createVLayout(d->_minButton));
+    d->_mainLayout->addLayout(d->_createVLayout(d->_maxButton));
+    d->_mainLayout->addLayout(d->_createVLayout(d->_closeButton));
 
     HWND hwnd = reinterpret_cast<HWND>(window()->winId());
 
@@ -170,6 +172,68 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 ElaAppBar::~ElaAppBar()
 {
     QGuiApplication::instance()->removeNativeEventFilter(this);
+}
+
+void ElaAppBar::setAppBarHeight(int height)
+{
+    Q_D(ElaAppBar);
+    d->_pAppBarHeight = height;
+    setFixedHeight(d->_pAppBarHeight);
+    window()->setContentsMargins(0, this->height(), 0, 0);
+    Q_EMIT pAppBarHeightChanged();
+}
+
+int ElaAppBar::getAppBarHeight() const
+{
+    Q_D(const ElaAppBar);
+    return d->_pAppBarHeight;
+}
+
+void ElaAppBar::setCustomWidget(QWidget* widget)
+{
+    Q_D(ElaAppBar);
+    if (!widget || widget == this)
+    {
+        return;
+    }
+    widget->setMinimumHeight(0);
+    widget->setMaximumHeight(height());
+    widget->setMaximumWidth(d->_pCustomWidgetMaximumWidth);
+    widget->setParent(this);
+    if (d->_pCustomWidget)
+    {
+        d->_mainLayout->removeWidget(d->_pCustomWidget);
+        d->_mainLayout->insertWidget(7, widget);
+    }
+    else
+    {
+        d->_mainLayout->insertWidget(7, widget);
+    }
+    d->_pCustomWidget = widget;
+    Q_EMIT pCustomWidgetChanged();
+}
+
+QWidget* ElaAppBar::getCustomWidget() const
+{
+    Q_D(const ElaAppBar);
+    return d->_pCustomWidget;
+}
+
+void ElaAppBar::setCustomWidgetMaximumWidth(int width)
+{
+    Q_D(ElaAppBar);
+    d->_pCustomWidgetMaximumWidth = width;
+    if (d->_pCustomWidget)
+    {
+        d->_pCustomWidget->setMaximumWidth(width);
+    }
+    Q_EMIT pCustomWidgetMaximumWidthChanged();
+}
+
+int ElaAppBar::getCustomWidgetMaximumWidth() const
+{
+    Q_D(const ElaAppBar);
+    return d->_pCustomWidgetMaximumWidth;
 }
 
 void ElaAppBar::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)
@@ -219,10 +283,16 @@ void ElaAppBar::closeWindow()
     closeOpacityAnimation->setEndValue(0);
     closeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     closeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    if (window()->isMaximized() || window()->isFullScreen())
+    {
+        return;
+    }
     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(window(), "geometry");
     QRect geometry = window()->geometry();
     geometryAnimation->setStartValue(geometry);
-    geometryAnimation->setEndValue(QRect(geometry.center().x() - d->_lastMinTrackWidth / 2, geometry.center().y() - window()->minimumHeight() / 2, d->_lastMinTrackWidth, window()->minimumHeight()));
+    int targetWidth = (geometry.width() - d->_lastMinTrackWidth) * 0.7 + d->_lastMinTrackWidth;
+    int targetHeight = (geometry.height() - window()->minimumHeight()) * 0.7 + window()->minimumHeight();
+    geometryAnimation->setEndValue(QRect(geometry.center().x() - targetWidth / 2, geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
     geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
     geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
@@ -348,12 +418,12 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         if (::IsZoomed(hwnd))
         {
             this->move(0, 7);
-            window()->setContentsMargins(8, 38, 8, 8);
+            window()->setContentsMargins(8, 8 + height(), 8, 8);
         }
         else
         {
             this->move(0, 0);
-            window()->setContentsMargins(0, 30, 0, 0);
+            window()->setContentsMargins(0, height(), 0, 0);
         }
         *result = 0;
         return true;
@@ -484,16 +554,8 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         MINMAXINFO* minmaxInfo = reinterpret_cast<MINMAXINFO*>(lParam);
         RECT rect;
         SystemParametersInfo(SPI_GETWORKAREA, 0, &rect, 0);
-        if (parentWidget()->findChild<ElaNavigationBar*>())
-        {
-            d->_lastMinTrackWidth = d->_calculateMinimumWidth() + 305;
-            minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
-        }
-        else
-        {
-            d->_lastMinTrackWidth = d->_calculateMinimumWidth() + 5;
-            minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
-        }
+        d->_lastMinTrackWidth = d->_calculateMinimumWidth();
+        minmaxInfo->ptMinTrackSize.x = d->_lastMinTrackWidth * qApp->devicePixelRatio();
         minmaxInfo->ptMinTrackSize.y = parentWidget()->minimumHeight() * qApp->devicePixelRatio();
         minmaxInfo->ptMaxPosition.x = rect.left;
         minmaxInfo->ptMaxPosition.y = rect.top;

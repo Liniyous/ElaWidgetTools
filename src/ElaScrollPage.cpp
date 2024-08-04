@@ -45,6 +45,7 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     mainLayout->addLayout(d->_pageTitleLayout);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(d->_centralStackedWidget);
+    setContentsMargins(20, 20, 0, 0);
 }
 
 ElaScrollPage::~ElaScrollPage()

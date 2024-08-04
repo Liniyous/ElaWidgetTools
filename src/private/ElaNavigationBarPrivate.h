@@ -20,7 +20,7 @@ class ElaNavigationDelegate;
 class ElaSuggestBox;
 class ElaInteractiveCard;
 
-class ElaListView;
+class ElaBaseListView;
 class ElaFooterModel;
 class ElaFooterDelegate;
 class ElaCompactModel;
@@ -48,7 +48,7 @@ private:
     QWidget* _maximalWidget{nullptr};
     QWidget* _compactWidget{nullptr};
     QHBoxLayout* _mainLayout{nullptr};
-    ElaListView* _compactView{nullptr};
+    ElaBaseListView* _compactView{nullptr};
     ElaCompactModel* _compactModel{nullptr};
     ElaCompactDelegate* _compactDelegate{nullptr};
 
@@ -56,7 +56,7 @@ private:
     ElaNavigationModel* _navigationModel{nullptr};
     ElaNavigationView* _navigationView{nullptr};
     ElaNavigationDelegate* _navigationDelegate{nullptr};
-    ElaListView* _footerView{nullptr};
+    ElaBaseListView* _footerView{nullptr};
     ElaFooterModel* _footerModel{nullptr};
     ElaFooterDelegate* _footerDelegate{nullptr};
     ElaSuggestBox* _navigationSuggestBox{nullptr};

@@ -3,6 +3,7 @@
 #include <QLayout>
 #include <QPropertyAnimation>
 
+#include "ElaBaseListView.h"
 #include "ElaBreadcrumbBar.h"
 #include "ElaCompactDelegate.h"
 #include "ElaCompactModel.h"

@@ -11,7 +11,7 @@ class ElaEvent;
 class ElaWindow;
 class ElaNavigationBar;
 class ElaAppBar;
-class QStackedWidget;
+class ElaCentralStackedWidget;
 class QHBoxLayout;
 class QVBoxLayout;
 class ElaThemeAnimationWidget;
@@ -37,7 +37,7 @@ private:
     bool _isInitFinished{false};
     ElaEvent* _focusEvent{nullptr};
     ElaNavigationBar* _navigationBar{nullptr};
-    QStackedWidget* _centerStackedWidget{nullptr};
+    ElaCentralStackedWidget* _centerStackedWidget{nullptr};
     ElaAppBar* _appBar{nullptr};
     QLinearGradient* _windowLinearGradient{nullptr};
     QHBoxLayout* _centerLayout{nullptr};

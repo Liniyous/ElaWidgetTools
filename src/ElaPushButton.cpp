@@ -28,8 +28,7 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     d->_lightTextColor = ElaThemeColor(ElaThemeType::Light, PushButtonDefaultText);
     d->_darkTextColor = ElaThemeColor(ElaThemeType::Dark, PushButtonDefaultText);
     setMouseTracking(true);
-    setFixedSize(90, 38);
-    setText("PushButton");
+    setFixedHeight(38);
     QFont font = this->font();
     font.setPointSize(11);
     setFont(font);

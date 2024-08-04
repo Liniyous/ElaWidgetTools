@@ -8,13 +8,13 @@
 class QLinearGradient;
 class ElaNavigationNode;
 class QPropertyAnimation;
-class ElaListView;
+class ElaBaseListView;
 class ElaFooterDelegate;
 class ElaFooterDelegatePrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaFooterDelegate)
-    Q_PRIVATE_CREATE_D(ElaListView*, ElaListView);
+    Q_PRIVATE_CREATE_D(ElaBaseListView*, ElaListView);
 
 public:
     explicit ElaFooterDelegatePrivate(QObject* parent = nullptr);

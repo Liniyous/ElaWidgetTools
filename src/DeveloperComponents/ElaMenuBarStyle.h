@@ -17,7 +17,7 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
-    int _menuBarItemMargin{5};
+    int _menuBarItemMargin{0};
     int _menuBarHeight{28};
 };
 

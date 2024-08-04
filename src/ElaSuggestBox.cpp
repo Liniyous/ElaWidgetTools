@@ -10,9 +10,9 @@
 #include <QPainterPath>
 #include <QVBoxLayout>
 
+#include "ElaBaseListView.h"
 #include "ElaIcon.h"
 #include "ElaLineEdit.h"
-#include "ElaListView.h"
 #include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestDelegate.h"
 #include "ElaSuggestModel.h"
@@ -44,7 +44,7 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     d->_searchViewBaseWidget = new ElaSuggestBoxSearchViewContainer(window());
     QVBoxLayout* shadowLayout = new QVBoxLayout(d->_searchViewBaseWidget);
     shadowLayout->setContentsMargins(0, 0, 0, 0);
-    d->_searchView = new ElaListView(d->_searchViewBaseWidget);
+    d->_searchView = new ElaBaseListView(d->_searchViewBaseWidget);
     d->_searchViewBaseWidget->resize(292, 300);
     shadowLayout->addWidget(d->_searchView);
     d->_searchModel = new ElaSuggestModel(this);
@@ -54,7 +54,7 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     d->_searchViewBaseWidget->hide();
     connect(d->_searchEdit, &ElaLineEdit::textEdited, d, &ElaSuggestBoxPrivate::onSearchEditTextEdit);
     connect(d->_searchEdit, &ElaLineEdit::focusIn, d, &ElaSuggestBoxPrivate::onSearchEditTextEdit);
-    connect(d->_searchView, &ElaListView::clicked, d, &ElaSuggestBoxPrivate::onSearchViewClicked);
+    connect(d->_searchView, &ElaBaseListView::clicked, d, &ElaSuggestBoxPrivate::onSearchViewClicked);
 
     // 焦点事件
     connect(d->_searchEdit, &ElaLineEdit::wmFocusOut, this, [d]() {

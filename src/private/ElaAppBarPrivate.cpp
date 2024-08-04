@@ -6,10 +6,12 @@
 #include <QLabel>
 #include <QPropertyAnimation>
 #include <QScreen>
+#include <QVBoxLayout>
 #include <QWidget>
 
 #include "ElaAppBar.h"
 #include "ElaIconButton.h"
+#include "ElaNavigationBar.h"
 #include "ElaText.h"
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
@@ -129,7 +131,7 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
     QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
     if (item == q)
     {
-        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
+        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_pCustomWidget) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
         {
             return false;
         }
@@ -160,6 +162,31 @@ int ElaAppBarPrivate::_calculateMinimumWidth()
     width += _titleLabel->width();
     width += _iconLabel->width();
     width += 15;
+    bool isHasNavigationBar = false;
+    if (q->parentWidget()->findChild<ElaNavigationBar*>())
+    {
+        isHasNavigationBar = true;
+        width += 305;
+    }
+    else
+    {
+        width += 5;
+    }
+    if (_pCustomWidget)
+    {
+        int customWidgetWidth = _pCustomWidget->minimumWidth();
+        if (isHasNavigationBar)
+        {
+            if (customWidgetWidth > 300)
+            {
+                width += customWidgetWidth - 300;
+            }
+        }
+        else
+        {
+            width += customWidgetWidth;
+        }
+    }
     QList<ElaIconButton*> buttonList = q->findChildren<ElaIconButton*>();
     for (auto button : buttonList)
     {
@@ -169,4 +196,22 @@ int ElaAppBarPrivate::_calculateMinimumWidth()
         }
     }
     return width;
+}
+
+QVBoxLayout* ElaAppBarPrivate::_createVLayout(QWidget* widget)
+{
+    if (!widget)
+    {
+        return nullptr;
+    }
+    QVBoxLayout* vLayout = new QVBoxLayout();
+    vLayout->setContentsMargins(0, 0, 0, 0);
+    vLayout->setSpacing(0);
+    if (widget == _iconLabel || widget == _titleLabel)
+    {
+        vLayout->addSpacing(6);
+    }
+    vLayout->addWidget(widget);
+    vLayout->addStretch();
+    return vLayout;
 }

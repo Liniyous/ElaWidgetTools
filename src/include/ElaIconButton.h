@@ -15,6 +15,8 @@ class ELA_EXPORT ElaIconButton : public QPushButton
     Q_PROPERTY_CREATE_Q_H(QColor, DarkHoverColor);
     Q_PROPERTY_CREATE_Q_H(QColor, LightIconColor);
     Q_PROPERTY_CREATE_Q_H(QColor, DarkIconColor);
+    Q_PROPERTY_CREATE_Q_H(QColor, LightHoverIconColor);
+    Q_PROPERTY_CREATE_Q_H(QColor, DarkHoverIconColor);
     Q_PROPERTY_CREATE_Q_H(bool, IsSelected);
 
 public:

@@ -24,16 +24,9 @@ ElaMenu::ElaMenu(QWidget* parent)
 }
 
 ElaMenu::ElaMenu(const QString& title, QWidget* parent)
-    : QMenu(title, parent), d_ptr(new ElaMenuPrivate())
+    : ElaMenu(parent)
 {
-    Q_D(ElaMenu);
-    d->q_ptr = this;
-    setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
-    setAttribute(Qt::WA_TranslucentBackground);
-    setObjectName("ElaMenu");
-    d->_menuStyle = new ElaMenuStyle(style());
-    setStyle(d->_menuStyle);
-    d->_pAnimationImagePosY = 0;
+    setTitle(title);
 }
 
 ElaMenu::~ElaMenu()

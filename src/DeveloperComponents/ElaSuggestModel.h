@@ -4,7 +4,6 @@
 #include <QAbstractListModel>
 
 #include "Def.h"
-#include "stdafx.h"
 class ElaSuggestion;
 class ElaSuggestModel : public QAbstractListModel
 {

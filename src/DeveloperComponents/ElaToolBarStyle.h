@@ -4,6 +4,7 @@
 #include <QProxyStyle>
 
 #include "Def.h"
+class QStyleOptionToolButton;
 class ElaToolBarStyle : public QProxyStyle
 {
     Q_OBJECT
@@ -16,6 +17,9 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
+    void _drawIndicator(QPainter* painter, const QStyleOptionToolButton* bopt, const QWidget* widget) const;
+    void _drawIcon(QPainter* painter, QRectF iconRect, const QStyleOptionToolButton* bopt, const QWidget* widget) const;
+    void _drawText(QPainter* painter, QRect contentRect, const QStyleOptionToolButton* bopt) const;
 };
 
 #endif // ELATOOLBARSTYLE_H

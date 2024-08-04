@@ -3,12 +3,12 @@
 #include <QWidget>
 
 #include "stdafx.h"
-class ElaListView;
-class ElaBreadcrumbBarModel;
-class ElaBreadcrumbBarDelegate;
+
+class ElaBreadcrumbBarPrivate;
 class ELA_EXPORT ElaBreadcrumbBar : public QWidget
 {
     Q_OBJECT
+    Q_Q_CREATE(ElaBreadcrumbBar)
 public:
     explicit ElaBreadcrumbBar(QWidget* parent = nullptr);
     ~ElaBreadcrumbBar();
@@ -21,11 +21,6 @@ public:
 
 Q_SIGNALS:
     Q_SIGNAL void breadcrumbClicked(QString breadcrumb, QStringList lastBreadcrumbList);
-
-private:
-    ElaBreadcrumbBarModel* _listModel{nullptr};
-    ElaBreadcrumbBarDelegate* _listDelegate{nullptr};
-    ElaListView* _listView{nullptr};
 };
 
 #endif // ELABREADCRUMBBAR_H

@@ -1,6 +1,7 @@
 ﻿#include "T_Home.h"
 
 #include <QDebug>
+#include <QDesktopServices>
 #include <QHBoxLayout>
 #include <QMouseEvent>
 #include <QVBoxLayout>
@@ -11,14 +12,12 @@
 #include "ElaMenu.h"
 #include "ElaMessageBar.h"
 #include "ElaNavigationRouter.h"
-#include "ElaReminderCard.h"
+#include "ElaPopularCard.h"
 #include "ElaScrollArea.h"
 #include "ElaText.h"
 T_Home::T_Home(QWidget* parent)
     : ElaScrollPage(parent)
 {
-    setPageTitleSpacing(5);
-
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("Home");
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
@@ -26,39 +25,67 @@ T_Home::T_Home(QWidget* parent)
     ElaImageCard* backgroundCard = new ElaImageCard(this);
     backgroundCard->setCardImage(QImage(":/Resource/Image/Home_Background.png"));
 
-    ElaText* flowLayoutText = new ElaText("Flow Layout", this);
+    ElaText* flowLayoutText = new ElaText("热门免费应用", this);
     // ElaFlowLayout
-    ElaReminderCard* homeCard1 = new ElaReminderCard(this);
-    connect(homeCard1, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaScreenNavigation(); });
+    ElaPopularCard* homeCard = new ElaPopularCard(this);
+    connect(homeCard, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
+        QDesktopServices::openUrl(QUrl("https://github.com/Liniyous/ElaWidgetTools"));
+    });
+    homeCard->setCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
+    homeCard->setTitle("ElaWidgetTool");
+    homeCard->setSubTitle("5.0⭐ 实用程序与工具");
+    homeCard->setInteractiveTips("免费下载");
+    homeCard->setDetailedText("ElaWidgetTools致力于为QWidget用户提供一站式的外观和实用功能解决方案,只需数十MB内存和极少CPU占用以支持高效而美观的界面开发");
+    homeCard->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
+
+    ElaPopularCard* homeCard1 = new ElaPopularCard(this);
+    connect(homeCard1, &ElaPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaScreenNavigation(); });
     homeCard1->setTitle("ElaScreen");
-    homeCard1->setSubTitle("Use ElaDxgiManager To Grab Screen");
+    homeCard1->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard1->setCardPixmap(QPixmap(":/Resource/Image/control/AutomationProperties.png"));
+    homeCard1->setInteractiveTips("免费使用");
+    homeCard1->setDetailedText("使用ElaDxgiManager获取屏幕的实时数据，以QImage的形式处理数据，支持切换采集设备和输出设备。");
+    homeCard1->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
-    ElaReminderCard* homeCard2 = new ElaReminderCard(this);
-    connect(homeCard2, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaSceneNavigation(); });
+    ElaPopularCard* homeCard2 = new ElaPopularCard(this);
+    connect(homeCard2, &ElaPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaSceneNavigation(); });
     homeCard2->setTitle("ElaScene");
-    homeCard2->setSubTitle("Use ElaScene To Create Link Work");
-    homeCard2->setCardPixmap(QPixmap(":/Resource/Image/control/BreadcrumbBar.png"));
+    homeCard2->setSubTitle("5.0⭐ 实用程序与工具");
+    homeCard2->setCardPixmap(QPixmap(":/Resource/Image/control/Canvas.png"));
+    homeCard2->setInteractiveTips("免费使用");
+    homeCard2->setDetailedText("使用ElaScene封装的高集成度API进行快速拓扑绘图开发，对基于连接的网络拓扑特化处理。");
+    homeCard2->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
-    ElaReminderCard* homeCard3 = new ElaReminderCard(this);
-    connect(homeCard3, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaBaseComponentNavigation(); });
+    ElaPopularCard* homeCard3 = new ElaPopularCard(this);
+    connect(homeCard3, &ElaPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaBaseComponentNavigation(); });
     homeCard3->setTitle("ElaBaseComponent");
-    homeCard3->setSubTitle("Use ElaBaseComponent To Start Project");
+    homeCard3->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard3->setCardPixmap(QPixmap(":/Resource/Image/control/StandardUICommand.png"));
+    homeCard3->setInteractiveTips("免费使用");
+    homeCard3->setDetailedText("添加ElaBaseComponent页面中的基础组件到你的项目中以进行快捷开发，使用方便，结构整洁，API规范");
+    homeCard3->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
-    ElaReminderCard* homeCard4 = new ElaReminderCard(this);
-    connect(homeCard4, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaSceneNavigation(); });
-    homeCard4->setTitle("ElaButton");
-    homeCard4->setSubTitle("Use ElaButton To Trigger Action");
-    homeCard4->setCardPixmap(QPixmap(":/Resource/Image/control/MenuFlyout.png"));
+    ElaPopularCard* homeCard4 = new ElaPopularCard(this);
+    connect(homeCard4, &ElaPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaCardNavigation(); });
+    homeCard4->setTitle("ElaCard");
+    homeCard4->setSubTitle("5.0⭐ 实用程序与工具");
+    homeCard4->setCardPixmap(QPixmap(":/Resource/Image/control/FlipView.png"));
+    homeCard4->setInteractiveTips("免费使用");
+    homeCard4->setDetailedText("使用ElaCard系列组件，包括促销卡片和促销卡片视窗来快速建立循环动画。");
+    homeCard4->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
-    ElaReminderCard* homeCard5 = new ElaReminderCard(this);
-    connect(homeCard5, &ElaReminderCard::clicked, this, [=]() { Q_EMIT elaIconNavigation(); });
+    ElaPopularCard* homeCard5 = new ElaPopularCard(this);
+    connect(homeCard5, &ElaPopularCard::popularCardButtonClicked, this, [=]() { Q_EMIT elaIconNavigation(); });
     homeCard5->setTitle("ElaIcon");
-    homeCard5->setSubTitle("Use ElaIcon To Create A Light Icon");
-    homeCard5->setCardPixmap(QPixmap(":/Resource/Image/control/Canvas.png"));
+    homeCard5->setSubTitle("5.0⭐ 实用程序与工具");
+    homeCard5->setCardPixmap(QPixmap(":/Resource/Image/control/CommandBarFlyout.png"));
+    homeCard5->setInteractiveTips("免费使用");
+    homeCard5->setDetailedText("在该界面快速挑选你喜欢的图标应用到项目中，以枚举的形式使用它");
+    homeCard5->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
+
     ElaFlowLayout* flowLayout = new ElaFlowLayout(0, 5, 5);
     flowLayout->setIsAnimation(true);
+    flowLayout->addWidget(homeCard);
     flowLayout->addWidget(homeCard1);
     flowLayout->addWidget(homeCard2);
     flowLayout->addWidget(homeCard3);

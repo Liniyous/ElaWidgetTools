@@ -25,7 +25,7 @@ ElaReminderCard::ElaReminderCard(QWidget* parent)
     d->_pBorderRadius = 6;
     d->_pTitlePixelSize = 15;
     d->_pSubTitlePixelSize = 12;
-    setMinimumSize(330, 105);
+    setFixedSize(330, 105);
     d->_pCardPixmapSize = QSize((height() - d->_shadowBorderWidth) * 0.8, (height() - d->_shadowBorderWidth) * 0.8);
     d->_pTitleSpacing = 3;
     d->_pCardPixmapBorderRadius = 6;

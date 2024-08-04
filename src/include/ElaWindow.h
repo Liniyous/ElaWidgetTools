@@ -47,6 +47,12 @@ public:
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;
 
+    void setCustomWidget(QWidget* widget);
+    QWidget* getCustomWidget() const;
+
+    void setCustomWidgetMaximumWidth(int width);
+    int getCustomWidgetMaximumWidth() const;
+
     void setIsDefaultClosed(bool isDefaultClosed);
     bool getIsDefaultClosed() const;
     void closeWindow();

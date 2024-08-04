@@ -11,6 +11,7 @@ class ELA_EXPORT ElaNavigationBar : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaNavigationBar)
+    Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
 public:
     explicit ElaNavigationBar(QWidget* parent = nullptr);
     ~ElaNavigationBar();

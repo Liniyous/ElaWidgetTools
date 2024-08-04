@@ -2,7 +2,7 @@
 #define ELATOOLBARPRIVATE_H
 #include <QObject>
 
-#include "stdafx.h"
+#include "Def.h"
 class ElaToolBar;
 class ElaToolBarPrivate : public QObject
 {
@@ -11,6 +11,10 @@ class ElaToolBarPrivate : public QObject
 public:
     explicit ElaToolBarPrivate(QObject* parent = nullptr);
     ~ElaToolBarPrivate();
+
+private:
+    ElaThemeType::ThemeMode _themeMode;
+    int _shadowBorderWidth{6};
 };
 
 #endif // ELATOOLBARPRIVATE_H

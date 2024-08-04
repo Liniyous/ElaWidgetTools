@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
+#include "ElaCentralStackedWidget.h"
 #include "ElaEventBus.h"
 #include "ElaMenu.h"
 #include "ElaNavigationBar.h"
@@ -37,8 +38,8 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(this, &ElaWindow::pNavigationBarDisplayModeChanged, d, &ElaWindowPrivate::onDisplayModeChanged);
 
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
+    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(eTheme->getThemeMode(), WindowBaseStart));
+    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(eTheme->getThemeMode(), WindowBaseEnd));
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
     connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
@@ -62,14 +63,14 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_navigationBar, &ElaNavigationBar::navigationNodeAdded, d, &ElaWindowPrivate::onNavigationNodeAdded);
 
     // 中心堆栈窗口
-    d->_centerStackedWidget = new QStackedWidget(this);
-    d->_centerStackedWidget->setContentsMargins(0, 10, 0, 0);
+    d->_centerStackedWidget = new ElaCentralStackedWidget(this);
+    d->_centerStackedWidget->setContentsMargins(0, 0, 0, 0);
     QWidget* centralWidget = new QWidget(this);
     d->_centerLayout = new QHBoxLayout(centralWidget);
+    d->_centerLayout->setSpacing(0);
     d->_centerLayout->addWidget(d->_navigationBar);
     d->_centerLayout->addWidget(d->_centerStackedWidget);
-    int contentMargin = d->_contentsMargins;
-    d->_centerLayout->setContentsMargins(contentMargin, contentMargin, contentMargin, contentMargin);
+    d->_centerLayout->setContentsMargins(d->_contentsMargins, 0, 0, 0);
 
     // 事件总线
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
@@ -250,6 +251,30 @@ void ElaWindow::setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags)
 ElaAppBarType::ButtonFlags ElaWindow::getWindowButtonFlags() const
 {
     return d_ptr->_appBar->getWindowButtonFlags();
+}
+
+void ElaWindow::setCustomWidget(QWidget* widget)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setCustomWidget(widget);
+}
+
+QWidget* ElaWindow::getCustomWidget() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getCustomWidget();
+}
+
+void ElaWindow::setCustomWidgetMaximumWidth(int width)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setCustomWidgetMaximumWidth(width);
+}
+
+int ElaWindow::getCustomWidgetMaximumWidth() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getCustomWidgetMaximumWidth();
 }
 
 void ElaWindow::setIsDefaultClosed(bool isDefaultClosed)

@@ -106,5 +106,10 @@
         <file>Resource/Image/Card/classroom.png</file>
         <file>Resource/Image/Card/dream.png</file>
         <file>Resource/Image/Card/miku.png</file>
+        <file>Resource/Image/IARC/IARC_12+.svg.png</file>
+        <file>Resource/Image/IARC/IARC_16+.svg.png</file>
+        <file>Resource/Image/IARC/IARC_18+.svg.png</file>
+        <file>Resource/Image/IARC/IARC_3+.svg.png</file>
+        <file>Resource/Image/IARC/IARC_7+.svg.png</file>
     </qresource>
 </RCC>

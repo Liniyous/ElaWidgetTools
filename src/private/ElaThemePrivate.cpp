@@ -75,7 +75,7 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ContentDialogRightButtonBase] = QColor(0x00, 0x66, 0xB4);
     _darkThemeColorList[ContentDialogRightButtonBase] = QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[ContentDialogRightButtonText] = Qt::white;
-    _darkThemeColorList[ContentDialogRightButtonText] = Qt::black;
+    _darkThemeColorList[ContentDialogRightButtonText] = Qt::white;
     _lightThemeColorList[ContentDialogRightButtonHover] = QColor(0x00, 0x70, 0xC6);
     _darkThemeColorList[ContentDialogRightButtonHover] = QColor(0x45, 0x91, 0xCC);
     _lightThemeColorList[ContentDialogRightButtonPress] = QColor(0x00, 0x7A, 0xD8);
@@ -163,11 +163,11 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[NavigationBaseEnd] = QColor(0xF4, 0xF1, 0xF8);
     _darkThemeColorList[NavigationBaseEnd] = QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[NavigationHover] = QColor(0xE9, 0xE9, 0xF0);
-    _darkThemeColorList[NavigationHover] = QColor(0x27, 0x27, 0x27);
+    _darkThemeColorList[NavigationHover] = QColor(0x2B, 0x2C, 0x36);
     _lightThemeColorList[NavigationSelected] = QColor(0xEA, 0xE9, 0xF0);
-    _darkThemeColorList[NavigationSelected] = QColor(0x35, 0x35, 0x35);
+    _darkThemeColorList[NavigationSelected] = QColor(0x2B, 0x2C, 0x36);
     _lightThemeColorList[NavigationSelectedHover] = QColor(0xED, 0xEC, 0xF3);
-    _darkThemeColorList[NavigationSelectedHover] = QColor(0x2F, 0x2F, 0x2F);
+    _darkThemeColorList[NavigationSelectedHover] = QColor(0x28, 0x27, 0x33);
     _lightThemeColorList[NavigationExpanderNodeKeyPoint] = QColor(0xFF, 0x4D, 0x4F);
     _darkThemeColorList[NavigationExpanderNodeKeyPoint] = QColor(0xFF, 0x4D, 0x4F);
     _lightThemeColorList[NavigationKeyPointBase] = Qt::white;
@@ -180,6 +180,22 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[NavigationMark] = QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[NavigationFooterBaseLine] = QColor(0xD2, 0xD2, 0xD2);
     _darkThemeColorList[NavigationFooterBaseLine] = QColor(0x50, 0x50, 0x50);
+
+    //ElaPopularCard
+    _lightThemeColorList[PopularCardBorder] = QColor(0xEA, 0xEA, 0xED);
+    _darkThemeColorList[PopularCardBorder] = QColor(0x26, 0x24, 0x2A);
+    _lightThemeColorList[PopularCardFloaterBorder] = QColor(0xBE, 0xBA, 0xBE);
+    _darkThemeColorList[PopularCardFloaterBorder] = QColor(0x52, 0x50, 0x52);
+    _lightThemeColorList[PopularCardBase] = QColor(0xFD, 0xFD, 0xFE);
+    _darkThemeColorList[PopularCardBase] = QColor(0x34, 0x30, 0x39);
+    _lightThemeColorList[PopularCardInteractiveTipsBase] = QColor(0xE6, 0xE6, 0xE6);
+    _darkThemeColorList[PopularCardInteractiveTipsBase] = QColor(0x2B, 0x2C, 0x36);
+    _lightThemeColorList[PopularCardInteractiveTips] = Qt::black;
+    _darkThemeColorList[PopularCardInteractiveTips] = Qt::white;
+    _lightThemeColorList[PopularCardFloaterBaseLine] = QColor(0xF1, 0xF1, 0xF1);
+    _darkThemeColorList[PopularCardFloaterBaseLine] = QColor(0x50, 0x50, 0x50);
+    _lightThemeColorList[PopularCardDetailedText] = QColor(0x87, 0x87, 0x87);
+    _darkThemeColorList[PopularCardDetailedText] = QColor(0xAD, 0xAD, 0xB0);
 
     //ElaProgressBar
     _lightThemeColorList[ProgressBarBase] = QColor(0xD6, 0xD6, 0xD6);
@@ -272,8 +288,10 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[SpinBoxMarkHasFocus] = QColor(0x4C, 0xA0, 0xE0);
 
     //ElaStatusBar
-    _lightThemeColorList[StatusBarBase] = QColor(0xF5, 0xF1, 0xFF);
+    _lightThemeColorList[StatusBarBase] = QColor(0xFC, 0xF7, 0xFC);
     _darkThemeColorList[StatusBarBase] = QColor(0x40, 0x40, 0x40);
+    _lightThemeColorList[StatusBarBorder] = QColor(0xE8, 0xE2, 0xEA);
+    _darkThemeColorList[StatusBarBorder] = Qt::transparent;
     _lightThemeColorList[StatusBarSeparator] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[StatusBarSeparator] = QColor(0x4C, 0xA0, 0xE0);
 
@@ -367,9 +385,11 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[WindowTextDisable] = Qt::gray;
     _darkThemeColorList[WindowTextDisable] = Qt::gray;
     _lightThemeColorList[WindowBaseStart] = QColor(0xF2, 0xF2, 0xF9);
-    _darkThemeColorList[WindowBaseStart] = QColor(0x1A, 0x1A, 0x1A);
-    _lightThemeColorList[WindowBaseEnd] = QColor(0xF9, 0xEF, 0xF6);
-    _darkThemeColorList[WindowBaseEnd] = QColor(0x1A, 0x1A, 0x1A);
+    _darkThemeColorList[WindowBaseStart] = QColor(0x1F, 0x1F, 0x2B);
+    _lightThemeColorList[WindowBaseEnd] = QColor(0xF4, 0xF1, 0xF9);
+    _darkThemeColorList[WindowBaseEnd] = QColor(0x1F, 0x1F, 0x29);
+    _lightThemeColorList[WindowBaseLine] = QColor(0xE4, 0xE4, 0xEA);
+    _darkThemeColorList[WindowBaseLine] = QColor(0x26, 0x2B, 0x2F);
     _lightThemeColorList[WindowDockWidgetResizeHandle] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[WindowDockWidgetResizeHandle] = QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[WindowDockWidgetResizeHandleHover] = QColor(0x6F, 0xAA, 0xDE);
@@ -382,6 +402,10 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[WindowTabBarHover] = QColor(0x27, 0x27, 0x27);
     _lightThemeColorList[WindowTabBarSelected] = Qt::white;
     _darkThemeColorList[WindowTabBarSelected] = QColor(0x2D, 0x2D, 0x2D);
-    _lightThemeColorList[windowTabBarSeparator] = QColor(0x0E, 0x6F, 0xC3);
-    _darkThemeColorList[windowTabBarSeparator] = QColor(0x4C, 0xA0, 0xE0);
+    _lightThemeColorList[WindowTabBarSeparator] = QColor(0x0E, 0x6F, 0xC3);
+    _darkThemeColorList[WindowTabBarSeparator] = QColor(0x4C, 0xA0, 0xE0);
+    _lightThemeColorList[WindowCentralStackBaseStart] = QColor(0xF9, 0xF9, 0xFC);
+    _darkThemeColorList[WindowCentralStackBaseStart] = QColor(0x24, 0x29, 0x2D);
+    _lightThemeColorList[WindowCentralStackBaseEnd] = QColor(0xFA, 0xF8, 0xFC);
+    _darkThemeColorList[WindowCentralStackBaseEnd] = QColor(0x2E, 0x26, 0x33);
 }

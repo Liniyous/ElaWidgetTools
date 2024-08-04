@@ -15,6 +15,7 @@
 #include "ElaLog.h"
 #include "ElaMenu.h"
 #include "ElaMenuBar.h"
+#include "ElaProgressBar.h"
 #include "ElaStatusBar.h"
 #include "ElaText.h"
 #include "ElaToolBar.h"
@@ -80,9 +81,18 @@ void MainWindow::initEdgeLayout()
 {
     //菜单栏
     ElaMenuBar* menuBar = new ElaMenuBar(this);
-    this->setMenuBar(menuBar);
+    menuBar->setFixedHeight(30);
+    QWidget* customWidget = new QWidget(this);
+    QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
+    customLayout->setContentsMargins(0, 0, 0, 0);
+    customLayout->addWidget(menuBar);
+    customLayout->addStretch();
+    //this->setMenuBar(menuBar);
+    this->setCustomWidget(customWidget);
+    this->setCustomWidgetMaximumWidth(500);
 
-    ElaMenu* iconMenu = menuBar->addMenu(ElaIconType::DeerRudolph, "图标菜单");
+    menuBar->addElaIconAction(ElaIconType::AtomSimple, "动作菜单");
+    ElaMenu* iconMenu = menuBar->addMenu(ElaIconType::Aperture, "图标菜单");
     iconMenu->setMenuItemHeight(27);
     iconMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
     iconMenu->addElaIconAction(ElaIconType::Copy, "复制");
@@ -90,8 +100,6 @@ void MainWindow::initEdgeLayout()
     iconMenu->addSeparator();
     iconMenu->addElaIconAction(ElaIconType::ArrowRotateRight, "刷新");
     iconMenu->addElaIconAction(ElaIconType::ArrowRotateLeft, "撤销");
-
-    menuBar->addAction("动作菜单");
     menuBar->addSeparator();
     ElaMenu* shortCutMenu = new ElaMenu("快捷菜单(&A)", this);
     shortCutMenu->setMenuItemHeight(27);
@@ -112,30 +120,57 @@ void MainWindow::initEdgeLayout()
 
     //工具栏
     ElaToolBar* toolBar = new ElaToolBar("工具栏", this);
+    toolBar->setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
+    toolBar->setToolBarSpacing(3);
+    toolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    toolBar->setIconSize(QSize(25, 25));
+    // toolBar->setFloatable(false);
+    // toolBar->setMovable(false);
     ElaToolButton* toolButton1 = new ElaToolButton(this);
     toolButton1->setElaIcon(ElaIconType::BadgeCheck);
     toolBar->addWidget(toolButton1);
     ElaToolButton* toolButton2 = new ElaToolButton(this);
-    toolButton2->setElaIcon(ElaIconType::BaseballBatBall);
+    toolButton2->setElaIcon(ElaIconType::ChartUser);
     toolBar->addWidget(toolButton2);
     toolBar->addSeparator();
     ElaToolButton* toolButton3 = new ElaToolButton(this);
     toolButton3->setElaIcon(ElaIconType::Bluetooth);
+    toolButton3->setText("Bluetooth");
     toolBar->addWidget(toolButton3);
     ElaToolButton* toolButton4 = new ElaToolButton(this);
-    toolButton4->setElaIcon(ElaIconType::GameBoard);
+    toolButton4->setElaIcon(ElaIconType::BringFront);
     toolBar->addWidget(toolButton4);
     toolBar->addSeparator();
     ElaToolButton* toolButton5 = new ElaToolButton(this);
-    toolButton5->setElaIcon(ElaIconType::CircleExclamationCheck);
+    toolButton5->setElaIcon(ElaIconType::ChartSimple);
     toolBar->addWidget(toolButton5);
     ElaToolButton* toolButton6 = new ElaToolButton(this);
     toolButton6->setElaIcon(ElaIconType::FaceClouds);
     toolBar->addWidget(toolButton6);
-    ElaToolButton* toolButton7 = new ElaToolButton(this);
-    toolButton7->setElaIcon(ElaIconType::SquareThisWayUp);
-    toolBar->addWidget(toolButton7);
-    this->addToolBar(Qt::LeftToolBarArea, toolBar);
+    ElaToolButton* toolButton8 = new ElaToolButton(this);
+    toolButton8->setElaIcon(ElaIconType::Aperture);
+    toolBar->addWidget(toolButton8);
+    ElaToolButton* toolButton9 = new ElaToolButton(this);
+    toolButton9->setElaIcon(ElaIconType::ChartMixed);
+    toolBar->addWidget(toolButton9);
+    ElaToolButton* toolButton10 = new ElaToolButton(this);
+    toolButton10->setElaIcon(ElaIconType::Coins);
+    toolBar->addWidget(toolButton10);
+    ElaToolButton* toolButton11 = new ElaToolButton(this);
+    toolButton11->setElaIcon(ElaIconType::AlarmPlus);
+    toolButton11->setText("AlarmPlus");
+    toolBar->addWidget(toolButton11);
+    ElaToolButton* toolButton12 = new ElaToolButton(this);
+    toolButton12->setElaIcon(ElaIconType::Crown);
+    toolBar->addWidget(toolButton12);
+
+    ElaProgressBar* progressBar = new ElaProgressBar(this);
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(0);
+    progressBar->setMaximumWidth(350);
+    toolBar->addWidget(progressBar);
+
+    this->addToolBar(Qt::TopToolBarArea, toolBar);
 
     //停靠窗口
     ElaDockWidget* logDockWidget = new ElaDockWidget("日志信息", this);
@@ -230,5 +265,6 @@ void MainWindow::initContent()
     connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() { this->navigation(_baseComponentsPage->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() { this->navigation(view->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaIconNavigation, this, [=]() { this->navigation(_iconPage->property("ElaPageKey").toString()); });
+    connect(_homePage, &T_Home::elaCardNavigation, this, [=]() { this->navigation(_cardPage->property("ElaPageKey").toString()); });
     qDebug() << "已注册的事件列表" << ElaEventBus::getInstance()->getRegisteredEventsName();
 }
