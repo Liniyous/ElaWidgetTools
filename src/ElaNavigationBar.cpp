@@ -132,7 +132,6 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 
     //主题设置
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
-    parent->installEventFilter(this);
 }
 
 ElaNavigationBar::~ElaNavigationBar()

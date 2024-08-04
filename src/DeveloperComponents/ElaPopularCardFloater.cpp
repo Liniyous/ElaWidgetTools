@@ -85,6 +85,10 @@ void ElaPopularCardFloater::hideFloater()
     }
     _isHideAnimationFinished = false;
     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(this, "geometry");
+    connect(geometryAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        QRect endGeometry = QRect(_card->mapTo(_cardPrivate->_pCardFloatArea, QPoint(0, 0)), _card->size());
+        geometryAnimation->setEndValue(endGeometry);
+    });
     connect(geometryAnimation, &QPropertyAnimation::finished, this, [=]() {
         _cardPrivate->_isFloating = false;
         setVisible(false);
