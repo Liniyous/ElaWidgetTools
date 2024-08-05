@@ -8,7 +8,7 @@
 #include "stdafx.h"
 
 #define eTheme ElaTheme::getInstance()
-#define ElaThemeColor(themeMode, themmColor) eTheme->getThemeColor(themeMode, ElaThemeType::themmColor)
+#define ElaThemeColor(themeMode, themeColor) eTheme->getThemeColor(themeMode, ElaThemeType::themeColor)
 class QPainter;
 class ElaThemePrivate;
 class ELA_EXPORT ElaTheme : public QObject
