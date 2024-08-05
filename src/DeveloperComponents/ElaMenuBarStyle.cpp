@@ -73,6 +73,7 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             {
                 return;
             }
+            int menuBarHeight = widget->height();
             QRect menuItemRect = mopt->rect;
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -112,15 +113,15 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
                     painter->save();
                     painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowTextDisable) : ElaThemeColor(_themeMode, WindowText));
                     QFont iconFont = QFont("ElaAwesome");
-                    iconFont.setPixelSize(_menuBarHeight * 0.7);
+                    iconFont.setPixelSize(menuBarHeight * 0.7);
                     painter->setFont(iconFont);
                     painter->drawText(menuItemRect, Qt::AlignCenter, iconText);
                     painter->restore();
                 }
                 else if (!icon.isNull())
                 {
-                    QRect menuIconRect(menuItemRect.center().x() - _menuBarHeight * 0.4, menuItemRect.center().y() - _menuBarHeight * 0.4, _menuBarHeight * 0.8, _menuBarHeight * 0.8);
-                    painter->drawPixmap(menuIconRect, icon.pixmap(_menuBarHeight * 0.8, _menuBarHeight * 0.8));
+                    QRect menuIconRect(menuItemRect.center().x() - menuBarHeight * 0.4, menuItemRect.center().y() - menuBarHeight * 0.4, menuBarHeight * 0.8, menuBarHeight * 0.8);
+                    painter->drawPixmap(menuIconRect, icon.pixmap(menuBarHeight * 0.8, menuBarHeight * 0.8));
                 }
             }
             else
@@ -135,20 +136,20 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
                 {
                     if (!iconText.isEmpty())
                     {
-                        QRectF menuIconRect(menuItemRect.x() + _menuBarHeight * 0.1 + _menuBarItemMargin, _menuBarHeight * 0.1, _menuBarHeight * 0.8, _menuBarHeight * 0.8);
+                        QRectF menuIconRect(menuItemRect.x() + menuBarHeight * 0.1 + _menuBarItemMargin, menuBarHeight * 0.1, menuBarHeight * 0.8, menuBarHeight * 0.8);
                         painter->save();
                         QFont iconFont = QFont("ElaAwesome");
-                        iconFont.setPixelSize(_menuBarHeight * 0.7);
+                        iconFont.setPixelSize(menuBarHeight * 0.7);
                         painter->setFont(iconFont);
                         painter->drawText(menuIconRect, Qt::AlignCenter, iconText);
                         painter->restore();
-                        painter->drawText(QRect(menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(), _menuBarHeight), Qt::AlignCenter, menuText);
+                        painter->drawText(QRect(menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(), menuBarHeight), Qt::AlignCenter, menuText);
                     }
                     else
                     {
-                        QRect menuIconRect(menuItemRect.x() + _menuBarHeight * 0.1 + _menuBarItemMargin, _menuBarHeight * 0.1, _menuBarHeight * 0.8, _menuBarHeight * 0.8);
-                        painter->drawPixmap(menuIconRect, icon.pixmap(_menuBarHeight * 0.8, _menuBarHeight * 0.8));
-                        painter->drawText(QRect(menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(), _menuBarHeight), Qt::AlignCenter, menuText);
+                        QRect menuIconRect(menuItemRect.x() + menuBarHeight * 0.1 + _menuBarItemMargin, menuBarHeight * 0.1, menuBarHeight * 0.8, menuBarHeight * 0.8);
+                        painter->drawPixmap(menuIconRect, icon.pixmap(menuBarHeight * 0.8, menuBarHeight * 0.8));
+                        painter->drawText(QRect(menuIconRect.right(), menuItemRect.y(), menuItemRect.width() - menuIconRect.width(), menuBarHeight), Qt::AlignCenter, menuText);
                     }
                 }
             }
@@ -172,7 +173,7 @@ QSize ElaMenuBarStyle::sizeFromContents(ContentsType type, const QStyleOption* o
     case QStyle::CT_MenuBar:
     {
         QSize menuBarHeight = QProxyStyle::sizeFromContents(type, option, size, widget);
-        menuBarHeight.setHeight(_menuBarHeight);
+        menuBarHeight.setHeight(widget->height());
         return menuBarHeight;
     }
     case QStyle::CT_MenuBarItem:
@@ -180,7 +181,7 @@ QSize ElaMenuBarStyle::sizeFromContents(ContentsType type, const QStyleOption* o
         if (const QStyleOptionMenuItem* mopt = qstyleoption_cast<const QStyleOptionMenuItem*>(option))
         {
             QSize menuBarItemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
-            menuBarItemSize.setHeight(_menuBarHeight);
+            menuBarItemSize.setHeight(widget->height());
             if ((!mopt->icon.isNull()) && !mopt->text.isEmpty())
             {
                 menuBarItemSize.setWidth(menuBarItemSize.width() + mopt->fontMetrics.horizontalAdvance(mopt->text) + 2 * _menuBarItemMargin);

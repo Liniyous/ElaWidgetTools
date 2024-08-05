@@ -3,7 +3,6 @@
 
 #include <QStyledItemDelegate>
 
-#include "Def.h"
 #include "stdafx.h"
 class ElaNavigationView;
 class ElaNavigationDelegatePrivate;

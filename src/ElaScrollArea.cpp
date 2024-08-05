@@ -1,6 +1,5 @@
 #include "ElaScrollArea.h"
 
-#include <QPainter>
 #include <QScrollBar>
 #include <QScroller>
 

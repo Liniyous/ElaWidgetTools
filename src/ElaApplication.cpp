@@ -8,14 +8,12 @@
 #include "private/ElaApplicationPrivate.h"
 Q_SINGLETON_CREATE_CPP(ElaApplication)
 Q_PROPERTY_CREATE_Q_CPP(ElaApplication, bool, IsApplicationClosed)
-Q_PRIVATE_CREATE_Q_CPP(ElaApplication, QIcon, WindowIcon)
 ElaApplication::ElaApplication(QObject* parent)
     : QObject{parent}, d_ptr(new ElaApplicationPrivate())
 {
     Q_D(ElaApplication);
     d->q_ptr = this;
     d->_pIsApplicationClosed = false;
-    d->_pWindowIcon = QIcon(":/include/Image/Cirno.jpg");
 }
 
 ElaApplication::~ElaApplication()
@@ -24,9 +22,7 @@ ElaApplication::~ElaApplication()
 
 void ElaApplication::init()
 {
-    Q_D(ElaApplication);
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
-    QApplication::setWindowIcon(d->_pWindowIcon);
     //默认字体
     QFont font = qApp->font();
     font.setPointSize(10);

@@ -94,17 +94,33 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
     //图标
     d->_iconLabel = new QLabel(this);
-    d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+    if (parent->windowIcon().isNull())
+    {
+        d->_iconLabel->setVisible(false);
+    }
+    else
+    {
+        d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+    }
     connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
         d->_iconLabel->setPixmap(icon.pixmap(18, 18));
+        d->_iconLabel->setVisible(icon.isNull() ? false : true);
     });
 
     //标题
     d->_titleLabel = new ElaText(this);
     d->_titleLabel->setTextPointSize(10);
-    d->_titleLabel->setText(parent->windowTitle());
+    if (parent->windowTitle().isEmpty())
+    {
+        d->_titleLabel->setVisible(false);
+    }
+    else
+    {
+        d->_titleLabel->setText(parent->windowTitle());
+    }
     connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title) {
         d->_titleLabel->setText(title);
+        d->_titleLabel->setVisible(title.isEmpty() ? false : true);
     });
 
     // 主题变更

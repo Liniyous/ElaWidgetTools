@@ -16,7 +16,7 @@ ElaScrollBarPrivate::~ElaScrollBarPrivate()
 void ElaScrollBarPrivate::onRangeChanged(int min, int max)
 {
     Q_Q(ElaScrollBar);
-    if (q->isVisible() && _pisAnimation)
+    if (q->isVisible() && _pisAnimation && max != 0)
     {
         QPropertyAnimation* rangeSmoothAnimation = new QPropertyAnimation(this, "pTargetMaximum");
         connect(rangeSmoothAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {

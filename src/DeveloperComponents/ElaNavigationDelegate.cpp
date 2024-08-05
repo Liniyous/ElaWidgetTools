@@ -192,10 +192,12 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     painter->setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
     if (node->getAwesome() != ElaIconType::None)
     {
+        painter->save();
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
         painter->drawText(itemRect.x() + 11, itemRect.y() + 26, QChar((unsigned short)node->getAwesome()));
+        painter->restore();
     }
     // 展开图标 KeyPoints
     if (node->getIsExpanderNode())
@@ -204,6 +206,9 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
         {
             QRectF expandIconRect(247, itemRect.y(), 17, itemRect.height());
             painter->save();
+            QFont iconFont = QFont("ElaAwesome");
+            iconFont.setPixelSize(17);
+            painter->setFont(iconFont);
             painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
             if (node == d->_expandAnimationTargetNode)
             {
@@ -270,10 +275,7 @@ void ElaNavigationDelegate::paint(QPainter* painter, const QStyleOptionViewItem&
     }
 
     // 文字绘制
-    QFont titlefont("Microsoft YaHei", 10);
-    titlefont.setHintingPreference(QFont::PreferNoHinting);
-    painter->setFont(titlefont);
-    painter->setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+    painter->setPen(ElaThemeColor(d->_themeMode, WindowText));
     painter->drawText(itemRect.x() + 37, itemRect.y() + 25, node->getNodeTitle());
     // 选中特效
     if (d->_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
