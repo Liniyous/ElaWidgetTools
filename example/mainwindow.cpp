@@ -64,7 +64,7 @@ void MainWindow::onCloseButtonClicked()
 void MainWindow::initWindow()
 {
     setWindowIcon(QIcon(":/include/Image/Cirno.jpg"));
-    resize(1240, 740);
+    resize(1200, 740);
     // ElaLog::getInstance()->initMessageLog(true);
     // eApp->setThemeMode(ElaThemeType::Dark);
     // setIsNavigationBarEnable(false);
@@ -168,7 +168,7 @@ void MainWindow::initEdgeLayout()
     ElaProgressBar* progressBar = new ElaProgressBar(this);
     progressBar->setMinimum(0);
     progressBar->setMaximum(0);
-    progressBar->setFixedWidth(600);
+    progressBar->setFixedWidth(350);
     toolBar->addWidget(progressBar);
 
     this->addToolBar(Qt::TopToolBarArea, toolBar);

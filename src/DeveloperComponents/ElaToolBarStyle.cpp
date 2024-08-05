@@ -27,6 +27,16 @@ void ElaToolBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
     {
         return;
     }
+    case QStyle::PE_FrameMenu:
+    {
+        painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
+        painter->setPen(ElaThemeColor(_themeMode, ToolBarWindowBorder));
+        painter->setBrush(ElaThemeColor(_themeMode, ToolBarWindowBase));
+        painter->drawRect(option->rect);
+        painter->restore();
+        return;
+    }
     case QStyle::PE_IndicatorToolBarHandle:
     {
         //拖动虚线

@@ -164,9 +164,9 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[NavigationBaseEnd] = QColor(0x1A, 0x1A, 0x1A);
     _lightThemeColorList[NavigationHover] = QColor(0xE9, 0xE9, 0xF0);
     _darkThemeColorList[NavigationHover] = QColor(0x2B, 0x2C, 0x36);
-    _lightThemeColorList[NavigationSelected] = QColor(0xEA, 0xE9, 0xF0);
+    _lightThemeColorList[NavigationSelected] = QColor(0xE9, 0xE9, 0xF0);
     _darkThemeColorList[NavigationSelected] = QColor(0x2B, 0x2C, 0x36);
-    _lightThemeColorList[NavigationSelectedHover] = QColor(0xED, 0xEC, 0xF3);
+    _lightThemeColorList[NavigationSelectedHover] = QColor(0xEC, 0xEC, 0xF3);
     _darkThemeColorList[NavigationSelectedHover] = QColor(0x28, 0x27, 0x33);
     _lightThemeColorList[NavigationExpanderNodeKeyPoint] = QColor(0xFF, 0x4D, 0x4F);
     _darkThemeColorList[NavigationExpanderNodeKeyPoint] = QColor(0xFF, 0x4D, 0x4F);

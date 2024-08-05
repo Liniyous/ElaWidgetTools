@@ -2,6 +2,7 @@
 
 #include <QLayout>
 #include <QPainter>
+#include <QStyleOption>
 
 #include "ElaIcon.h"
 #include "ElaTheme.h"
@@ -13,7 +14,6 @@ ElaToolBar::ElaToolBar(QWidget* parent)
     Q_D(ElaToolBar);
     d->q_ptr = this;
     setObjectName("ElaToolBar");
-    setStyleSheet("#ElaToolBar{background-color:transparent;}");
     setStyle(new ElaToolBarStyle(style()));
     layout()->setSpacing(10);
     layout()->setContentsMargins(3, 3, 3, 3);
@@ -94,13 +94,21 @@ void ElaToolBar::paintEvent(QPaintEvent* event)
         painter.setBrush(ElaThemeColor(d->_themeMode, ToolBarWindowBase));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRoundedRect(foregroundRect, 5, 5);
+        QStyle* style = this->style();
+        QStyleOptionToolBar opt;
+        initStyleOption(&opt);
+        opt.rect = style->subElementRect(QStyle::SE_ToolBarHandle, &opt, this);
+        if (opt.rect.isValid())
+        {
+            style->drawPrimitive(QStyle::PE_IndicatorToolBarHandle, &opt, &painter, this);
+        }
     }
     else
     {
         painter.setPen(Qt::NoPen);
         painter.setBrush(Qt::transparent);
         painter.drawRoundedRect(rect(), 5, 5);
+        QToolBar::paintEvent(event);
     }
     painter.restore();
-    QToolBar::paintEvent(event);
 }
