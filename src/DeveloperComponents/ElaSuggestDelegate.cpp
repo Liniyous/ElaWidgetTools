@@ -57,9 +57,6 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         }
     }
     //文字绘制
-    QFont titlefont("Microsoft YaHei", 10);
-    titlefont.setHintingPreference(QFont::PreferNoHinting);
-    painter->setFont(titlefont);
     painter->setPen(ElaThemeColor(_themeMode, WindowText));
     painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());
 

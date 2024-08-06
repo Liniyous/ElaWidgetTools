@@ -64,7 +64,14 @@ void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
     {
         q->update();
         _currentText = str;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         _selectedTextList = _currentText.split(",", Qt::SkipEmptyParts);
+#else
+        if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty())
+        {
+            _selectedTextList.clear();
+        }
+#endif
         q->setCurrentIndex(-1);
         Q_EMIT q->currentTextListChanged(_selectedTextList);
     }

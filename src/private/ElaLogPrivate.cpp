@@ -69,7 +69,11 @@ void ElaLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& 
     if (logfile.open(QIODevice::WriteOnly | QIODevice::Append))
     {
         QTextStream logFileStream(&logfile);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         logFileStream << logInfo << Qt::endl;
+#else
+        logFileStream << logInfo << endl;
+#endif
         logfile.close();
     }
     messageLogMutex->unlock();

@@ -109,7 +109,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
     //标题
     d->_titleLabel = new ElaText(this);
-    d->_titleLabel->setTextPointSize(10);
+    d->_titleLabel->setTextPixelSize(13);
     if (parent->windowTitle().isEmpty())
     {
         d->_titleLabel->setVisible(false);
@@ -412,6 +412,11 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
         }
         return false;
     }
+    case WM_NCACTIVATE:
+    {
+        *result = TRUE;
+        return true;
+    }
     case WM_SIZE:
     {
         if (wParam == SIZE_RESTORED)
@@ -462,8 +467,12 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
                 *result = static_cast<long>(hitTestResult);
                 return true;
             }
-            // qDebug() << clientRect->left << clientRect->top << clientRect->bottom << clientRect->right;
+// qDebug() << clientRect->left << clientRect->top << clientRect->bottom << clientRect->right;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
             auto geometry = window()->screen()->geometry();
+#else
+            auto geometry = qApp->screenAt(window()->geometry().center())->geometry();
+#endif
             clientRect->top = geometry.top();
         }
         *result = WVR_REDRAW;

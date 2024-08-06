@@ -20,7 +20,7 @@ public:
     void setPlaceholderText(const QString& placeholderText);
 
     void addSuggestion(const QString& suggestText, const QVariantMap& suggestData = {});
-    void addSuggestion(ElaIconType icon, const QString& suggestText, const QVariantMap& suggestData = {});
+    void addSuggestion(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});
     void removeSuggestion(const QString& suggestText);
     void removeSuggestion(int index);
 Q_SIGNALS:

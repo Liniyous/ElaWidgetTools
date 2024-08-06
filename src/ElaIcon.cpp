@@ -11,7 +11,7 @@ ElaIcon::~ElaIcon()
 {
 }
 
-QIcon ElaIcon::getElaIcon(ElaIconType awesome)
+QIcon ElaIcon::getElaIcon(ElaIconType::IconName awesome)
 {
     QFont iconFont = QFont("ElaAwesome");
     QPixmap pix(30, 30);
@@ -28,7 +28,7 @@ QIcon ElaIcon::getElaIcon(ElaIconType awesome)
     return QIcon(pix);
 }
 
-QIcon ElaIcon::getElaIcon(ElaIconType awesome, QColor iconColor)
+QIcon ElaIcon::getElaIcon(ElaIconType::IconName awesome, QColor iconColor)
 {
     QFont iconFont = QFont("ElaAwesome");
     QPixmap pix(30, 30);
@@ -45,7 +45,7 @@ QIcon ElaIcon::getElaIcon(ElaIconType awesome, QColor iconColor)
     return QIcon(pix);
 }
 
-QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize)
+QIcon ElaIcon::getElaIcon(ElaIconType::IconName awesome, int pixelSize)
 {
     QFont iconFont = QFont("ElaAwesome");
     QPixmap pix(pixelSize, pixelSize);
@@ -61,7 +61,7 @@ QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize)
     return QIcon(pix);
 }
 
-QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize, QColor iconColor)
+QIcon ElaIcon::getElaIcon(ElaIconType::IconName awesome, int pixelSize, QColor iconColor)
 {
     QFont iconFont = QFont("ElaAwesome");
     QPixmap pix(pixelSize, pixelSize);
@@ -78,7 +78,7 @@ QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize, QColor iconColor)
     return QIcon(pix);
 }
 
-QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize, int fixedWidth, int fixedHeight)
+QIcon ElaIcon::getElaIcon(ElaIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight)
 {
     QFont iconFont = QFont("ElaAwesome");
     QPixmap pix(fixedWidth, fixedHeight);
@@ -94,7 +94,7 @@ QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize, int fixedWidth, in
     return QIcon(pix);
 }
 
-QIcon ElaIcon::getElaIcon(ElaIconType awesome, int pixelSize, int fixedWidth, int fixedHeight, QColor iconColor)
+QIcon ElaIcon::getElaIcon(ElaIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, QColor iconColor)
 {
     QFont iconFont = QFont("ElaAwesome");
     QPixmap pix(fixedWidth, fixedHeight);

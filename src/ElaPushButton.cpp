@@ -30,7 +30,7 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     setMouseTracking(true);
     setFixedHeight(38);
     QFont font = this->font();
-    font.setPointSize(11);
+    font.setPixelSize(15);
     setFont(font);
     setObjectName("ElaPushButton");
     setStyleSheet("#ElaPushButton{background-color:transparent;}");

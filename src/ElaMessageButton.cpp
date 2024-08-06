@@ -24,7 +24,7 @@ ElaMessageButton::ElaMessageButton(QWidget* parent)
     setMouseTracking(true);
     setFixedSize(80, 38);
     QFont font = this->font();
-    font.setPointSize(11);
+    font.setPixelSize(15);
     setFont(font);
     setText("Message");
     setObjectName("ElaMessageButton");

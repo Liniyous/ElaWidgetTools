@@ -39,12 +39,12 @@ public:
 
     void selectAllItems();
 
-    QList<QJsonObject> getItemLinkList() const;
+    QList<QVariantMap> getItemLinkList() const;
     bool addItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* item2, int port1 = 0, int port2 = 0);
     bool removeItemLink(ElaGraphicsItem* item1);
     bool removeItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* item2, int port1 = 0, int port2 = 0);
 
-    QVector<QJsonObject> getItemsDataRoute() const;
+    QVector<QVariantMap> getItemsDataRoute() const;
 
     // 序列化 反序列化
     void serialize();

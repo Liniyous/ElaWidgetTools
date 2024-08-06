@@ -29,7 +29,7 @@ private:
     friend class ElaGraphicsItem;
     QMap<QString, ElaGraphicsItem*> _items; // 存储所有item
     ElaGraphicsSceneType::SceneMode _sceneMode;
-    QList<QJsonObject> _itemsLink; // item连接状态
+    QList<QVariantMap> _itemsLink; // item连接状态
     QList<ElaGraphicsLineItem*> _lineItemsList;
     ElaGraphicsLineItem* _linkLineItem{nullptr};
     qreal _currentZ{1};

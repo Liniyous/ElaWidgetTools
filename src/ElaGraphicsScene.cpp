@@ -1,5 +1,6 @@
 #include "ElaGraphicsScene.h"
 
+#include <QDebug>
 #include <QFile>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
@@ -183,7 +184,7 @@ void ElaGraphicsScene::selectAllItems()
     }
 }
 
-QList<QJsonObject> ElaGraphicsScene::getItemLinkList() const
+QList<QVariantMap> ElaGraphicsScene::getItemLinkList() const
 {
     return d_ptr->_itemsLink;
 }
@@ -209,7 +210,7 @@ bool ElaGraphicsScene::addItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* item
             return false;
         }
     }
-    QJsonObject linkObject;
+    QVariantMap linkObject;
     linkObject.insert(item1->getItemUID(), port1);
     linkObject.insert(item2->getItemUID(), port2);
     d->_itemsLink.append(linkObject);
@@ -309,9 +310,9 @@ bool ElaGraphicsScene::removeItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* i
     }
 }
 
-QVector<QJsonObject> ElaGraphicsScene::getItemsDataRoute() const
+QVector<QVariantMap> ElaGraphicsScene::getItemsDataRoute() const
 {
-    QVector<QJsonObject> dataRouteVector;
+    QVector<QVariantMap> dataRouteVector;
     for (const auto& pair : d_ptr->_items.toStdMap())
     {
         ElaGraphicsItem* item = pair.second;
@@ -445,7 +446,7 @@ void ElaGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
                 }
                 else
                 {
-                    QJsonObject linkObject;
+                    QVariantMap linkObject;
                     for (auto item : selectedItemList)
                     {
                         linkObject.insert(item->getItemUID(), 0);

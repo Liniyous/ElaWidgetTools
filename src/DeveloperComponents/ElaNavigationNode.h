@@ -12,7 +12,7 @@ class ElaNavigationNode : public QObject
     Q_Q_CREATE(ElaNavigationNode)
     Q_PROPERTY_CREATE_Q_H(QList<ElaNavigationNode*>, ChildrenNodes)
     Q_PRIVATE_CREATE_Q_H(ElaNavigationNode*, ParentNode)
-    Q_PROPERTY_CREATE_Q_H(ElaIconType, Awesome)
+    Q_PROPERTY_CREATE_Q_H(ElaIconType::IconName, Awesome)
     Q_PROPERTY_CREATE_Q_H(QModelIndex, ModelIndex)
     Q_PROPERTY_CREATE_Q_H(int, KeyPoints)
     Q_PROPERTY_CREATE_Q_H(int, Depth)

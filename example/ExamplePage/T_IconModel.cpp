@@ -4,7 +4,7 @@
 T_IconModel::T_IconModel(QObject* parent)
     : QAbstractTableModel{parent}
 {
-    _metaEnum = QMetaEnum::fromType<ElaIconType>();
+    _metaEnum = QMetaEnum::fromType<ElaIconType::IconName>();
     _columnCount = 7;
     _rowCount = (_metaEnum.keyCount() - 1) / _columnCount;
     if ((_metaEnum.keyCount() - 1) % _columnCount)

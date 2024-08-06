@@ -17,13 +17,13 @@ public:
     QAction* addMenu(QMenu* menu);
     ElaMenu* addMenu(const QString& title);
     ElaMenu* addMenu(const QIcon& icon, const QString& title);
-    ElaMenu* addMenu(ElaIconType icon, const QString& title);
+    ElaMenu* addMenu(ElaIconType::IconName, const QString& title);
 
-    QAction* addElaIconAction(ElaIconType icon, const QString& text);
-    QAction* addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut);
+    QAction* addElaIconAction(ElaIconType::IconName icon, const QString& text);
+    QAction* addElaIconAction(ElaIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
 
 protected:
-    void resizeEvent(QResizeEvent*event) override;
+    void resizeEvent(QResizeEvent* event) override;
 };
 
 #endif // ELAMENUBAR_H

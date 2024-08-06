@@ -5,7 +5,7 @@
 #include "private/ElaNavigationNodePrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationNode, QList<ElaNavigationNode*>, ChildrenNodes)
 Q_PRIVATE_CREATE_Q_CPP(ElaNavigationNode, ElaNavigationNode*, ParentNode)
-Q_PROPERTY_CREATE_Q_CPP(ElaNavigationNode, ElaIconType, Awesome)
+Q_PROPERTY_CREATE_Q_CPP(ElaNavigationNode, ElaIconType::IconName, Awesome)
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationNode, QModelIndex, ModelIndex)
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationNode, int, KeyPoints)
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationNode, int, Depth)

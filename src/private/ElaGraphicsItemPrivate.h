@@ -13,7 +13,7 @@ class ElaGraphicsItemPrivate : public QObject
     Q_PROPERTY_CREATE_D(QImage, ItemImage)
     Q_PROPERTY_CREATE_D(QImage, ItemSelectedImage)
     Q_PROPERTY_CREATE_D(QString, ItemName)
-    Q_PROPERTY_CREATE_D(QJsonObject, DataRoutes)
+    Q_PROPERTY_CREATE_D(QVariantMap, DataRoutes)
     Q_PROPERTY_CREATE_D(int, MaxLinkPortCount)
     Q_PROPERTY_CREATE_D(int, CurrentLinkPortCount)
 public:

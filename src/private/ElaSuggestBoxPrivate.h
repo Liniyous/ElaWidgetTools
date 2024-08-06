@@ -4,13 +4,14 @@
 #include <QObject>
 #include <QSize>
 #include <QVariantMap>
+#include <QVector>
 
 #include "Def.h"
 #include "stdafx.h"
 class ElaSuggestion : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(ElaIconType, ElaIcon)
+    Q_PROPERTY_CREATE(ElaIconType::IconName, ElaIcon)
     Q_PROPERTY_CREATE(QString, SuggestText)
     Q_PROPERTY_CREATE(QVariantMap, SuggestData)
 public:

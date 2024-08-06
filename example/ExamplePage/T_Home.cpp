@@ -100,7 +100,7 @@ T_Home::T_Home(QWidget* parent)
     addCentralWidget(centralWidget);
     ElaText* homeStack1 = new ElaText("HomeStack1", this);
     QFont font = homeStack1->font();
-    font.setPointSize(25);
+    font.setPixelSize(32);
     homeStack1->setFont(font);
     homeStack1->setAlignment(Qt::AlignCenter);
     homeStack1->setWindowTitle("HomeStack1");

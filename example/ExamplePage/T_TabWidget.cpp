@@ -12,7 +12,7 @@ T_TabWidget::T_TabWidget(QWidget* parent)
     QLabel* page1 = new QLabel("新标签页1", this);
     page1->setAlignment(Qt::AlignCenter);
     QFont font = page1->font();
-    font.setPointSize(20);
+    font.setPixelSize(32);
     page1->setFont(font);
     QLabel* page2 = new QLabel("新标签页2", this);
     page2->setFont(font);

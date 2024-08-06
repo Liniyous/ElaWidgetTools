@@ -81,7 +81,7 @@ void ElaSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap&
     d->_suggestionVector.append(suggest);
 }
 
-void ElaSuggestBox::addSuggestion(ElaIconType icon, const QString& suggestText, const QVariantMap& suggestData)
+void ElaSuggestBox::addSuggestion(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
 {
     Q_D(ElaSuggestBox);
     ElaSuggestion* suggest = new ElaSuggestion(this);

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QDebug>
 #include <QGraphicsView>
 #include <QHBoxLayout>
 #include <QStackedWidget>

@@ -18,7 +18,7 @@ class ELA_EXPORT ElaGraphicsItem : public QGraphicsObject
     Q_PROPERTY_CREATE_Q_H(QImage, ItemImage)
     Q_PROPERTY_CREATE_Q_H(QImage, ItemSelectedImage)
     Q_PROPERTY_CREATE_Q_H(QString, ItemName)
-    Q_PROPERTY_CREATE_Q_H(QJsonObject, DataRoutes)
+    Q_PROPERTY_CREATE_Q_H(QVariantMap, DataRoutes)
     Q_PROPERTY_CREATE_Q_H(int, MaxLinkPortCount)
     Q_PROPERTY_CREATE_Q_H(int, CurrentLinkPortCount)
 public:

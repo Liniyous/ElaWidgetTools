@@ -13,7 +13,7 @@ class ElaFooterModel : public QAbstractListModel
 public:
     explicit ElaFooterModel(QObject* parent = nullptr);
     ~ElaFooterModel();
-    ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, bool isHasFooterPage, int keyPoints = 0, ElaIconType awesome = ElaIconType::None);
+    ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, bool isHasFooterPage, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None);
     int getFooterNodeCount() const;
     ElaNavigationNode* getNavigationNode(QString footerKey);
 

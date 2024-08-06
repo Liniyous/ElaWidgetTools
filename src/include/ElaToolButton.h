@@ -15,7 +15,7 @@ public:
     explicit ElaToolButton(QWidget* parent = nullptr);
     ~ElaToolButton();
     void setMenu(ElaMenu* menu);
-    void setElaIcon(ElaIconType icon);
+    void setElaIcon(ElaIconType::IconName icon);
 };
 
 #endif // ELATOOLBUTTON_H

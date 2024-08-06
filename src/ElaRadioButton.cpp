@@ -10,7 +10,7 @@ ElaRadioButton::ElaRadioButton(QWidget* parent)
     d->q_ptr = this;
     setFixedHeight(20);
     QFont font = this->font();
-    font.setPointSize(11);
+    font.setPixelSize(15);
     setFont(font);
     setStyle(new ElaRadioButtonStyle(style()));
     d->onThemeChanged(eTheme->getThemeMode());

@@ -12,7 +12,7 @@ class ElaLineEditPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaLineEdit)
-    Q_PROPERTY_CREATE_D(ElaIconType, Awesome)
+    Q_PROPERTY_CREATE_D(ElaIconType::IconName, Awesome)
     Q_PROPERTY_CREATE_D(int, BorderRadius)
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:

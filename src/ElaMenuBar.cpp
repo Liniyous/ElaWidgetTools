@@ -45,7 +45,7 @@ ElaMenu* ElaMenuBar::addMenu(const QIcon& icon, const QString& title)
     return menu;
 }
 
-ElaMenu* ElaMenuBar::addMenu(ElaIconType icon, const QString& title)
+ElaMenu* ElaMenuBar::addMenu(ElaIconType::IconName icon, const QString& title)
 {
     ElaMenu* menu = new ElaMenu(title, this);
     menu->setMenuItemHeight(27);
@@ -55,7 +55,7 @@ ElaMenu* ElaMenuBar::addMenu(ElaIconType icon, const QString& title)
     return menu;
 }
 
-QAction* ElaMenuBar::addElaIconAction(ElaIconType icon, const QString& text)
+QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString& text)
 {
     QAction* action = new QAction(text, this);
     action->setProperty("ElaIconType", QChar((unsigned short)icon));

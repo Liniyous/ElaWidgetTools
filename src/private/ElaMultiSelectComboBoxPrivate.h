@@ -1,6 +1,7 @@
 #ifndef ELAMULTISELECTCOMBOBOXPRIVATE_H
 #define ELAMULTISELECTCOMBOBOXPRIVATE_H
 #include <QObject>
+#include <QVector>
 
 #include "Def.h"
 #include "stdafx.h"

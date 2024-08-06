@@ -14,7 +14,7 @@ Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightHoverIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkHoverIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, bool, IsSelected);
-ElaIconButton::ElaIconButton(ElaIconType awesome, QWidget* parent)
+ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaIconButtonPrivate())
 {
     Q_D(ElaIconButton);
@@ -38,7 +38,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, QWidget* parent)
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
-ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, QWidget* parent)
+ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, int pixelSize, QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaIconButtonPrivate())
 {
     Q_D(ElaIconButton);
@@ -62,7 +62,7 @@ ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, QWidget* parent
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
-ElaIconButton::ElaIconButton(ElaIconType awesome, int pixelSize, int fixedWidth, int fixedHeight, QWidget* parent)
+ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaIconButtonPrivate())
 {
     Q_D(ElaIconButton);
@@ -91,14 +91,14 @@ ElaIconButton::~ElaIconButton()
 {
 }
 
-void ElaIconButton::setAwesome(ElaIconType awesome)
+void ElaIconButton::setAwesome(ElaIconType::IconName awesome)
 {
     Q_D(ElaIconButton);
     d->_pAwesome = awesome;
     this->setText(QChar((unsigned short)awesome));
 }
 
-ElaIconType ElaIconButton::getAwesome() const
+ElaIconType::IconName ElaIconButton::getAwesome() const
 {
     return this->d_ptr->_pAwesome;
 }

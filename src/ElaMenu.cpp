@@ -65,7 +65,7 @@ ElaMenu* ElaMenu::addMenu(const QIcon& icon, const QString& title)
     return menu;
 }
 
-ElaMenu* ElaMenu::addMenu(ElaIconType icon, const QString& title)
+ElaMenu* ElaMenu::addMenu(ElaIconType::IconName icon, const QString& title)
 {
     ElaMenu* menu = new ElaMenu(title, this);
     QMenu::addAction(menu->menuAction());
@@ -73,7 +73,7 @@ ElaMenu* ElaMenu::addMenu(ElaIconType icon, const QString& title)
     return menu;
 }
 
-QAction* ElaMenu::addElaIconAction(ElaIconType icon, const QString& text)
+QAction* ElaMenu::addElaIconAction(ElaIconType::IconName icon, const QString& text)
 {
     QAction* action = new QAction(text, this);
     action->setProperty("ElaIconType", QChar((unsigned short)icon));
@@ -81,7 +81,7 @@ QAction* ElaMenu::addElaIconAction(ElaIconType icon, const QString& text)
     return action;
 }
 
-QAction* ElaMenu::addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut)
+QAction* ElaMenu::addElaIconAction(ElaIconType::IconName icon, const QString& text, const QKeySequence& shortcut)
 {
     QAction* action = new QAction(text, this);
     action->setShortcut(shortcut);

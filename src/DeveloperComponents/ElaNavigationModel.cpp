@@ -102,7 +102,7 @@ QVariant ElaNavigationModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome) const
 {
     ElaNavigationNode* node = new ElaNavigationNode(expanderTitle, d_ptr->_rootNode);
     node->setDepth(1);
@@ -115,7 +115,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QSt
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
 {
     if (!d_ptr->_nodesMap.contains(targetExpanderKey))
     {
@@ -140,7 +140,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QSt
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, ElaIconType awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, ElaIconType::IconName awesome) const
 {
     ElaNavigationNode* node = new ElaNavigationNode(pageTitle, d_ptr->_rootNode);
     node->setAwesome(awesome);
@@ -156,7 +156,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, ElaIconType awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
 {
     if (!d_ptr->_nodesMap.contains(targetExpanderKey))
     {
@@ -184,7 +184,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, int keyPoints, ElaIconType awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, int keyPoints, ElaIconType::IconName awesome) const
 {
     ElaNavigationNode* node = new ElaNavigationNode(pageTitle, d_ptr->_rootNode);
     node->setAwesome(awesome);
@@ -201,7 +201,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, ElaIconType awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome) const
 {
     if (!d_ptr->_nodesMap.contains(targetExpanderKey))
     {

@@ -11,11 +11,11 @@ class ELA_EXPORT ElaLineEdit : public QLineEdit
 {
     Q_OBJECT
     Q_Q_CREATE(ElaLineEdit)
-    Q_PROPERTY_CREATE_Q_H(ElaIconType, Awesome)
+    Q_PROPERTY_CREATE_Q_H(ElaIconType::IconName, Awesome)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
 public:
     explicit ElaLineEdit(QWidget* parent = nullptr);
-    explicit ElaLineEdit(ElaIconType awesome, QWidget* parent = nullptr);
+    explicit ElaLineEdit(ElaIconType::IconName awesome, QWidget* parent = nullptr);
     ~ElaLineEdit();
 
 Q_SIGNALS:

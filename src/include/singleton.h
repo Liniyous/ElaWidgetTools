@@ -10,7 +10,7 @@ public:
     static T* getInstance();
 
 private:
-    Q_DISABLE_COPY_MOVE(Singleton)
+    Q_DISABLE_COPY(Singleton)
 };
 
 template <typename T>

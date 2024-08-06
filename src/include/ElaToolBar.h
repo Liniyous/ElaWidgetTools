@@ -17,8 +17,8 @@ public:
     void setToolBarSpacing(int spacing);
     int getToolBarSpacing() const;
 
-    QAction* addElaIconAction(ElaIconType icon, const QString& text);
-    QAction* addElaIconAction(ElaIconType icon, const QString& text, const QKeySequence& shortcut);
+    QAction* addElaIconAction(ElaIconType::IconName icon, const QString& text);
+    QAction* addElaIconAction(ElaIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

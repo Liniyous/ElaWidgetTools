@@ -12,7 +12,7 @@
 #include "ElaMenu.h"
 #include "ElaTheme.h"
 #include "private/ElaLineEditPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaLineEdit, ElaIconType, Awesome)
+Q_PROPERTY_CREATE_Q_CPP(ElaLineEdit, ElaIconType::IconName, Awesome)
 Q_PROPERTY_CREATE_Q_CPP(ElaLineEdit, int, BorderRadius)
 
 ElaLineEdit::ElaLineEdit(QWidget* parent)
@@ -40,7 +40,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
 }
 
-ElaLineEdit::ElaLineEdit(ElaIconType awesome, QWidget* parent)
+ElaLineEdit::ElaLineEdit(ElaIconType::IconName awesome, QWidget* parent)
     : ElaLineEdit(parent)
 {
     Q_D(ElaLineEdit);

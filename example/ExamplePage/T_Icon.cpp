@@ -11,7 +11,7 @@
 T_Icon::T_Icon(QWidget* parent)
     : ElaScrollPage(parent)
 {
-    _metaEnum = QMetaEnum::fromType<ElaIconType>();
+    _metaEnum = QMetaEnum::fromType<ElaIconType::IconName>();
     QWidget* centralWidget = new QWidget(this);
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 5, 0);
