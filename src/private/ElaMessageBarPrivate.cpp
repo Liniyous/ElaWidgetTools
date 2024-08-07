@@ -7,6 +7,7 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 
+#include "ElaIconButton.h"
 #include "ElaMessageBar.h"
 Q_SINGLETON_CREATE_CPP(ElaMessageBarManager)
 QMap<ElaMessageBarType::PositionPolicy, QList<ElaMessageBar*>*> _messageBarActiveMap;
@@ -218,7 +219,11 @@ void ElaMessageBarPrivate::messageBarEnd(QVariantMap eventData)
 {
     Q_Q(ElaMessageBar);
     ElaMessageBarManager::getInstance()->postMessageBarEndEvent(q);
-    QPropertyAnimation* barFinishedOpacityAnimation = new QPropertyAnimation(q->graphicsEffect(), "opacity");
+    QPropertyAnimation* barFinishedOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
+    connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        _closeButton->setOpacity(_pOpacity);
+        q->update();
+    });
     connect(barFinishedOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
         q->deleteLater();
     });
@@ -239,9 +244,13 @@ void ElaMessageBarPrivate::onCloseButtonClicked()
     _isReadyToEnd = true;
     _isNormalDisplay = false;
     ElaMessageBarManager::getInstance()->forcePostMessageBarEndEvent(q);
-    QPropertyAnimation* opacityAnimation = new QPropertyAnimation(q->graphicsEffect(), "opacity");
+    QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
+    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        _closeButton->setOpacity(_pOpacity);
+        q->update();
+    });
     connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() { q->deleteLater(); });
-    opacityAnimation->setStartValue(dynamic_cast<QGraphicsOpacityEffect*>(q->graphicsEffect())->opacity());
+    opacityAnimation->setStartValue(_pOpacity);
     opacityAnimation->setEndValue(0);
     opacityAnimation->setDuration(220);
     opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);

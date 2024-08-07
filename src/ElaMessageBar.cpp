@@ -1,7 +1,6 @@
 #include "ElaMessageBar.h"
 
 #include <QApplication>
-#include <QGraphicsOpacityEffect>
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QPainterPath>
@@ -25,9 +24,7 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     d->_themeMode = eTheme->getThemeMode();
     setFixedHeight(60);
     setMouseTracking(true);
-    QGraphicsOpacityEffect* effect = new QGraphicsOpacityEffect(this);
-    effect->setOpacity(1);
-    setGraphicsEffect(effect);
+    d->_pOpacity = 1;
     setFont(QFont("微软雅黑"));
     parent->installEventFilter(this);
     d->_closeButton = new ElaIconButton(ElaIconType::Xmark, 17, d->_closeButtonWidth, 30, this);
@@ -168,6 +165,7 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaMessageBar);
     QPainter painter(this);
+    painter.setOpacity(d->_pOpacity);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
     eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_borderRadius);

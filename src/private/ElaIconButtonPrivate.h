@@ -12,6 +12,7 @@ class ElaIconButtonPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(ElaIconButton)
     Q_PROPERTY_CREATE_D(int, BorderRadius)
+    Q_PROPERTY_CREATE_D(qreal, Opacity);
     Q_PROPERTY_CREATE_D(ElaIconType::IconName, Awesome)
     Q_PROPERTY_CREATE_D(QColor, LightHoverColor);
     Q_PROPERTY_CREATE_D(QColor, DarkHoverColor);

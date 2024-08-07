@@ -7,6 +7,7 @@
 #include "ElaTheme.h"
 #include "private/ElaIconButtonPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, int, BorderRadius)
+Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, qreal, Opacity);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightHoverColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkHoverColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightIconColor);
@@ -20,6 +21,7 @@ ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, QWidget* parent)
     Q_D(ElaIconButton);
     d->q_ptr = this;
     d->_pHoverAlpha = 0;
+    d->_pOpacity = 1;
     d->_pLightHoverColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultHover);
     d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
     d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
@@ -44,6 +46,7 @@ ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, int pixelSize, QWidg
     Q_D(ElaIconButton);
     d->q_ptr = this;
     d->_pHoverAlpha = 0;
+    d->_pOpacity = 1;
     d->_pLightHoverColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultHover);
     d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
     d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
@@ -68,6 +71,7 @@ ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, int pixelSize, int f
     Q_D(ElaIconButton);
     d->q_ptr = this;
     d->_pHoverAlpha = 0;
+    d->_pOpacity = 1;
     d->_pLightHoverColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultHover);
     d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
     d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
@@ -154,6 +158,7 @@ void ElaIconButton::paintEvent(QPaintEvent* event)
     Q_D(ElaIconButton);
     QPainter painter(this);
     painter.save();
+    painter.setOpacity(d->_pOpacity);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
     if (d->_isAlphaAnimationFinished || d->_pIsSelected)

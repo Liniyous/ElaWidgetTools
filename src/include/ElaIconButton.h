@@ -11,6 +11,7 @@ class ELA_EXPORT ElaIconButton : public QPushButton
     Q_OBJECT
     Q_Q_CREATE(ElaIconButton)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(qreal, Opacity);
     Q_PROPERTY_CREATE_Q_H(QColor, LightHoverColor);
     Q_PROPERTY_CREATE_Q_H(QColor, DarkHoverColor);
     Q_PROPERTY_CREATE_Q_H(QColor, LightIconColor);

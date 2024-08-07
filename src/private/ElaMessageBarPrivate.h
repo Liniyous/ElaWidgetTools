@@ -50,6 +50,7 @@ class ElaMessageBarPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaMessageBar)
+    Q_PROPERTY_CREATE(qreal, Opacity)
 public:
     explicit ElaMessageBarPrivate(QObject* parent = nullptr);
     ~ElaMessageBarPrivate();
