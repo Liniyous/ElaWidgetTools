@@ -212,7 +212,16 @@ void ElaMultiSelectComboBox::showPopup()
         QWidget* container = this->findChild<QFrame*>();
         if (container)
         {
-            int containerHeight = container->height();
+            int containerHeight = 0;
+            if (count() >= maxVisibleItems())
+            {
+                containerHeight = maxVisibleItems() * 35 + 10;
+            }
+            else
+            {
+                containerHeight = count() * 35 + 10;
+            }
+            view()->resize(view()->width(), containerHeight - 8);
             container->move(container->x(), container->y() + 3);
             QLayout* layout = container->layout();
             while (layout->count())
