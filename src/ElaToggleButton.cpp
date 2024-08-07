@@ -42,6 +42,7 @@ void ElaToggleButton::setIsToggled(bool isToggled)
     Q_D(ElaToggleButton);
     d->_isToggled = isToggled;
     update();
+    Q_EMIT toggled(isToggled);
 }
 
 bool ElaToggleButton::getIsToggled() const
