@@ -42,11 +42,11 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addWidget(d->_searchEdit);
     d->_searchViewBaseWidget = new ElaSuggestBoxSearchViewContainer(window());
-    QVBoxLayout* shadowLayout = new QVBoxLayout(d->_searchViewBaseWidget);
-    shadowLayout->setContentsMargins(0, 0, 0, 0);
+    d->_shadowLayout = new QVBoxLayout(d->_searchViewBaseWidget);
+    d->_shadowLayout->setContentsMargins(0, 0, 0, 0);
     d->_searchView = new ElaBaseListView(d->_searchViewBaseWidget);
     d->_searchViewBaseWidget->resize(292, 300);
-    shadowLayout->addWidget(d->_searchView);
+    d->_shadowLayout->addWidget(d->_searchView);
     d->_searchModel = new ElaSuggestModel(this);
     d->_searchDelegate = new ElaSuggestDelegate(this);
     d->_searchView->setModel(d->_searchModel);

@@ -19,6 +19,7 @@ public:
     ~ElaSuggestion();
 };
 
+class QVBoxLayout;
 class ElaLineEdit;
 class ElaNavigationNode;
 class ElaSuggestModel;
@@ -45,6 +46,8 @@ private:
     ElaSuggestModel* _searchModel{nullptr};
     ElaBaseListView* _searchView{nullptr};
     ElaSuggestDelegate* _searchDelegate{nullptr};
+    QVBoxLayout* _shadowLayout{nullptr};
+    QSize _lastSize;
     bool _isExpandAnimationFinished{true};
     bool _isCloseAnimationFinished{true};
     void _startSizeAnimation(QSize oldSize, QSize newSize);

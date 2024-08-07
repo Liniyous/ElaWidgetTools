@@ -95,12 +95,24 @@ void ElaSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
 
 void ElaSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
 {
+    if (_lastSize.isValid() && _lastSize == newSize)
+    {
+        return;
+    }
+    _shadowLayout->removeWidget(_searchView);
     QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
+    connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+        _searchView->resize(_searchViewBaseWidget->size());
+    });
+    connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
+        _shadowLayout->addWidget(_searchView);
+    });
     expandAnimation->setDuration(300);
     expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
     expandAnimation->setStartValue(oldSize);
     expandAnimation->setEndValue(newSize);
     expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    _lastSize = newSize;
 }
 
 void ElaSuggestBoxPrivate::_startExpandAnimation()
@@ -148,4 +160,5 @@ void ElaSuggestBoxPrivate::_startCloseAnimation()
     closeAnimation->setStartValue(_searchView->pos());
     closeAnimation->setEndValue(QPoint(_searchView->pos().x(), -_searchView->height()));
     closeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    _lastSize = baseWidgetsAnimation->endValue().toSize();
 }
