@@ -19,11 +19,13 @@ public:
     Q_SLOT void onRangeChanged(int min, int max);
 
 private:
+    QTimer* _expandTimer{nullptr};
+    bool _isExpand{false};
     QPropertyAnimation* _slideSmoothAnimation{nullptr};
-    int _scrollValue{0};
+    int _scrollValue{-1};
     int _lastHorizontalDeltaAngle{-120};
     int _lastVerticalDeltaAngle{-120};
-    void _scroll(int value);
+    void _scroll(Qt::KeyboardModifiers modifiers, int value);
     int _pixelPosToRangeValue(int pos) const;
 };
 

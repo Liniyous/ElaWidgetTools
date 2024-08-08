@@ -7,6 +7,7 @@
 #include "ElaComboBox.h"
 #include "ElaMessageButton.h"
 #include "ElaMultiSelectComboBox.h"
+#include "ElaPlainTextEdit.h"
 #include "ElaProgressBar.h"
 #include "ElaRadioButton.h"
 #include "ElaScrollPageArea.h"
@@ -147,6 +148,9 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     progressBarLayout->addWidget(_progressBar);
     progressBarLayout->addStretch();
 
+    ElaPlainTextEdit* edit = new ElaPlainTextEdit(this);
+    edit->setPlainText("这是一个ElaPlainTextEdit  暂时放在这里");
+
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaBaseComponents");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
@@ -160,6 +164,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centerLayout->addWidget(sliderArea);
     centerLayout->addWidget(radioButtonArea);
     centerLayout->addWidget(progressBarArea);
+    centerLayout->addWidget(edit);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);
     addCentralWidget(centralWidget, true, true, 0);

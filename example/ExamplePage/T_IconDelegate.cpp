@@ -33,6 +33,7 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
     QString iconValue = iconList.at(1);
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    painter->save();
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(22);
     painter->setFont(iconFont);
@@ -45,6 +46,7 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
         painter->setPen(Qt::white);
     }
     painter->drawText(option.rect.x() + option.rect.width() / 2 - 11, option.rect.y() + option.rect.height() / 2 - 11, iconValue);
+    painter->restore();
     // 文字绘制
     QFont titlefont = painter->font();
     titlefont.setPixelSize(13);

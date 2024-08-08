@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPointer>
 #include <QPropertyAnimation>
+#include <QTimer>
 #include <QWheelEvent>
 
 #include "ElaMenu.h"
@@ -15,36 +16,66 @@ ElaScrollBar::ElaScrollBar(QWidget* parent)
     Q_D(ElaScrollBar);
     d->q_ptr = this;
     setSingleStep(1);
+    setObjectName("ElaScrollBar");
     setAttribute(Qt::WA_OpaquePaintEvent, false);
     d->_pTargetMaximum = 0;
     d->_pisAnimation = false;
     connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
-    setStyle(new ElaScrollBarStyle(style()));
+    ElaScrollBarStyle* scrollBarStyle = new ElaScrollBarStyle(style());
+    scrollBarStyle->setScrollBar(this);
+    setStyle(scrollBarStyle);
     d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
     d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
     d->_slideSmoothAnimation->setDuration(300);
     connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
+
+    d->_expandTimer = new QTimer(this);
+    connect(d->_expandTimer, &QTimer::timeout, this, [=]() {
+        d->_expandTimer->stop();
+        d->_isExpand = underMouse();
+        scrollBarStyle->startExpandAnimation(d->_isExpand);
+    });
 }
 
 ElaScrollBar::ElaScrollBar(Qt::Orientation orientation, QWidget* parent)
-    : QScrollBar(orientation, parent), d_ptr(new ElaScrollBarPrivate())
+    : ElaScrollBar(parent)
 {
-    Q_D(ElaScrollBar);
-    d->q_ptr = this;
-    setSingleStep(1);
-    setAttribute(Qt::WA_OpaquePaintEvent, false);
-    d->_pTargetMaximum = 0;
-    d->_pisAnimation = false;
-    connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
-    setStyle(new ElaScrollBarStyle(style()));
-    d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
-    d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
-    d->_slideSmoothAnimation->setDuration(300);
-    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
+    setOrientation(orientation);
 }
 
 ElaScrollBar::~ElaScrollBar()
 {
+}
+
+bool ElaScrollBar::event(QEvent* event)
+{
+    Q_D(ElaScrollBar);
+    switch (event->type())
+    {
+    case QEvent::Enter:
+    {
+        d->_expandTimer->stop();
+        if (!d->_isExpand)
+        {
+            d->_expandTimer->start(350);
+        }
+        break;
+    }
+    case QEvent::Leave:
+    {
+        d->_expandTimer->stop();
+        if (d->_isExpand)
+        {
+            d->_expandTimer->start(350);
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QScrollBar::event(event);
 }
 
 void ElaScrollBar::mousePressEvent(QMouseEvent* event)
@@ -77,22 +108,22 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
     if (this->orientation() == Qt::Horizontal)
     {
         int horizontalDelta = event->angleDelta().x();
-        if (d->_lastHorizontalDeltaAngle != horizontalDelta)
+        if (d->_lastHorizontalDeltaAngle != horizontalDelta || d->_scrollValue == -1)
         {
             d->_scrollValue = value();
             d->_lastHorizontalDeltaAngle = horizontalDelta;
         }
-        d->_scroll(horizontalDelta);
+        d->_scroll(event->modifiers(), horizontalDelta);
     }
     else
     {
         int verticalDelta = event->angleDelta().y();
-        if (d->_lastVerticalDeltaAngle != verticalDelta)
+        if (d->_lastVerticalDeltaAngle != verticalDelta || d->_scrollValue == -1)
         {
             d->_scrollValue = value();
             d->_lastVerticalDeltaAngle = verticalDelta;
         }
-        d->_scroll(verticalDelta);
+        d->_scroll(event->modifiers(), verticalDelta);
     }
 }
 

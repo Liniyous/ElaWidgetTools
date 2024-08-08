@@ -15,8 +15,11 @@ public:
     explicit ElaScrollBar(QWidget* parent = nullptr);
     explicit ElaScrollBar(Qt::Orientation orientation, QWidget* parent = nullptr);
     ~ElaScrollBar();
+Q_SIGNALS:
+    Q_SIGNAL void rangeAnimationFinished();
 
 protected:
+    virtual bool event(QEvent* event) override;
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void mouseMoveEvent(QMouseEvent* event) override;

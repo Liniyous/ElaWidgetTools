@@ -1,36 +1,33 @@
-#include "ElaLineEditPrivate.h"
+#include "ElaPlainTextEditPrivate.h"
 
 #include "ElaApplication.h"
-#include "ElaLineEdit.h"
-
-ElaLineEditPrivate::ElaLineEditPrivate(QObject* parent)
+#include "ElaPlainTextEdit.h"
+ElaPlainTextEditPrivate::ElaPlainTextEditPrivate(QObject* parent)
     : QObject{parent}
 {
 }
 
-ElaLineEditPrivate::~ElaLineEditPrivate()
+ElaPlainTextEditPrivate::~ElaPlainTextEditPrivate()
 {
 }
 
-void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
+void ElaPlainTextEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
-    Q_Q(ElaLineEdit);
+    Q_Q(ElaPlainTextEdit);
     ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
     if (actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
     {
-        if (ElaApplication::containsCursorToItem(q) || q->hasSelectedText())
+        if (ElaApplication::containsCursorToItem(q) || !q->textCursor().selectedText().isEmpty())
         {
             return;
         }
         q->clearFocus();
-        Q_EMIT q->wmFocusOut(q->text());
     }
 }
 
-void ElaLineEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
+void ElaPlainTextEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
-    Q_Q(ElaLineEdit);
-    _themeMode = themeMode;
+    Q_Q(ElaPlainTextEdit);
     if (themeMode == ElaThemeType::Light)
     {
         QPalette palette;

@@ -2,7 +2,6 @@
 #define ELALINEEDITPRIVATE_H
 
 #include <QObject>
-#include <QSize>
 
 #include "Def.h"
 #include "stdafx.h"

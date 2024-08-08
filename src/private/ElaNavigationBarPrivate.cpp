@@ -4,15 +4,12 @@
 #include <QPropertyAnimation>
 
 #include "ElaBaseListView.h"
-#include "ElaBreadcrumbBar.h"
 #include "ElaCompactDelegate.h"
 #include "ElaCompactModel.h"
 #include "ElaFooterDelegate.h"
 #include "ElaFooterModel.h"
-#include "ElaListView.h"
 #include "ElaMenu.h"
 #include "ElaNavigationBar.h"
-#include "ElaNavigationDelegate.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationRouter.h"
@@ -63,7 +60,6 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     // 收起
                     data.insert("Collapse", QVariant::fromValue(node));
                     node->setIsExpanded(false);
-                    _navigationDelegate->navigationNodeStateChange(data);
                     _navigationView->navigationNodeStateChange(data);
                     _navigationView->collapse(index);
                 }
@@ -72,7 +68,6 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     // 展开
                     data.insert("Expand", QVariant::fromValue(node));
                     node->setIsExpanded(true);
-                    _navigationDelegate->navigationNodeStateChange(data);
                     _navigationView->navigationNodeStateChange(data);
                     _navigationView->expand(index);
                 }
@@ -145,7 +140,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     _compactDelegate->navigationNodeStateChange(compactPostData);
                 }
                 _navigationModel->setSelectedNode(node);
-                _navigationDelegate->navigationNodeStateChange(postData);
+                _navigationView->navigationNodeStateChange(postData);
                 if (!node->getIsVisible())
                 {
                     _expandSelectedNodeParent();
@@ -202,7 +197,7 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
                 mainPostData.insert("SelectedNode", QVariant::fromValue(nullptr));
                 compactPostData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedNode()->getOriginalNode()));
                 _navigationView->clearSelection();
-                _navigationDelegate->navigationNodeStateChange(mainPostData);
+                _navigationView->navigationNodeStateChange(mainPostData);
                 _navigationModel->setSelectedExpandedNode(nullptr);
                 _navigationModel->setSelectedNode(nullptr);
             }
@@ -266,7 +261,7 @@ void ElaNavigationBarPrivate::_resetNodeSelected()
             postData.insert("SelectMarkChanged", true);
             postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
             postData.insert("SelectedNode", QVariant::fromValue(selectedNode));
-            _navigationDelegate->navigationNodeStateChange(postData);
+            _navigationView->navigationNodeStateChange(postData);
         }
         _navigationModel->setSelectedExpandedNode(nullptr);
     }
@@ -288,7 +283,7 @@ void ElaNavigationBarPrivate::_resetNodeSelected()
             postData.insert("SelectMarkChanged", true);
             postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedNode()));
             postData.insert("SelectedNode", QVariant::fromValue(parentNode));
-            _navigationDelegate->navigationNodeStateChange(postData);
+            _navigationView->navigationNodeStateChange(postData);
         }
         else
         {
@@ -302,7 +297,7 @@ void ElaNavigationBarPrivate::_resetNodeSelected()
                     postData.insert("SelectMarkChanged", true);
                     postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
                     postData.insert("SelectedNode", QVariant::fromValue(parentNode));
-                    _navigationDelegate->navigationNodeStateChange(postData);
+                    _navigationView->navigationNodeStateChange(postData);
                 }
             }
         }
@@ -318,7 +313,6 @@ void ElaNavigationBarPrivate::_expandSelectedNodeParent()
     {
         QVariantMap data;
         data.insert("Expand", QVariant::fromValue(parentNode));
-        _navigationDelegate->navigationNodeStateChange(data);
         _navigationView->navigationNodeStateChange(data);
         parentNode->setIsExpanded(true);
         _navigationView->expand(parentNode->getModelIndex());

@@ -1,7 +1,5 @@
 #include "ElaNavigationView.h"
 
-//#include <private/qtreeview_p.h>
-
 #include <QDebug>
 #include <QHeaderView>
 #include <QModelIndex>
@@ -17,18 +15,20 @@
 ElaNavigationView::ElaNavigationView(QWidget* parent)
     : QTreeView(parent)
 {
-    setStyleSheet(
-        "QTreeView{background-color: transparent;border:0px;}"
-        "QTreeView::branch{image:none;}");
+    setObjectName("ElaNavigationView");
+    setStyleSheet("#ElaNavigationView{background-color:transparent;}");
     setAnimated(true);
     setHeaderHidden(true);
     setRootIsDecorated(false);
     setExpandsOnDoubleClick(false);
     setSelectionMode(QAbstractItemView::NoSelection);
-    header()->setSectionResizeMode(QHeaderView::Stretch);
+    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ElaScrollBar* vScrollBar = new ElaScrollBar(this);
     vScrollBar->setisAnimation(true);
+    connect(vScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
+        this->viewport()->update();
+    });
     setVerticalScrollBar(vScrollBar);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -45,6 +45,7 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     QScroller::scroller(this->viewport())->setScrollerProperties(properties);
 
     _navigationStyle = new ElaNavigationStyle(this->style());
+    _navigationStyle->setNavigationView(this);
     setStyle(_navigationStyle);
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &ElaNavigationView::customContextMenuRequested, this, &ElaNavigationView::onCustomContextMenuRequested);

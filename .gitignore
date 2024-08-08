@@ -52,3 +52,7 @@ compile_commands.json
 *creator.user*
 
 *_qmlcache.qrc
+
+# CLion
+/.idea
+*.clang-format

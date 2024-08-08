@@ -14,7 +14,6 @@
 #include "ElaFooterModel.h"
 #include "ElaInteractiveCard.h"
 #include "ElaMenu.h"
-#include "ElaNavigationDelegate.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationView.h"
@@ -37,9 +36,6 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_navigationModel = new ElaNavigationModel(this);
     d->_navigationView = new ElaNavigationView(this);
     d->_navigationView->setModel(d->_navigationModel);
-    d->_navigationDelegate = new ElaNavigationDelegate(this);
-    d->_navigationDelegate->setNavigationView(d->_navigationView);
-    d->_navigationView->setItemDelegateForColumn(0, d->_navigationDelegate);
     connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
 
     d->_navigationSuggestBox = new ElaSuggestBox(this);
@@ -164,18 +160,20 @@ void ElaNavigationBar::setUserInfoCardSubTitle(QString subTitle)
 
 ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome) const
 {
+    Q_D(const ElaNavigationBar);
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addExpanderNode(expanderTitle, expanderKey, awesome);
     if (returnType == ElaNavigationType::Success)
     {
         ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(expanderKey);
-        d_ptr->_compactModel->addCompactNode(node);
+        d->_compactModel->addCompactNode(node);
     }
     return returnType;
 }
 
 ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
 {
-    return d_ptr->_navigationModel->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
+    Q_D(const ElaNavigationBar);
+    return d->_navigationModel->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
 }
 
 ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, ElaIconType::IconName awesome) const

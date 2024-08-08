@@ -55,7 +55,6 @@ private:
     QLinearGradient* _windowLinearGradient{nullptr};
     ElaNavigationModel* _navigationModel{nullptr};
     ElaNavigationView* _navigationView{nullptr};
-    ElaNavigationDelegate* _navigationDelegate{nullptr};
     ElaBaseListView* _footerView{nullptr};
     ElaFooterModel* _footerModel{nullptr};
     ElaFooterDelegate* _footerDelegate{nullptr};

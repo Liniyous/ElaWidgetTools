@@ -1,5 +1,6 @@
 #include "ElaScrollBarPrivate.h"
 
+#include <QApplication>
 #include <QPropertyAnimation>
 #include <QStyleOption>
 
@@ -19,6 +20,9 @@ void ElaScrollBarPrivate::onRangeChanged(int min, int max)
     if (q->isVisible() && _pisAnimation && max != 0)
     {
         QPropertyAnimation* rangeSmoothAnimation = new QPropertyAnimation(this, "pTargetMaximum");
+        connect(rangeSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
+            Q_EMIT q->rangeAnimationFinished();
+        });
         connect(rangeSmoothAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             q->blockSignals(true);
             q->setMaximum(value.toUInt());
@@ -33,14 +37,30 @@ void ElaScrollBarPrivate::onRangeChanged(int min, int max)
     }
     else
     {
+        if (max == 0)
+        {
+            _scrollValue = -1;
+        }
         _pTargetMaximum = max;
     }
 }
 
-void ElaScrollBarPrivate::_scroll(int value)
+void ElaScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta)
 {
     Q_Q(ElaScrollBar);
-    _scrollValue -= value;
+    int stepsToScroll = 0;
+    qreal offset = qreal(delta) / 120;
+    int pageStep = 10;
+    int singleStep = q->singleStep();
+    if ((modifiers & Qt::ControlModifier) || (modifiers & Qt::ShiftModifier))
+    {
+        stepsToScroll = qBound(-pageStep, int(offset * pageStep), pageStep);
+    }
+    else
+    {
+        stepsToScroll = QApplication::wheelScrollLines() * offset * singleStep;
+    }
+    _scrollValue -= stepsToScroll;
     _slideSmoothAnimation->stop();
     _slideSmoothAnimation->setStartValue(q->value());
     _slideSmoothAnimation->setEndValue(_scrollValue);

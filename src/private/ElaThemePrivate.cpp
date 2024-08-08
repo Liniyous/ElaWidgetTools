@@ -252,6 +252,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::ReminderCardSubTitleText] = QColor(0x79, 0x72, 0x68);
 
     //ElaScrollBar
+    _lightThemeColorList[ElaThemeType::ScrollBarBase] = QColor(0xF1, 0xF2, 0xF3);
+    _darkThemeColorList[ElaThemeType::ScrollBarBase] = QColor(0x38, 0x38, 0x38);
     _lightThemeColorList[ElaThemeType::ScrollBarHandle] = QColor(0x8A, 0x84, 0x89);
     _darkThemeColorList[ElaThemeType::ScrollBarHandle] = QColor(0x9F, 0x9F, 0x9F);
 
@@ -316,6 +318,10 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::TabBarTabSelected] = QColor(0x2D, 0x2D, 0x2D);
     _lightThemeColorList[ElaThemeType::TabBarTabMark] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[ElaThemeType::TabBarTabMark] = QColor(0x4C, 0xA0, 0xE0);
+    _lightThemeColorList[ElaThemeType::TabBarPanelButtonToolHover] = QColor(0xE9, 0xE9, 0xF0);
+    _darkThemeColorList[ElaThemeType::TabBarPanelButtonToolHover] = QColor(0x2B, 0x2C, 0x36);
+    _lightThemeColorList[ElaThemeType::TabBarPanelButtonToolPress] = QColor(0xE9, 0xE9, 0xF0);
+    _darkThemeColorList[ElaThemeType::TabBarPanelButtonToolPress] = QColor(0x2B, 0x2C, 0x36);
 
     //ElaToggleButton
     _lightThemeColorList[ElaThemeType::ToggleButtonNoToggledBorder] = QColor(0xDF, 0xDF, 0xDF);

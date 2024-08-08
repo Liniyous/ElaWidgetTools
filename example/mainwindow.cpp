@@ -56,10 +56,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::onCloseButtonClicked()
 {
-    ElaContentDialog* dialag = new ElaContentDialog(this);
-    connect(dialag, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(dialag, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
-    dialag->show();
+    ElaContentDialog* dialog = new ElaContentDialog(this);
+    connect(dialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(dialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
+    dialog->show();
 }
 
 void MainWindow::initWindow()
@@ -165,6 +165,8 @@ void MainWindow::initEdgeLayout()
     ElaToolButton* toolButton12 = new ElaToolButton(this);
     toolButton12->setElaIcon(ElaIconType::Crown);
     toolBar->addWidget(toolButton12);
+    QAction* test = new QAction(this);
+    test->setMenu(new QMenu(this));
 
     ElaProgressBar* progressBar = new ElaProgressBar(this);
     progressBar->setMinimum(0);

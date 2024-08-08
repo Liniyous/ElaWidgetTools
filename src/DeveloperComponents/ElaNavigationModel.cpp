@@ -126,7 +126,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QSt
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeTypeError;
     }
-    if (parentNode->getDepth() > 3)
+    if (parentNode->getDepth() > 10)
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeDepthLimit;
     }
@@ -167,7 +167,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeTypeError;
     }
-    if (parentNode->getDepth() > 3)
+    if (parentNode->getDepth() > 10)
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeDepthLimit;
     }
@@ -212,7 +212,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeTypeError;
     }
-    if (parentNode->getDepth() > 3)
+    if (parentNode->getDepth() > 10)
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeDepthLimit;
     }
