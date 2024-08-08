@@ -4,7 +4,7 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
-
+#include <QtMath>
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
 ElaScrollBarStyle::ElaScrollBarStyle(QStyle* style)

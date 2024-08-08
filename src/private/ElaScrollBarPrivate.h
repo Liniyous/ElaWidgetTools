@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "stdafx.h"
-
+class QTimer;
 class QPropertyAnimation;
 class ElaScrollBar;
 class ElaScrollBarPrivate : public QObject
