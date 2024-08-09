@@ -22,7 +22,6 @@ public:
 
 private:
     ElaComboBoxStyle* _comboBoxStyle{nullptr};
-    bool _isAllowHidePopup{false};
     ElaComboBoxView* _comboView{nullptr};
     QVector<bool> _itemSelection;
     bool _isFirstPopup{false};

@@ -19,7 +19,6 @@ public:
 
 private:
     ElaComboBoxStyle* _comboBoxStyle{nullptr};
-    bool _isAllowHidePopup{false};
     ElaThemeType::ThemeMode _themeMode;
 };
 
