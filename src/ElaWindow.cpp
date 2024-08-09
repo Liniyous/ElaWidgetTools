@@ -114,7 +114,7 @@ void ElaWindow::moveToCenter()
 #else
     auto geometry = qApp->screenAt(this->geometry().center())->geometry();
 #endif
-    setGeometry((geometry.width() - width()) / 2, (geometry.height() - height()) / 2, width(), height());
+    setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
 }
 
 void ElaWindow::setIsNavigationBarEnable(bool isVisible)

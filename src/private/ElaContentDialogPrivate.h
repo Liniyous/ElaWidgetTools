@@ -5,7 +5,6 @@
 
 #include "Def.h"
 #include "stdafx.h"
-class QHBoxLayout;
 class QVBoxLayout;
 class ElaPushButton;
 class ElaContentDialog;
@@ -22,8 +21,8 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     QWidget* _shadowWidget{nullptr};
     QWidget* _centralWidget{nullptr};
+    QWidget* _buttonWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
-    QHBoxLayout* _buttonLayout{nullptr};
     QString _leftButtonText{"cancel"};
     QString _middleButtonText{"minimum"};
     QString _rightButtonText{"exit"};
