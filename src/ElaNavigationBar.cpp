@@ -166,9 +166,9 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QStri
     {
         ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(expanderKey);
         d->_compactModel->addCompactNode(node);
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
     }
-    d->_initNodeModelIndex(QModelIndex());
-    d->_resetNodeSelected();
     return returnType;
 }
 
@@ -176,8 +176,11 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QStri
 {
     Q_D(ElaNavigationBar);
     ElaNavigationType::NodeOperateReturnType returnType = d->_navigationModel->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
-    d->_initNodeModelIndex(QModelIndex());
-    d->_resetNodeSelected();
+    if (returnType == ElaNavigationType::Success)
+    {
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
+    }
     return returnType;
 }
 
@@ -199,9 +202,9 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
             d_ptr->_compactModel->setSelectedNode(d_ptr->_navigationModel->getSelectedNode()->getOriginalNode());
         }
         d_ptr->_addStackedPage(page, pageKey);
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
     }
-    d->_initNodeModelIndex(QModelIndex());
-    d->_resetNodeSelected();
     return returnType;
 }
 
@@ -240,9 +243,9 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
             d_ptr->_compactMenuMap.insert(originalNode, menu);
         }
         d_ptr->_addStackedPage(page, pageKey);
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
     }
-    d->_initNodeModelIndex(QModelIndex());
-    d->_resetNodeSelected();
     return returnType;
 }
 
@@ -264,9 +267,9 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
             d_ptr->_compactModel->setSelectedNode(d_ptr->_navigationModel->getSelectedNode()->getOriginalNode());
         }
         d_ptr->_addStackedPage(page, pageKey);
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
     }
-    d->_initNodeModelIndex(QModelIndex());
-    d->_resetNodeSelected();
     return returnType;
 }
 
@@ -305,9 +308,9 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
             d_ptr->_compactMenuMap.insert(originalNode, menu);
         }
         d_ptr->_addStackedPage(page, pageKey);
+        d->_initNodeModelIndex(QModelIndex());
+        d->_resetNodeSelected();
     }
-    d->_initNodeModelIndex(QModelIndex());
-    d->_resetNodeSelected();
     return returnType;
 }
 

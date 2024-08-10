@@ -5,6 +5,7 @@
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
 #include <QtMath>
+
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
 ElaScrollBarStyle::ElaScrollBarStyle(QStyle* style)
@@ -131,6 +132,15 @@ int ElaScrollBarStyle::pixelMetric(PixelMetric metric, const QStyleOption* optio
     }
     }
     return QProxyStyle::pixelMetric(metric, option, widget);
+}
+
+int ElaScrollBarStyle::styleHint(StyleHint hint, const QStyleOption* option, const QWidget* widget, QStyleHintReturn* returnData) const
+{
+    if (hint == QStyle::SH_ScrollBar_LeftClickAbsolutePosition)
+    {
+        return true;
+    }
+    return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
 void ElaScrollBarStyle::startExpandAnimation(bool isExpand)
