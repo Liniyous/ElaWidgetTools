@@ -133,7 +133,6 @@ void ElaMenu::showEvent(QShowEvent* event)
 {
     Q_EMIT menuShow();
     Q_D(ElaMenu);
-
     //消除阴影偏移
     move(this->pos().x() - 6, this->pos().y());
     if (!d->_animationPix.isNull())

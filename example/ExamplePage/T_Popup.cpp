@@ -16,6 +16,9 @@ T_Popup::T_Popup(QWidget* parent)
     centerVLayout->setContentsMargins(0, 0, 0, 0);
 
     _toolButton = new ElaToolButton(this);
+    _toolButton->setIsTransparent(false);
+    _toolButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    //_toolButton->setPopupMode(QToolButton::MenuButtonPopup);
     _toolButton->setText("ElaToolButton");
     ElaMenu* menu = new ElaMenu(this);
     menu->addElaIconAction(ElaIconType::JackOLantern, "JackOLantern");
@@ -31,7 +34,7 @@ T_Popup::T_Popup(QWidget* parent)
     toolButtonLayout->addStretch();
     centerVLayout->addWidget(toolButtonArea);
     centerVLayout->addStretch();
-    addCentralWidget(centralWidget, true, true, 0);
+    addCentralWidget(centralWidget, true, false, 0);
 }
 
 T_Popup::~T_Popup()

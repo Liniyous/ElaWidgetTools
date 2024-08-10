@@ -88,7 +88,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
     // 设置置顶
     d->_stayTopButton = new ElaIconButton(ElaIconType::ArrowUpToArc, 15, 40, 30, this);
-    d->_stayTopButton->setLightHoverColor(QColor(0xEF, 0xE6, 0xED));
     connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
 

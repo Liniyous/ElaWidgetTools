@@ -5,6 +5,7 @@
 
 #include "ElaCheckBox.h"
 #include "ElaComboBox.h"
+#include "ElaMenu.h"
 #include "ElaMessageButton.h"
 #include "ElaMultiSelectComboBox.h"
 #include "ElaPlainTextEdit.h"
@@ -14,13 +15,62 @@
 #include "ElaSlider.h"
 #include "ElaSpinBox.h"
 #include "ElaText.h"
+#include "ElaTheme.h"
 #include "ElaToggleButton.h"
 #include "ElaToggleSwitch.h"
+#include "ElaToolButton.h"
 T_BaseComponents::T_BaseComponents(QWidget* parent)
     : ElaScrollPage(parent)
 {
-    _toggleSwitch = new ElaToggleSwitch(this);
+    ElaText* subTitleText = new ElaText(this);
+    subTitleText->setText("https://github.com/Liniyous/ElaWidgetTools");
+    subTitleText->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    subTitleText->setTextPixelSize(11);
 
+    ElaToolButton* documentationButton = new ElaToolButton(this);
+    documentationButton->setFixedHeight(35);
+    documentationButton->setIsTransparent(false);
+    documentationButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    //_toolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    documentationButton->setText("Documentation");
+    documentationButton->setElaIcon(ElaIconType::FileDoc);
+    ElaMenu* documentationMenu = new ElaMenu(this);
+    documentationMenu->addElaIconAction(ElaIconType::CardsBlank, "CardsBlank");
+    documentationMenu->addElaIconAction(ElaIconType::EarthAmericas, "EarthAmericas");
+    documentationButton->setMenu(documentationMenu);
+
+    ElaToolButton* sourceButton = new ElaToolButton(this);
+    sourceButton->setFixedHeight(35);
+    sourceButton->setIsTransparent(false);
+    sourceButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    sourceButton->setText("Source");
+    sourceButton->setElaIcon(ElaIconType::NfcSymbol);
+    ElaMenu* sourceMenu = new ElaMenu(this);
+    sourceMenu->addElaIconAction(ElaIconType::FireBurner, "FireBurner");
+    sourceMenu->addElaIconAction(ElaIconType::Galaxy, "Galaxy~~~~");
+    sourceButton->setMenu(sourceMenu);
+
+    ElaToolButton* themeButton = new ElaToolButton(this);
+    themeButton->setFixedSize(35, 35);
+    themeButton->setIsTransparent(false);
+    themeButton->setElaIcon(ElaIconType::MoonStars);
+    connect(themeButton, &ElaToolButton::clicked, this, [=]() {
+        eTheme->setThemeMode(eTheme->getThemeMode() == ElaThemeType::Light ? ElaThemeType::Dark : ElaThemeType::Light);
+    });
+
+    QHBoxLayout* buttonLayout = new QHBoxLayout();
+    buttonLayout->addWidget(documentationButton);
+    buttonLayout->addSpacing(5);
+    buttonLayout->addWidget(sourceButton);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(themeButton);
+    buttonLayout->addSpacing(15);
+
+    ElaText* desText = new ElaText(this);
+    desText->setText("一些常用的基础组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+    desText->setTextPixelSize(13);
+
+    _toggleSwitch = new ElaToggleSwitch(this);
     ElaScrollPageArea* toggleSwitchArea = new ElaScrollPageArea(this);
     QHBoxLayout* toggleSwitchLayout = new QHBoxLayout(toggleSwitchArea);
     ElaText* toggleSwitchText = new ElaText("ElaToggleSwitch", this);
@@ -154,6 +204,12 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaBaseComponents");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
+    centerLayout->addWidget(subTitleText);
+    centerLayout->addSpacing(5);
+    centerLayout->addLayout(buttonLayout);
+    centerLayout->addSpacing(5);
+    centerLayout->addWidget(desText);
+    centerLayout->addSpacing(5);
     centerLayout->addWidget(toggleSwitchArea);
     centerLayout->addWidget(toggleButtonArea);
     centerLayout->addWidget(comboBoxArea);

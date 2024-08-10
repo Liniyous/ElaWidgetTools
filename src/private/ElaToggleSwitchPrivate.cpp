@@ -16,17 +16,13 @@ void ElaToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool i
 {
     Q_Q(ElaToggleSwitch);
     QPropertyAnimation* circleAnimation = new QPropertyAnimation(q, "circleCenterX");
-    connect(circleAnimation, &QPropertyAnimation::finished, q, [=]()
-            { _isAnimationFinished = true; });
-    connect(circleAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value)
-            {
+    connect(circleAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) {
                 this->_circleCenterX = value.toReal();
                 q->update(); });
     circleAnimation->setStartValue(startX);
     circleAnimation->setEndValue(endX);
     circleAnimation->setEasingCurve(QEasingCurve::InOutSine);
     circleAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    _isAnimationFinished = false;
     _isToggled = isToggle;
     Q_EMIT q->toggled(isToggle);
 }
@@ -35,8 +31,7 @@ void ElaToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endR
 {
     Q_Q(ElaToggleSwitch);
     QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(q, "circleRadius");
-    connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value)
-            {
+    connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, q, [=](const QVariant& value) {
         this->_circleRadius = value.toReal();
         q->update(); });
     circleRadiusAnimation->setEasingCurve(QEasingCurve::InOutSine);

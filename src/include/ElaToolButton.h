@@ -14,8 +14,15 @@ class ELA_EXPORT ElaToolButton : public QToolButton
 public:
     explicit ElaToolButton(QWidget* parent = nullptr);
     ~ElaToolButton();
+
+    void setIsTransparent(bool isTransparent);
+    bool getIsTransparent() const;
+
     void setMenu(ElaMenu* menu);
     void setElaIcon(ElaIconType::IconName icon);
+
+protected:
+    virtual bool eventFilter(QObject* watched, QEvent* event) override;
 };
 
 #endif // ELATOOLBUTTON_H

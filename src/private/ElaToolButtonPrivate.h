@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 class ElaToolButton;
+class ElaToolButtonStyle;
 class ElaToolButtonPrivate : public QObject
 {
     Q_OBJECT
@@ -12,6 +13,9 @@ class ElaToolButtonPrivate : public QObject
 public:
     explicit ElaToolButtonPrivate(QObject* parent = nullptr);
     ~ElaToolButtonPrivate();
+
+private:
+    ElaToolButtonStyle* _toolButtonStyle{nullptr};
 };
 
 #endif // ELATOOLBUTTONPRIVATE_H

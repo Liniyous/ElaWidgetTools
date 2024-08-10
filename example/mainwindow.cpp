@@ -137,6 +137,7 @@ void MainWindow::initEdgeLayout()
     toolBar->addSeparator();
     ElaToolButton* toolButton3 = new ElaToolButton(this);
     toolButton3->setElaIcon(ElaIconType::Bluetooth);
+    toolButton3->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolButton3->setText("Bluetooth");
     toolBar->addWidget(toolButton3);
     ElaToolButton* toolButton4 = new ElaToolButton(this);
@@ -159,6 +160,7 @@ void MainWindow::initEdgeLayout()
     toolButton10->setElaIcon(ElaIconType::Coins);
     toolBar->addWidget(toolButton10);
     ElaToolButton* toolButton11 = new ElaToolButton(this);
+    toolButton11->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolButton11->setElaIcon(ElaIconType::AlarmPlus);
     toolButton11->setText("AlarmPlus");
     toolBar->addWidget(toolButton11);

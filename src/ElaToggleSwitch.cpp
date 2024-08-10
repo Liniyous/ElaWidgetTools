@@ -14,7 +14,7 @@ ElaToggleSwitch::ElaToggleSwitch(QWidget* parent)
     d->q_ptr = this;
     setMouseTracking(true);
     setFixedSize(44, 22);
-    d->_circleCenterX = 0;
+    d->_circleCenterX = -1;
     d->_isToggled = false;
     d->_themeMode = eTheme->getThemeMode();
     setProperty("circleCenterX", 0.01);
@@ -105,17 +105,17 @@ void ElaToggleSwitch::mouseReleaseEvent(QMouseEvent* event)
     }
     else
     {
-        if (d->_isAnimationFinished)
+        // if (d->_isAnimationFinished)
+        // {
+        if (d->_isToggled)
         {
-            if (d->_isToggled)
-            {
-                d->_startPosAnimation(width() - height() / 2 - d->_margin * 2, height() / 2, false);
-            }
-            else
-            {
-                d->_startPosAnimation(height() / 2, width() - height() / 2 - d->_margin * 2, true);
-            }
+            d->_startPosAnimation(d->_circleCenterX, height() / 2, false);
         }
+        else
+        {
+            d->_startPosAnimation(d->_circleCenterX, width() - height() / 2 - d->_margin * 2, true);
+        }
+        //}
     }
     d->_startRadiusAnimation(height() * 0.25, height() * 0.35);
 }
@@ -165,14 +165,11 @@ void ElaToggleSwitch::paintEvent(QPaintEvent* event)
     }
     else
     {
-        if (d->_isAnimationFinished)
+        if (d->_circleCenterX == -1)
         {
-            painter.drawEllipse(QPointF(d->_isToggled ? width() - height() / 2 - d->_margin * 2 : height() / 2, height() / 2), d->_circleRadius, d->_circleRadius);
+            d->_circleCenterX = d->_isToggled ? width() - height() / 2 - d->_margin * 2 : height() / 2;
         }
-        else
-        {
-            painter.drawEllipse(QPointF(d->_circleCenterX, height() / 2), d->_circleRadius, d->_circleRadius);
-        }
+        painter.drawEllipse(QPointF(d->_circleCenterX, height() / 2), d->_circleRadius, d->_circleRadius);
     }
     painter.restore();
 }

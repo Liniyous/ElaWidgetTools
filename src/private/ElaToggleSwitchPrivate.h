@@ -17,7 +17,6 @@ public:
 
 private:
     bool _isToggled{false};
-    bool _isAnimationFinished{true};
     int _margin{1};
     qreal _circleCenterX{0};
     qreal _circleRadius{0};

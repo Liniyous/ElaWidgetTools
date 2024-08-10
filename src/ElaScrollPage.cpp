@@ -43,7 +43,6 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->addLayout(d->_pageTitleLayout);
-    mainLayout->addSpacing(10);
     mainLayout->addWidget(d->_centralStackedWidget);
     setContentsMargins(20, 20, 0, 0);
 }

@@ -1,7 +1,9 @@
 #include "ElaText.h"
 
+#include <QContextMenuEvent>
 #include <QPainter>
 
+#include "ElaMenu.h"
 #include "ElaTheme.h"
 #include "private/ElaTextPrivate.h"
 ElaText::ElaText(QWidget* parent)

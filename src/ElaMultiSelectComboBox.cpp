@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QLayout>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
 
@@ -56,7 +57,6 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
         layout->setContentsMargins(6, 0, 6, 6);
     }
     QComboBox::setMaxVisibleItems(5);
-    setInsertPolicy(QComboBox::NoInsert);
     connect(d->_comboView, &ElaComboBoxView::itemPressed, d, &ElaMultiSelectComboBoxPrivate::onItemPressed);
     connect(this, QOverload<int>::of(&ElaMultiSelectComboBox::currentIndexChanged), d, &ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs);
     d->_itemSelection.resize(32);
@@ -215,11 +215,11 @@ void ElaMultiSelectComboBox::showPopup()
             int containerHeight = 0;
             if (count() >= maxVisibleItems())
             {
-                containerHeight = maxVisibleItems() * 35 + 10;
+                containerHeight = maxVisibleItems() * 35 + 8;
             }
             else
             {
-                containerHeight = count() * 35 + 10;
+                containerHeight = count() * 35 + 8;
             }
             view()->resize(view()->width(), containerHeight - 8);
             container->move(container->x(), container->y() + 3);
@@ -240,10 +240,8 @@ void ElaMultiSelectComboBox::showPopup()
 
             QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
             connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
-                if (layout->count() == 0)
-                {
-                    layout->addWidget(view());
-                }
+                d->_isAllowHidePopup = true;
+                layout->addWidget(view());
             });
             QPoint viewPos = view()->pos();
             viewPosAnimation->setStartValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
@@ -287,31 +285,60 @@ void ElaMultiSelectComboBox::hidePopup()
     }
     else
     {
-        QComboBox::hidePopup();
-        QWidget* container = this->findChild<QFrame*>();
-        if (container)
+        if (d->_isAllowHidePopup)
         {
-            QLayout* layout = container->layout();
-            if (layout->count() == 0)
+            QWidget* container = this->findChild<QFrame*>();
+            int containerHeight = container->height();
+            if (container)
             {
-                layout->addWidget(view());
+                QLayout* layout = container->layout();
+                while (layout->count())
+                {
+                    layout->takeAt(0);
+                }
+                QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
+                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
+                    layout->addWidget(view());
+                    QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(0, 0), QPoint(0, 0), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+                    QApplication::sendEvent(parentWidget(), &focusEvent);
+                });
+                QPoint viewPos = QPoint(7, 1);
+                connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
+                viewPosAnimation->setStartValue(viewPos);
+                viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
+                viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);
+                viewPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+                QPropertyAnimation* fixedSizeAnimation = new QPropertyAnimation(container, "maximumHeight");
+                connect(fixedSizeAnimation, &QPropertyAnimation::finished, this, [=]() {
+                    QComboBox::hidePopup();
+                    container->setFixedHeight(containerHeight);
+                });
+                connect(fixedSizeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                    container->setFixedHeight(value.toUInt());
+                });
+                fixedSizeAnimation->setStartValue(container->height());
+                fixedSizeAnimation->setEndValue(1);
+                fixedSizeAnimation->setEasingCurve(QEasingCurve::InCubic);
+                fixedSizeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+                d->_isAllowHidePopup = false;
             }
+            //指示器动画
+            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
+            connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+                update();
+            });
+            rotateAnimation->setDuration(300);
+            rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
+            rotateAnimation->setStartValue(d->_pExpandIconRotate);
+            rotateAnimation->setEndValue(0);
+            rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
+            markAnimation->setDuration(300);
+            markAnimation->setEasingCurve(QEasingCurve::InOutSine);
+            markAnimation->setStartValue(d->_pExpandMarkWidth);
+            markAnimation->setEndValue(0);
+            markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         }
-        //指示器动画
-        QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d, "pExpandIconRotate");
-        connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            update();
-        });
-        rotateAnimation->setDuration(300);
-        rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        rotateAnimation->setStartValue(d->_pExpandIconRotate);
-        rotateAnimation->setEndValue(0);
-        rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        markAnimation->setDuration(300);
-        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        markAnimation->setStartValue(d->_pExpandMarkWidth);
-        markAnimation->setEndValue(0);
-        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }

@@ -15,7 +15,7 @@ ElaWidget::ElaWidget(QWidget* parent)
     resize(500, 500); // 默认宽高
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
-
+    setWindowModality(Qt::ApplicationModal);
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
     d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
     d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));

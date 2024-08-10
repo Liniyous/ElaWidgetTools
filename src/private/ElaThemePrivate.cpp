@@ -376,10 +376,18 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::ToolBarHandle] = QColor(0x4C, 0xA0, 0xE0);
 
     //ElaToolButton
-    _lightThemeColorList[ElaThemeType::ToolButtonHover] = QColor(0xE5, 0xE4, 0xEB);
-    _darkThemeColorList[ElaThemeType::ToolButtonHover] = QColor(0x40, 0x40, 0x40);
-    _lightThemeColorList[ElaThemeType::ToolButtonPress] = QColor(0xEA, 0xE9, 0xF0);
-    _darkThemeColorList[ElaThemeType::ToolButtonPress] = QColor(0x33, 0x33, 0x33);
+    _lightThemeColorList[ElaThemeType::ToolButtonBorder] = QColor(0xD1, 0xD1, 0xD3);
+    _darkThemeColorList[ElaThemeType::ToolButtonBorder] = QColor(0x3B, 0x3B, 0x40);
+    _lightThemeColorList[ElaThemeType::ToolButtonBase] = QColor(0xFD, 0xFD, 0xFE);
+    _darkThemeColorList[ElaThemeType::ToolButtonBase] = QColor(0x33, 0x33, 0x3B);
+    _lightThemeColorList[ElaThemeType::ToolButtonHover] = QColor(0xF7, 0xF7, 0xFA);
+    _darkThemeColorList[ElaThemeType::ToolButtonHover] = QColor(0x3C, 0x3C, 0x42);
+    _lightThemeColorList[ElaThemeType::ToolButtonTransparentHover] = QColor(0xE5, 0xE4, 0xEB);
+    _darkThemeColorList[ElaThemeType::ToolButtonTransparentHover] = QColor(0x40, 0x40, 0x40);
+    _lightThemeColorList[ElaThemeType::ToolButtonPress] = QColor(0xF3, 0xF2, 0xF5);
+    _darkThemeColorList[ElaThemeType::ToolButtonPress] = QColor(0x2D, 0x2D, 0x34);
+    _lightThemeColorList[ElaThemeType::ToolButtonTransparentPress] = QColor(0xEA, 0xE9, 0xF0);
+    _darkThemeColorList[ElaThemeType::ToolButtonTransparentPress] = QColor(0x33, 0x33, 0x33);
     _lightThemeColorList[ElaThemeType::ToolButtonIndicator] = QColor(0xE0, 0xE0, 0xE0);
     _darkThemeColorList[ElaThemeType::ToolButtonIndicator] = QColor(0x40, 0x40, 0x40);
 
