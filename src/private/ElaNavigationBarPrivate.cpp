@@ -340,18 +340,11 @@ void ElaNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
     Q_Q(ElaNavigationBar);
     page->setProperty("ElaPageKey", pageKey);
     Q_EMIT q->navigationNodeAdded(ElaNavigationType::PageNode, pageKey, page);
-    _initNodeModelIndex(QModelIndex());
     ElaNavigationNode* node = _navigationModel->getNavigationNode(pageKey);
     QVariantMap suggestData;
     suggestData.insert("ElaNodeType", "Stacked");
     suggestData.insert("ElaPageKey", pageKey);
     _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
-    static bool isFirstAdd = true;
-    if (isFirstAdd)
-    {
-        isFirstAdd = false;
-        _resetNodeSelected();
-    }
 }
 
 void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)

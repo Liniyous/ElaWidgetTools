@@ -102,26 +102,30 @@ QVariant ElaNavigationModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome)
 {
-    ElaNavigationNode* node = new ElaNavigationNode(expanderTitle, d_ptr->_rootNode);
+    Q_D(ElaNavigationModel);
+    ElaNavigationNode* node = new ElaNavigationNode(expanderTitle, d->_rootNode);
     node->setDepth(1);
     node->setIsVisible(true);
     node->setIsExpanderNode(true);
     node->setAwesome(awesome);
-    d_ptr->_rootNode->appendChildNode(node);
-    d_ptr->_nodesMap.insert(node->getNodeKey(), node);
+    beginInsertRows(QModelIndex(), d->_rootNode->getChildrenNodes().count(), d->_rootNode->getChildrenNodes().count());
+    d->_rootNode->appendChildNode(node);
+    d->_nodesMap.insert(node->getNodeKey(), node);
+    endInsertRows();
     expanderKey = node->getNodeKey();
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome)
 {
-    if (!d_ptr->_nodesMap.contains(targetExpanderKey))
+    Q_D(ElaNavigationModel);
+    if (!d->_nodesMap.contains(targetExpanderKey))
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeInvalid;
     }
-    ElaNavigationNode* parentNode = d_ptr->_nodesMap.value(targetExpanderKey);
+    ElaNavigationNode* parentNode = d->_nodesMap.value(targetExpanderKey);
     if (!parentNode->getIsExpanderNode())
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeTypeError;
@@ -134,35 +138,45 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addExpanderNode(QSt
     node->setDepth(parentNode->getDepth() + 1);
     node->setIsExpanderNode(true);
     node->setAwesome(awesome);
+    if (parentNode->getIsVisible() && parentNode->getIsExpanded())
+    {
+        node->setIsVisible(true);
+    }
+    beginInsertRows(parentNode->getModelIndex(), parentNode->getChildrenNodes().count(), parentNode->getChildrenNodes().count());
     parentNode->appendChildNode(node);
-    d_ptr->_nodesMap.insert(node->getNodeKey(), node);
+    d->_nodesMap.insert(node->getNodeKey(), node);
+    endInsertRows();
     expanderKey = node->getNodeKey();
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, ElaIconType::IconName awesome)
 {
-    ElaNavigationNode* node = new ElaNavigationNode(pageTitle, d_ptr->_rootNode);
+    Q_D(ElaNavigationModel);
+    ElaNavigationNode* node = new ElaNavigationNode(pageTitle, d->_rootNode);
     node->setAwesome(awesome);
     node->setDepth(1);
     node->setIsVisible(true);
-    d_ptr->_rootNode->appendChildNode(node);
-    d_ptr->_nodesMap.insert(node->getNodeKey(), node);
+    beginInsertRows(QModelIndex(), d->_rootNode->getChildrenNodes().count(), d->_rootNode->getChildrenNodes().count());
+    d->_rootNode->appendChildNode(node);
+    d->_nodesMap.insert(node->getNodeKey(), node);
+    endInsertRows();
     pageKey = node->getNodeKey();
-    if (!d_ptr->_pSelectedNode)
+    if (!d->_pSelectedNode)
     {
-        d_ptr->_pSelectedNode = node;
+        d->_pSelectedNode = node;
     }
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, ElaIconType::IconName awesome)
 {
-    if (!d_ptr->_nodesMap.contains(targetExpanderKey))
+    Q_D(ElaNavigationModel);
+    if (!d->_nodesMap.contains(targetExpanderKey))
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeInvalid;
     }
-    ElaNavigationNode* parentNode = d_ptr->_nodesMap.value(targetExpanderKey);
+    ElaNavigationNode* parentNode = d->_nodesMap.value(targetExpanderKey);
     if (!parentNode->getIsExpanderNode())
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeTypeError;
@@ -174,40 +188,50 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     ElaNavigationNode* node = new ElaNavigationNode(pageTitle, parentNode);
     node->setDepth(parentNode->getDepth() + 1);
     node->setAwesome(awesome);
-    parentNode->appendChildNode(node);
-    d_ptr->_nodesMap.insert(node->getNodeKey(), node);
-    pageKey = node->getNodeKey();
-    if (!d_ptr->_pSelectedNode)
+    if (parentNode->getIsVisible() && parentNode->getIsExpanded())
     {
-        d_ptr->_pSelectedNode = node;
+        node->setIsVisible(true);
+    }
+    beginInsertRows(parentNode->getModelIndex(), parentNode->getChildrenNodes().count(), parentNode->getChildrenNodes().count());
+    parentNode->appendChildNode(node);
+    d->_nodesMap.insert(node->getNodeKey(), node);
+    endInsertRows();
+    pageKey = node->getNodeKey();
+    if (!d->_pSelectedNode)
+    {
+        d->_pSelectedNode = node;
     }
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, int keyPoints, ElaIconType::IconName awesome)
 {
-    ElaNavigationNode* node = new ElaNavigationNode(pageTitle, d_ptr->_rootNode);
+    Q_D(ElaNavigationModel);
+    ElaNavigationNode* node = new ElaNavigationNode(pageTitle, d->_rootNode);
     node->setAwesome(awesome);
     node->setDepth(1);
     node->setIsVisible(true);
     node->setKeyPoints(keyPoints);
-    d_ptr->_rootNode->appendChildNode(node);
-    d_ptr->_nodesMap.insert(node->getNodeKey(), node);
+    beginInsertRows(QModelIndex(), d->_rootNode->getChildrenNodes().count(), d->_rootNode->getChildrenNodes().count());
+    d->_rootNode->appendChildNode(node);
+    d->_nodesMap.insert(node->getNodeKey(), node);
+    endInsertRows();
     pageKey = node->getNodeKey();
-    if (!d_ptr->_pSelectedNode)
+    if (!d->_pSelectedNode)
     {
-        d_ptr->_pSelectedNode = node;
+        d->_pSelectedNode = node;
     }
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome)
 {
-    if (!d_ptr->_nodesMap.contains(targetExpanderKey))
+    Q_D(ElaNavigationModel);
+    if (!d->_nodesMap.contains(targetExpanderKey))
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeInvalid;
     }
-    ElaNavigationNode* parentNode = d_ptr->_nodesMap.value(targetExpanderKey);
+    ElaNavigationNode* parentNode = d->_nodesMap.value(targetExpanderKey);
     if (!parentNode->getIsExpanderNode())
     {
         return ElaNavigationType::NodeOperateReturnType::TargetNodeTypeError;
@@ -220,12 +244,18 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     node->setDepth(parentNode->getDepth() + 1);
     node->setAwesome(awesome);
     node->setKeyPoints(keyPoints);
-    parentNode->appendChildNode(node);
-    d_ptr->_nodesMap.insert(node->getNodeKey(), node);
-    pageKey = node->getNodeKey();
-    if (!d_ptr->_pSelectedNode)
+    if (parentNode->getIsVisible() && parentNode->getIsExpanded())
     {
-        d_ptr->_pSelectedNode = node;
+        node->setIsVisible(true);
+    }
+    beginInsertRows(parentNode->getModelIndex(), parentNode->getChildrenNodes().count(), parentNode->getChildrenNodes().count());
+    parentNode->appendChildNode(node);
+    d->_nodesMap.insert(node->getNodeKey(), node);
+    endInsertRows();
+    pageKey = node->getNodeKey();
+    if (!d->_pSelectedNode)
+    {
+        d->_pSelectedNode = node;
     }
     return ElaNavigationType::NodeOperateReturnType::Success;
 }

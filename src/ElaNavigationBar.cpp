@@ -158,26 +158,32 @@ void ElaNavigationBar::setUserInfoCardSubTitle(QString subTitle)
     d->_userCard->setSubTitle(subTitle);
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome)
 {
-    Q_D(const ElaNavigationBar);
+    Q_D(ElaNavigationBar);
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addExpanderNode(expanderTitle, expanderKey, awesome);
     if (returnType == ElaNavigationType::Success)
     {
         ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(expanderKey);
         d->_compactModel->addCompactNode(node);
     }
+    d->_initNodeModelIndex(QModelIndex());
+    d->_resetNodeSelected();
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome)
 {
-    Q_D(const ElaNavigationBar);
-    return d->_navigationModel->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
+    Q_D(ElaNavigationBar);
+    ElaNavigationType::NodeOperateReturnType returnType = d->_navigationModel->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
+    d->_initNodeModelIndex(QModelIndex());
+    d->_resetNodeSelected();
+    return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, ElaIconType::IconName awesome)
 {
+    Q_D(ElaNavigationBar);
     if (!page)
     {
         return ElaNavigationType::PageInvalid;
@@ -194,11 +200,14 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         }
         d_ptr->_addStackedPage(page, pageKey);
     }
+    d->_initNodeModelIndex(QModelIndex());
+    d->_resetNodeSelected();
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, ElaIconType::IconName awesome)
 {
+    Q_D(ElaNavigationBar);
     if (!page)
     {
         return ElaNavigationType::PageInvalid;
@@ -232,11 +241,14 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         }
         d_ptr->_addStackedPage(page, pageKey);
     }
+    d->_initNodeModelIndex(QModelIndex());
+    d->_resetNodeSelected();
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, int keyPoints, ElaIconType::IconName awesome)
 {
+    Q_D(ElaNavigationBar);
     if (!page)
     {
         return ElaNavigationType::PageInvalid;
@@ -253,11 +265,14 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         }
         d_ptr->_addStackedPage(page, pageKey);
     }
+    d->_initNodeModelIndex(QModelIndex());
+    d->_resetNodeSelected();
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome)
 {
+    Q_D(ElaNavigationBar);
     if (!page)
     {
         return ElaNavigationType::PageInvalid;
@@ -291,15 +306,17 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         }
         d_ptr->_addStackedPage(page, pageKey);
     }
+    d->_initNodeModelIndex(QModelIndex());
+    d->_resetNodeSelected();
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QString& footerKey, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QString& footerKey, int keyPoints, ElaIconType::IconName awesome)
 {
     return addFooterNode(footerTitle, nullptr, footerKey, keyPoints, awesome);
 }
 
-ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints, ElaIconType::IconName awesome)
 {
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_footerModel->addFooterNode(footerTitle, footerKey, page ? true : false, keyPoints, awesome);
     if (returnType == ElaNavigationType::Success)
