@@ -19,6 +19,7 @@ public:
     void setColumnCount(int count);
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
+    QString getIconNameFromModelIndex(const QModelIndex& index) const;
 
 private:
     QMetaEnum _metaEnum;

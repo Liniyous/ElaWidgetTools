@@ -126,3 +126,23 @@ QVariant T_IconModel::data(const QModelIndex& index, int role) const
     }
     return QVariant();
 }
+
+QString T_IconModel::getIconNameFromModelIndex(const QModelIndex& index) const
+{
+    QString iconName;
+    if (_pIsSearchMode)
+    {
+        if (index.row() * _columnCount + index.column() < _searchKeyList.count())
+        {
+            iconName = QString("ElaIconType::") + _searchKeyList.at(index.row() * _columnCount + index.column());
+        }
+    }
+    else
+    {
+        if (index.row() * _columnCount + index.column() < _metaEnum.keyCount() - 1)
+        {
+            iconName = QString("ElaIconType::") + _metaEnum.key(index.row() * _columnCount + index.column() + 1);
+        }
+    }
+    return iconName;
+}

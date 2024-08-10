@@ -21,10 +21,6 @@ ElaTableView::ElaTableView(QWidget* parent)
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
-    horizontalHeader()->setDefaultSectionSize(100);
-    verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    verticalHeader()->setDefaultSectionSize(100);
     setStyle(new ElaTableViewStyle(style()));
 }
 

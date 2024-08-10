@@ -1,9 +1,13 @@
 ﻿#include "T_Icon.h"
 
+#include <QApplication>
+#include <QClipboard>
+#include <QHeaderView>
 #include <QStandardItemModel>
 #include <QVBoxLayout>
 
 #include "ElaLineEdit.h"
+#include "ElaMessageBar.h"
 #include "ElaTableView.h"
 #include "ElaText.h"
 #include "T_IconDelegate.h"
@@ -18,6 +22,19 @@ T_Icon::T_Icon(QWidget* parent)
     centralWidget->setWindowTitle("ElaIcon");
     // TableView
     _iconView = new ElaTableView(this);
+    _iconView->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
+    _iconView->horizontalHeader()->setDefaultSectionSize(100);
+    _iconView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    _iconView->verticalHeader()->setDefaultSectionSize(100);
+    connect(_iconView, &ElaTableView::clicked, this, [=](const QModelIndex& index) {
+        QString iconName = _iconModel->getIconNameFromModelIndex(index);
+        if (iconName.isEmpty())
+        {
+            return;
+        }
+        qApp->clipboard()->setText(iconName);
+        ElaMessageBar::success(ElaMessageBarType::Top, "复制完成", iconName + "已被复制到剪贴板", 1000, this);
+    });
     _iconModel = new T_IconModel(this);
     _iconDelegate = new T_IconDelegate(this);
     _iconView->setModel(_iconModel);

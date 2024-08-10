@@ -96,7 +96,7 @@ void MainWindow::initEdgeLayout()
     menuBar->addElaIconAction(ElaIconType::AtomSimple, "动作菜单");
     ElaMenu* iconMenu = menuBar->addMenu(ElaIconType::Aperture, "图标菜单");
     iconMenu->setMenuItemHeight(27);
-    iconMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
+    iconMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::SelectAll);
     iconMenu->addElaIconAction(ElaIconType::Copy, "复制");
     iconMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
     iconMenu->addSeparator();
@@ -105,7 +105,7 @@ void MainWindow::initEdgeLayout()
     menuBar->addSeparator();
     ElaMenu* shortCutMenu = new ElaMenu("快捷菜单(&A)", this);
     shortCutMenu->setMenuItemHeight(27);
-    shortCutMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Save);
+    shortCutMenu->addElaIconAction(ElaIconType::BoxCheck, "排序方式", QKeySequence::Find);
     shortCutMenu->addElaIconAction(ElaIconType::Copy, "复制");
     shortCutMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
     shortCutMenu->addSeparator();
