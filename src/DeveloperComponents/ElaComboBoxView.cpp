@@ -2,12 +2,9 @@
 
 #include <QMouseEvent>
 
-#include "private/ElaComboBoxViewPrivate.h"
 ElaComboBoxView::ElaComboBoxView(QWidget* parent)
-    : QListView(parent), d_ptr(new ElaComboBoxViewPrivate())
+    : QListView(parent)
 {
-    Q_D(ElaComboBoxView);
-    d->q_ptr = this;
 }
 
 ElaComboBoxView::~ElaComboBoxView()

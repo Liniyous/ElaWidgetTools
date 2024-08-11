@@ -3,28 +3,14 @@
 #include <QDateTime>
 #include <QDebug>
 
-#include "private/ElaDxgiPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, QStringList, DxDeviceList)
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, QStringList, OutputDeviceList)
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, DxDeviceID);
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, OutputDeviceID);
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, QString, LastError)
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsGrabActive)
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, QRect, GrabArea);
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, GrabFrameRate);  // 截图帧数
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, int, TimeoutMsValue); // 超时等待
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsInitSuccess);
-Q_PROPERTY_CREATE_Q_CPP(ElaDxgi, bool, IsGrabStoped);
 ElaDxgi::ElaDxgi(QObject* parent)
-    : QObject(parent), d_ptr(new ElaDxgiPrivate())
+    : QObject(parent)
 {
-    Q_D(ElaDxgi);
-    d->q_ptr = this;
-    d->_pIsInitSuccess = false;
-    d->_pIsGrabActive = false;
-    d->_pGrabFrameRate = 120;
-    d->_pTimeoutMsValue = 50;
-    d->_pIsGrabStoped = true;
+    _pIsInitSuccess = false;
+    _pIsGrabActive = false;
+    _pGrabFrameRate = 120;
+    _pTimeoutMsValue = 50;
+    _pIsGrabStoped = true;
 }
 
 ElaDxgi::~ElaDxgi()
@@ -34,10 +20,9 @@ ElaDxgi::~ElaDxgi()
 
 bool ElaDxgi::initialize(int dxID, int outputID)
 {
-    Q_D(ElaDxgi);
-    d->_pIsInitSuccess = false;
-    d->_pDxDeviceID = dxID;
-    d->_pOutputDeviceID = outputID;
+    _pIsInitSuccess = false;
+    _pDxDeviceID = dxID;
+    _pOutputDeviceID = outputID;
     releaseInterface();
     ID3D11Device* d3dDevice = nullptr;
     ID3D11DeviceContext* d3dContext = nullptr;
@@ -46,8 +31,8 @@ bool ElaDxgi::initialize(int dxID, int outputID)
                                    D3D11_SDK_VERSION, &d3dDevice, &feat, &d3dContext);
     if (FAILED(hr))
     {
-        d->_pLastError = "Failed to D3D11CreateDevice ErrorCode = " + QString::number(uint(hr), 16);
-        qDebug() << d->_pLastError;
+        _pLastError = "Failed to D3D11CreateDevice ErrorCode = " + QString::number(uint(hr), 16);
+        qDebug() << _pLastError;
         if (d3dDevice)
         {
             d3dDevice->Release();
@@ -69,13 +54,13 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     }
     dxgiFactory->Release();
     dxgiAdapter = nullptr;
-    d->_pDxDeviceList.clear();
+    _pDxDeviceList.clear();
     for (int i = 0; i < dxgiAdapterVector.count(); i++)
     {
         IDXGIAdapter* adapt = dxgiAdapterVector.at(i);
         DXGI_ADAPTER_DESC desc;
         adapt->GetDesc(&desc);
-        d->_pDxDeviceList.append(QString::fromWCharArray(desc.Description));
+        _pDxDeviceList.append(QString::fromWCharArray(desc.Description));
     }
     if (dxID >= 0 && dxID < dxgiAdapterVector.count())
     {
@@ -84,8 +69,8 @@ bool ElaDxgi::initialize(int dxID, int outputID)
 
     if (!dxgiAdapter)
     {
-        d->_pLastError = "Failed to found gpu";
-        qDebug() << d->_pLastError;
+        _pLastError = "Failed to found gpu";
+        qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
         for (auto adapter : dxgiAdapterVector)
@@ -106,13 +91,13 @@ bool ElaDxgi::initialize(int dxID, int outputID)
         adapter->Release();
     }
     dxgiOutput = nullptr;
-    d->_pOutputDeviceList.clear();
+    _pOutputDeviceList.clear();
     for (int i = 0; i < dxgiOutputVector.count(); i++)
     {
         const auto& output = dxgiOutputVector.at(i);
         DXGI_OUTPUT_DESC desc;
         output->GetDesc(&desc);
-        d->_pOutputDeviceList.append(QString::fromWCharArray(desc.DeviceName));
+        _pOutputDeviceList.append(QString::fromWCharArray(desc.DeviceName));
     }
     if (outputID >= 0 && outputID < dxgiOutputVector.count())
     {
@@ -121,8 +106,8 @@ bool ElaDxgi::initialize(int dxID, int outputID)
 
     if (!dxgiOutput)
     {
-        d->_pLastError = "Failed to found screen!";
-        qDebug() << d->_pLastError;
+        _pLastError = "Failed to found screen!";
+        qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
         for (auto output : dxgiOutputVector)
@@ -139,8 +124,8 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     }
     if (FAILED(hr))
     {
-        d->_pLastError = "Failed to QueryInterface IDXGIOutput6 ErrorCode = " + QString::number(uint(hr), 16);
-        qDebug() << d->_pLastError;
+        _pLastError = "Failed to QueryInterface IDXGIOutput6 ErrorCode = " + QString::number(uint(hr), 16);
+        qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
         dxgiOutput6->Release();
@@ -148,52 +133,51 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     }
     UINT supportedFormatsCount = 1; // 支持的格式数
     DXGI_FORMAT supportedFormats[1] = {DXGI_FORMAT_B8G8R8A8_UNORM};
-    hr = dxgiOutput6->DuplicateOutput1(d3dDevice, 0, supportedFormatsCount, supportedFormats, &d->_duplication);
+    hr = dxgiOutput6->DuplicateOutput1(d3dDevice, 0, supportedFormatsCount, supportedFormats, &_duplication);
     dxgiOutput6->Release();
     if (FAILED(hr))
     {
-        d->_pLastError = "Failed to DuplicateOutput ErrorCode = " + QString::number(uint(hr), 16);
-        qDebug() << d->_pLastError;
+        _pLastError = "Failed to DuplicateOutput ErrorCode = " + QString::number(uint(hr), 16);
+        qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
-        if (d->_duplication)
+        if (_duplication)
         {
-            d->_duplication->Release();
-            d->_duplication = nullptr;
+            _duplication->Release();
+            _duplication = nullptr;
         }
         return false;
     }
-    d->_device = d3dDevice;
-    d->_context = d3dContext;
-    d->_pIsInitSuccess = true;
+    _device = d3dDevice;
+    _context = d3dContext;
+    _pIsInitSuccess = true;
     return true;
 }
 
 QImage ElaDxgi::getGrabImage() const
 {
-    return d_ptr->_grabImg;
+    return _grabImg;
 }
 
 void ElaDxgi::onGrabScreen()
 {
-    Q_D(ElaDxgi);
     qreal startTime = 0;
     qreal endTime = 0;
-    if (!d->_duplication || !d->_device || !d->_context)
+    if (!_duplication || !_device || !_context)
     {
         setIsGrabStoped(true);
         return;
     }
-    d->_pIsGrabStoped = false;
-    while (d->_pIsGrabActive)
+    _pIsGrabStoped = false;
+    while (_pIsGrabActive)
     {
         IDXGIResource* desktopRes = nullptr;
         DXGI_OUTDUPL_FRAME_INFO frameInfo;
         while (true)
         {
             startTime = QDateTime::currentMSecsSinceEpoch();
-            d->_duplication->ReleaseFrame();
-            HRESULT hr = d->_duplication->AcquireNextFrame(d->_pTimeoutMsValue, &frameInfo, &desktopRes);
+            _duplication->ReleaseFrame();
+            HRESULT hr = _duplication->AcquireNextFrame(_pTimeoutMsValue, &frameInfo, &desktopRes);
             if (FAILED(hr))
             {
                 if (hr != DXGI_ERROR_WAIT_TIMEOUT)
@@ -205,12 +189,12 @@ void ElaDxgi::onGrabScreen()
                     }
                     while (true)
                     {
-                        if (!d->_duplication || !d->_device || !d->_context)
+                        if (!_duplication || !_device || !_context)
                         {
                             setIsGrabStoped(true);
                             return;
                         }
-                        if (initialize(d->_pDxDeviceID, d->_pOutputDeviceID))
+                        if (initialize(_pDxDeviceID, _pOutputDeviceID))
                         {
                             break;
                         }
@@ -246,10 +230,10 @@ void ElaDxgi::onGrabScreen()
         texDesc.BindFlags = 0;
         texDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
         texDesc.MiscFlags = 0;
-        d->_device->CreateTexture2D(&texDesc, nullptr, &d->_texture);
-        d->_context->CopyResource(d->_texture, textrueRes);
+        _device->CreateTexture2D(&texDesc, nullptr, &_texture);
+        _context->CopyResource(_texture, textrueRes);
         IDXGISurface1* surface = nullptr;
-        hr = d->_texture->QueryInterface(__uuidof(IDXGISurface1), reinterpret_cast<void**>(&surface));
+        hr = _texture->QueryInterface(__uuidof(IDXGISurface1), reinterpret_cast<void**>(&surface));
         if (FAILED(hr))
         {
             qDebug() << "Failed to QueryInterface IDXGISurface1 ErrorCode ="
@@ -263,20 +247,20 @@ void ElaDxgi::onGrabScreen()
                          QImage::Format_ARGB32);
         surface->Unmap();
         surface->Release();
-        d->_texture->Release();
-        d->_grabImg = grabImage.copy(d->_pGrabArea);
+        _texture->Release();
+        _grabImg = grabImage.copy(_pGrabArea);
         Q_EMIT grabScreenOver();
         endTime = QDateTime::currentMSecsSinceEpoch();
-        if (d->_lastGrabTime == 0)
+        if (_lastGrabTime == 0)
         {
-            d->_lastGrabTime = endTime - startTime; // 毫秒
+            _lastGrabTime = endTime - startTime; // 毫秒
         }
         else
         {
-            d->_lastGrabTime = ((endTime - startTime) + d->_lastGrabTime) / 2.0;
+            _lastGrabTime = ((endTime - startTime) + _lastGrabTime) / 2.0;
         }
-        d->_cpuSleepTime = (1000 - d->_lastGrabTime * d->_pGrabFrameRate) / d->_pGrabFrameRate;
-        cpuSleep(d->_cpuSleepTime * 1000);
+        _cpuSleepTime = (1000 - _lastGrabTime * _pGrabFrameRate) / _pGrabFrameRate;
+        cpuSleep(_cpuSleepTime * 1000);
         // qDebug() << _cpuSleepTime << _lastGrabTime;
     }
     setIsGrabStoped(true);
@@ -284,21 +268,20 @@ void ElaDxgi::onGrabScreen()
 
 void ElaDxgi::releaseInterface()
 {
-    Q_D(ElaDxgi);
-    if (d->_duplication)
+    if (_duplication)
     {
-        d->_duplication->Release();
-        d->_duplication = nullptr;
+        _duplication->Release();
+        _duplication = nullptr;
     }
-    if (d->_device)
+    if (_device)
     {
-        d->_device->Release();
-        d->_device = nullptr;
+        _device->Release();
+        _device = nullptr;
     }
-    if (d->_context)
+    if (_context)
     {
-        d->_context->Release();
-        d->_context = nullptr;
+        _context->Release();
+        _context = nullptr;
     }
 }
 
