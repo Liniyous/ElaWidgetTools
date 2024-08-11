@@ -264,12 +264,12 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::ScrollPageAreaBase] = QColor(0x23, 0x22, 0x24);
 
     //ElaSlider
-    _lightThemeColorList[ElaThemeType::SliderBaseNoValue] = QColor(0x8A, 0x8A, 0x8A);
-    _darkThemeColorList[ElaThemeType::SliderBaseNoValue] = QColor(0x8A, 0x8A, 0x8A);
+    _lightThemeColorList[ElaThemeType::SliderBaseNoValue] = QColor(0xCF, 0xCF, 0xCF);
+    _darkThemeColorList[ElaThemeType::SliderBaseNoValue] = QColor(0x63, 0x63, 0x63);
     _lightThemeColorList[ElaThemeType::SliderBaseHasValue] = QColor(0x00, 0x66, 0xB4);
-    _darkThemeColorList[ElaThemeType::SliderBaseHasValue] = QColor(0x00, 0x66, 0xB4);
+    _darkThemeColorList[ElaThemeType::SliderBaseHasValue] = QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[ElaThemeType::SliderHandleBase] = QColor(0x00, 0x66, 0xB4);
-    _darkThemeColorList[ElaThemeType::SliderHandleBase] = QColor(0x00, 0x66, 0xB4);
+    _darkThemeColorList[ElaThemeType::SliderHandleBase] = QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[ElaThemeType::SliderHandleCenter] = QColor(0xEA, 0xEA, 0xEB);
     _darkThemeColorList[ElaThemeType::SliderHandleCenter] = QColor(0xEA, 0xEA, 0xEB);
 
