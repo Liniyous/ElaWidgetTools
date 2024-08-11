@@ -1,11 +1,14 @@
 #include "ElaDoubleSpinBox.h"
 
+#include <QContextMenuEvent>
 #include <QLineEdit>
 
 #include "DeveloperComponents/ElaSpinBoxStyle.h"
+#include "ElaDoubleSpinBoxPrivate.h"
+#include "ElaMenu.h"
 #include "ElaTheme.h"
 ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
-    : QDoubleSpinBox(parent)
+    : QDoubleSpinBox(parent), d_ptr(new ElaDoubleSpinBoxPrivate())
 {
     setFixedSize(120, 30);
     setStyle(new ElaSpinBoxStyle(style()));
@@ -21,4 +24,40 @@ ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
 
 ElaDoubleSpinBox::~ElaDoubleSpinBox()
 {
+}
+
+void ElaDoubleSpinBox::contextMenuEvent(QContextMenuEvent* event)
+{
+    Q_D(ElaDoubleSpinBox);
+    QPointer<ElaMenu> menu = d->_createStandardContextMenu();
+    if (!menu)
+    {
+        return;
+    }
+    menu->addSeparator();
+    const uint se = stepEnabled();
+    QAction* up = menu->addElaIconAction(ElaIconType::Plus, tr("增加"));
+    up->setEnabled(se & StepUpEnabled);
+    QAction* down = menu->addElaIconAction(ElaIconType::Minus, tr("减少"));
+    down->setEnabled(se & StepDownEnabled);
+    menu->addSeparator();
+
+    const QPointer<QAbstractSpinBox> that = this;
+    const QPoint pos = (event->reason() == QContextMenuEvent::Mouse)
+                           ? event->globalPos()
+                           : mapToGlobal(QPoint(event->pos().x(), 0)) + QPoint(width() / 2, height() / 2);
+    const QAction* action = menu->exec(pos);
+    delete static_cast<ElaMenu*>(menu);
+    if (that && action)
+    {
+        if (action == up)
+        {
+            stepBy(1);
+        }
+        else if (action == down)
+        {
+            stepBy(-1);
+        }
+    }
+    event->accept();
 }

@@ -133,16 +133,23 @@ void ElaScrollBar::contextMenuEvent(QContextMenuEvent* event)
     bool horiz = this->orientation() == Qt::Horizontal;
     QPointer<ElaMenu> menu = new ElaMenu(this);
     menu->setMenuItemHeight(27);
-    QAction* actScrollHere = menu->addAction(tr("Scroll here"));
+    // Scroll here
+    QAction* actScrollHere = menu->addElaIconAction(ElaIconType::UpDownLeftRight, tr("滚动到此处"));
     menu->addSeparator();
-    QAction* actScrollTop = menu->addAction(horiz ? tr("Left edge") : tr("Top"));
-    QAction* actScrollBottom = menu->addAction(horiz ? tr("Right edge") : tr("Bottom"));
+    // Left edge Top
+    QAction* actScrollTop = menu->addElaIconAction(horiz ? ElaIconType::ArrowLeftToLine : ElaIconType::ArrowUpToLine, horiz ? tr("左边缘") : tr("顶端"));
+    // Right edge Bottom
+    QAction* actScrollBottom = menu->addElaIconAction(horiz ? ElaIconType::ArrowRightToLine : ElaIconType::ArrowDownToLine, horiz ? tr("右边缘") : tr("底部"));
     menu->addSeparator();
-    QAction* actPageUp = menu->addAction(horiz ? tr("Page left") : tr("Page up"));
-    QAction* actPageDn = menu->addAction(horiz ? tr("Page right") : tr("Page down"));
+    // Page left Page up
+    QAction* actPageUp = menu->addElaIconAction(horiz ? ElaIconType::AnglesLeft : ElaIconType::AnglesUp, horiz ? tr("向左翻页") : tr("向上翻页"));
+    //Page right Page down
+    QAction* actPageDn = menu->addElaIconAction(horiz ? ElaIconType::AnglesRight : ElaIconType::AnglesDown, horiz ? tr("向右翻页") : tr("向下翻页"));
     menu->addSeparator();
-    QAction* actScrollUp = menu->addAction(horiz ? tr("Scroll left") : tr("Scroll up"));
-    QAction* actScrollDn = menu->addAction(horiz ? tr("Scroll right") : tr("Scroll down"));
+    //Scroll left Scroll up
+    QAction* actScrollUp = menu->addElaIconAction(horiz ? ElaIconType::AngleLeft : ElaIconType::AngleUp, horiz ? tr("向左滚动") : tr("向上滚动"));
+    //Scroll right Scroll down
+    QAction* actScrollDn = menu->addElaIconAction(horiz ? ElaIconType::AngleRight : ElaIconType::AngleDown, horiz ? tr("向右滚动") : tr("向下滚动"));
     QAction* actionSelected = menu->exec(event->globalPos());
     delete menu;
     if (!actionSelected)
