@@ -1,5 +1,5 @@
 #include "ElaSpinBox.h"
-
+#include <QPainter>
 #include <QContextMenuEvent>
 #include <QLineEdit>
 
@@ -31,7 +31,7 @@ ElaSpinBox::~ElaSpinBox()
 void ElaSpinBox::contextMenuEvent(QContextMenuEvent* event)
 {
     Q_D(ElaSpinBox);
-    QPointer<ElaMenu> menu = d->_createStandardContextMenu();
+    ElaMenu* menu = d->_createStandardContextMenu();
     if (!menu)
     {
         return;
@@ -44,12 +44,12 @@ void ElaSpinBox::contextMenuEvent(QContextMenuEvent* event)
     down->setEnabled(se & StepDownEnabled);
     menu->addSeparator();
 
-    const QPointer<QAbstractSpinBox> that = this;
+    const QAbstractSpinBox* that = this;
     const QPoint pos = (event->reason() == QContextMenuEvent::Mouse)
                            ? event->globalPos()
                            : mapToGlobal(QPoint(event->pos().x(), 0)) + QPoint(width() / 2, height() / 2);
     const QAction* action = menu->exec(pos);
-    delete static_cast<ElaMenu*>(menu);
+    delete menu;
     if (that && action)
     {
         if (action == up)
