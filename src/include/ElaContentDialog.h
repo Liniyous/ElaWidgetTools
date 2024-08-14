@@ -31,10 +31,13 @@ protected:
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     bool eventFilter(QObject* obj, QEvent* event) override;
 #endif
+
+#ifdef Q_OS_WIN
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     virtual bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
 #else
     virtual bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
+#endif
 #endif
 };
 

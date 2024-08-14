@@ -79,6 +79,7 @@ void ElaWindowPrivate::onThemeReadyChange()
     _appBar->setIsOnlyAllowMinAndClose(true);
     if (!_animationWidget)
     {
+        QPoint centerPos = q->mapFromGlobal(QCursor::pos());
         _animationWidget = new ElaThemeAnimationWidget(q);
         connect(_animationWidget, &ElaThemeAnimationWidget::animationFinished, this, [=]() {
             _appBar->setIsOnlyAllowMinAndClose(false);
@@ -99,7 +100,6 @@ void ElaWindowPrivate::onThemeReadyChange()
             eTheme->setThemeMode(ElaThemeType::Light);
         }
         _animationWidget->setNewWindowBackground(q->grab(q->rect()).toImage());
-        QPoint centerPos = q->mapFromGlobal(QCursor::pos());
         _animationWidget->setCenter(centerPos);
         qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
         qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));

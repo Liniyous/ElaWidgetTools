@@ -1,10 +1,11 @@
 ﻿#include "ElaContentDialog.h"
 
 #include <ElaPushButton.h>
+#ifdef Q_OS_WIN
 #include <Windows.h>
 #include <dwmapi.h>
 #include <windowsx.h>
-
+#endif
 #include <QApplication>
 #include <QGuiApplication>
 #include <QHBoxLayout>
@@ -16,6 +17,8 @@
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "private/ElaContentDialogPrivate.h"
+
+#ifdef Q_OS_WIN
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
 {
@@ -32,6 +35,7 @@
         }
     }
 }
+#endif
 #endif
 
 ElaContentDialog::ElaContentDialog(QWidget* parent)
@@ -61,11 +65,15 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     }
     resize(400, height());
     setWindowModality(Qt::ApplicationModal);
+#ifdef Q_OS_WIN
     createWinId();
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     installEventFilter(this);
     setShadow((HWND)winId());
+#endif
+#else
+    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint);
 #endif
     setAttribute(Qt::WA_DeleteOnClose);
     d->_leftButton = new ElaPushButton("cancel", this);
@@ -206,6 +214,7 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
     painter.restore();
 }
 
+#ifdef Q_OS_WIN
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
 [[maybe_unused]] bool ElaContentDialog::eventFilter(QObject* obj, QEvent* event)
 {
@@ -222,7 +231,9 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
     return QObject::eventFilter(obj, event);
 }
 #endif
+#endif
 
+#ifdef Q_OS_WIN
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
 #else
@@ -313,3 +324,4 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
     }
     return QWidget::nativeEvent(eventType, message, result);
 }
+#endif

@@ -26,6 +26,16 @@ void ElaComboBoxStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
     {
         return;
     }
+#ifndef Q_OS_WIN
+    case PE_PanelMenu:
+    {
+        return;
+    }
+    case PE_IndicatorArrowDown:
+    {
+        return;
+    }
+#endif
     default:
     {
         break;
@@ -71,6 +81,9 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             QPainterPath path;
             QRect optionRect = option->rect;
             optionRect.adjust(margin, margin, -margin, -margin);
+#ifndef Q_OS_WIN
+            optionRect.adjust(6, 0, -6, 0);
+#endif
             path.addRoundedRect(optionRect, 5, 5);
             if (option->state & QStyle::State_Selected)
             {

@@ -118,12 +118,16 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::LineEditHemline] = QColor(0x86, 0x86, 0x86);
 
     //ElaListView
-    _lightThemeColorList[ElaThemeType::ListViewItemHover] = QColor(0xE9, 0xE9, 0xF0);
-    _darkThemeColorList[ElaThemeType::ListViewItemHover] = QColor(0x35, 0x35, 0x35);
-    _lightThemeColorList[ElaThemeType::ListViewItemSelected] = QColor(0xEA, 0xE9, 0xF0);
-    _darkThemeColorList[ElaThemeType::ListViewItemSelected] = QColor(0x35, 0x35, 0x35);
-    _lightThemeColorList[ElaThemeType::ListViewItemSelectedHover] = QColor(0xED, 0xEC, 0xF3);
-    _darkThemeColorList[ElaThemeType::ListViewItemSelectedHover] = QColor(0x2F, 0x2F, 0x2F);
+    _lightThemeColorList[ElaThemeType::ListViewBase] = QColor(0xF0, 0xF0, 0xF5);
+    _darkThemeColorList[ElaThemeType::ListViewBase] = QColor(0x2D, 0x2D, 0x2D);
+    _lightThemeColorList[ElaThemeType::ListViewBorder] = QColor(0xBE, 0xBA, 0xBE);
+    _darkThemeColorList[ElaThemeType::ListViewBorder] = QColor(0x52, 0x50, 0x52);
+    _lightThemeColorList[ElaThemeType::ListViewItemHover] = QColor(0xE4, 0xE4, 0xEB);
+    _darkThemeColorList[ElaThemeType::ListViewItemHover] = QColor(0x40, 0x40, 0x40);
+    _lightThemeColorList[ElaThemeType::ListViewItemSelected] = QColor(0xE4, 0xE4, 0xEB);
+    _darkThemeColorList[ElaThemeType::ListViewItemSelected] = QColor(0x40, 0x40, 0x40);
+    _lightThemeColorList[ElaThemeType::ListViewItemSelectedHover] = QColor(0xE9, 0xE9, 0xF0);
+    _darkThemeColorList[ElaThemeType::ListViewItemSelectedHover] = QColor(0x3A, 0x3A, 0x3A);
 
     //ElaMenu
     _lightThemeColorList[ElaThemeType::MenuBaseStart] = QColor(0xF2, 0xE7, 0xF5);

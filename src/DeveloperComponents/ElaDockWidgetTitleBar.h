@@ -23,7 +23,6 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    int _margins{8};
     ElaThemeType::ThemeMode _themeMode;
     ElaDockWidget* _dockWidget{nullptr};
     QLabel* _iconLabel{nullptr};

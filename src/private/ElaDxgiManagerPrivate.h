@@ -1,7 +1,7 @@
 #ifndef ELADXGIMANAGERPRIVATE_H
 #define ELADXGIMANAGERPRIVATE_H
 #include <QObject>
-
+#ifdef Q_OS_WIN
 #include "stdafx.h"
 class ElaDxgi;
 class ElaDxgiManager;
@@ -34,5 +34,5 @@ private:
     ElaDxgiManager* _dxgiManager{nullptr};
     bool _isSyncGrabSize{false};
 };
-
+#endif
 #endif // ELADXGIMANAGERPRIVATE_H

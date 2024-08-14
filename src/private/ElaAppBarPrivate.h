@@ -45,10 +45,13 @@ private:
     QLabel* _iconLabel{nullptr};
     qint64 _currentWinID{0};
     int _lastMinTrackWidth{0};
+    quint64 _clickTimer{0};
+    int _edges{0};
     int _margins{8};
     bool _isHoverMaxButton{false};
     void _changeMaxButtonAwesome(bool isMaximized);
     void _showSystemMenu(QPoint point);
+    void _updateCursor(int edges);
     bool _containsCursorToItem(QWidget* item);
     void _onThemeModeChange(ElaThemeType::ThemeMode themeMode);
     int _calculateMinimumWidth();

@@ -1,5 +1,5 @@
 ﻿#include "T_ElaScreen.h"
-
+#ifdef Q_OS_WIN
 #include <QVBoxLayout>
 
 #include "ElaComboBox.h"
@@ -62,3 +62,4 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
 T_ElaScreen::~T_ElaScreen()
 {
 }
+#endif

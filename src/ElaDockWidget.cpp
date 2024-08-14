@@ -5,11 +5,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
-#ifdef Q_OS_WIN
-#include <Windows.h>
-#include <dwmapi.h>
-#include <windowsx.h>
-#endif
+
 #include "ElaDockWidgetPrivate.h"
 #include "ElaDockWidgetTitleBar.h"
 #include "ElaTheme.h"
@@ -27,10 +23,12 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
         if (topLevel)
         {
             d->_titleBar->setContentsMargins(6, 6, 6, 0);
+            widget()->setContentsMargins(6, 0, 6, 6);
         }
         else
         {
             d->_titleBar->setContentsMargins(0, 0, 0, 0);
+            widget()->setContentsMargins(0, 0, 0, 0);
         }
     });
 
@@ -61,7 +59,6 @@ void ElaDockWidget::setWidget(QWidget* widget)
     {
         return;
     }
-    widget->setContentsMargins(6, 0, 6, 6);
     QDockWidget::setWidget(widget);
 }
 

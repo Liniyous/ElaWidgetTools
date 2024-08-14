@@ -200,8 +200,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
             painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointCenter));
             painter->drawEllipse(QPoint(255, itemRect.y() + itemRect.height() / 2), 9, 9);
             painter->setPen(QPen(ElaThemeColor(_themeMode, NavigationKeyPointText), 2));
-            QFont font = QFont("Microsoft YaHei");
-            font.setHintingPreference(QFont::PreferNoHinting);
+            QFont font = painter->font();
             font.setBold(true);
             if (keyPoints > 99)
             {
@@ -223,7 +222,17 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 
     // 文字绘制
     painter->setPen(ElaThemeColor(_themeMode, WindowText));
-    painter->drawText(itemRect.x() + 37, itemRect.y() + 25, node->getNodeTitle());
+    QRect textRect;
+    if (node->getAwesome() != ElaIconType::None)
+    {
+        textRect = QRect(itemRect.x() + _iconAreaWidth, itemRect.y(), itemRect.width() - _textRightSpacing - _indicatorIconAreaWidth - _iconAreaWidth, itemRect.height());
+    }
+    else
+    {
+        textRect = QRect(itemRect.x() + _leftPadding, itemRect.y(), itemRect.width() - _textRightSpacing - _indicatorIconAreaWidth - _leftPadding, itemRect.height());
+    }
+    QString text = painter->fontMetrics().elidedText(node->getNodeTitle(), Qt::ElideRight, textRect.width());
+    painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
     // 选中特效
     if (_isSelectMarkDisplay && (node == model->getSelectedNode()))
     {

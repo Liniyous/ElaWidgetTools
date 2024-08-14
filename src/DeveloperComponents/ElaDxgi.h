@@ -1,10 +1,11 @@
 #ifndef ELADXGI_H
 #define ELADXGI_H
 
+#include <QObject>
+#ifdef Q_OS_WIN
 #include <d3d11.h>
 #include <dxgi1_6.h>
 
-#include <QObject>
 #include <QPixmap>
 
 #include "stdafx.h"
@@ -43,5 +44,5 @@ private:
     void releaseInterface();
     void cpuSleep(int usec);
 };
-
+#endif
 #endif // ELADXGI_H

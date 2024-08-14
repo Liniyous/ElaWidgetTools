@@ -202,7 +202,7 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
     font.setWeight(QFont::Bold);
     font.setPixelSize(16);
     painter.setFont(font);
-    int titleTextWidth = painter.fontMetrics().horizontalAdvance(d->_title);
+    int titleTextWidth = painter.fontMetrics().horizontalAdvance(d->_title) + 1;
     if (titleTextWidth > 100)
     {
         titleTextWidth = 100;

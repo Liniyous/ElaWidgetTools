@@ -49,6 +49,9 @@ ElaComboBox::ElaComboBox(QWidget* parent)
         }
         layout->addWidget(view());
         layout->setContentsMargins(6, 0, 6, 6);
+#ifndef Q_OS_WIN
+        container->setStyleSheet("background-color:transparent;");
+#endif
     }
     QComboBox::setMaxVisibleItems(5);
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
@@ -147,7 +150,7 @@ void ElaComboBox::hidePopup()
                 QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(0, 0), QPoint(0, 0), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
                 QApplication::sendEvent(parentWidget(), &focusEvent);
             });
-            QPoint viewPos = QPoint(7, 1);
+            QPoint viewPos = view()->pos();
             connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
             viewPosAnimation->setStartValue(viewPos);
             viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));

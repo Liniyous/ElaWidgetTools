@@ -3,7 +3,6 @@
 #include <QProxyStyle>
 
 #include "Def.h"
-#include "stdafx.h"
 class ElaNavigationNode;
 class ElaNavigationView;
 class QPropertyAnimation;

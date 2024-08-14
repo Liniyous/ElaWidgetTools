@@ -1,7 +1,8 @@
 #include "ElaSpinBox.h"
-#include <QPainter>
+
 #include <QContextMenuEvent>
 #include <QLineEdit>
+#include <QPainter>
 
 #include "DeveloperComponents/ElaSpinBoxStyle.h"
 #include "ElaMenu.h"

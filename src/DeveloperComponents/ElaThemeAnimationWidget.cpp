@@ -1,7 +1,5 @@
 #include "ElaThemeAnimationWidget.h"
 
-#include <Windows.h>
-
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>

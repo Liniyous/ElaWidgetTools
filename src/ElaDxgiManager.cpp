@@ -1,5 +1,5 @@
 #include "ElaDxgiManager.h"
-
+#ifdef Q_OS_WIN
 #include <d3d11.h>
 #include <dxgi1_6.h>
 #include <windows.h>
@@ -278,3 +278,4 @@ bool ElaDxgiScreen::getIsSyncGrabSize() const
     Q_D(const ElaDxgiScreen);
     return d->_isSyncGrabSize;
 }
+#endif

@@ -43,6 +43,7 @@ void ElaReminderCard::setCardPixmapSize(int width, int height)
 {
     Q_D(ElaReminderCard);
     d->_pCardPixmapSize = QSize(width, height);
+    Q_EMIT pCardPixmapSizeChanged();
 }
 
 void ElaReminderCard::paintEvent(QPaintEvent* event)

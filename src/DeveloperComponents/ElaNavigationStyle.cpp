@@ -218,8 +218,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                     painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointCenter));
                     painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 9, 9);
                     painter->setPen(QPen(ElaThemeColor(_themeMode, NavigationKeyPointText), 2));
-                    QFont font = QFont("Microsoft YaHei");
-                    font.setHintingPreference(QFont::PreferNoHinting);
+                    QFont font = painter->font();
                     font.setBold(true);
                     if (keyPoints > 99)
                     {

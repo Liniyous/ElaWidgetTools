@@ -26,7 +26,9 @@ public:
 
 private:
     T_Home* _homePage{nullptr};
+#ifdef Q_OS_WIN
     T_ElaScreen* _elaScreenPage{nullptr};
+#endif
     T_Icon* _iconPage{nullptr};
     T_BaseComponents* _baseComponentsPage{nullptr};
     T_TabWidget* _tabWidgetPage{nullptr};

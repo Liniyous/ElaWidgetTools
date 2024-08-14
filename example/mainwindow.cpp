@@ -24,7 +24,9 @@
 #include "ElaWidget.h"
 #include "ExamplePage/T_BaseComponents.h"
 #include "ExamplePage/T_Card.h"
+#ifdef Q_OS_WIN
 #include "ExamplePage/T_ElaScreen.h"
+#endif
 #include "ExamplePage/T_Home.h"
 #include "ExamplePage/T_Icon.h"
 #include "ExamplePage/T_LogWidget.h"
@@ -200,7 +202,9 @@ void MainWindow::initEdgeLayout()
 void MainWindow::initContent()
 {
     _homePage = new T_Home(this);
+#ifdef Q_OS_WIN
     _elaScreenPage = new T_ElaScreen(this);
+#endif
     _iconPage = new T_Icon(this);
     _baseComponentsPage = new T_BaseComponents(this);
     _tabWidgetPage = new T_TabWidget(this);
@@ -230,8 +234,10 @@ void MainWindow::initContent()
     QString testKey_1;
     QString testKey_2;
     addPageNode("HOME", _homePage, ElaIconType::House);
+#ifdef Q_OS_WIN
     addExpanderNode("ElaDxgi", _elaDxgiKey, ElaIconType::TvMusic);
     addPageNode("ElaScreen", _elaScreenPage, _elaDxgiKey, 3, ElaIconType::ObjectGroup);
+#endif
     // navigation(elaScreenWidget->property("ElaPageKey").toString());
     addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
     addPageNode("ElaGraphics", view, 9, ElaIconType::KeySkeleton);
@@ -267,7 +273,9 @@ void MainWindow::initContent()
     });
     addFooterNode("Setting", new QWidget(this), _settingKey, 0, ElaIconType::GearComplex);
     connect(this, &MainWindow::userInfoCardClicked, this, [=]() { this->navigation(_homePage->property("ElaPageKey").toString()); });
+#ifdef Q_OS_WIN
     connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() { this->navigation(_elaScreenPage->property("ElaPageKey").toString()); });
+#endif
     connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() { this->navigation(_baseComponentsPage->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() { this->navigation(view->property("ElaPageKey").toString()); });
     connect(_homePage, &T_Home::elaIconNavigation, this, [=]() { this->navigation(_iconPage->property("ElaPageKey").toString()); });

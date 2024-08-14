@@ -73,10 +73,16 @@ if(MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "d")
 endif()
 
-
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} PUBLIC
+        Qt${QT_VERSION_MAJOR}::Widgets
+        D3D11
+        DXGI
+    )
+else()
 target_link_libraries(${PROJECT_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Widgets
-    D3D11
-    DXGI
 )
+endif()
+
 message(${CMAKE_INSTALL_PREFIX})

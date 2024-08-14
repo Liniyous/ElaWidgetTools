@@ -36,12 +36,13 @@ Q_SIGNALS:
     Q_SIGNAL void closeButtonClicked();
 
 protected:
+    virtual bool eventFilter(QObject* obj, QEvent* event) override;
+
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     virtual bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
 #else
     virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
 #endif
-    virtual bool eventFilter(QObject* obj, QEvent* event) override;
 };
 
 #endif // ELAAPPBAR_H

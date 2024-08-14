@@ -22,6 +22,10 @@ protected:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 
 private:
+    int _leftPadding{11};
+    int _iconAreaWidth{38};
+    int _textRightSpacing{3};
+    int _indicatorIconAreaWidth{24};
     qreal _lastSelectMarkTop{10};
     qreal _lastSelectMarkBottom{10};
     qreal _selectMarkTop{10};

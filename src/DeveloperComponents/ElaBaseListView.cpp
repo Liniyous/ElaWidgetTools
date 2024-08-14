@@ -10,6 +10,7 @@ ElaBaseListView::ElaBaseListView(QWidget* parent)
     setVerticalScrollBar(new ElaScrollBar(this));
     setHorizontalScrollBar(new ElaScrollBar(this));
     setSelectionMode(QAbstractItemView::NoSelection);
+    setMouseTracking(true);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);

@@ -37,18 +37,19 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         QRect addLineRect = subControlRect(control, sopt, SC_ScrollBarAddLine, widget);
         if (sopt->activeSubControls == SC_ScrollBarAddLine)
         {
-            if (sopt->state & QStyle::State_Sunken)
+            if (sopt->state & QStyle::State_Sunken && sopt->state & QStyle::State_MouseOver)
             {
-                if (sopt->state & QStyle::State_MouseOver)
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonPress));
-                }
+                painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonPress));
             }
             else
             {
                 if (sopt->state & QStyle::State_MouseOver)
                 {
                     painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonHover));
+                }
+                else
+                {
+                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonBase));
                 }
             }
         }
@@ -70,18 +71,19 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         QRect subLineRect = subControlRect(control, sopt, SC_ScrollBarSubLine, widget);
         if (sopt->activeSubControls == SC_ScrollBarSubLine)
         {
-            if (sopt->state & QStyle::State_Sunken)
+            if (sopt->state & QStyle::State_Sunken && sopt->state & QStyle::State_MouseOver)
             {
-                if (sopt->state & QStyle::State_MouseOver)
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonPress));
-                }
+                painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonPress));
             }
             else
             {
                 if (sopt->state & QStyle::State_MouseOver)
                 {
                     painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonHover));
+                }
+                else
+                {
+                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonBase));
                 }
             }
         }

@@ -41,6 +41,7 @@ void ElaInteractiveCard::setCardPixmapSize(int width, int height)
 {
     Q_D(ElaInteractiveCard);
     d->_pCardPixmapSize = QSize(width, height);
+    Q_EMIT pCardPixmapSizeChanged();
 }
 
 void ElaInteractiveCard::paintEvent(QPaintEvent* event)

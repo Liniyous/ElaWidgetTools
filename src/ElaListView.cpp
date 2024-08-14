@@ -1,23 +1,57 @@
 #include "ElaListView.h"
 
-#include "DeveloperComponents/ElaListViewDelegate.h"
+#include <QMouseEvent>
+
+#include "ElaListViewPrivate.h"
+#include "ElaListViewStyle.h"
 #include "ElaScrollBar.h"
 ElaListView::ElaListView(QWidget* parent)
-    : QListView(parent)
+    : QListView(parent), d_ptr(new ElaListViewPrivate())
 {
-    setStyleSheet(
-        "QListView{background-color: transparent;border:0px;}"
-        "QListView::item{border:none;}");
+    Q_D(ElaListView);
+    d->q_ptr = this;
+    setObjectName("ElaListView");
+    setStyleSheet("#ElaListView{background-color:transparent;}");
+    d->_listViewStyle = new ElaListViewStyle(style());
+    setStyle(d->_listViewStyle);
+    setMouseTracking(true);
     setVerticalScrollBar(new ElaScrollBar(this));
     setHorizontalScrollBar(new ElaScrollBar(this));
-    setSelectionMode(QAbstractItemView::NoSelection);
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    setItemDelegate(new ElaListViewDelegate(this));
 }
 
 ElaListView::~ElaListView()
 {
+}
+
+void ElaListView::setItemHeight(int itemHeight)
+{
+    Q_D(ElaListView);
+    if (itemHeight > 0)
+    {
+        d->_listViewStyle->setItemHeight(itemHeight);
+        update();
+    }
+}
+
+int ElaListView::getItemHeight() const
+{
+    Q_D(const ElaListView);
+    return d->_listViewStyle->getItemHeight();
+}
+
+void ElaListView::setIsTransparent(bool isTransparent)
+{
+    Q_D(ElaListView);
+    d->_listViewStyle->setIsTransparent(isTransparent);
+    update();
+}
+
+bool ElaListView::getIsTransparent() const
+{
+    Q_D(const ElaListView);
+    return d->_listViewStyle->getIsTransparent();
 }

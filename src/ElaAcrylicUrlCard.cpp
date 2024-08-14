@@ -35,7 +35,7 @@ ElaAcrylicUrlCard::ElaAcrylicUrlCard(QWidget* parent)
     d->_pTitlePixelSize = 15;
     d->_pSubTitlePixelSize = 12;
     setFixedSize(180, 200);
-    d->_pCardPixmapSize = QSize((height() - d->_shadowBorderWidth) * 0.28, (height() - d->_shadowBorderWidth) * 0.28);
+    d->_pCardPixmapSize = QSize(54, 54);
     d->_pTitleSpacing = 10;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
@@ -52,6 +52,7 @@ void ElaAcrylicUrlCard::setCardPixmapSize(int width, int height)
 {
     Q_D(ElaAcrylicUrlCard);
     d->_pCardPixmapSize = QSize(width, height);
+    Q_EMIT pCardPixmapSizeChanged();
 }
 
 void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
@@ -79,6 +80,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.restore();
 
     // 图片绘制
+    QRect pixRect(width / 7, height() / 4 - d->_pCardPixmapSize.height() / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height());
     if (!d->_pCardPixmap.isNull())
     {
         painter.save();
@@ -87,17 +89,17 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
         {
             path.addEllipse(QPointF(d->_pCardPixmapSize.width() / 2 + width / 7, height() / 4), d->_pCardPixmapSize.width() / 2, d->_pCardPixmapSize.height() / 2);
             painter.setClipPath(path);
-            painter.drawPixmap(QRect(width / 7, height() / 4 - d->_pCardPixmapSize.height() / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap); // rect为绘制区域，image为要绘制的图片
+            painter.drawPixmap(pixRect, d->_pCardPixmap); // rect为绘制区域，image为要绘制的图片
         }
         else if (d->_pCardPixMode == ElaCardPixType::PixMode::Default)
         {
-            painter.drawPixmap(width / 7 + d->_shadowBorderWidth, height() / 4 - d->_pCardPixmapSize.height() / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
+            painter.drawPixmap(pixRect, d->_pCardPixmap);
         }
         else if (d->_pCardPixMode == ElaCardPixType::PixMode::RoundedRect)
         {
             path.addRoundedRect(QRectF(width / 7, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmapBorderRadius, d->_pCardPixmapBorderRadius);
             painter.setClipPath(path);
-            painter.drawPixmap(width / 7 + d->_shadowBorderWidth, height() / 4 - d->_pCardPixmapSize.height() / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
+            painter.drawPixmap(pixRect, d->_pCardPixmap);
         }
         painter.restore();
     }
@@ -110,13 +112,13 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setFont(font);
     painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
-    painter.drawText(QRect(width / 7, height() / 4 + d->_pCardPixmapSize.height() / 2 + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pTitle);
+    painter.drawText(QRect(pixRect.x(), pixRect.bottom() + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, d->_pTitle);
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
     painter.setPen(ElaThemeColor(d->_themeMode, AcrylicUrlCardSubTitleText));
     int titleHeight = painter.fontMetrics().boundingRect(d->_pTitle).height() * 1.8;
-    painter.drawText(QRect(width / 7, titleHeight + height() / 4 + d->_pCardPixmapSize.height() / 2 + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
+    painter.drawText(QRect(pixRect.x(), titleHeight + pixRect.bottom() + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
     painter.restore();
 
     // 图标绘制

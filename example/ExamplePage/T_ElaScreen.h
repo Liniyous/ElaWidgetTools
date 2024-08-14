@@ -3,6 +3,7 @@
 #include <QWidget>
 
 #include "ElaScrollPage.h"
+#ifdef Q_OS_WIN
 class ElaDxgiScreen;
 class ElaComboBox;
 class T_ElaScreen : public ElaScrollPage
@@ -17,5 +18,5 @@ private:
     ElaComboBox* _dxComboBox{nullptr};
     ElaComboBox* _outputComboBox{nullptr};
 };
-
+#endif
 #endif // T_ELASCREEN_H
