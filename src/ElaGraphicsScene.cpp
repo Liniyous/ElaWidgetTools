@@ -46,7 +46,10 @@ void ElaGraphicsScene::addItem(ElaGraphicsItem* item)
     item->setParent(this);
     item->setScene(this);
     item->setZValue(d->_currentZ);
-    item->setItemName(QString("ElaItem%1").arg(d->_currentZ));
+    if (item->getItemName().isEmpty())
+    {
+        item->setItemName(QString("ElaItem%1").arg(d->_currentZ));
+    }
     item->setPos(sceneRect().width() / 2, sceneRect().height() / 2);
     QGraphicsScene::addItem(item);
     d->_currentZ++;

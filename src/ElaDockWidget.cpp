@@ -53,15 +53,6 @@ ElaDockWidget::~ElaDockWidget()
 {
 }
 
-void ElaDockWidget::setWidget(QWidget* widget)
-{
-    if (!widget)
-    {
-        return;
-    }
-    QDockWidget::setWidget(widget);
-}
-
 void ElaDockWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaDockWidget);

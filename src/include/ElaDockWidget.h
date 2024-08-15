@@ -13,7 +13,6 @@ public:
     explicit ElaDockWidget(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     explicit ElaDockWidget(const QString& title, QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     ~ElaDockWidget();
-    void setWidget(QWidget* widget);
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

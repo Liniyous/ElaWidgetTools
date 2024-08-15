@@ -25,26 +25,22 @@ public:
     explicit ElaGraphicsItem(QGraphicsItem* parent = nullptr);
     explicit ElaGraphicsItem(int width, int height, QGraphicsItem* parent = nullptr);
     ~ElaGraphicsItem();
+
     virtual QRectF boundingRect() const override;
+
     Q_INVOKABLE QString getItemUID() const;
     void setScene(ElaGraphicsScene* scene);
-
     void setCurrentLinkPortState(bool isFullLink);
     void setCurrentLinkPortState(bool isLink, int portNumber);
     unsigned long long getCurrentLinkPortState() const;
     bool getCurrentLinkPortState(int portNumber) const;
     int getUnusedLinkPortCount() const;
     QVector<int> getUnusedLinkPort() const;
+
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
     friend QDataStream& operator<<(QDataStream& stream, const ElaGraphicsItem* item);
     friend QDataStream& operator>>(QDataStream& stream, ElaGraphicsItem* item);
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
 };
 
 #endif // ELAGRAPHICSITEM_H

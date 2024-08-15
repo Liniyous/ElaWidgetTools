@@ -182,23 +182,3 @@ QDataStream& operator>>(QDataStream& stream, ElaGraphicsItem* item)
     stream >> item->d_func();
     return stream;
 }
-
-void ElaGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsObject::mousePressEvent(event);
-}
-
-void ElaGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsObject::mouseReleaseEvent(event);
-}
-
-void ElaGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsObject::mouseMoveEvent(event);
-}
-
-void ElaGraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
-{
-    QGraphicsObject::mouseDoubleClickEvent(event);
-}

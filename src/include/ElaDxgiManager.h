@@ -34,6 +34,7 @@ public:
     int getGrabFrameRate() const;
     void setTimeoutMsValue(int timeoutValue);
     int getTimeoutMsValue() const;
+Q_SIGNALS:
     Q_SIGNAL void grabImageUpdate();
 };
 
