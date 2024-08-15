@@ -7,7 +7,6 @@
 #include "ElaIconButton.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
-#include "qdebug.h"
 ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     : QWidget{parent}
 {

@@ -58,10 +58,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::onCloseButtonClicked()
 {
-    ElaContentDialog* dialog = new ElaContentDialog(this);
-    connect(dialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(dialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
-    dialog->show();
+    ElaContentDialog dialog(this);
+    connect(&dialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(&dialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
+    dialog.exec();
 }
 
 void MainWindow::initWindow()

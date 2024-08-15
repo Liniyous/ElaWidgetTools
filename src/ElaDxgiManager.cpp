@@ -4,6 +4,7 @@
 #include <dxgi1_6.h>
 #include <windows.h>
 
+#include <QApplication>
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
@@ -12,7 +13,6 @@
 
 #include "ElaDxgi.h"
 #include "ElaDxgiManagerPrivate.h"
-#include "qapplication.h"
 Q_SINGLETON_CREATE_CPP(ElaDxgiManager);
 ElaDxgiManager::ElaDxgiManager(QObject* parent)
     : QObject{parent}, d_ptr(new ElaDxgiManagerPrivate())

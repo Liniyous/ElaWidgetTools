@@ -11,7 +11,7 @@ class ELA_EXPORT ElaContentDialog : public QDialog
     Q_OBJECT
     Q_Q_CREATE(ElaContentDialog)
 public:
-    explicit ElaContentDialog(QWidget* parent = nullptr);
+    explicit ElaContentDialog(QWidget* parent);
     ~ElaContentDialog();
     Q_SLOT virtual void onLeftButtonClicked();
     Q_SLOT virtual void onMiddleButtonClicked();
@@ -27,6 +27,8 @@ Q_SIGNALS:
     Q_SIGNAL void rightButtonClicked();
 
 protected:
+    virtual void showEvent(QShowEvent* event) override;
+    virtual void closeEvent(QCloseEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     bool eventFilter(QObject* obj, QEvent* event) override;
