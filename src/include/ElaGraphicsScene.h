@@ -64,9 +64,6 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
-
-private:
-    friend class ElaGraphicsItem;
 };
 
 #endif // ELAGRAPHICSSCENE_H

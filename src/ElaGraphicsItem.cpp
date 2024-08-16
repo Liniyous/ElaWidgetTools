@@ -88,7 +88,7 @@ void ElaGraphicsItem::setLinkPortState(bool isFullLink)
 void ElaGraphicsItem::setLinkPortState(bool isLink, int portIndex)
 {
     Q_D(ElaGraphicsItem);
-    if (portIndex < d->_pMaxLinkPortCount)
+    if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount)
     {
         d->_currentLinkPortState[portIndex] = isLink;
     }
@@ -103,7 +103,7 @@ QVector<bool> ElaGraphicsItem::getLinkPortState() const
 bool ElaGraphicsItem::getLinkPortState(int portIndex) const
 {
     Q_D(const ElaGraphicsItem);
-    if (portIndex < d->_pMaxLinkPortCount)
+    if (portIndex >= 0 && portIndex < d->_pMaxLinkPortCount)
     {
         return d->_currentLinkPortState[portIndex];
     }
