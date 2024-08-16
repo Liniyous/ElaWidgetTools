@@ -18,7 +18,6 @@ ElaGraphicsScene::ElaGraphicsScene(QObject* parent)
     Q_D(ElaGraphicsScene);
     d->q_ptr = this;
     setItemIndexMethod(QGraphicsScene::NoIndex);
-    // qDebug() << this->ElaGraphicsScene::metaObject()->classInfo(6).value();
     d->_pIsAutoSobel = false;
     d->_pIsCheckLinkPort = false;
     d->_sceneMode = ElaGraphicsSceneType::SceneMode::Default;
@@ -44,7 +43,6 @@ void ElaGraphicsScene::addItem(ElaGraphicsItem* item)
         }
     }
     item->setParent(this);
-    item->setScene(this);
     item->setZValue(d->_currentZ);
     if (item->getItemName().isEmpty())
     {
@@ -128,6 +126,12 @@ QList<ElaGraphicsItem*> ElaGraphicsScene::getSelectedElaItems() const
     return selectedElaItemList;
 }
 
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems()
+{
+    Q_D(ElaGraphicsScene);
+    return d->_items.values();
+}
+
 QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QPoint pos)
 {
     QList<QGraphicsItem*> itemList = items(pos);
@@ -201,12 +205,10 @@ bool ElaGraphicsScene::addItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* item
     }
     if (d->_pIsCheckLinkPort)
     {
-        if (!item1->getCurrentLinkPortState(port1) && !item2->getCurrentLinkPortState(port2))
+        if (!item1->getLinkPortState(port1) && !item2->getLinkPortState(port2))
         {
-            item1->setCurrentLinkPortState(true, port1);
-            item1->setCurrentLinkPortCount(item1->getCurrentLinkPortCount() + 1);
-            item2->setCurrentLinkPortState(true, port2);
-            item2->setCurrentLinkPortCount(item2->getCurrentLinkPortCount() + 1);
+            item1->setLinkPortState(true, port1);
+            item2->setLinkPortState(true, port2);
         }
         else
         {
@@ -233,8 +235,7 @@ bool ElaGraphicsScene::removeItemLink(ElaGraphicsItem* item1)
     }
     if (d->_pIsCheckLinkPort)
     {
-        item1->setCurrentLinkPortState(false);
-        item1->setCurrentLinkPortCount(0);
+        item1->setLinkPortState(false);
     }
     // 处理与该Item有关的连接
     foreach (auto& link, d->_itemsLink)
@@ -247,8 +248,7 @@ bool ElaGraphicsScene::removeItemLink(ElaGraphicsItem* item1)
                 QStringList keys = link.keys();
                 keys.removeOne(item1->getItemUID());
                 ElaGraphicsItem* otherItem = d->_items.value(keys.at(0));
-                otherItem->setCurrentLinkPortState(false, link.value(keys.at(0)).toInt());
-                otherItem->setCurrentLinkPortCount(otherItem->getCurrentLinkPortCount() - 1);
+                otherItem->setLinkPortState(false, link.value(keys.at(0)).toInt());
             }
             d->_itemsLink.removeOne(link);
         }
@@ -299,10 +299,8 @@ bool ElaGraphicsScene::removeItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* i
     {
         if (d->_pIsCheckLinkPort)
         {
-            item1->setCurrentLinkPortState(false, port1);
-            item1->setCurrentLinkPortCount(item1->getCurrentLinkPortCount() - 1);
-            item2->setCurrentLinkPortState(false, port2);
-            item2->setCurrentLinkPortCount(item2->getCurrentLinkPortCount() - 1);
+            item1->setLinkPortState(false, port1);
+            item2->setLinkPortState(false, port2);
         }
         update();
         return true;
@@ -398,10 +396,12 @@ void ElaGraphicsScene::keyReleaseEvent(QKeyEvent* event)
 void ElaGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     Q_D(ElaGraphicsScene);
+
     if (event->button() == Qt::LeftButton)
     {
         if (d->_sceneMode == ElaGraphicsSceneType::SceneMode::Default)
         {
+            d->_isLeftButtonPress = true;
             d->_lastPos = event->pos();
         }
     }
@@ -423,6 +423,7 @@ void ElaGraphicsScene::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     QList<ElaGraphicsItem*> itemList = getElaItems(event->scenePos());
     if (event->button() == Qt::LeftButton)
     {
+        d->_isLeftButtonPress = false;
         switch (d->_sceneMode)
         {
         case ElaGraphicsSceneType::SceneMode::Default:
@@ -498,6 +499,16 @@ void ElaGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
             {
                 d->_linkLineItem->setEndPoint(event->scenePos());
                 d->_linkLineItem->update();
+            }
+        }
+    }
+    else
+    {
+        if (d->_isLeftButtonPress)
+        {
+            for (auto lineItem : d->_lineItemsList)
+            {
+                lineItem->update();
             }
         }
     }

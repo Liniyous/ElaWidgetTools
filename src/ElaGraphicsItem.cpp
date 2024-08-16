@@ -13,8 +13,6 @@ Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsItem, QImage, ItemImage)
 Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsItem, QImage, ItemSelectedImage)
 Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsItem, QString, ItemName)
 Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsItem, QVariantMap, DataRoutes)
-Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsItem, int, MaxLinkPortCount)
-Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsItem, int, CurrentLinkPortCount)
 ElaGraphicsItem::ElaGraphicsItem(QGraphicsItem* parent)
     : QGraphicsObject(parent), d_ptr(new ElaGraphicsItemPrivate())
 {
@@ -30,34 +28,50 @@ ElaGraphicsItem::ElaGraphicsItem(QGraphicsItem* parent)
     d->_pItemSelectedImage = QImage(":/include/Image/Cirno.jpg");
     d->_pItemName = "";
     d->_pMaxLinkPortCount = 1;
-    d->_pCurrentLinkPortCount = 0;
+    d->_currentLinkPortState.resize(1);
+    d->_currentLinkPortState.fill(false);
 }
 
 ElaGraphicsItem::ElaGraphicsItem(int width, int height, QGraphicsItem* parent)
-    : QGraphicsObject(parent), d_ptr(new ElaGraphicsItemPrivate())
+    : ElaGraphicsItem(parent)
 {
     Q_D(ElaGraphicsItem);
-    d->q_ptr = this;
-    setAcceptHoverEvents(true);
-    setAcceptedMouseButtons(Qt::AllButtons);
-    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsSelectable | ItemAcceptsInputMethod);
     d->_pWidth = width;
     d->_pHeight = height;
-    d->_itemUID = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
-    d->_pItemImage = QImage(":/include/Image/Moon.jpg");
-    d->_pItemSelectedImage = QImage(":/include/Image/Cirno.jpg");
-    d->_pItemName = "";
-    d->_pMaxLinkPortCount = 1;
-    d->_pCurrentLinkPortCount = 0;
 }
 
 ElaGraphicsItem::~ElaGraphicsItem()
 {
 }
 
-QRectF ElaGraphicsItem::boundingRect() const
+void ElaGraphicsItem::setMaxLinkPortCount(int maxLinkPortCount)
 {
-    return QRect(-d_ptr->_pWidth / 2, -d_ptr->_pHeight / 2, d_ptr->_pWidth, d_ptr->_pHeight);
+    Q_D(ElaGraphicsItem);
+    if (maxLinkPortCount < 0)
+    {
+        maxLinkPortCount = 0;
+    }
+    d->_pMaxLinkPortCount = maxLinkPortCount;
+    if (d->_currentLinkPortState.count() > maxLinkPortCount)
+    {
+        while (d->_currentLinkPortState.count() > maxLinkPortCount)
+        {
+            d->_currentLinkPortState.removeLast();
+        }
+    }
+    else
+    {
+        while (d->_currentLinkPortState.count() < maxLinkPortCount)
+        {
+            d->_currentLinkPortState.append(false);
+        }
+    }
+}
+
+int ElaGraphicsItem::getMaxLinkPortCount() const
+{
+    Q_D(const ElaGraphicsItem);
+    return d->_pMaxLinkPortCount;
 }
 
 QString ElaGraphicsItem::getItemUID() const
@@ -65,78 +79,88 @@ QString ElaGraphicsItem::getItemUID() const
     return d_ptr->_itemUID;
 }
 
-void ElaGraphicsItem::setScene(ElaGraphicsScene* scene)
+void ElaGraphicsItem::setLinkPortState(bool isFullLink)
 {
     Q_D(ElaGraphicsItem);
-    d->_scene = scene;
+    d->_currentLinkPortState.fill(isFullLink);
 }
 
-void ElaGraphicsItem::setCurrentLinkPortState(bool isFullLink)
+void ElaGraphicsItem::setLinkPortState(bool isLink, int portIndex)
 {
     Q_D(ElaGraphicsItem);
-    if (d->_scene->getIsCheckLinkPort())
+    if (portIndex < d->_pMaxLinkPortCount)
     {
-        if (isFullLink)
-        {
-            d->_currentLinkPortState = 0;
-            d->_currentLinkPortState = ~d->_currentLinkPortState;
-        }
-        else
-        {
-            d->_currentLinkPortState = 0;
-        }
+        d->_currentLinkPortState[portIndex] = isLink;
     }
 }
 
-void ElaGraphicsItem::setCurrentLinkPortState(bool isLink, int portNumber)
+QVector<bool> ElaGraphicsItem::getLinkPortState() const
 {
-    Q_D(ElaGraphicsItem);
-    if (d->_scene->getIsCheckLinkPort())
+    Q_D(const ElaGraphicsItem);
+    return d->_currentLinkPortState;
+}
+
+bool ElaGraphicsItem::getLinkPortState(int portIndex) const
+{
+    Q_D(const ElaGraphicsItem);
+    if (portIndex < d->_pMaxLinkPortCount)
+    {
+        return d->_currentLinkPortState[portIndex];
+    }
+    return false;
+}
+
+int ElaGraphicsItem::getUsedLinkPortCount() const
+{
+    Q_D(const ElaGraphicsItem);
+    int currentLinkPortCount = 0;
+    for (auto isLink : d->_currentLinkPortState)
     {
         if (isLink)
         {
-            d->_currentLinkPortState |= (1LL << portNumber);
-        }
-        else
-        {
-            d->_currentLinkPortState &= ~(1LL << portNumber);
+            currentLinkPortCount++;
         }
     }
+    return currentLinkPortCount;
 }
 
-unsigned long long ElaGraphicsItem::getCurrentLinkPortState() const
+QVector<int> ElaGraphicsItem::getUsedLinkPort() const
 {
-    return d_ptr->_currentLinkPortState;
-}
-
-bool ElaGraphicsItem::getCurrentLinkPortState(int portNumber) const
-{
-    return d_ptr->_currentLinkPortState & (1LL << portNumber);
+    Q_D(const ElaGraphicsItem);
+    QVector<int> usedPortVector;
+    for (int i = 0; i < d->_pMaxLinkPortCount; i++)
+    {
+        if (d->_currentLinkPortState[i])
+        {
+            usedPortVector.append(i);
+        }
+    }
+    return usedPortVector;
 }
 
 int ElaGraphicsItem::getUnusedLinkPortCount() const
 {
-    if (d_ptr->_scene->getIsCheckLinkPort())
-    {
-        return d_ptr->_pMaxLinkPortCount - d_ptr->_pCurrentLinkPortCount;
-    }
-    return 0;
+    Q_D(const ElaGraphicsItem);
+    return d->_pMaxLinkPortCount - getUsedLinkPortCount();
 }
 
 QVector<int> ElaGraphicsItem::getUnusedLinkPort() const
 {
+    Q_D(const ElaGraphicsItem);
     QVector<int> unusedPortVector;
-    if (d_ptr->_scene->getIsCheckLinkPort())
+    for (int i = 0; i < d->_pMaxLinkPortCount; i++)
     {
-        for (int i = 0; i < d_ptr->_pMaxLinkPortCount; i++)
+        if (!(d->_currentLinkPortState[i]))
         {
-            if (!(d_ptr->_currentLinkPortState & (1LL << i)))
-            {
-                unusedPortVector.append(i);
-            }
+            unusedPortVector.append(i);
         }
     }
     return unusedPortVector;
+}
+
+QRectF ElaGraphicsItem::boundingRect() const
+{
+    return QRect(-d_ptr->_pWidth / 2, -d_ptr->_pHeight / 2, d_ptr->_pWidth, d_ptr->_pHeight);
 }
 
 void ElaGraphicsItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

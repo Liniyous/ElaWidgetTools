@@ -10,8 +10,8 @@ class ELA_EXPORT ElaListView : public QListView
 {
     Q_OBJECT
     Q_Q_CREATE(ElaListView)
-    Q_PRIVATE_CREATE_Q_H(int, ItemHeight)
-    Q_PRIVATE_CREATE_Q_H(bool, IsTransparent)
+    Q_PROPERTY_CREATE_Q_H(int, ItemHeight)
+    Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
 public:
     explicit ElaListView(QWidget* parent = nullptr);
     ~ElaListView();

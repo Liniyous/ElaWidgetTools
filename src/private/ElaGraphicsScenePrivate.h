@@ -26,7 +26,7 @@ public:
     friend QDataStream& operator>>(QDataStream& stream, ElaGraphicsScenePrivate* data);
 
 private:
-    friend class ElaGraphicsItem;
+    bool _isLeftButtonPress{false};
     QMap<QString, ElaGraphicsItem*> _items; // 存储所有item
     ElaGraphicsSceneType::SceneMode _sceneMode;
     QList<QVariantMap> _itemsLink; // item连接状态

@@ -20,25 +20,27 @@ class ELA_EXPORT ElaGraphicsItem : public QGraphicsObject
     Q_PROPERTY_CREATE_Q_H(QString, ItemName)
     Q_PROPERTY_CREATE_Q_H(QVariantMap, DataRoutes)
     Q_PROPERTY_CREATE_Q_H(int, MaxLinkPortCount)
-    Q_PROPERTY_CREATE_Q_H(int, CurrentLinkPortCount)
 public:
     explicit ElaGraphicsItem(QGraphicsItem* parent = nullptr);
     explicit ElaGraphicsItem(int width, int height, QGraphicsItem* parent = nullptr);
     ~ElaGraphicsItem();
 
-    virtual QRectF boundingRect() const override;
+    QString getItemUID() const;
 
-    Q_INVOKABLE QString getItemUID() const;
-    void setScene(ElaGraphicsScene* scene);
-    void setCurrentLinkPortState(bool isFullLink);
-    void setCurrentLinkPortState(bool isLink, int portNumber);
-    unsigned long long getCurrentLinkPortState() const;
-    bool getCurrentLinkPortState(int portNumber) const;
+    void setLinkPortState(bool isFullLink);
+    void setLinkPortState(bool isLink, int portIndex);
+
+    bool getLinkPortState(int portIndex) const;
+    QVector<bool> getLinkPortState() const;
+
+    int getUsedLinkPortCount() const;
+    QVector<int> getUsedLinkPort() const;
     int getUnusedLinkPortCount() const;
     QVector<int> getUnusedLinkPort() const;
 
+protected:
+    virtual QRectF boundingRect() const override;
     virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
-
     friend QDataStream& operator<<(QDataStream& stream, const ElaGraphicsItem* item);
     friend QDataStream& operator>>(QDataStream& stream, ElaGraphicsItem* item);
 };

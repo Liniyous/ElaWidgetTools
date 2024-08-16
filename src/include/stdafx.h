@@ -37,7 +37,6 @@ public:                                                                 \
 // Q_D Q_Q指针变量快速创建
 #define Q_PRIVATE_CREATE_Q_H(TYPE, M) \
 public:                               \
-    Q_SIGNAL void p##M##Changed();    \
     void set##M(TYPE M);              \
     TYPE get##M() const;
 
@@ -58,7 +57,6 @@ public:                               \
     {                                          \
         Q_D(CLASS);                            \
         d->_p##M = M;                          \
-        Q_EMIT p##M##Changed();                \
     }                                          \
     TYPE CLASS::get##M() const                 \
     {                                          \

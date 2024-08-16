@@ -214,20 +214,16 @@ void MainWindow::initContent()
     // GraphicsView
     ElaGraphicsScene* scene = new ElaGraphicsScene(this);
     scene->setSceneRect(0, 0, 1500, 1500);
-    // scene->setSceneRect(0, 0, 1000, 1000);
     ElaGraphicsItem* item1 = new ElaGraphicsItem();
     item1->setWidth(100);
     item1->setHeight(100);
+    item1->setMaxLinkPortCount(100);
+    item1->setMaxLinkPortCount(1);
     ElaGraphicsItem* item2 = new ElaGraphicsItem();
     item2->setWidth(100);
     item2->setHeight(100);
-    // ElaGraphicsItem* item3 = new ElaGraphicsItem();
-    // item3->setWidth(100);
-    // item3->setHeight(100);
-    // item3->setPos(10, 10);
     scene->addItem(item1);
     scene->addItem(item2);
-    // scene->addItem(item3);
     ElaGraphicsView* view = new ElaGraphicsView(scene);
     view->setScene(scene);
 

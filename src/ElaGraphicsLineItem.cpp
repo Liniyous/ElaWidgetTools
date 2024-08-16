@@ -4,23 +4,35 @@
 #include <QPainter>
 
 #include "ElaGraphicsItem.h"
+#include "ElaGraphicsLineItemPrivate.h"
+Q_PRIVATE_CREATE_Q_CPP(ElaGraphicsLineItem, QPointF, StartPoint);
+Q_PRIVATE_CREATE_Q_CPP(ElaGraphicsLineItem, QPointF, EndPoint);
+Q_PRIVATE_CREATE_Q_CPP(ElaGraphicsLineItem, ElaGraphicsItem*, StartItem);
+Q_PRIVATE_CREATE_Q_CPP(ElaGraphicsLineItem, ElaGraphicsItem*, EndItem);
+Q_PRIVATE_CREATE_Q_CPP(ElaGraphicsLineItem, int, StartItemPort);
+Q_PRIVATE_CREATE_Q_CPP(ElaGraphicsLineItem, int, EndItemPort);
 ElaGraphicsLineItem::ElaGraphicsLineItem(ElaGraphicsItem* startItem, ElaGraphicsItem* endItem, int startItemPort, int endItemPort, QGraphicsItem* parent)
-    : QGraphicsPathItem(parent)
+    : QGraphicsPathItem(parent), d_ptr(new ElaGraphicsLineItemPrivate())
 {
-    _pStartItem = startItem;
-    _pEndItem = endItem;
-    _pStartItemPort = startItemPort;
-    _pEndItemPort = endItemPort;
-    _linkItemMap.insert(_pStartItem, _pStartItemPort);
-    _linkItemMap.insert(_pEndItem, _pEndItemPort);
+    Q_D(ElaGraphicsLineItem);
+    d->q_ptr = this;
+    d->_pStartItem = startItem;
+    d->_pEndItem = endItem;
+    d->_pStartItemPort = startItemPort;
+    d->_pEndItemPort = endItemPort;
+    d->_linkItemMap.insert(d->_pStartItem, d->_pStartItemPort);
+    d->_linkItemMap.insert(d->_pEndItem, d->_pEndItemPort);
     setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsSelectable | ItemAcceptsInputMethod);
 }
 
 ElaGraphicsLineItem::ElaGraphicsLineItem(QPointF startPoint, QPointF endPoint, QGraphicsItem* parent)
+    : QGraphicsPathItem(parent), d_ptr(new ElaGraphicsLineItemPrivate())
 {
-    _pStartPoint = startPoint;
-    _pEndPoint = endPoint;
-    _isCreateWithItem = false;
+    Q_D(ElaGraphicsLineItem);
+    d->q_ptr = this;
+    d->_pStartPoint = startPoint;
+    d->_pEndPoint = endPoint;
+    d->_isCreateWithItem = false;
     setFlags(QGraphicsItem::ItemIsFocusable | QGraphicsItem::ItemIsSelectable | ItemAcceptsInputMethod);
 }
 
@@ -28,27 +40,30 @@ ElaGraphicsLineItem::~ElaGraphicsLineItem()
 {
 }
 
-bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item)
+bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item) const
 {
-    if (_linkItemMap.contains(item))
+    Q_D(const ElaGraphicsLineItem);
+    if (d->_linkItemMap.contains(item))
     {
         return true;
     }
     return false;
 }
 
-bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item1, ElaGraphicsItem* item2)
+bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item1, ElaGraphicsItem* item2) const
 {
-    if (_linkItemMap.contains(item1) && _linkItemMap.contains(item2))
+    Q_D(const ElaGraphicsLineItem);
+    if (d->_linkItemMap.contains(item1) && d->_linkItemMap.contains(item2))
     {
         return true;
     }
     return false;
 }
 
-bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item1, ElaGraphicsItem* item2, int port1, int port2)
+bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item1, ElaGraphicsItem* item2, int port1, int port2) const
 {
-    if (_linkItemMap.value(item1) == port1 && _linkItemMap.value(item2) == port2)
+    Q_D(const ElaGraphicsLineItem);
+    if (d->_linkItemMap.value(item1) == port1 && d->_linkItemMap.value(item2) == port2)
     {
         return true;
     }
@@ -57,6 +72,7 @@ bool ElaGraphicsLineItem::isTargetLink(ElaGraphicsItem* item1, ElaGraphicsItem* 
 
 void ElaGraphicsLineItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+    Q_D(ElaGraphicsLineItem);
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing);
     painter->setPen(QPen(Qt::black, 3));
@@ -65,19 +81,19 @@ void ElaGraphicsLineItem::paint(QPainter* painter, const QStyleOptionGraphicsIte
     qreal pathYStart = 0;
     qreal pathXEnd = 0;
     qreal pathYEnd = 0;
-    if (_isCreateWithItem)
+    if (d->_isCreateWithItem)
     {
-        pathXStart = _pStartItem->x();
-        pathYStart = _pStartItem->y();
-        pathXEnd = _pEndItem->x();
-        pathYEnd = _pEndItem->y();
+        pathXStart = d->_pStartItem->x();
+        pathYStart = d->_pStartItem->y();
+        pathXEnd = d->_pEndItem->x();
+        pathYEnd = d->_pEndItem->y();
     }
     else
     {
-        pathXStart = _pStartPoint.x();
-        pathYStart = _pStartPoint.y();
-        pathXEnd = _pEndPoint.x();
-        pathYEnd = _pEndPoint.y();
+        pathXStart = d->_pStartPoint.x();
+        pathYStart = d->_pStartPoint.y();
+        pathXEnd = d->_pEndPoint.x();
+        pathYEnd = d->_pEndPoint.y();
     }
     path.moveTo(pathXStart, pathYStart); // 设置起始点
     path.cubicTo((pathXStart + pathXEnd) / 2, pathYStart, (pathXStart + pathXEnd) / 2, pathYEnd, pathXEnd, pathYEnd);

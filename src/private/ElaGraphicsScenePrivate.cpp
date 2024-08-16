@@ -20,7 +20,6 @@ QList<ElaGraphicsItem*> ElaGraphicsScenePrivate::serializeItem(int count)
     {
         ElaGraphicsItem* item = new ElaGraphicsItem();
         item->setParent(q);
-        item->setScene(q);
         itemList.append(item);
         _currentZ++;
     }

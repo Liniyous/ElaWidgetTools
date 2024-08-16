@@ -2,6 +2,7 @@
 #define ELAGRAPHICSITEMPRIVATE_H
 
 #include <QObject>
+#include <QVector>
 
 #include "ElaGraphicsItem.h"
 class ElaGraphicsItemPrivate : public QObject
@@ -15,7 +16,6 @@ class ElaGraphicsItemPrivate : public QObject
     Q_PROPERTY_CREATE_D(QString, ItemName)
     Q_PROPERTY_CREATE_D(QVariantMap, DataRoutes)
     Q_PROPERTY_CREATE_D(int, MaxLinkPortCount)
-    Q_PROPERTY_CREATE_D(int, CurrentLinkPortCount)
 public:
     explicit ElaGraphicsItemPrivate(QObject* parent = nullptr);
     ~ElaGraphicsItemPrivate();
@@ -25,8 +25,7 @@ public:
 
 private:
     QString _itemUID;
-    unsigned long long _currentLinkPortState{0};
-    ElaGraphicsScene* _scene{nullptr};
+    QVector<bool> _currentLinkPortState;
 };
 
 #endif // ELAGRAPHICSITEMPRIVATE_H
