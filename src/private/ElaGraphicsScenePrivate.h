@@ -20,8 +20,6 @@ public:
     explicit ElaGraphicsScenePrivate(QObject* parent = nullptr);
     ~ElaGraphicsScenePrivate();
 
-    QList<ElaGraphicsItem*> serializeItem(int count);
-
     friend QDataStream& operator<<(QDataStream& stream, const ElaGraphicsScenePrivate* data);
     friend QDataStream& operator>>(QDataStream& stream, ElaGraphicsScenePrivate* data);
 
@@ -35,7 +33,9 @@ private:
     qreal _currentZ{1};
     QPointF _lastPos;
     QPointF _lastLeftPressPos;
+    QList<ElaGraphicsItem*> _serializeItem(int count);
     void _removeLinkLineItem();
+    void _deserializeLink();
 };
 
 #endif // ELAGRAPHICSSCENEPRIVATE_H

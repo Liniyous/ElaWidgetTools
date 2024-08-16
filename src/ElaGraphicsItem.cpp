@@ -195,8 +195,8 @@ QDataStream& operator>>(QDataStream& stream, ElaGraphicsItem* item)
     qreal itemX;
     qreal itemY;
     qreal itemZ;
-    qreal itemWidth;
-    qreal itemHeight;
+    int itemWidth;
+    int itemHeight;
     stream >> itemX >> itemY >> itemZ >> itemWidth >> itemHeight;
     item->setX(itemX);
     item->setY(itemY);
