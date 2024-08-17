@@ -25,7 +25,7 @@ ElaInteractiveCard::ElaInteractiveCard(QWidget* parent)
     d->_pSubTitlePixelSize = 12;
     setMinimumSize(270, 80);
     d->_pCardPixmapSize = QSize(height() * 0.8, height() * 0.8);
-    d->_pTitleSpacing = 3;
+    d->_pTitleSpacing = 2;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Ellipse;
     d->_themeMode = eTheme->getThemeMode();
@@ -82,10 +82,12 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setFont(font);
-    painter.drawText(d->_pCardPixmapSize.width() + width() / 11, height() / 2 - d->_pTitleSpacing, d->_pTitle);
+    int textStartX = d->_pCardPixmapSize.width() + width() / 11;
+    int textWidth = width() - d->_pCardPixmapSize.width() - width() / 11;
+    painter.drawText(QRect(textStartX, rect().y(), textWidth, height() / 2 - d->_pTitleSpacing), Qt::TextWordWrap | Qt::AlignBottom | Qt::AlignLeft, d->_pTitle);
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
-    painter.drawText(d->_pCardPixmapSize.width() + width() / 11, height() / 2 + d->_pTitleSpacing + d->_pSubTitlePixelSize, d->_pSubTitle);
+    painter.drawText(QRect(textStartX, height() / 2 + d->_pTitleSpacing, textWidth, height() / 2 - d->_pTitleSpacing), Qt::TextWordWrap | Qt::AlignTop | Qt::AlignLeft, d->_pSubTitle);
     painter.restore();
 }
