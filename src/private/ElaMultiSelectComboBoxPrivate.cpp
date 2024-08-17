@@ -42,6 +42,7 @@ void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
     Q_Q(ElaMultiSelectComboBox);
     QString str;
     _adjustSelectedVector();
+    QVector<bool> selectedIndexVector;
     for (int i = 0; i < q->count(); i++)
     {
         // 该位选中
@@ -54,10 +55,12 @@ void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
                 str.append(",");
             }
             str.append(q->itemText(i));
+            selectedIndexVector.append(true);
         }
         else
         {
             _comboView->selectionModel()->select(index, QItemSelectionModel::Deselect);
+            selectedIndexVector.append(false);
         }
     }
     if (str != _currentText)
@@ -73,6 +76,7 @@ void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
         }
 #endif
         q->setCurrentIndex(-1);
+        Q_EMIT q->itemSelectionChanged(selectedIndexVector);
         Q_EMIT q->currentTextListChanged(_selectedTextList);
     }
 }
