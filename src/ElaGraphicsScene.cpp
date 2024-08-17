@@ -9,7 +9,6 @@
 #include "ElaGraphicsItem.h"
 #include "ElaGraphicsLineItem.h"
 #include "private/ElaGraphicsScenePrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsScene, bool, IsAutoSobel)
 Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsScene, bool, IsCheckLinkPort)
 Q_PROPERTY_CREATE_Q_CPP(ElaGraphicsScene, QString, SerializePath)
 ElaGraphicsScene::ElaGraphicsScene(QObject* parent)
@@ -18,7 +17,6 @@ ElaGraphicsScene::ElaGraphicsScene(QObject* parent)
     Q_D(ElaGraphicsScene);
     d->q_ptr = this;
     setItemIndexMethod(QGraphicsScene::NoIndex);
-    d->_pIsAutoSobel = false;
     d->_pIsCheckLinkPort = false;
     d->_sceneMode = ElaGraphicsSceneType::SceneMode::Default;
     d->_pSerializePath = "./scene.bin";
@@ -162,6 +160,36 @@ QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QPointF pos)
     return elaItemList;
 }
 
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QRect rect)
+{
+    QList<QGraphicsItem*> itemList = items(rect);
+    QList<ElaGraphicsItem*> elaItemList;
+    for (auto item : itemList)
+    {
+        ElaGraphicsItem* elaItem = dynamic_cast<ElaGraphicsItem*>(item);
+        if (elaItem)
+        {
+            elaItemList.append(elaItem);
+        }
+    }
+    return elaItemList;
+}
+
+QList<ElaGraphicsItem*> ElaGraphicsScene::getElaItems(QRectF rect)
+{
+    QList<QGraphicsItem*> itemList = items(rect);
+    QList<ElaGraphicsItem*> elaItemList;
+    for (auto item : itemList)
+    {
+        ElaGraphicsItem* elaItem = dynamic_cast<ElaGraphicsItem*>(item);
+        if (elaItem)
+        {
+            elaItemList.append(elaItem);
+        }
+    }
+    return elaItemList;
+}
+
 void ElaGraphicsScene::setSceneMode(ElaGraphicsSceneType::SceneMode mode)
 {
     Q_D(ElaGraphicsScene);
@@ -277,7 +305,9 @@ bool ElaGraphicsScene::removeItemLink(ElaGraphicsItem* item1, ElaGraphicsItem* i
     bool isLinkExist = false;
     foreach (auto& link, d->_itemsLink)
     {
-        if (link.value(item1->getItemUID()) == port1 && link.value(item2->getItemUID()) == port2)
+        QVariant portVariant1 = link.value(item1->getItemUID());
+        QVariant portVariant2 = link.value(item2->getItemUID());
+        if (portVariant1.isValid() && portVariant2.isValid() && portVariant1.toUInt() == port1 && portVariant2.toUInt() == port2)
         {
             d->_itemsLink.removeOne(link);
             // 这里处理连线图元

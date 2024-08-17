@@ -327,7 +327,6 @@ enum SceneMode
     DragMove = 0x0001,
     MultiSelect = 0x0002,
     ItemLink = 0x0003,
-
 };
 Q_ENUM_CREATE(SceneMode)
 Q_END_ENUM_CREATE(ElaGraphicsSceneType)

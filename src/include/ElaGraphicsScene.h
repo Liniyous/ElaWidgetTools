@@ -17,7 +17,6 @@ class ELA_EXPORT ElaGraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
     Q_Q_CREATE(ElaGraphicsScene)
-    Q_PROPERTY_CREATE_Q_H(bool, IsAutoSobel)
     Q_PROPERTY_CREATE_Q_H(bool, IsCheckLinkPort)
     Q_PROPERTY_CREATE_Q_H(QString, SerializePath)
 public:
@@ -33,6 +32,8 @@ public:
     QList<ElaGraphicsItem*> getElaItems();
     QList<ElaGraphicsItem*> getElaItems(QPoint pos);
     QList<ElaGraphicsItem*> getElaItems(QPointF pos);
+    QList<ElaGraphicsItem*> getElaItems(QRect rect);
+    QList<ElaGraphicsItem*> getElaItems(QRectF rect);
 
     void setSceneMode(ElaGraphicsSceneType::SceneMode mode);
     ElaGraphicsSceneType::SceneMode getSceneMode() const;

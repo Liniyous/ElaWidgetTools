@@ -13,7 +13,6 @@ class ElaGraphicsScenePrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaGraphicsScene)
-    Q_PROPERTY_CREATE_D(bool, IsAutoSobel)
     Q_PROPERTY_CREATE_D(bool, IsCheckLinkPort)
     Q_PROPERTY_CREATE_D(QString, SerializePath)
 public:
