@@ -1,8 +1,11 @@
 #include "ElaToolButton.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QEvent>
+#include <QMouseEvent>
 #include <QPropertyAnimation>
+
 #include "DeveloperComponents/ElaToolButtonStyle.h"
 #include "ElaIcon.h"
 #include "ElaMenu.h"
@@ -57,15 +60,15 @@ bool ElaToolButton::eventFilter(QObject* watched, QEvent* event)
     Q_D(ElaToolButton);
     if (watched == menu())
     {
-        switch(event->type())
+        switch (event->type())
         {
         case QEvent::Show:
         {
             //指示器动画
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
             connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                        update();
-                    });
+                update();
+            });
             rotateAnimation->setDuration(300);
             rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
             rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());
@@ -78,13 +81,15 @@ bool ElaToolButton::eventFilter(QObject* watched, QEvent* event)
             //指示器动画
             QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
             connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                        update();
-                    });
+                update();
+            });
             rotateAnimation->setDuration(300);
             rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
             rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());
             rotateAnimation->setEndValue(0);
             rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(0, 0), QPoint(0, 0), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+            QApplication::sendEvent(parentWidget(), &focusEvent);
             break;
         }
         default:
