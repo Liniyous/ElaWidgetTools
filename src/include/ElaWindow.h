@@ -50,6 +50,9 @@ public:
     void setCustomWidget(QWidget* widget);
     QWidget* getCustomWidget() const;
 
+    void setAppBarHeight(int appBarHeight);
+    int getAppBarHeight() const;
+
     void setCustomWidgetMaximumWidth(int width);
     int getCustomWidgetMaximumWidth() const;
 

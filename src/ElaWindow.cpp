@@ -270,6 +270,18 @@ QWidget* ElaWindow::getCustomWidget() const
     return d->_appBar->getCustomWidget();
 }
 
+void ElaWindow::setAppBarHeight(int appBarHeight)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setAppBarHeight(appBarHeight);
+}
+
+int ElaWindow::getAppBarHeight() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getAppBarHeight();
+}
+
 void ElaWindow::setCustomWidgetMaximumWidth(int width)
 {
     Q_D(ElaWindow);
