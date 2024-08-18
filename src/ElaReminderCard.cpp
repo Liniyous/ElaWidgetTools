@@ -26,7 +26,7 @@ ElaReminderCard::ElaReminderCard(QWidget* parent)
     d->_pTitlePixelSize = 15;
     d->_pSubTitlePixelSize = 12;
     setFixedSize(330, 105);
-    d->_pCardPixmapSize = QSize((height() - d->_shadowBorderWidth) * 0.8, (height() - d->_shadowBorderWidth) * 0.8);
+    d->_pCardPixmapSize = QSize(79, 79);
     d->_pTitleSpacing = 3;
     d->_pCardPixmapBorderRadius = 6;
     d->_pCardPixMode = ElaCardPixType::PixMode::Default;
@@ -64,25 +64,26 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
 
     // 图片绘制
+    int pixLeftMargin = width / 28;
     if (!d->_pCardPixmap.isNull())
     {
         painter.save();
         QPainterPath path;
         if (d->_pCardPixMode == ElaCardPixType::PixMode::Ellipse)
         {
-            path.addEllipse(QPointF(d->_pCardPixmapSize.width() / 2 + width / 28, height() / 2), d->_pCardPixmapSize.width() / 2, d->_pCardPixmapSize.height() / 2);
+            path.addEllipse(QPointF(d->_pCardPixmapSize.width() / 2 + pixLeftMargin, height() / 2), d->_pCardPixmapSize.width() / 2, d->_pCardPixmapSize.height() / 2);
             painter.setClipPath(path);
-            painter.drawPixmap(QRect(width / 28 + d->_shadowBorderWidth, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap); // rect为绘制区域，image为要绘制的图片
+            painter.drawPixmap(QRect(pixLeftMargin + d->_shadowBorderWidth, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap); // rect为绘制区域，image为要绘制的图片
         }
         else if (d->_pCardPixMode == ElaCardPixType::PixMode::Default)
         {
-            painter.drawPixmap(width / 28 + d->_shadowBorderWidth, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
+            painter.drawPixmap(pixLeftMargin + d->_shadowBorderWidth, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
         }
         else if (d->_pCardPixMode == ElaCardPixType::PixMode::RoundedRect)
         {
-            path.addRoundedRect(QRectF(width / 28, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmapBorderRadius, d->_pCardPixmapBorderRadius);
+            path.addRoundedRect(QRectF(pixLeftMargin, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmapBorderRadius, d->_pCardPixmapBorderRadius);
             painter.setClipPath(path);
-            painter.drawPixmap(width / 28 + d->_shadowBorderWidth, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
+            painter.drawPixmap(pixLeftMargin + d->_shadowBorderWidth, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
         }
         painter.restore();
     }
@@ -99,13 +100,16 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
     painter.setFont(font);
-    // 计算换行 width() / 28 图片左间距 文字右边距  width() / 11 文字左间距
-    painter.drawText(d->_pCardPixmapSize.width() + width / 11 + d->_shadowBorderWidth, this->height() / 2 - d->_pTitleSpacing, d->_pTitle);
+    // 主标题
+    int textLeftMargin = width / 11;
+    int textStartX = d->_pCardPixmapSize.width() + textLeftMargin + d->_shadowBorderWidth;
+    int textWidth = foregroundRect.width() - textStartX - d->_shadowBorderWidth - 5;
+    painter.drawText(QRect(textStartX, foregroundRect.y(), textWidth, this->height() / 2 - d->_pTitleSpacing), Qt::AlignLeft | Qt::AlignBottom | Qt::TextWordWrap | Qt::TextWrapAnywhere, d->_pTitle);
+    // 副标题
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
     painter.setPen(ElaThemeColor(d->_themeMode, ReminderCardSubTitleText));
-    qreal rowTextWidth = (this->width() - this->width() / 11 - this->width() / 28 - d->_pCardPixmapSize.width() - 2 * d->_shadowBorderWidth);
-    painter.drawText(QRect(d->_pCardPixmapSize.width() + width / 11 + d->_shadowBorderWidth, height() / 2 + d->_pTitleSpacing, rowTextWidth, height() / 2), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap | Qt::TextWrapAnywhere, d->_pSubTitle);
+    painter.drawText(QRect(textStartX, height() / 2 + d->_pTitleSpacing, textWidth, height() / 2 - d->_pTitleSpacing), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap | Qt::TextWrapAnywhere, d->_pSubTitle);
     painter.restore();
 }
