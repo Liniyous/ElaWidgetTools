@@ -32,7 +32,7 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
             QRect itemRect = vopt->rect;
-            itemRect.adjust(_margin, 2, -_margin, -2);
+            itemRect.adjust(0, 2, 0, -2);
             QPainterPath path;
             path.addRoundedRect(itemRect, 4, 4);
             if (vopt->showDecorationSelected && (vopt->state & QStyle::State_Selected))
@@ -57,6 +57,23 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 }
             }
             painter->restore();
+        }
+        return;
+    }
+    case QStyle::PE_PanelItemViewRow:
+    {
+        // Item背景隔行变色
+        if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
+        {
+            if (vopt->features == QStyleOptionViewItem::Alternate)
+            {
+                painter->save();
+                painter->setRenderHint(QPainter::Antialiasing);
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(ElaThemeColor(_themeMode, ListViewAlternatingRow));
+                painter->drawRect(vopt->rect);
+                painter->restore();
+            }
         }
         return;
     }
@@ -108,8 +125,8 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
             // QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
             QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
             QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-            iconRect.adjust(_leftPadding + _margin, 0, 0, 0);
-            textRect.adjust(_leftPadding + _margin, 0, 0, 0);
+            iconRect.adjust(_leftPadding, 0, 0, 0);
+            textRect.adjust(_leftPadding, 0, 0, 0);
             // 图标绘制
             if (!vopt->icon.isNull())
             {
@@ -163,7 +180,7 @@ QSize ElaListViewStyle::sizeFromContents(ContentsType type, const QStyleOption* 
         QListView::ViewMode viewMode = listView->viewMode();
         if (viewMode == QListView::ListMode)
         {
-            itemSize.setWidth(itemSize.width() + _leftPadding + _margin * 2);
+            itemSize.setWidth(itemSize.width() + _leftPadding);
         }
         itemSize.setHeight(_pItemHeight);
         return itemSize;

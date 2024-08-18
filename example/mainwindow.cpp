@@ -22,8 +22,9 @@
 #include "ElaToolBar.h"
 #include "ElaToolButton.h"
 #include "ElaWidget.h"
-#include "ExamplePage/T_BaseComponents.h"
-#include "ExamplePage/T_Card.h"
+#include "T_BaseComponents.h"
+#include "T_Card.h"
+#include "T_View.h"
 #ifdef Q_OS_WIN
 #include "ExamplePage/T_ElaScreen.h"
 #endif
@@ -210,6 +211,7 @@ void MainWindow::initContent()
     _tabWidgetPage = new T_TabWidget(this);
     _popupPage = new T_Popup(this);
     _cardPage = new T_Card(this);
+    _viewPage = new T_View(this);
 
     // GraphicsView
     ElaGraphicsScene* scene = new ElaGraphicsScene(this);
@@ -240,6 +242,7 @@ void MainWindow::initContent()
     addPageNode("ElaTabWidget", _tabWidgetPage, ElaIconType::Table);
     addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
     addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
+    addPageNode("ElaView", _viewPage, ElaIconType::CameraViewfinder);
     addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
     addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
     addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);

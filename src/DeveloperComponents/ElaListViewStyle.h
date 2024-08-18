@@ -19,7 +19,6 @@ public:
 private:
     ElaThemeType::ThemeMode _themeMode;
     int _leftPadding{11};
-    int _margin{3};
 };
 
 #endif // ELALISTVIEWSTYLE_H

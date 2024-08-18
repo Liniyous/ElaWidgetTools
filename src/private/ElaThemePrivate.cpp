@@ -120,6 +120,8 @@ void ElaThemePrivate::_initThemeColor()
     //ElaListView
     _lightThemeColorList[ElaThemeType::ListViewBase] = QColor(0xF0, 0xF0, 0xF5);
     _darkThemeColorList[ElaThemeType::ListViewBase] = QColor(0x2D, 0x2D, 0x2D);
+    _lightThemeColorList[ElaThemeType::ListViewAlternatingRow] = QColor(0xF5, 0xF5, 0xFA);
+    _darkThemeColorList[ElaThemeType::ListViewAlternatingRow] = QColor(0x33, 0x33, 0x33);
     _lightThemeColorList[ElaThemeType::ListViewBorder] = QColor(0xBE, 0xBA, 0xBE);
     _darkThemeColorList[ElaThemeType::ListViewBorder] = QColor(0x52, 0x50, 0x52);
     _lightThemeColorList[ElaThemeType::ListViewItemHover] = QColor(0xE4, 0xE4, 0xEB);

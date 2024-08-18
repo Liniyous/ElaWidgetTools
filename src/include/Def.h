@@ -85,6 +85,7 @@ enum ThemeColor
     LineEditHasFocus,
     LineEditHemline,
     ListViewBase,
+    ListViewAlternatingRow,
     ListViewBorder,
     ListViewItemHover,
     ListViewItemSelected,

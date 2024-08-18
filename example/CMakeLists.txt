@@ -68,6 +68,8 @@ endif()
 
 include_directories(
     ../src/include
+    ExamplePage
+    ModelView
 )
 set(EXECUTABLE_OUTPUT_PATH  ${CMAKE_BINARY_DIR})
 target_link_libraries(ElaWidgetToolsExample PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
