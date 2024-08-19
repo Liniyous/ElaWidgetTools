@@ -7,8 +7,8 @@
 #include <QVBoxLayout>
 
 #include "ElaLineEdit.h"
+#include "ElaListView.h"
 #include "ElaMessageBar.h"
-#include "ElaTableView.h"
 #include "ElaText.h"
 #include "T_IconDelegate.h"
 #include "T_IconModel.h"
@@ -20,13 +20,13 @@ T_Icon::T_Icon(QWidget* parent)
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 5, 0);
     centralWidget->setWindowTitle("ElaIcon");
-    // TableView
-    _iconView = new ElaTableView(this);
-    _iconView->horizontalHeader()->sectionResizeMode(QHeaderView::Fixed);
-    _iconView->horizontalHeader()->setDefaultSectionSize(100);
-    _iconView->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    _iconView->verticalHeader()->setDefaultSectionSize(100);
-    connect(_iconView, &ElaTableView::clicked, this, [=](const QModelIndex& index) {
+    // ListView
+    _iconView = new ElaListView(this);
+    _iconView->setIsTransparent(true);
+    _iconView->setFlow(QListView::LeftToRight);
+    _iconView->setViewMode(QListView::IconMode);
+    _iconView->setResizeMode(QListView::Adjust);
+    connect(_iconView, &ElaListView::clicked, this, [=](const QModelIndex& index) {
         QString iconName = _iconModel->getIconNameFromModelIndex(index);
         if (iconName.isEmpty())
         {
@@ -84,10 +84,4 @@ void T_Icon::onSearchEditTextEdit(const QString& searchText)
     _iconView->clearSelection();
     _iconView->scrollTo(_iconModel->index(0, 0));
     _iconView->viewport()->update();
-}
-
-void T_Icon::resizeEvent(QResizeEvent* event)
-{
-    this->_iconModel->setColumnCount(width() / 100);
-    ElaScrollPage::resizeEvent(event);
 }

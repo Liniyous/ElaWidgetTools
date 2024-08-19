@@ -67,3 +67,8 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
     }
     painter->restore();
 }
+
+QSize T_IconDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+    return QSize(100, 100);
+}
