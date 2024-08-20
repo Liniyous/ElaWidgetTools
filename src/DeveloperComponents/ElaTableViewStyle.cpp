@@ -197,8 +197,8 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             // QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
             QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
             QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-            iconRect.adjust(_leftPadding, 0, _leftPadding, 0);
-            textRect.adjust(_leftPadding, 0, 0, 0);
+            iconRect.adjust(_horizontalPadding, 0, _horizontalPadding, 0);
+            textRect.adjust(_horizontalPadding, 0, -_horizontalPadding, 0);
             // 图标绘制
             if (!vopt->icon.isNull())
             {

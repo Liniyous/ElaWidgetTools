@@ -19,7 +19,7 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
-    int _leftPadding{11};
+    int _horizontalPadding{11};
 };
 
 #endif // ELATABLEVIEWSTYLE_H
