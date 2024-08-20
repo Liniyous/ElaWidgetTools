@@ -102,11 +102,11 @@ void ElaMessageButton::paintEvent(QPaintEvent* event)
     painter.save();
     QRect foregroundRect(d->_penBorderWidth + d->_shadowBorderWidth, d->_penBorderWidth + d->_shadowBorderWidth, width() - 2 * (d->_penBorderWidth + d->_shadowBorderWidth), height() - 2 * (d->_penBorderWidth + d->_shadowBorderWidth));
     painter.setPen(QPen(ElaThemeColor(d->_themeMode, MessageButtonBorder), d->_penBorderWidth));
-    painter.setBrush((underMouse() ? ElaThemeColor(d->_themeMode, MessageButtonHover) : ElaThemeColor(d->_themeMode, MessageButtonBase)));
+    painter.setBrush(isEnabled() ? underMouse() ? ElaThemeColor(d->_themeMode, MessageButtonHover) : ElaThemeColor(d->_themeMode, MessageButtonBase) : ElaThemeColor(d->_themeMode, MessageButtonDisableBase));
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
 
     //文字绘制
-    painter.setPen(d->_isLeftButtonPress ? ElaThemeColor(d->_themeMode, MessageButtonTextPress) : ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(isEnabled() ? d->_isLeftButtonPress ? ElaThemeColor(d->_themeMode, MessageButtonTextPress) : ElaThemeColor(d->_themeMode, WindowText) : ElaThemeColor(d->_themeMode, WindowTextDisable));
     painter.drawText(rect(), Qt::AlignCenter, text());
     painter.restore();
 }

@@ -55,12 +55,18 @@ bool ElaToggleSwitch::event(QEvent* event)
     {
     case QEvent::Enter:
     {
-        d->_startRadiusAnimation(height() * 0.3, height() * 0.35);
+        if (isEnabled())
+        {
+            d->_startRadiusAnimation(height() * 0.3, height() * 0.35);
+        }
         break;
     }
     case QEvent::Leave:
     {
-        d->_startRadiusAnimation(height() * 0.35, height() * 0.3);
+        if (isEnabled())
+        {
+            d->_startRadiusAnimation(height() * 0.35, height() * 0.3);
+        }
         break;
     }
     case QEvent::MouseMove:
@@ -105,8 +111,6 @@ void ElaToggleSwitch::mouseReleaseEvent(QMouseEvent* event)
     }
     else
     {
-        // if (d->_isAnimationFinished)
-        // {
         if (d->_isToggled)
         {
             d->_startPosAnimation(d->_circleCenterX, height() / 2, false);
@@ -115,7 +119,6 @@ void ElaToggleSwitch::mouseReleaseEvent(QMouseEvent* event)
         {
             d->_startPosAnimation(d->_circleCenterX, width() - height() / 2 - d->_margin * 2, true);
         }
-        //}
     }
     d->_startRadiusAnimation(height() * 0.25, height() * 0.35);
 }
@@ -142,7 +145,7 @@ void ElaToggleSwitch::paintEvent(QPaintEvent* event)
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 背景绘制
     painter.setPen(d->_isToggled ? QPen(ElaThemeColor(d->_themeMode, ToggleSwitchToggledBorder), 2) : QPen(ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledBorder), 2));
-    painter.setBrush(d->_isToggled ? ElaThemeColor(d->_themeMode, ToggleSwitchToggledBase) : (underMouse() ? ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledHover) : ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledBase)));
+    painter.setBrush(isEnabled() ? d->_isToggled ? ElaThemeColor(d->_themeMode, ToggleSwitchToggledBase) : (underMouse() ? ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledHover) : ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledBase)) : ElaThemeColor(d->_themeMode, ToggleSwitchDisableBase));
     QPainterPath path;
     path.moveTo(width() - height() - d->_margin, height() - d->_margin);
     path.arcTo(QRectF(QPointF(width() - height() - d->_margin, d->_margin), QSize(height() - d->_margin * 2, height() - d->_margin * 2)), -90, 180);
@@ -153,8 +156,8 @@ void ElaToggleSwitch::paintEvent(QPaintEvent* event)
     painter.drawPath(path);
 
     // 圆心绘制
-    painter.setBrush(d->_isToggled ? ElaThemeColor(d->_themeMode, ToggleSwitchToggledCenter) : ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledCenter));
     painter.setPen(Qt::NoPen);
+    painter.setBrush(isEnabled() ? d->_isToggled ? ElaThemeColor(d->_themeMode, ToggleSwitchToggledCenter) : ElaThemeColor(d->_themeMode, ToggleSwitchNoToggledCenter) : ElaThemeColor(d->_themeMode, ToggleSwitchDisableCenter));
     if (d->_circleRadius == 0)
     {
         d->_circleRadius = this->isEnabled() ? (underMouse() ? height() * 0.35 : height() * 0.3) : height() * 0.3;

@@ -140,14 +140,15 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
             painter->save();
             painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
             //背景绘制
+            bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
             painter->setPen(ElaThemeColor(_themeMode, ComboBoxBorder));
-            painter->setBrush(copt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, ComboBoxHover) : ElaThemeColor(_themeMode, ComboBoxBase));
+            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, ComboBoxHover) : ElaThemeColor(_themeMode, ComboBoxBase) : Qt::transparent);
             QRect comboBoxRect = copt->rect;
             comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
             painter->drawRoundedRect(comboBoxRect, 3, 3);
             //文字绘制
             QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
-            painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
             painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
             //展开指示器绘制
             painter->setPen(Qt::NoPen);
@@ -160,7 +161,7 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
                 QFont iconFont = QFont("ElaAwesome");
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(isEnabled ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
                 painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
                 painter->rotate(_pExpandIconRotate);
                 painter->translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);

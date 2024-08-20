@@ -164,22 +164,13 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    if (d->_themeMode == ElaThemeType::Light)
-    {
-        painter.setPen(QPen(QColor(0xDF, 0xDF, 0xDF), 1));
-        painter.setBrush(underMouse() ? QColor(0xF6, 0xF6, 0xF6) : QColor(0xFD, 0xFD, 0xFD));
-    }
-    else
-    {
-        painter.setPen(QPen(QColor(0x4B, 0x4B, 0x4D), 1));
-        painter.setBrush(underMouse() ? QColor(0x44, 0x44, 0x44) : QColor(0x3B, 0x3B, 0x3B));
-    }
-
+    painter.setPen(ElaThemeColor(d->_themeMode, ComboBoxBorder));
+    painter.setBrush(isEnabled() ? underMouse() ? ElaThemeColor(d->_themeMode, ComboBoxHover) : ElaThemeColor(d->_themeMode, ComboBoxBase) : Qt::transparent);
     QRect foregroundRect = rect();
     foregroundRect.adjust(6, 1, -6, -1);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     //文字绘制
-    painter.setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+    painter.setPen(isEnabled() ? ElaThemeColor(d->_themeMode, WindowText) : ElaThemeColor(d->_themeMode, WindowTextDisable));
     QString currentText = painter.fontMetrics().elidedText(d->_currentText, Qt::ElideRight, foregroundRect.width() - 27 - width() * 0.05);
     painter.drawText(15, height() / 2 + painter.fontMetrics().ascent() / 2 - 1, currentText);
     //展开指示器绘制
@@ -192,7 +183,7 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(17);
         painter.setFont(iconFont);
-        painter.setPen(d->_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+        painter.setPen(isEnabled() ? ElaThemeColor(d->_themeMode, WindowText) : ElaThemeColor(d->_themeMode, WindowTextDisable));
         QRectF expandIconRect(width() - 25, 0, 20, height());
         painter.translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2 - 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
         painter.rotate(d->_pExpandIconRotate);

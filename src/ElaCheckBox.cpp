@@ -14,15 +14,9 @@ ElaCheckBox::ElaCheckBox(QWidget* parent)
 }
 
 ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
-    : QCheckBox(text, parent)
+    : ElaCheckBox(parent)
 {
-    _pBorderRadius = 3;
-    setMouseTracking(true);
-    setObjectName("ElaCheckBox");
-    setStyle(new ElaCheckBoxStyle(style()));
-    QFont font = this->font();
-    font.setPixelSize(15);
-    setFont(font);
+    setText(text);
 }
 
 ElaCheckBox::~ElaCheckBox()

@@ -31,6 +31,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
     {
         if (const QStyleOptionButton* bopt = qstyleoption_cast<const QStyleOptionButton*>(option))
         {
+            bool isEnabled = bopt->state.testFlag(QStyle::State_Enabled);
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
             QRect checkBoxRect = bopt->rect;
@@ -94,7 +95,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
                 painter->drawLine(checkLine);
             }
             //文字绘制
-            painter->setPen(ElaThemeColor(_themeMode, WindowText));
+            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
             QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             painter->restore();

@@ -160,6 +160,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::MessageButtonHover] = QColor(0x44, 0x44, 0x44);
     _lightThemeColorList[ElaThemeType::MessageButtonTextPress] = QColor(0x64, 0x66, 0x73);
     _darkThemeColorList[ElaThemeType::MessageButtonTextPress] = QColor(0xA1, 0xA2, 0xA2);
+    _lightThemeColorList[ElaThemeType::MessageButtonDisableBase] = QColor(0xF4, 0xF4, 0xF4);
+    _darkThemeColorList[ElaThemeType::MessageButtonDisableBase] = QColor(0x3B, 0x3B, 0x3B);
 
     //ElaNavigationBar
     _lightThemeColorList[ElaThemeType::NavigationBaseStart] = QColor(0xF3, 0xF2, 0xF9);
@@ -230,6 +232,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::PushButtonDefaultPress] = QColor(0x1C, 0x1C, 0x1C);
     _lightThemeColorList[ElaThemeType::PushButtonDefaultText] = Qt::black;
     _darkThemeColorList[ElaThemeType::PushButtonDefaultText] = Qt::white;
+    _lightThemeColorList[ElaThemeType::PushButtonDisableBase] = QColor(0xF4, 0xF4, 0xF4);
+    _darkThemeColorList[ElaThemeType::PushButtonDisableBase] = QColor(0x3B, 0x3B, 0x3B);
 
     //ElaRadioButton
     _lightThemeColorList[ElaThemeType::RadioButtonStateOffBorder] = QColor(0x94, 0x94, 0x94);
@@ -372,6 +376,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::ToggleButtonToggledText] = QColor(0x01, 0x01, 0x02);
     _lightThemeColorList[ElaThemeType::ToggleButtonHemline] = QColor(0xBC, 0xBC, 0xBC);
     _darkThemeColorList[ElaThemeType::ToggleButtonHemline] = QColor(0x52, 0x52, 0x52);
+    _lightThemeColorList[ElaThemeType::ToggleButtonDisableBase] = QColor(0xF4, 0xF4, 0xF4);
+    _darkThemeColorList[ElaThemeType::ToggleButtonDisableBase] = QColor(0x3B, 0x3B, 0x3B);
 
     //ElaToggleSwitch
     _lightThemeColorList[ElaThemeType::ToggleSwitchNoToggledBorder] = QColor(0xA5, 0xA5, 0xA7);
@@ -388,6 +394,10 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::ToggleSwitchToggledBase] = QColor(0x4C, 0xA0, 0xE0);
     _lightThemeColorList[ElaThemeType::ToggleSwitchToggledCenter] = QColor(0xFD, 0xFF, 0xF3);
     _darkThemeColorList[ElaThemeType::ToggleSwitchToggledCenter] = QColor(0x00, 0x00, 0x00);
+    _lightThemeColorList[ElaThemeType::ToggleSwitchDisableBase] = QColor(0xE9, 0xE9, 0xE9);
+    _darkThemeColorList[ElaThemeType::ToggleSwitchDisableBase] = QColor(0x52, 0x52, 0x52);
+    _lightThemeColorList[ElaThemeType::ToggleSwitchDisableCenter] = QColor(0x96, 0x96, 0x96);
+    _darkThemeColorList[ElaThemeType::ToggleSwitchDisableCenter] = QColor(0x32, 0x32, 0x32);
 
     //ElaToolBar
     _lightThemeColorList[ElaThemeType::ToolBarExpandButtonHover] = QColor(0xE9, 0xE9, 0xF0);
