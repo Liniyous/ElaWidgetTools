@@ -67,9 +67,11 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
         d->_breadcrumbBar->appendBreadcrumb(centralWidget->windowTitle());
     }
     ElaScrollArea* scrollArea = new ElaScrollArea(this);
+    scrollArea->setMouseTracking(true);
     scrollArea->setIsAnimation(Qt::Vertical, true);
     scrollArea->setWidgetResizable(isWidgetResizeable);
-    scrollArea->setIsGrabGesture(Qt::Vertical, isVerticalGrabGesture, mousePressEventDelay);
+    scrollArea->setIsGrabGesture(isVerticalGrabGesture, mousePressEventDelay);
+    scrollArea->setIsOverShoot(Qt::Vertical, true);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollArea->setWidget(centralWidget);

@@ -1,14 +1,17 @@
 #include "T_View.h"
 
 #include <QHBoxLayout>
+#include <QHeaderView>
 #include <QVBoxLayout>
 
 #include "ElaListView.h"
 #include "ElaMenu.h"
+#include "ElaTableView.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaToolButton.h"
 #include "T_ListViewModel.h"
+#include "T_TableViewModel.h"
 T_View::T_View(QWidget* parent)
     : ElaScrollPage(parent)
 {
@@ -65,8 +68,30 @@ T_View::T_View(QWidget* parent)
     ElaText* listText = new ElaText("ElaListView", this);
     listText->setTextPixelSize(18);
     _listView = new ElaListView(this);
+    _listView->setFixedHeight(450);
     // _listView->setAlternatingRowColors(true);
     _listView->setModel(new T_ListViewModel(this));
+
+    //ElaTableView
+    ElaText* tableText = new ElaText("ElaTableView", this);
+    tableText->setTextPixelSize(18);
+    _tableView = new ElaTableView(this);
+    _tableView->setModel(new T_TableViewModel(this));
+    _tableView->setAlternatingRowColors(true);
+    _tableView->setIconSize(QSize(38, 38));
+    _tableView->verticalHeader()->setHidden(true);
+    _tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+    _tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    _tableView->horizontalHeader()->setMinimumSectionSize(60);
+    _tableView->verticalHeader()->setMinimumSectionSize(46);
+    _tableView->setFixedHeight(450);
+    connect(_tableView, &ElaTableView::tableViewShow, this, [=]() {
+        _tableView->setColumnWidth(0, 60);
+        _tableView->setColumnWidth(1, 205);
+        _tableView->setColumnWidth(2, 170);
+        _tableView->setColumnWidth(3, 150);
+        _tableView->setColumnWidth(4, 60);
+    });
 
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaView");
@@ -81,8 +106,12 @@ T_View::T_View(QWidget* parent)
     centerVLayout->addWidget(listText);
     centerVLayout->addSpacing(10);
     centerVLayout->addWidget(_listView);
+    centerVLayout->addSpacing(15);
+    centerVLayout->addWidget(tableText);
+    centerVLayout->addSpacing(10);
+    centerVLayout->addWidget(_tableView);
 
-    addCentralWidget(centralWidget, true, true, 0);
+    addCentralWidget(centralWidget, true, false, 0);
 }
 
 T_View::~T_View()

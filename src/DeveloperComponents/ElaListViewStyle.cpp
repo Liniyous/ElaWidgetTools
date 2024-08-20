@@ -35,7 +35,7 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             itemRect.adjust(0, 2, 0, -2);
             QPainterPath path;
             path.addRoundedRect(itemRect, 4, 4);
-            if (vopt->showDecorationSelected && (vopt->state & QStyle::State_Selected))
+            if (vopt->state & QStyle::State_Selected)
             {
                 if (vopt->state & QStyle::State_MouseOver)
                 {

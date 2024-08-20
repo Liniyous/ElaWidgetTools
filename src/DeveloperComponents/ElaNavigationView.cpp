@@ -35,9 +35,7 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     QScroller::grabGesture(this->viewport(), QScroller::LeftMouseButtonGesture);
     QScrollerProperties properties = QScroller::scroller(this->viewport())->scrollerProperties();
-#if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3))
     properties.setScrollMetric(QScrollerProperties::MousePressEventDelay, 0);
-#endif
     properties.setScrollMetric(QScrollerProperties::HorizontalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
     properties.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOn);
     properties.setScrollMetric(QScrollerProperties::OvershootDragResistanceFactor, 0.35);

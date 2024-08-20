@@ -221,7 +221,7 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::PushButtonBorder] = QColor(0xDF, 0xDF, 0xDF);
     _darkThemeColorList[ElaThemeType::PushButtonBorder] = Qt::transparent;
     _lightThemeColorList[ElaThemeType::PushButtonHemline] = QColor(0xBC, 0xBC, 0xBC);
-    _darkThemeColorList[ElaThemeType::PushButtonHemline] = QColor(0xBC, 0xBC, 0xBC);
+    _darkThemeColorList[ElaThemeType::PushButtonHemline] = QColor(0x42, 0x42, 0x42);
     _lightThemeColorList[ElaThemeType::PushButtonDefaultBase] = QColor(0xFE, 0xFE, 0xFE);
     _darkThemeColorList[ElaThemeType::PushButtonDefaultBase] = QColor(0x3E, 0x3E, 0x3E);
     _lightThemeColorList[ElaThemeType::PushButtonDefaultHover] = QColor(0xF6, 0xF6, 0xF6);
@@ -328,6 +328,26 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::TabBarPanelButtonToolHover] = QColor(0x2B, 0x2C, 0x36);
     _lightThemeColorList[ElaThemeType::TabBarPanelButtonToolPress] = QColor(0xE9, 0xE9, 0xF0);
     _darkThemeColorList[ElaThemeType::TabBarPanelButtonToolPress] = QColor(0x2B, 0x2C, 0x36);
+
+    //ElaTableView
+    _lightThemeColorList[ElaThemeType::TableViewBase] = QColor(0xF0, 0xF0, 0xF5);
+    _darkThemeColorList[ElaThemeType::TableViewBase] = QColor(0x2D, 0x2D, 0x2D);
+    _lightThemeColorList[ElaThemeType::TableViewHeaderBase] = QColor(0xD6, 0xD6, 0xDB);
+    _darkThemeColorList[ElaThemeType::TableViewHeaderBase] = QColor(0x4F, 0x4F, 0x4F);
+    _lightThemeColorList[ElaThemeType::TableViewHeaderHover] = QColor(0xCF, 0xCF, 0xD4);
+    _darkThemeColorList[ElaThemeType::TableViewHeaderHover] = QColor(0x6E, 0x6E, 0x6E);
+    _lightThemeColorList[ElaThemeType::TableViewHeaderSelected] = QColor(0xCF, 0xCF, 0xD4);
+    _darkThemeColorList[ElaThemeType::TableViewHeaderSelected] = QColor(0x6E, 0x6E, 0x6E);
+    _lightThemeColorList[ElaThemeType::TableViewHeaderSelectedHover] = QColor(0xCA, 0xCA, 0xCF);
+    _darkThemeColorList[ElaThemeType::TableViewHeaderSelectedHover] = QColor(0x66, 0x66, 0x66);
+    _lightThemeColorList[ElaThemeType::TableViewAlternatingRow] = QColor(0xF5, 0xF5, 0xFA);
+    _darkThemeColorList[ElaThemeType::TableViewAlternatingRow] = QColor(0x33, 0x33, 0x33);
+    _lightThemeColorList[ElaThemeType::TableViewBorder] = QColor(0xBE, 0xBA, 0xBE);
+    _darkThemeColorList[ElaThemeType::TableViewBorder] = QColor(0x52, 0x50, 0x52);
+    _lightThemeColorList[ElaThemeType::TableViewItemHover] = QColor(0xE4, 0xE4, 0xEB);
+    _darkThemeColorList[ElaThemeType::TableViewItemHover] = QColor(0x40, 0x40, 0x40);
+    _lightThemeColorList[ElaThemeType::TableViewItemSelected] = QColor(0xE4, 0xE4, 0xEB);
+    _darkThemeColorList[ElaThemeType::TableViewItemSelected] = QColor(0x40, 0x40, 0x40);
 
     //ElaToggleButton
     _lightThemeColorList[ElaThemeType::ToggleButtonNoToggledBorder] = QColor(0xDF, 0xDF, 0xDF);

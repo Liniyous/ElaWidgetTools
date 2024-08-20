@@ -111,5 +111,14 @@
         <file>Resource/Image/IARC/IARC_18+.svg.png</file>
         <file>Resource/Image/IARC/IARC_3+.svg.png</file>
         <file>Resource/Image/IARC/IARC_7+.svg.png</file>
+        <file>Resource/Image/Model/CollapsingWorld.jpg</file>
+        <file>Resource/Image/Model/DarkForest.jpg</file>
+        <file>Resource/Image/Model/LASTSTARDUST.jpg</file>
+        <file>Resource/Image/Model/Light.jpg</file>
+        <file>Resource/Image/Model/MaVieEnRose.jpg</file>
+        <file>Resource/Image/Model/NaightNavigationStar.jpg</file>
+        <file>Resource/Image/Model/RainMan.jpg</file>
+        <file>Resource/Image/Model/RunningInTheDark.jpg</file>
+        <file>Resource/Image/Model/STYXHELIX.jpg</file>
     </qresource>
 </RCC>

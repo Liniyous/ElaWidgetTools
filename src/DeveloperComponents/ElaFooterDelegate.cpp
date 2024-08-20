@@ -118,7 +118,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     itemRect.setBottom(itemRect.bottom() - 2);
     QPainterPath path;
     path.addRoundedRect(itemRect, 8, 8);
-    if (option.showDecorationSelected && (option.state & QStyle::State_Selected))
+    if (option.state & QStyle::State_Selected)
     {
         if (option.state & QStyle::State_MouseOver)
         {

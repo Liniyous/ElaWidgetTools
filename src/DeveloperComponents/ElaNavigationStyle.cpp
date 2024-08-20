@@ -82,7 +82,7 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
             itemRect.setBottom(itemRect.bottom() - 2);
             QPainterPath path;
             path.addRoundedRect(itemRect, 8, 8);
-            if (vopt->showDecorationSelected && (vopt->state & QStyle::State_Selected))
+            if (vopt->state & QStyle::State_Selected)
             {
                 if (vopt->state & QStyle::State_MouseOver)
                 {

@@ -4,6 +4,7 @@
 #include <ElaScrollPage.h>
 
 class ElaListView;
+class ElaTableView;
 class T_View : public ElaScrollPage
 {
 public:
@@ -12,6 +13,7 @@ public:
 
 private:
     ElaListView* _listView{nullptr};
+    ElaTableView* _tableView{nullptr};
 };
 
 #endif // T_VIEW_H

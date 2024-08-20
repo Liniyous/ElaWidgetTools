@@ -175,6 +175,11 @@ void ElaDxgi::onGrabScreen()
         DXGI_OUTDUPL_FRAME_INFO frameInfo;
         while (true)
         {
+            if (!_pIsGrabActive)
+            {
+                setIsGrabStoped(true);
+                return;
+            }
             startTime = QDateTime::currentMSecsSinceEpoch();
             _duplication->ReleaseFrame();
             HRESULT hr = _duplication->AcquireNextFrame(_pTimeoutMsValue, &frameInfo, &desktopRes);

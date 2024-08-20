@@ -12,8 +12,9 @@ public:
     ~ElaScrollArea();
 
     void setIsGrabGesture(bool isEnable, qreal mousePressEventDelay = 0.5);
-    void setIsGrabGesture(Qt::Orientation orientation, bool isEnable, qreal mousePressEventDelay = 0.5);
-    bool getIsGrabGesture(Qt::Orientation orientation) const;
+
+    void setIsOverShoot(Qt::Orientation orientation, bool isEnable);
+    bool getIsOverShoot(Qt::Orientation orientation) const;
 
     void setIsAnimation(Qt::Orientation orientation, bool isAnimation);
     bool getIsAnimation(Qt::Orientation orientation) const;

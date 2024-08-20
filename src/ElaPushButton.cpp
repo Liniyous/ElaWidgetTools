@@ -113,7 +113,7 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     // 底边线绘制
     if (!d->_isPressed)
     {
-        painter.setPen(ElaThemeColor(ElaThemeType::Light, PushButtonHemline));
+        painter.setPen(ElaThemeColor(d->_themeMode, PushButtonHemline));
         painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(), height() - d->_shadowBorderWidth);
     }
     //文字绘制

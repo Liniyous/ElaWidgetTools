@@ -35,7 +35,7 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     QRect optionRect = option.rect;
     optionRect.adjust(margin * 2, margin, -margin * 2, -margin);
     path.addRoundedRect(optionRect, 8, 8);
-    if (option.showDecorationSelected && (option.state & QStyle::State_Selected))
+    if (option.state & QStyle::State_Selected)
     {
         if (option.state & QStyle::State_MouseOver)
         {

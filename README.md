@@ -52,6 +52,7 @@
 |ElaImageCard|图片卡片||
 |ElaInteractiveCard|带图片的交互式透明卡片||
 |ElaLineEdit|输入框||
+|ElaListView|列表视图||
 |ElaLog|消息日志||
 |ElaMenu|菜单||
 |ElaMenuBar|菜单栏||
@@ -70,6 +71,7 @@
 |ElaToggleSwitch|开关按钮||
 |ElaTabBar|选项卡|谷歌浏览器风格|
 |ElaTabWidget|选项卡页面|谷歌浏览器风格|
+|ElaTableView|表格视图||
 |ElaToolButton|带下拉菜单的工具按钮||
 |ElaToolBar|工具栏||
 |ElaTheme|主题管理器||

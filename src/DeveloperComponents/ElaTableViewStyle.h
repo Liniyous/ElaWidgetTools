@@ -1,5 +1,6 @@
 #ifndef ELATABLEVIEWSTYLE_H
 #define ELATABLEVIEWSTYLE_H
+#include <QModelIndex>
 #include <QProxyStyle>
 
 #include "Def.h"
@@ -7,17 +8,18 @@ class QStyleOptionViewItem;
 class ElaTableViewStyle : public QProxyStyle
 {
     Q_OBJECT
+    Q_PROPERTY_CREATE(int, HeaderMargin)
+    Q_PROPERTY_CREATE(int, CurrentHoverRow)
 public:
     explicit ElaTableViewStyle(QStyle* style = nullptr);
     ~ElaTableViewStyle();
-    void drawPrimitive(QStyle::PrimitiveElement pe, const QStyleOption* opt, QPainter* p, const QWidget* w) const override;
-    void drawPanelItemViewRow(const QStyleOption* opt, QPainter* p, const QWidget* w) const;
-    Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
+    void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
+    void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
+    int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;
 
 private:
-    QLinearGradient* _hovergradient{nullptr};
-    QLinearGradient* _selectedgradient{nullptr};
-    QLinearGradient* _selectedHovergradient{nullptr};
+    ElaThemeType::ThemeMode _themeMode;
+    int _leftPadding{11};
 };
 
 #endif // ELATABLEVIEWSTYLE_H

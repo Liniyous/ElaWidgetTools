@@ -166,6 +166,7 @@ void ElaPromotionView::wheelEvent(QWheelEvent* event)
             d->onPromotionCardClicked(d->_promotionCardList[d->_getAdjacentIndex(Qt::LeftToRight, d->_pCurrentIndex)]);
         }
     }
+    event->accept();
 }
 
 void ElaPromotionView::paintEvent(QPaintEvent* event)

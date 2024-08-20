@@ -108,6 +108,11 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
     if (this->orientation() == Qt::Horizontal)
     {
         int horizontalDelta = event->angleDelta().x();
+        if ((value() == minimum() && horizontalDelta > 0) || (value() == maximum() && horizontalDelta < 0))
+        {
+            QScrollBar::wheelEvent(event);
+            return;
+        }
         if (d->_lastHorizontalDeltaAngle != horizontalDelta || d->_scrollValue == -1)
         {
             d->_scrollValue = value();
@@ -118,6 +123,11 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
     else
     {
         int verticalDelta = event->angleDelta().y();
+        if ((value() == minimum() && verticalDelta > 0) || (value() == maximum() && verticalDelta < 0))
+        {
+            QScrollBar::wheelEvent(event);
+            return;
+        }
         if (d->_lastVerticalDeltaAngle != verticalDelta || d->_scrollValue == -1)
         {
             d->_scrollValue = value();
@@ -125,6 +135,7 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
         }
         d->_scroll(event->modifiers(), verticalDelta);
     }
+    event->accept();
 }
 
 void ElaScrollBar::contextMenuEvent(QContextMenuEvent* event)
