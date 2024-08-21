@@ -3,12 +3,12 @@
 
 #include <QMetaEnum>
 
-#include "ElaScrollPage.h"
+#include "T_BasePage.h"
 class ElaLineEdit;
 class ElaListView;
 class T_IconModel;
 class T_IconDelegate;
-class T_Icon : public ElaScrollPage
+class T_Icon : public T_BasePage
 {
     Q_OBJECT
 public:

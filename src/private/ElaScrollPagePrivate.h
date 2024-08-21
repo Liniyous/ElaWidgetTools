@@ -15,7 +15,6 @@ class ElaScrollPagePrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaScrollPage)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
 public:
     explicit ElaScrollPagePrivate(QObject* parent = nullptr);
     ~ElaScrollPagePrivate();

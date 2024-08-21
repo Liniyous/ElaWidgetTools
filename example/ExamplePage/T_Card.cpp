@@ -6,8 +6,11 @@
 #include "ElaPromotionView.h"
 
 T_Card::T_Card(QWidget* parent)
-    : ElaScrollPage(parent)
+    : T_BasePage(parent)
 {
+    // 顶部元素
+    QVBoxLayout* topLayout = createTopLayout("一些常用的卡片组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+
     _promotionCard = new ElaPromotionCard(this);
     _promotionCard->setFixedSize(600, 300);
     _promotionCard->setCardPixmap(QPixmap(":/Resource/Image/Card/miku.png"));
@@ -56,6 +59,8 @@ T_Card::T_Card(QWidget* parent)
     centralWidget->setWindowTitle("ElaCard");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
     centerLayout->setContentsMargins(0, 0, 0, 0);
+    centerLayout->addLayout(topLayout);
+    centerLayout->addSpacing(5);
     centerLayout->addWidget(_promotionCard);
     centerLayout->addSpacing(20);
     centerLayout->addWidget(_promotionView);

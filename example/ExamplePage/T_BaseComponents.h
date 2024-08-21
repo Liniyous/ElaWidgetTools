@@ -1,7 +1,7 @@
 ﻿#ifndef T_BASECOMPONENTS_H
 #define T_BASECOMPONENTS_H
 
-#include <ElaScrollPage.h>
+#include "T_BasePage.h"
 
 class ElaToggleSwitch;
 class ElaToggleButton;
@@ -13,7 +13,7 @@ class ElaSpinBox;
 class ElaSlider;
 class ElaRadioButton;
 class ElaProgressBar;
-class T_BaseComponents : public ElaScrollPage
+class T_BaseComponents : public T_BasePage
 {
     Q_OBJECT
 public:

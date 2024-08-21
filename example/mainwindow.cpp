@@ -238,11 +238,11 @@ void MainWindow::initContent()
 #endif
     // navigation(elaScreenWidget->property("ElaPageKey").toString());
     addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
+    addPageNode("ElaView", _viewPage, ElaIconType::CameraViewfinder);
     addPageNode("ElaGraphics", view, 9, ElaIconType::KeySkeleton);
+    addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
     addPageNode("ElaTabWidget", _tabWidgetPage, ElaIconType::Table);
     addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
-    addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
-    addPageNode("ElaView", _viewPage, ElaIconType::CameraViewfinder);
     addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
     addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
     addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);

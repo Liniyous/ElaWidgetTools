@@ -34,7 +34,11 @@ ElaTableView::~ElaTableView()
 void ElaTableView::setHeaderMargin(int headerMargin)
 {
     Q_D(ElaTableView);
-    d->_tableViewStyle->setHeaderMargin(headerMargin);
+    if (headerMargin >= 0)
+    {
+        d->_tableViewStyle->setHeaderMargin(headerMargin);
+        doItemsLayout();
+    }
 }
 
 int ElaTableView::getHeaderMargin() const

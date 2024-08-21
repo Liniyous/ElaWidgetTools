@@ -1,11 +1,12 @@
 #ifndef T_VIEW_H
 #define T_VIEW_H
 
-#include <ElaScrollPage.h>
+#include "T_BasePage.h"
 
 class ElaListView;
 class ElaTableView;
-class T_View : public ElaScrollPage
+class ElaTreeView;
+class T_View : public T_BasePage
 {
 public:
     explicit T_View(QWidget* parent = nullptr);
@@ -14,6 +15,7 @@ public:
 private:
     ElaListView* _listView{nullptr};
     ElaTableView* _tableView{nullptr};
+    ElaTreeView* _treeView{nullptr};
 };
 
 #endif // T_VIEW_H

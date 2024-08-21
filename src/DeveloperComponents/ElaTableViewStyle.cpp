@@ -128,9 +128,6 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             if (!hopt->text.isEmpty())
             {
                 painter->setPen(ElaThemeColor(_themeMode, WindowText));
-                QFont font = painter->font();
-                font.setPixelSize(16);
-                painter->setFont(font);
                 painter->drawText(headerRect, hopt->textAlignment, hopt->text);
             }
             painter->restore();

@@ -87,7 +87,7 @@ int ElaNavigationModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return 1;
-};
+}
 
 QVariant ElaNavigationModel::data(const QModelIndex& index, int role) const
 {

@@ -1,11 +1,11 @@
 #ifndef T_CARD_H
 #define T_CARD_H
 
-#include <ElaScrollPage.h>
+#include "T_BasePage.h"
 
 class ElaPromotionCard;
 class ElaPromotionView;
-class T_Card : public ElaScrollPage
+class T_Card : public T_BasePage
 {
     Q_OBJECT
 public:

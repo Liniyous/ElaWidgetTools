@@ -23,7 +23,6 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setExpandsOnDoubleClick(false);
     setMouseTracking(true);
     setSelectionMode(QAbstractItemView::NoSelection);
-    header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ElaScrollBar* vScrollBar = new ElaScrollBar(this);
     vScrollBar->setisAnimation(true);

@@ -33,7 +33,7 @@ void ElaListView::setItemHeight(int itemHeight)
     if (itemHeight > 0)
     {
         d->_listViewStyle->setItemHeight(itemHeight);
-        update();
+        doItemsLayout();
     }
 }
 

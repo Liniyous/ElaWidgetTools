@@ -13,7 +13,6 @@
 #include "ElaNavigationRouter.h"
 #include "ElaScrollArea.h"
 #include "private/ElaScrollPagePrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaScrollPage, int, BorderRadius)
 ElaScrollPage::ElaScrollPage(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaScrollPagePrivate())
 {
@@ -36,7 +35,6 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     d->_pageTitleLayout->setContentsMargins(0, 0, 0, 0);
     d->_pageTitleLayout->addWidget(d->_breadcrumbBar);
 
-    d->_pBorderRadius = 5;
     d->_centralStackedWidget = new QStackedWidget(this);
     d->_centralStackedWidget->setContentsMargins(0, 0, 0, 0);
 
