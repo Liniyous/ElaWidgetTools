@@ -69,7 +69,7 @@ void ElaTreeViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 QRect indicatorRect = option->rect;
                 indicatorRect.adjust(0, 0, -2, 0);
                 QFont iconFont = QFont("ElaAwesome");
-                iconFont.setPixelSize(vopt->rect.height() / 2 + 1);
+                iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
                 painter->setPen(ElaThemeColor(_themeMode, WindowText));
                 painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight, vopt->state.testFlag(QStyle::State_Open) ? QChar((unsigned short)ElaIconType::AngleDown) : QChar((unsigned short)ElaIconType::AngleRight));
