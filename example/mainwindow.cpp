@@ -21,7 +21,7 @@
 #include "ElaText.h"
 #include "ElaToolBar.h"
 #include "ElaToolButton.h"
-#include "ElaWidget.h"
+#include "T_About.h"
 #include "T_BaseComponents.h"
 #include "T_Card.h"
 #include "T_View.h"
@@ -261,13 +261,14 @@ void MainWindow::initContent()
     addExpanderNode("TEST17", testKey_1, ElaIconType::Acorn);
 
     addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
-    ElaWidget* widget = new ElaWidget();
-    widget->setWindowModality(Qt::ApplicationModal);
-    widget->hide();
+    T_About* aboutPage = new T_About();
+    aboutPage->hide();
     connect(this, &ElaWindow::navigationNodeClicked, this, [=](ElaNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
         {
-            widget->show();
+            aboutPage->setFixedSize(400, 400);
+            aboutPage->moveToCenter();
+            aboutPage->show();
         }
     });
     addFooterNode("Setting", new QWidget(this), _settingKey, 0, ElaIconType::GearComplex);

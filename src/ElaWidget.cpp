@@ -2,6 +2,7 @@
 
 #include <QHBoxLayout>
 #include <QPainter>
+#include <QScreen>
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
@@ -36,6 +37,20 @@ ElaWidget::~ElaWidget()
 {
 }
 
+void ElaWidget::moveToCenter()
+{
+    if (isMaximized() || isFullScreen())
+    {
+        return;
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    auto geometry = screen()->availableGeometry();
+#else
+    auto geometry = qApp->screenAt(this->geometry().center())->geometry();
+#endif
+    setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
+}
+
 void ElaWidget::setIsStayTop(bool isStayTop)
 {
     Q_D(ElaWidget);
@@ -56,6 +71,23 @@ void ElaWidget::setIsFixedSize(bool isFixedSize)
 bool ElaWidget::getIsFixedSize() const
 {
     return d_ptr->_appBar->getIsFixedSize();
+}
+
+void ElaWidget::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)
+{
+    Q_D(ElaWidget);
+    d->_appBar->setWindowButtonFlag(buttonFlag, isEnable);
+}
+
+void ElaWidget::setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags)
+{
+    Q_D(ElaWidget);
+    d->_appBar->setWindowButtonFlags(buttonFlags);
+}
+
+ElaAppBarType::ButtonFlags ElaWidget::getWindowButtonFlags() const
+{
+    return d_ptr->_appBar->getWindowButtonFlags();
 }
 
 void ElaWidget::paintEvent(QPaintEvent* event)

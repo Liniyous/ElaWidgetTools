@@ -214,7 +214,7 @@ int ElaAppBarPrivate::_calculateMinimumWidth()
     {
         width += _iconLabel->width();
     }
-    width += 15;
+    width += 20;
     bool isHasNavigationBar = false;
     if (q->parentWidget()->findChild<ElaNavigationBar*>())
     {

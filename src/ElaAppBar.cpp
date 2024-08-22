@@ -160,7 +160,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_mainLayout->setSpacing(0);
     d->_mainLayout->addLayout(d->_createVLayout(d->_routeBackButton));
     d->_mainLayout->addLayout(d->_createVLayout(d->_navigationButton));
-    d->_mainLayout->addSpacing(5);
+    d->_mainLayout->addSpacing(10);
     d->_mainLayout->addLayout(d->_createVLayout(d->_iconLabel));
     d->_mainLayout->addSpacing(10);
     d->_mainLayout->addLayout(d->_createVLayout(d->_titleLabel));
@@ -743,7 +743,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     }
     case WM_NCLBUTTONDBLCLK:
     {
-        if (!d->_pIsOnlyAllowMinAndClose)
+        if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize)
         {
             return false;
         }
