@@ -1,8 +1,6 @@
 #include "ElaBreadcrumbBar.h"
 
-#include <QFontMetrics>
 #include <QHeaderView>
-#include <QPainter>
 #include <QScroller>
 #include <QVBoxLayout>
 

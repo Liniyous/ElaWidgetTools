@@ -1,5 +1,6 @@
 #include "ElaWidget.h"
 
+#include <QApplication>
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QScreen>

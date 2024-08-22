@@ -1,6 +1,7 @@
 #include "T_About.h"
 
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QVBoxLayout>
 
 #include "ElaImageCard.h"
