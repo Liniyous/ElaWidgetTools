@@ -1,6 +1,7 @@
 #ifndef ELAFOOTERDELEGATE_H
 #define ELAFOOTERDELEGATE_H
 
+#include <QModelIndex>
 #include <QStyledItemDelegate>
 
 #include "Def.h"
@@ -11,6 +12,7 @@ class ElaFooterDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
     Q_PRIVATE_CREATE(ElaBaseListView*, ElaListView);
+    Q_PRIVATE_CREATE(QModelIndex, PressIndex);
 
 public:
     explicit ElaFooterDelegate(QObject* parent = nullptr);

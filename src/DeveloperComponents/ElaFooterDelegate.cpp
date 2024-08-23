@@ -120,23 +120,39 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     path.addRoundedRect(itemRect, 8, 8);
     if (option.state & QStyle::State_Selected)
     {
-        if (option.state & QStyle::State_MouseOver)
+        if (index == _pPressIndex)
         {
-            // 选中时覆盖
-            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+            // 选中时点击
+            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
         }
         else
         {
-            // 选中
-            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelected));
+            if (option.state & QStyle::State_MouseOver)
+            {
+                // 选中时覆盖
+                painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+            }
+            else
+            {
+                // 选中
+                painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelected));
+            }
         }
     }
     else
     {
-        if (option.state & QStyle::State_MouseOver)
+        if (index == _pPressIndex)
         {
-            // 覆盖时颜色
-            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
+            // 点击时颜色
+            painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+        }
+        else
+        {
+            if (option.state & QStyle::State_MouseOver)
+            {
+                // 覆盖时颜色
+                painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
+            }
         }
     }
     painter->restore();
@@ -152,7 +168,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
         painter->drawLine(option.rect.x(), itemRect.y() + 1, option.rect.x() + option.rect.width(), itemRect.y() + 1);
     }
     // 图标绘制
-    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
     if (node->getAwesome() != ElaIconType::None)
     {
         painter->save();
@@ -221,7 +237,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     }
 
     // 文字绘制
-    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
     QRect textRect;
     if (node->getAwesome() != ElaIconType::None)
     {

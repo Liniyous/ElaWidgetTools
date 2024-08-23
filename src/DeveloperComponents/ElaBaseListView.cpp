@@ -1,5 +1,7 @@
 #include "ElaBaseListView.h"
 
+#include <QMouseEvent>
+
 #include "ElaScrollBar.h"
 ElaBaseListView::ElaBaseListView(QWidget* parent)
     : QListView(parent)
@@ -21,4 +23,22 @@ ElaBaseListView::ElaBaseListView(QWidget* parent)
 
 ElaBaseListView::~ElaBaseListView()
 {
+}
+
+void ElaBaseListView::mousePressEvent(QMouseEvent* event)
+{
+    Q_EMIT mousePress(indexAt(event->pos()));
+    QListView::mousePressEvent(event);
+}
+
+void ElaBaseListView::mouseReleaseEvent(QMouseEvent* event)
+{
+    Q_EMIT mouseRelease(indexAt(event->pos()));
+    QListView::mouseReleaseEvent(event);
+}
+
+void ElaBaseListView::mouseDoubleClickEvent(QMouseEvent* event)
+{
+    Q_EMIT mouseDoubleClick(indexAt(event->pos()));
+    QListView::mouseDoubleClickEvent(event);
 }

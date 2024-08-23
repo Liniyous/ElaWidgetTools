@@ -77,6 +77,20 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_footerDelegate = new ElaFooterDelegate(this);
     d->_footerDelegate->setElaListView(d->_footerView);
     d->_footerView->setItemDelegate(d->_footerDelegate);
+    connect(d->_footerView, &ElaBaseListView::mousePress, this, [=](const QModelIndex& index) {
+        d->_footerDelegate->setPressIndex(index);
+        d->_footerView->viewport()->update();
+    });
+    connect(d->_footerView, &ElaBaseListView::mouseDoubleClick, this, [=](const QModelIndex& index) {
+        d->_footerDelegate->setPressIndex(index);
+        d->_footerView->viewport()->update();
+    });
+
+    connect(d->_footerView, &ElaBaseListView::mouseRelease, this, [=](const QModelIndex& index) {
+        d->_footerDelegate->setPressIndex(QModelIndex());
+        d->_footerView->viewport()->update();
+    });
+
     connect(d->_footerView, &ElaBaseListView::clicked, this, [=](const QModelIndex& index) { d->onFooterViewClicked(index); });
 
     //Maximal导航栏
