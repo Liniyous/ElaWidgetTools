@@ -8,6 +8,7 @@ ElaBaseListView::ElaBaseListView(QWidget* parent)
         "QListView{background-color: transparent;border:0px;}"
         "QListView::item{border:none;}");
     setAutoScroll(false);
+    setFocusPolicy(Qt::NoFocus);
     setVerticalScrollBar(new ElaScrollBar(this));
     setHorizontalScrollBar(new ElaScrollBar(this));
     setSelectionMode(QAbstractItemView::NoSelection);

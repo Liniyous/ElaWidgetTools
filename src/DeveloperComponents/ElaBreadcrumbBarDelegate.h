@@ -1,12 +1,14 @@
 #ifndef ELABREADCRUMBBARDELEGATE_H
 #define ELABREADCRUMBBARDELEGATE_H
 
+#include <QModelIndex>
 #include <QStyledItemDelegate>
 
 #include "Def.h"
 class ElaBreadcrumbBarDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
+    Q_PRIVATE_CREATE(QModelIndex, PressIndex)
 public:
     explicit ElaBreadcrumbBarDelegate(QObject* parent = nullptr);
     ~ElaBreadcrumbBarDelegate();

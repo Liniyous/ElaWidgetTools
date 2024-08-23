@@ -26,7 +26,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
     QString breadcrumbUserData = index.data(Qt::UserRole).toString();
     if (breadcrumbUserData != "LastBreadcrumb")
     {
-        if (option.state & QStyle::State_HasFocus)
+        if (_pPressIndex == index)
         {
             //鼠标按下
             painter->setPen(ElaThemeColor(_themeMode, BreadcrumbBarTextHasFocus));
