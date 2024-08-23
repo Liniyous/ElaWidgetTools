@@ -217,6 +217,7 @@ enum ThemeColor
     ToolButtonIndicator,
     WindowText,
     WindowTextDisable,
+    WindowTextPress,
     WindowBaseStart,
     WindowBaseEnd,
     WindowBaseLine,

@@ -71,7 +71,8 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
             painter->save();
-            ElaNavigationNode* node = static_cast<ElaNavigationNode*>(vopt->index.internalPointer());
+            QModelIndex index = vopt->index;
+            ElaNavigationNode* node = static_cast<ElaNavigationNode*>(index.internalPointer());
             if (this->_opacityAnimationTargetNode && node->getParentNode() == this->_opacityAnimationTargetNode)
             {
                 painter->setOpacity(_pOpacity);
@@ -84,23 +85,39 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
             path.addRoundedRect(itemRect, 8, 8);
             if (vopt->state & QStyle::State_Selected)
             {
-                if (vopt->state & QStyle::State_MouseOver)
+                if (index == _pPressIndex)
                 {
-                    // 选中时覆盖
-                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+                    // 选中时点击
+                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
                 }
                 else
                 {
-                    // 选中
-                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelected));
+                    if (vopt->state & QStyle::State_MouseOver)
+                    {
+                        // 选中时覆盖
+                        painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+                    }
+                    else
+                    {
+                        // 选中
+                        painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelected));
+                    }
                 }
             }
             else
             {
-                if (vopt->state & QStyle::State_MouseOver)
+                if (index == _pPressIndex)
                 {
-                    // 覆盖时颜色
-                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
+                    // 点击时颜色
+                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+                }
+                else
+                {
+                    if (vopt->state & QStyle::State_MouseOver)
+                    {
+                        // 覆盖时颜色
+                        painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
+                    }
                 }
             }
             painter->restore();
@@ -154,7 +171,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
             }
 
             // 图标绘制
-            painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
             if (node->getAwesome() != ElaIconType::None)
             {
                 painter->save();
@@ -239,7 +256,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
             }
 
             // 文字绘制
-            painter->setPen(ElaThemeColor(_themeMode, WindowText));
+            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
             QRect textRect;
             if (node->getAwesome() != ElaIconType::None)
             {

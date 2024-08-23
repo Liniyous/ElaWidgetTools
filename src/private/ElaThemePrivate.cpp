@@ -432,6 +432,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::WindowText] = Qt::white;
     _lightThemeColorList[ElaThemeType::WindowTextDisable] = Qt::gray;
     _darkThemeColorList[ElaThemeType::WindowTextDisable] = Qt::gray;
+    _lightThemeColorList[ElaThemeType::WindowTextPress] = QColor(0x5A, 0x5A, 0x5D);
+    _darkThemeColorList[ElaThemeType::WindowTextPress] = QColor(0xBB, 0xBB, 0xBF);
     _lightThemeColorList[ElaThemeType::WindowBaseStart] = QColor(0xF2, 0xF2, 0xF9);
     _darkThemeColorList[ElaThemeType::WindowBaseStart] = QColor(0x1F, 0x1F, 0x2B);
     _lightThemeColorList[ElaThemeType::WindowBaseEnd] = QColor(0xF4, 0xF1, 0xF9);

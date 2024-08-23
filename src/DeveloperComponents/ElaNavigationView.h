@@ -18,6 +18,7 @@ Q_SIGNALS:
     Q_SIGNAL void navigationClicked(const QModelIndex& index);
 
 protected:
+    void mouseDoubleClickEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:

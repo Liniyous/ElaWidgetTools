@@ -1,5 +1,6 @@
 #ifndef ELANAVIGATIONSTYLE_H
 #define ELANAVIGATIONSTYLE_H
+#include <QModelIndex>
 #include <QProxyStyle>
 
 #include "Def.h"
@@ -17,7 +18,7 @@ class ElaNavigationStyle : public QProxyStyle
     Q_PROPERTY_CREATE(qreal, LastSelectMarkBottom)
     Q_PROPERTY_CREATE(qreal, SelectMarkTop)
     Q_PROPERTY_CREATE(qreal, SelectMarkBottom)
-
+    Q_PRIVATE_CREATE(QModelIndex, PressIndex)
 public:
     explicit ElaNavigationStyle(QStyle* style = nullptr);
     ~ElaNavigationStyle();

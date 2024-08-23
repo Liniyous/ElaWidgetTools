@@ -32,19 +32,34 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setVerticalScrollBar(vScrollBar);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
+    _navigationStyle = new ElaNavigationStyle(this->style());
+    _navigationStyle->setNavigationView(this);
+    setStyle(_navigationStyle);
+
     QScroller::grabGesture(this->viewport(), QScroller::LeftMouseButtonGesture);
-    QScrollerProperties properties = QScroller::scroller(this->viewport())->scrollerProperties();
+    QScroller* scroller = QScroller::scroller(this->viewport());
+    QScrollerProperties properties = scroller->scrollerProperties();
     properties.setScrollMetric(QScrollerProperties::MousePressEventDelay, 0);
     properties.setScrollMetric(QScrollerProperties::HorizontalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
     properties.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOn);
     properties.setScrollMetric(QScrollerProperties::OvershootDragResistanceFactor, 0.35);
     properties.setScrollMetric(QScrollerProperties::OvershootScrollTime, 0.5);
     properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
-    QScroller::scroller(this->viewport())->setScrollerProperties(properties);
+    scroller->setScrollerProperties(properties);
 
-    _navigationStyle = new ElaNavigationStyle(this->style());
-    _navigationStyle->setNavigationView(this);
-    setStyle(_navigationStyle);
+    connect(scroller, &QScroller::stateChanged, this, [=](QScroller::State newstate) {
+        if (newstate == QScroller::Pressed)
+        {
+            _navigationStyle->setPressIndex(indexAt(mapFromGlobal(QCursor::pos())));
+            viewport()->update();
+        }
+        else if (newstate == QScroller::Scrolling || newstate == QScroller::Inactive)
+        {
+            _navigationStyle->setPressIndex(QModelIndex());
+        }
+    });
+
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &ElaNavigationView::customContextMenuRequested, this, &ElaNavigationView::onCustomContextMenuRequested);
 }
@@ -72,6 +87,13 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
     }
 }
 
+void ElaNavigationView::mouseDoubleClickEvent(QMouseEvent* event)
+{
+    _navigationStyle->setPressIndex(indexAt(event->pos()));
+    viewport()->update();
+    QTreeView::mouseDoubleClickEvent(event);
+}
+
 void ElaNavigationView::mouseReleaseEvent(QMouseEvent* event)
 {
     QTreeView::mouseReleaseEvent(event);
@@ -82,5 +104,6 @@ void ElaNavigationView::mouseReleaseEvent(QMouseEvent* event)
         {
             Q_EMIT navigationClicked(index);
         }
+        _navigationStyle->setPressIndex(QModelIndex());
     }
 }
