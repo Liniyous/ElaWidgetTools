@@ -88,7 +88,7 @@ bool ElaToolButton::eventFilter(QObject* watched, QEvent* event)
             rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());
             rotateAnimation->setEndValue(0);
             rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-            QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(0, 0), QPoint(0, 0), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+            QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
             QApplication::sendEvent(parentWidget(), &focusEvent);
             break;
         }

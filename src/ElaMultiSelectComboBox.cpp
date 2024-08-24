@@ -293,7 +293,7 @@ void ElaMultiSelectComboBox::hidePopup()
                 QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
                 connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
                     layout->addWidget(view());
-                    QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(0, 0), QPoint(0, 0), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+                    QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
                     QApplication::sendEvent(parentWidget(), &focusEvent);
                 });
                 QPoint viewPos = view()->pos();
