@@ -13,6 +13,7 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
 {
     Q_D(ElaBreadcrumbBar);
     d->q_ptr = this;
+    d->_pTextPixelSize = 18;
     setFixedHeight(37);
     setObjectName("ElaBreadcrumbBar");
     setStyleSheet("#ElaBreadcrumbBar{background-color:transparent;}");
@@ -35,7 +36,7 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
         } });
     QFont textFont = this->font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
-    textFont.setPixelSize(28);
+    textFont.setPixelSize(d->_pTextPixelSize);
     d->_listView->setFont(textFont);
 
     QScroller::grabGesture(d->_listView->viewport(), QScroller::LeftMouseButtonGesture);
@@ -67,6 +68,25 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
 
 ElaBreadcrumbBar::~ElaBreadcrumbBar()
 {
+}
+
+void ElaBreadcrumbBar::setTextPixelSize(int textPixelSize)
+{
+    Q_D(ElaBreadcrumbBar);
+    if (textPixelSize > 0)
+    {
+        d->_pTextPixelSize = textPixelSize;
+        QFont textFont = this->font();
+        textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
+        textFont.setPixelSize(d->_pTextPixelSize);
+        d->_listView->setFont(textFont);
+    }
+}
+
+int ElaBreadcrumbBar::getTextPixelSize() const
+{
+    Q_D(const ElaBreadcrumbBar);
+    return d->_pTextPixelSize;
 }
 
 void ElaBreadcrumbBar::setBreadcrumbList(QStringList breadcrumbList)

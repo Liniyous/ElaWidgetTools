@@ -9,6 +9,8 @@ ElaProgressBar::ElaProgressBar(QWidget* parent)
     : QProgressBar(parent), d_ptr(new ElaProgressBarPrivate())
 {
     Q_D(ElaProgressBar);
+    setObjectName("ElaProgressBar");
+    setStyleSheet("#ElaProgressBar{background-color:transparent;}");
     d->q_ptr = this;
     d->_style = new ElaProgressBarStyle(style());
     setStyle(d->_style);

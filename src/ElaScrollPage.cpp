@@ -20,6 +20,7 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     setProperty("ElaBaseClassName", "ElaScrollPage");
     d->q_ptr = this;
     d->_breadcrumbBar = new ElaBreadcrumbBar(this);
+    d->_breadcrumbBar->setTextPixelSize(28);
     connect(d->_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList) {
         if (d->_centralWidgetMap.contains(breadcrumb))
         {

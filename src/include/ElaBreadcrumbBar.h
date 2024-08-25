@@ -9,6 +9,7 @@ class ELA_EXPORT ElaBreadcrumbBar : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaBreadcrumbBar)
+    Q_PROPERTY_CREATE_Q_H(int, TextPixelSize)
 public:
     explicit ElaBreadcrumbBar(QWidget* parent = nullptr);
     ~ElaBreadcrumbBar();
