@@ -80,6 +80,7 @@ void ElaBreadcrumbBar::setTextPixelSize(int textPixelSize)
         textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
         textFont.setPixelSize(d->_pTextPixelSize);
         d->_listView->setFont(textFont);
+        Q_EMIT pTextPixelSizeChanged();
     }
 }
 

@@ -187,6 +187,14 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::NavigationFooterBaseLine] = QColor(0xD2, 0xD2, 0xD2);
     _darkThemeColorList[ElaThemeType::NavigationFooterBaseLine] = QColor(0x50, 0x50, 0x50);
 
+    //ElaPivot
+    _lightThemeColorList[ElaThemeType::PivotText] = QColor(0x5B, 0x5B, 0x5E);
+    _darkThemeColorList[ElaThemeType::PivotText] = QColor(0xDE, 0xDE, 0xDE);
+    _lightThemeColorList[ElaThemeType::PivotTextHasFocus] = QColor(0x86, 0x86, 0x8A);
+    _darkThemeColorList[ElaThemeType::PivotTextHasFocus] = QColor(0x86, 0x86, 0x8A);
+    _lightThemeColorList[ElaThemeType::PivotMark] = QColor(0x0E, 0x6F, 0xC3);
+    _darkThemeColorList[ElaThemeType::PivotMark] = QColor(0x4C, 0xA0, 0xE0);
+
     //ElaPopularCard
     _lightThemeColorList[ElaThemeType::PopularCardBorder] = QColor(0xEA, 0xEA, 0xED);
     _darkThemeColorList[ElaThemeType::PopularCardBorder] = QColor(0x26, 0x24, 0x2A);
