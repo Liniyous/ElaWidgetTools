@@ -665,6 +665,8 @@ void ElaNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnim
             {
                 _userCard->setVisible(true);
             }
+            _userButton->setFixedSize(36, 36);
+            _userButton->setGeometry(QRect(3, 10, 36, 36));
             _userButton->setVisible(false);
         });
         connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
