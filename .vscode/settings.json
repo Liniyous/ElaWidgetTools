@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "qvboxlayout": "cpp",
+        "qhboxlayout": "cpp",
+        "qpropertyanimation": "cpp",
+        "qscreen": "cpp",
+        "qapplication": "cpp",
+        "qthread": "cpp",
+        "qpainterpath": "cpp",
+        "qpainter": "cpp",
+        "qdebug": "cpp"
+    }
+}

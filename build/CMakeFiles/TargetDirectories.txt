@@ -1,0 +1,12 @@
+D:/workspace/ElaWidgetTools/build/CMakeFiles/INSTALL.dir
+D:/workspace/ElaWidgetTools/build/CMakeFiles/ALL_BUILD.dir
+D:/workspace/ElaWidgetTools/build/CMakeFiles/ZERO_CHECK.dir
+D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/AutoGui.dir
+D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/INSTALL.dir
+D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/ALL_BUILD.dir
+D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample.dir
+D:/workspace/ElaWidgetTools/build/example/CMakeFiles/INSTALL.dir
+D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ALL_BUILD.dir
+D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools.dir
+D:/workspace/ElaWidgetTools/build/src/CMakeFiles/INSTALL.dir
+D:/workspace/ElaWidgetTools/build/src/CMakeFiles/ALL_BUILD.dir

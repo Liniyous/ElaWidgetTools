@@ -1,0 +1,347 @@
+{
+	"BUILD_DIR" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen",
+	"CMAKE_BINARY_DIR" : "D:/workspace/ElaWidgetTools/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/workspace/ElaWidgetTools/build/example",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/workspace/ElaWidgetTools/example",
+	"CMAKE_EXECUTABLE" : "C:/CUDA/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/workspace/ElaWidgetTools/example/CMakeLists.txt",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
+		"D:/workspace/ElaWidgetTools/src/include/ElaWidgetTools.qrc",
+		"D:/workspace/ElaWidgetTools/example/ElaWidgetToolsExample.qrc",
+		"C:/CUDA/CMake/share/cmake-3.28/Modules/GNUInstallDirs.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/workspace/ElaWidgetTools",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_About.h",
+			"MU",
+			"CLKLULXE33/moc_T_About.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_BaseComponents.h",
+			"MU",
+			"CLKLULXE33/moc_T_BaseComponents.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_BasePage.h",
+			"MU",
+			"CLKLULXE33/moc_T_BasePage.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Card.h",
+			"MU",
+			"CLKLULXE33/moc_T_Card.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_ElaScreen.h",
+			"MU",
+			"CLKLULXE33/moc_T_ElaScreen.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Home.h",
+			"MU",
+			"CLKLULXE33/moc_T_Home.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Icon.h",
+			"MU",
+			"CLKLULXE33/moc_T_Icon.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_LogWidget.h",
+			"MU",
+			"CLKLULXE33/moc_T_LogWidget.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Popup.h",
+			"MU",
+			"CLKLULXE33/moc_T_Popup.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_TabWidget.h",
+			"MU",
+			"CLKLULXE33/moc_T_TabWidget.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_UpdateWidget.h",
+			"MU",
+			"CLKLULXE33/moc_T_UpdateWidget.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_View.h",
+			"MU",
+			"CLKLULXE33/moc_T_View.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_IconDelegate.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_IconDelegate.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_IconModel.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_IconModel.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_ListViewModel.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_ListViewModel.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_LogModel.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_LogModel.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_TableViewModel.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_TableViewModel.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_TreeItem.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_TreeItem.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_TreeViewModel.h",
+			"MU",
+			"HN5EUOQNKV/moc_T_TreeViewModel.cpp",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/mainwindow.h",
+			"MU",
+			"EWIEGA46WW/moc_mainwindow.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/include",
+	"INCLUDE_DIR_Debug" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/include_Debug",
+	"INCLUDE_DIR_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/include_MinSizeRel",
+	"INCLUDE_DIR_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/include_RelWithDebInfo",
+	"INCLUDE_DIR_Release" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/include_Release",
+	"MOC_COMPILATION_FILE" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/mocs_compilation.cpp",
+	"MOC_COMPILATION_FILE_Debug" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/mocs_compilation_Debug.cpp",
+	"MOC_COMPILATION_FILE_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/mocs_compilation_MinSizeRel.cpp",
+	"MOC_COMPILATION_FILE_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/mocs_compilation_RelWithDebInfo.cpp",
+	"MOC_COMPILATION_FILE_Release" : "D:/workspace/ElaWidgetTools/build/example/ElaWidgetToolsExample_autogen/mocs_compilation_Release.cpp",
+	"MOC_DEFINITIONS" : [],
+	"MOC_DEFINITIONS_Debug" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEFINITIONS_MinSizeRel" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEFINITIONS_RelWithDebInfo" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEFINITIONS_Release" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_NO_DEBUG", "QT_WIDGETS_LIB", "WIN32" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : [],
+	"MOC_INCLUDES_Debug" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/example/ExamplePage",
+		"D:/workspace/ElaWidgetTools/example/ModelView",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_INCLUDES_MinSizeRel" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/example/ExamplePage",
+		"D:/workspace/ElaWidgetTools/example/ModelView",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_INCLUDES_RelWithDebInfo" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/example/ExamplePage",
+		"D:/workspace/ElaWidgetTools/example/ModelView",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_INCLUDES_Release" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/example/ExamplePage",
+		"D:/workspace/ElaWidgetTools/example/ModelView",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : true,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE_Debug" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/ParseCache_Debug.txt",
+	"PARSE_CACHE_FILE_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/ParseCache_MinSizeRel.txt",
+	"PARSE_CACHE_FILE_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/ParseCache_RelWithDebInfo.txt",
+	"PARSE_CACHE_FILE_Release" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/ParseCache_Release.txt",
+	"QT_MOC_EXECUTABLE" : "C:/Qt/5.15.2/msvc2019_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "C:/Qt/5.15.2/msvc2019_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE_Debug" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/AutogenUsed_Debug.txt",
+	"SETTINGS_FILE_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/AutogenUsed_MinSizeRel.txt",
+	"SETTINGS_FILE_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
+	"SETTINGS_FILE_Release" : "D:/workspace/ElaWidgetTools/build/example/CMakeFiles/ElaWidgetToolsExample_autogen.dir/AutogenUsed_Release.txt",
+	"SOURCES" : 
+	[
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_About.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_BaseComponents.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_BasePage.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Card.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_ElaScreen.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Home.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Icon.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_LogWidget.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_Popup.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_TabWidget.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_UpdateWidget.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ExamplePage/T_View.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_IconDelegate.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_IconModel.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_ListViewModel.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_LogModel.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_TableViewModel.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_TreeItem.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/workspace/ElaWidgetTools/example/ModelView/T_TreeViewModel.cpp",
+			"MU",
+			null
+		],
+		[ "D:/workspace/ElaWidgetTools/example/main.cpp", "MU", null ],
+		[ "D:/workspace/ElaWidgetTools/example/mainwindow.cpp", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}

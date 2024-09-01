@@ -1,0 +1,646 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F6156FE4-BA3A-3AC8-9D16-70225B934F21}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <VcpkgEnabled>false</VcpkgEnabled>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>AutoGui</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="do_not_import_user.props" Condition="exists('do_not_import_user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\ElaWidgetTools\build\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AutoGui.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AutoGui</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\ElaWidgetTools\build\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AutoGui.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AutoGui</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\workspace\ElaWidgetTools\build\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">AutoGui.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">AutoGui</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\workspace\ElaWidgetTools\build\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">AutoGui.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">AutoGui</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_Debug;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/5.15.2/msvc2019_64/include" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtWidgets" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtGui" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtANGLE" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtCore" /external:I "C:/Qt/5.15.2/msvc2019_64/./mkspecs/win32-msvc" /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_Debug;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_Debug;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target AutoGui</Message>
+      <Command>setlocal
+cd D:\workspace\ElaWidgetTools\build\AutoGui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+C:\CUDA\CMake\bin\cmake.exe -E cmake_autogen D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/AutoGui_autogen.dir/AutogenInfo.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/CUDA/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/workspace/ElaWidgetTools/build/Debug/AutoGui.exe -installedDir C:/CUDA/vcpkg/installed/x64-windows/debug/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\src\Debug\elawidgettoolsd.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Widgetsd.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Guid.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Cored.lib;C:\Qt\5.15.2\msvc2019_64\lib\qtmaind.lib;D3D11.lib;DXGI.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/workspace/ElaWidgetTools/build/Debug/AutoGui.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/workspace/ElaWidgetTools/build/Debug/AutoGui.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_Release;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/5.15.2/msvc2019_64/include" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtWidgets" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtGui" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtANGLE" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtCore" /external:I "C:/Qt/5.15.2/msvc2019_64/./mkspecs/win32-msvc" /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_Release;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_Release;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target AutoGui</Message>
+      <Command>setlocal
+cd D:\workspace\ElaWidgetTools\build\AutoGui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+C:\CUDA\CMake\bin\cmake.exe -E cmake_autogen D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/AutoGui_autogen.dir/AutogenInfo.json Release
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/CUDA/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/workspace/ElaWidgetTools/build/Release/AutoGui.exe -installedDir C:/CUDA/vcpkg/installed/x64-windows/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\src\Release\elawidgettools.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Widgets.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Gui.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Core.lib;C:\Qt\5.15.2\msvc2019_64\lib\qtmain.lib;D3D11.lib;DXGI.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/workspace/ElaWidgetTools/build/Release/AutoGui.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/workspace/ElaWidgetTools/build/Release/AutoGui.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_MinSizeRel;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/5.15.2/msvc2019_64/include" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtWidgets" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtGui" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtANGLE" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtCore" /external:I "C:/Qt/5.15.2/msvc2019_64/./mkspecs/win32-msvc" /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_MinSizeRel;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_MinSizeRel;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target AutoGui</Message>
+      <Command>setlocal
+cd D:\workspace\ElaWidgetTools\build\AutoGui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+C:\CUDA\CMake\bin\cmake.exe -E cmake_autogen D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/AutoGui_autogen.dir/AutogenInfo.json MinSizeRel
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/CUDA/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/workspace/ElaWidgetTools/build/MinSizeRel/AutoGui.exe -installedDir C:/CUDA/vcpkg/installed/x64-windows/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\src\MinSizeRel\elawidgettools.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Widgets.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Gui.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Core.lib;C:\Qt\5.15.2\msvc2019_64\lib\qtmain.lib;D3D11.lib;DXGI.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/workspace/ElaWidgetTools/build/MinSizeRel/AutoGui.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/workspace/ElaWidgetTools/build/MinSizeRel/AutoGui.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_RelWithDebInfo;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Qt/5.15.2/msvc2019_64/include" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtWidgets" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtGui" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtANGLE" /external:I "C:/Qt/5.15.2/msvc2019_64/include/QtCore" /external:I "C:/Qt/5.15.2/msvc2019_64/./mkspecs/win32-msvc" /utf-8</AdditionalOptions>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;QT_NO_DEBUG;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_RelWithDebInfo;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\include_RelWithDebInfo;D:\workspace\ElaWidgetTools\AutoGui\..\src\include;D:\workspace\ElaWidgetTools\AutoGui\ExamplePage;D:\workspace\ElaWidgetTools\AutoGui\ModelView;D:\workspace\ElaWidgetTools\AutoGui\StaticSrc;D:\workspace\ElaWidgetTools\AutoGui\DXGI;C:\Qt\5.15.2\msvc2019_64\include;C:\Qt\5.15.2\msvc2019_64\include\QtWidgets;C:\Qt\5.15.2\msvc2019_64\include\QtGui;C:\Qt\5.15.2\msvc2019_64\include\QtANGLE;C:\Qt\5.15.2\msvc2019_64\include\QtCore;C:\Qt\5.15.2\msvc2019_64\.\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Automatic MOC and UIC for target AutoGui</Message>
+      <Command>setlocal
+cd D:\workspace\ElaWidgetTools\build\AutoGui
+if %errorlevel% neq 0 goto :cmEnd
+D:
+if %errorlevel% neq 0 goto :cmEnd
+C:\CUDA\CMake\bin\cmake.exe -E cmake_autogen D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/AutoGui_autogen.dir/AutogenInfo.json RelWithDebInfo
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Message></Message>
+      <Command>setlocal
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/CUDA/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary D:/workspace/ElaWidgetTools/build/RelWithDebInfo/AutoGui.exe -installedDir C:/CUDA/vcpkg/installed/x64-windows/bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalDependencies>..\src\RelWithDebInfo\elawidgettools.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Widgets.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Gui.lib;C:\Qt\5.15.2\msvc2019_64\lib\Qt5Core.lib;C:\Qt\5.15.2\msvc2019_64\lib\qtmain.lib;D3D11.lib;DXGI.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>D:/workspace/ElaWidgetTools/build/RelWithDebInfo/AutoGui.lib</ImportLibrary>
+      <ProgramDataBaseFile>D:/workspace/ElaWidgetTools/build/RelWithDebInfo/AutoGui.pdb</ProgramDataBaseFile>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\src\include\ElaWidgetTools.qrc">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating qrc_ElaWidgetTools.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name ElaWidgetTools --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_ElaWidgetTools.cpp D:/workspace/ElaWidgetTools/src/include/ElaWidgetTools.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\ElaWidgetTools\src\include\Font\ElaAwesome.ttf;D:\workspace\ElaWidgetTools\src\include\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\src\include\Image\Moon.jpg;D:\workspace\ElaWidgetTools\src\include\Image\noise.png;D:\workspace\ElaWidgetTools\build\AutoGui\__\src\include\ElaWidgetTools.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_ElaWidgetTools.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating qrc_ElaWidgetTools.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name ElaWidgetTools --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_ElaWidgetTools.cpp D:/workspace/ElaWidgetTools/src/include/ElaWidgetTools.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\ElaWidgetTools\src\include\Font\ElaAwesome.ttf;D:\workspace\ElaWidgetTools\src\include\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\src\include\Image\Moon.jpg;D:\workspace\ElaWidgetTools\src\include\Image\noise.png;D:\workspace\ElaWidgetTools\build\AutoGui\__\src\include\ElaWidgetTools.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_ElaWidgetTools.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating qrc_ElaWidgetTools.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name ElaWidgetTools --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_ElaWidgetTools.cpp D:/workspace/ElaWidgetTools/src/include/ElaWidgetTools.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\workspace\ElaWidgetTools\src\include\Font\ElaAwesome.ttf;D:\workspace\ElaWidgetTools\src\include\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\src\include\Image\Moon.jpg;D:\workspace\ElaWidgetTools\src\include\Image\noise.png;D:\workspace\ElaWidgetTools\build\AutoGui\__\src\include\ElaWidgetTools.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_ElaWidgetTools.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating qrc_ElaWidgetTools.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name ElaWidgetTools --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_ElaWidgetTools.cpp D:/workspace/ElaWidgetTools/src/include/ElaWidgetTools.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\workspace\ElaWidgetTools\src\include\Font\ElaAwesome.ttf;D:\workspace\ElaWidgetTools\src\include\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\src\include\Image\Moon.jpg;D:\workspace\ElaWidgetTools\src\include\Image\noise.png;D:\workspace\ElaWidgetTools\build\AutoGui\__\src\include\ElaWidgetTools.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_ElaWidgetTools.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\AutoGui\AutoGui.qrc">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating qrc_AutoGui.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name AutoGui --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_AutoGui.cpp D:/workspace/ElaWidgetTools/AutoGui/AutoGui.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Acrylic.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedIcon.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedVisualPlayer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimationInterop.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarSeparator.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutomationProperties.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutoSuggestBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Border.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\BreadcrumbBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Button.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarDatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Canvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Checkbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Clipboard.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPaletteResources.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ComboBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBarFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CompactSizing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ConnectedAnimation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ContentDialog.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CreateMultipleWindows.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DataGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DropDownButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\EasingFunction.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Expander.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FilePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FlipView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Flyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Grid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\GridView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\HyperlinkButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\IconElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Image.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ImplicitTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBadge.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkCanvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkToolbar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InputValidation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ItemsRepeater.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Line.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MediaPlayerElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NavigationView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NumberBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PageTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ParallaxView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PasswordBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PersonPicture.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PipsPager.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Pivot.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressRing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PullToRefresh.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadialGradientBrush.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButtons.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RatingControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RelativePanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RepeatButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RevealFocus.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichEditBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichTextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ScrollViewer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SemanticZoom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Shape.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Slider.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Sound.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StackPanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StandardUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SwipeControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TabView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TeachingTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ThemeTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TimePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TitleBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSwitch.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToolTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TreeView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\VariableSizedWrapGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Viewbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\WebView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\XamlUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\github.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Home_Background.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Moon.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\beach.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\classroom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\dream.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\miku.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_12+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_16+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_18+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_3+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_7+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\CollapsingWorld.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\DarkForest.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\LASTSTARDUST.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\Light.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\MaVieEnRose.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\NaightNavigationStar.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RainMan.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RunningInTheDark.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\STYXHELIX.jpg;D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_AutoGui.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating qrc_AutoGui.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name AutoGui --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_AutoGui.cpp D:/workspace/ElaWidgetTools/AutoGui/AutoGui.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Acrylic.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedIcon.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedVisualPlayer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimationInterop.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarSeparator.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutomationProperties.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutoSuggestBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Border.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\BreadcrumbBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Button.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarDatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Canvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Checkbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Clipboard.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPaletteResources.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ComboBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBarFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CompactSizing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ConnectedAnimation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ContentDialog.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CreateMultipleWindows.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DataGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DropDownButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\EasingFunction.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Expander.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FilePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FlipView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Flyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Grid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\GridView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\HyperlinkButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\IconElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Image.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ImplicitTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBadge.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkCanvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkToolbar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InputValidation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ItemsRepeater.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Line.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MediaPlayerElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NavigationView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NumberBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PageTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ParallaxView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PasswordBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PersonPicture.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PipsPager.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Pivot.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressRing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PullToRefresh.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadialGradientBrush.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButtons.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RatingControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RelativePanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RepeatButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RevealFocus.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichEditBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichTextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ScrollViewer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SemanticZoom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Shape.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Slider.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Sound.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StackPanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StandardUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SwipeControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TabView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TeachingTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ThemeTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TimePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TitleBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSwitch.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToolTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TreeView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\VariableSizedWrapGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Viewbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\WebView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\XamlUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\github.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Home_Background.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Moon.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\beach.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\classroom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\dream.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\miku.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_12+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_16+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_18+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_3+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_7+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\CollapsingWorld.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\DarkForest.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\LASTSTARDUST.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\Light.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\MaVieEnRose.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\NaightNavigationStar.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RainMan.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RunningInTheDark.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\STYXHELIX.jpg;D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_AutoGui.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Generating qrc_AutoGui.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name AutoGui --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_AutoGui.cpp D:/workspace/ElaWidgetTools/AutoGui/AutoGui.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Acrylic.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedIcon.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedVisualPlayer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimationInterop.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarSeparator.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutomationProperties.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutoSuggestBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Border.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\BreadcrumbBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Button.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarDatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Canvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Checkbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Clipboard.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPaletteResources.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ComboBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBarFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CompactSizing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ConnectedAnimation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ContentDialog.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CreateMultipleWindows.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DataGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DropDownButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\EasingFunction.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Expander.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FilePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FlipView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Flyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Grid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\GridView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\HyperlinkButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\IconElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Image.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ImplicitTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBadge.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkCanvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkToolbar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InputValidation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ItemsRepeater.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Line.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MediaPlayerElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NavigationView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NumberBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PageTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ParallaxView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PasswordBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PersonPicture.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PipsPager.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Pivot.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressRing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PullToRefresh.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadialGradientBrush.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButtons.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RatingControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RelativePanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RepeatButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RevealFocus.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichEditBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichTextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ScrollViewer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SemanticZoom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Shape.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Slider.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Sound.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StackPanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StandardUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SwipeControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TabView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TeachingTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ThemeTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TimePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TitleBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSwitch.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToolTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TreeView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\VariableSizedWrapGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Viewbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\WebView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\XamlUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\github.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Home_Background.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Moon.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\beach.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\classroom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\dream.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\miku.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_12+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_16+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_18+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_3+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_7+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\CollapsingWorld.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\DarkForest.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\LASTSTARDUST.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\Light.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\MaVieEnRose.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\NaightNavigationStar.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RainMan.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RunningInTheDark.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\STYXHELIX.jpg;D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_AutoGui.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Generating qrc_AutoGui.cpp</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+C:\Qt\5.15.2\msvc2019_64\bin\rcc.exe --name AutoGui --output D:/workspace/ElaWidgetTools/build/AutoGui/qrc_AutoGui.cpp D:/workspace/ElaWidgetTools/AutoGui/AutoGui.qrc
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Acrylic.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedIcon.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimatedVisualPlayer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AnimationInterop.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarSeparator.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AppBarToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutomationProperties.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\AutoSuggestBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Border.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\BreadcrumbBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Button.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarDatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CalendarView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Canvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Checkbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Clipboard.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPaletteResources.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ColorPicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ComboBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CommandBarFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CompactSizing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ConnectedAnimation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ContentDialog.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\CreateMultipleWindows.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DataGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DatePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\DropDownButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\EasingFunction.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Expander.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FilePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\FlipView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Flyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Grid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\GridView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\HyperlinkButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\IconElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Image.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ImplicitTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBadge.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InfoBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkCanvas.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InkToolbar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\InputValidation.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ItemsRepeater.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Line.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ListView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MediaPlayerElement.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\MenuFlyout.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NavigationView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\NumberBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PageTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ParallaxView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PasswordBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PersonPicture.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PipsPager.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Pivot.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ProgressRing.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\PullToRefresh.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadialGradientBrush.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RadioButtons.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RatingControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RelativePanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RepeatButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RevealFocus.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichEditBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\RichTextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ScrollViewer.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SemanticZoom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Shape.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Slider.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Sound.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SplitView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StackPanel.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\StandardUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\SwipeControl.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TabView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TeachingTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBlock.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TextBox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ThemeTransition.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TimePicker.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TitleBar.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSplitButton.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToggleSwitch.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\ToolTip.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\TreeView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\VariableSizedWrapGrid.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\Viewbox.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\WebView.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\control\XamlUICommand.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Cirno.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\github.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Home_Background.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Moon.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\beach.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\classroom.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\dream.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Card\miku.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_12+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_16+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_18+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_3+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\IARC\IARC_7+.svg.png;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\CollapsingWorld.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\DarkForest.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\LASTSTARDUST.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\Light.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\MaVieEnRose.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\NaightNavigationStar.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RainMan.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\RunningInTheDark.jpg;D:\workspace\ElaWidgetTools\AutoGui\Resource\Image\Model\STYXHELIX.jpg;D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui.qrc.depends;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\qrc_AutoGui.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\AutoGui\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/workspace/ElaWidgetTools/AutoGui/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+C:\CUDA\CMake\bin\cmake.exe -SD:/workspace/ElaWidgetTools -BD:/workspace/ElaWidgetTools/build --check-stamp-file D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\CUDA\CMake\share\cmake-3.28\Modules\GNUInstallDirs.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;D:\workspace\ElaWidgetTools\AutoGui\AutoGui.qrc;D:\workspace\ElaWidgetTools\src\include\ElaWidgetTools.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/workspace/ElaWidgetTools/AutoGui/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+C:\CUDA\CMake\bin\cmake.exe -SD:/workspace/ElaWidgetTools -BD:/workspace/ElaWidgetTools/build --check-stamp-file D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\CUDA\CMake\share\cmake-3.28\Modules\GNUInstallDirs.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;D:\workspace\ElaWidgetTools\AutoGui\AutoGui.qrc;D:\workspace\ElaWidgetTools\src\include\ElaWidgetTools.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/workspace/ElaWidgetTools/AutoGui/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+C:\CUDA\CMake\bin\cmake.exe -SD:/workspace/ElaWidgetTools -BD:/workspace/ElaWidgetTools/build --check-stamp-file D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\CUDA\CMake\share\cmake-3.28\Modules\GNUInstallDirs.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;D:\workspace\ElaWidgetTools\AutoGui\AutoGui.qrc;D:\workspace\ElaWidgetTools\src\include\ElaWidgetTools.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/workspace/ElaWidgetTools/AutoGui/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+C:\CUDA\CMake\bin\cmake.exe -SD:/workspace/ElaWidgetTools -BD:/workspace/ElaWidgetTools/build --check-stamp-file D:/workspace/ElaWidgetTools/build/AutoGui/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\CUDA\CMake\share\cmake-3.28\Modules\GNUInstallDirs.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5Config.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5\Qt5ModuleLocation.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Gui\Qt5GuiConfigVersion.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfig.cmake;C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Widgets\Qt5WidgetsConfigVersion.cmake;D:\workspace\ElaWidgetTools\AutoGui\AutoGui.qrc;D:\workspace\ElaWidgetTools\src\include\ElaWidgetTools.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\workspace\ElaWidgetTools\build\AutoGui\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_Debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\DXGI\DxgiWidget.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\DXGI\DxgiWidgrt.cpp" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_About.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_About.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BaseComponents.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BaseComponents.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BasePage.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BasePage.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Card.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Card.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_ElaScreen.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_ElaScreen.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Home.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Home.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Icon.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Icon.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_LogWidget.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_LogWidget.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Popup.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Popup.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_TabWidget.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_TabWidget.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_UpdateWidget.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_UpdateWidget.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_View.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_View.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconDelegate.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconDelegate.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconModel.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconModel.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_ListViewModel.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_ListViewModel.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_LogModel.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_LogModel.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TableViewModel.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TableViewModel.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeItem.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeItem.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeViewModel.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeViewModel.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\StaticSrc\T_AppConfig.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\StaticSrc\T_AppConfig.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\T_mainwindow.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\T_mainwindow.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\main.cpp" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\mainwindow.cpp" />
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\mainwindow.h" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\qrc_ElaWidgetTools.cpp" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\qrc_AutoGui.cpp" />
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_Release.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_MinSizeRel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\workspace\ElaWidgetTools\build\ZERO_CHECK.vcxproj">
+      <Project>{E8273634-3EEA-3086-94B6-0DE5D8A3806C}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="D:\workspace\ElaWidgetTools\build\src\elawidgettools.vcxproj">
+      <Project>{F4D87D7D-D065-3E30-A785-FDD54FB39139}</Project>
+      <Name>elawidgettools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

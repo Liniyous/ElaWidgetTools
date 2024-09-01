@@ -28,6 +28,7 @@ public:
     bool setOutputDeviceID(int deviceID);
     int getOutputDeviceID() const;
     void setGrabArea(int width, int height); //从屏幕中心向外延伸
+    void setGrabArea(int width, int height, int screenIndex);
     void setGrabArea(int x, int y, int width, int height);
     QRect getGrabArea() const;
     void setGrabFrameRate(int frameRateValue);

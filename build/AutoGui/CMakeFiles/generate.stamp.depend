@@ -1,0 +1,12 @@
+# CMake generation dependency list for this directory.
+C:/CUDA/CMake/share/cmake-3.28/Modules/GNUInstallDirs.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake
+C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake
+D:/workspace/ElaWidgetTools/AutoGui/AutoGui.qrc
+D:/workspace/ElaWidgetTools/AutoGui/CMakeLists.txt
+D:/workspace/ElaWidgetTools/src/include/ElaWidgetTools.qrc

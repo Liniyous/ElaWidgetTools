@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\build\CMakeFiles\db062cdda2c66601be13d3d46c4a1195\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{2DC6D77E-6862-39B9-9E98-31FF094AA1AE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

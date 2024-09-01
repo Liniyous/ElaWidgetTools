@@ -266,7 +266,7 @@ void ElaDxgi::onGrabScreen()
         }
         _cpuSleepTime = (1000 - _lastGrabTime * _pGrabFrameRate) / _pGrabFrameRate;
         cpuSleep(_cpuSleepTime * 1000);
-        // qDebug() << _cpuSleepTime << _lastGrabTime;
+         //qDebug() << _cpuSleepTime << _lastGrabTime;
     }
     setIsGrabStoped(true);
 }

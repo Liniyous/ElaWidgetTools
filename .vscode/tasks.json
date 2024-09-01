@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake Configure",
+            "type": "shell",
+            "command": "C:\\CUDA\\CMake\\bin\\cmake.exe",
+            "args": [
+                "-DCMAKE_TOOLCHAIN_FILE:STRING=C:/CUDA/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE",
+                "--no-warn-unused-cli",
+                "-SD:/workspace/ElaWidgetTools",
+                "-Bd:/workspace/ElaWidgetTools/build",
+                "-G", "Visual Studio 16 2019",
+                "-T", "host=x64",
+                "-A", "x64"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "CMake Build",
+            "type": "shell",
+            "command": "C:\\CUDA\\CMake\\bin\\cmake.exe",
+            "args": [
+                "--build",
+                "d:/workspace/ElaWidgetTools/build",
+                "--config",
+                "Release",
+                "--target",
+                "AutoGui",
+                "-j",
+                "34"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        }
+    ]
+}

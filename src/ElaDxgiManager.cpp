@@ -1,15 +1,16 @@
 #include "ElaDxgiManager.h"
 #ifdef Q_OS_WIN
+#include <QScreen>
 #include <d3d11.h>
 #include <dxgi1_6.h>
 #include <windows.h>
-
 #include <QApplication>
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QThread>
 #include <QUrl>
+
 
 #include "ElaDxgi.h"
 #include "ElaDxgiManagerPrivate.h"
@@ -58,6 +59,8 @@ ElaDxgiManager::~ElaDxgiManager()
         d->_dxgiThread->wait();
     }
     delete d->_dxgi;
+    d->_dxgi = nullptr; // 防止悬空指针
+    d->_dxgiThread = nullptr;
 }
 
 QStringList ElaDxgiManager::getDxDeviceList() const
@@ -138,17 +141,21 @@ bool ElaDxgiManager::setOutputDeviceID(int deviceID)
     {
         return false;
     }
-
+    
     d->_dxgi->setIsGrabActive(false);
+    
     while (!d->_dxgi->getIsGrabStoped())
     {
+        setGrabArea(0,0,deviceID);
         //等待任务结束
         QApplication::processEvents();
     }
     if (d->_dxgi->initialize(d->_dxgi->getDxDeviceID(), deviceID))
     {
+        
         if (d->_isAllowedGrabScreen)
         {
+            
             d->_dxgi->setIsGrabActive(true);
             Q_EMIT d->grabScreen();
         }
@@ -166,32 +173,115 @@ int ElaDxgiManager::getOutputDeviceID() const
 void ElaDxgiManager::setGrabArea(int width, int height)
 {
     Q_D(ElaDxgiManager);
-    int maxWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-    int maxHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-    if (width <= 0 || width > maxWidth)
+    
+    //auto screenIndex=d_dx->getOutputDeviceID();
+    d->_dxgi->setIsGrabActive(false);
+    
+    while (!d->_dxgi->getIsGrabStoped())
     {
-        width = maxWidth;
+        setGrabArea(0,0,d->_dxgi->getOutputDeviceID());
+        //等待任务结束
+        QApplication::processEvents();
     }
-    if (height <= 0 || height > maxHeight)
-    {
-        height = maxHeight;
-    }
-    d->_dxgi->setGrabArea(QRect((maxWidth - width) / 2, (maxHeight - height) / 2, width, height));
-}
+    // // 获取指定索引的屏幕
+    // QScreen* screen = QGuiApplication::screens().at(d->_dxgi->getOutputDeviceID());
 
+    // // 获取屏幕的实际几何尺寸（包括任务栏）
+    // QRect screenGeometry = screen->geometry();
+
+    // // 获取屏幕DPI缩放因子
+    // qreal dpiFactor = screen->devicePixelRatio();
+
+    // // 获取屏幕的真实分辨率（包括DPI缩放）
+    // int screenWidth = screenGeometry.width() * dpiFactor;
+    // int screenHeight = screenGeometry.height() * dpiFactor;
+
+    // // 根据DPI因子调整宽高
+    // if (width <= 0 || width > screenWidth)
+    // {
+    //     width = screenWidth;
+    // }
+    // if (height <= 0 || height > screenHeight)
+    // {
+    //     height = screenHeight;
+    // }
+    
+    // d->_dxgi->setGrabArea(QRect(0, 0, width, height));
+}
+void ElaDxgiManager::setGrabArea(int width, int height,int screenIndex)
+{
+    Q_D(ElaDxgiManager);
+    //auto screenIndex=d->_dxgi->getOutputDeviceID();
+    
+    // 获取指定索引的屏幕
+    QScreen* screen = QGuiApplication::screens().at(screenIndex);
+
+    // 获取屏幕的实际几何尺寸（包括任务栏）
+    QRect screenGeometry = screen->geometry();
+
+    // 获取屏幕DPI缩放因子
+    qreal dpiFactor = screen->devicePixelRatio();
+
+    // 获取屏幕的真实分辨率（包括DPI缩放）
+    int screenWidth = screenGeometry.width() * dpiFactor;
+    int screenHeight = screenGeometry.height() * dpiFactor;
+
+    // 根据DPI因子调整宽高
+    if (width <= 0 || width > screenWidth)
+    {
+        width = screenWidth;
+    }
+    if (height <= 0 || height > screenHeight)
+    {
+        height = screenHeight;
+    }
+
+    d->_dxgi->setGrabArea(QRect(0, 0, width, height));
+
+}
 void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
 {
     Q_D(ElaDxgiManager);
-    int maxWidth = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-    int maxHeight = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-    if (width <= 0 || width > maxWidth)
+    auto screenIndex=d->_dxgi->getOutputDeviceID();
+    
+  // 获取指定索引的屏幕
+    QScreen* screen = QGuiApplication::screens().at(screenIndex);
+
+    // 获取屏幕的实际几何尺寸（包括任务栏）
+    QRect screenGeometry = screen->geometry();
+
+    // 获取屏幕DPI缩放因子
+    qreal dpiFactor = screen->devicePixelRatio();
+
+    // 获取屏幕的真实分辨率（包括DPI缩放）
+    int screenWidth = screenGeometry.width() * dpiFactor;
+    int screenHeight = screenGeometry.height() * dpiFactor;
+
+    // 根据DPI因子调整宽高
+    if (width <= 0 || width > screenWidth)
     {
-        width = maxWidth;
+        width = screenWidth;
     }
-    if (height <= 0 || height > maxHeight)
+    if (height <= 0 || height > screenHeight)
     {
-        height = maxHeight;
+        height = screenHeight;
     }
+
+    // 确保起始位置在屏幕范围内
+    if (x < screenGeometry.left())
+    {
+        x = screenGeometry.left();
+    }
+    if (y < screenGeometry.top())
+    {
+        y = screenGeometry.top();
+    }
+
+    // 打印调试信息
+    //qDebug() << "Screen Geometry: " << screenGeometry;
+    //qDebug() << "Grab Area: " << QRect(x, y, width, height);
+
+    // 设置捕获区域
     d->_dxgi->setGrabArea(QRect(x, y, width, height));
 }
 
@@ -250,10 +340,12 @@ ElaDxgiScreen::ElaDxgiScreen(QWidget* parent)
 
 ElaDxgiScreen::~ElaDxgiScreen()
 {
+    
 }
 
 void ElaDxgiScreen::paintEvent(QPaintEvent* event)
 {
+    
     Q_D(ElaDxgiScreen);
     QPainter painter(this);
     painter.save();
@@ -262,8 +354,40 @@ void ElaDxgiScreen::paintEvent(QPaintEvent* event)
     path.addRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
     painter.drawImage(rect(), d->_dxgiManager->grabScreenToImage());
     painter.restore();
-}
 
+}
+// void ElaDxgiScreen::paintEvent(QPaintEvent* event)
+// {
+//     Q_D(ElaDxgiScreen);
+
+//     // 创建并启动计时器
+//     QElapsedTimer timer;
+//     timer.start();
+
+//     // 执行绘制操作
+//     QPainter painter(this);
+//     painter.save();
+//     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing, false);
+
+//     // 使用 QPixmap 进行绘制
+//     QPixmap pixmap = QPixmap::fromImage(d->_dxgiManager->grabScreenToImage());
+//     painter.drawPixmap(rect(), pixmap);
+
+//     painter.restore();
+
+//     // 计算并输出绘制耗时
+//     qint64 elapsed = timer.elapsed();
+    
+//     // 打印绘制耗时
+//     //qDebug() << "绘制操作耗时：" << elapsed << "毫秒";
+    
+//     // 绘制耗时文本
+//     painter.save();
+//     painter.setPen(Qt::red); // 设置文本颜色
+//     painter.setFont(QFont("Arial", 12)); // 设置字体和字号
+//     painter.drawText(rect().adjusted(10, 10, 0, 0), Qt::AlignLeft, QString("绘制耗时：%1 ms").arg(elapsed));
+//     painter.restore();
+// }
 void ElaDxgiScreen::setIsSyncGrabSize(bool isSyncGrabSize)
 {
     Q_D(ElaDxgiScreen);

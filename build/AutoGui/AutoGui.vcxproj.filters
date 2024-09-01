@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\DXGI\DxgiWidgrt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_About.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BaseComponents.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BasePage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Card.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_ElaScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Home.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Icon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_LogWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Popup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_TabWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_UpdateWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_View.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_ListViewModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_LogModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TableViewModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeViewModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\StaticSrc\T_AppConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\T_mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\AutoGui\mainwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\qrc_ElaWidgetTools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\qrc_AutoGui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_Release.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_MinSizeRel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\workspace\ElaWidgetTools\build\AutoGui\AutoGui_autogen\mocs_compilation_RelWithDebInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\DXGI\DxgiWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_About.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BaseComponents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_BasePage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Card.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_ElaScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Home.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Icon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_LogWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_Popup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_TabWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_UpdateWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ExamplePage\T_View.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconDelegate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_IconModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_ListViewModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_LogModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TableViewModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\ModelView\T_TreeViewModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\StaticSrc\T_AppConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\T_mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\workspace\ElaWidgetTools\AutoGui\mainwindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\src\include\ElaWidgetTools.qrc" />
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\AutoGui\AutoGui.qrc" />
+    <CustomBuild Include="D:\workspace\ElaWidgetTools\AutoGui\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{C360E65C-46FB-356C-B1FD-C62126B2F687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F44DAFF2-31F5-348A-86E3-3524E958C4F7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

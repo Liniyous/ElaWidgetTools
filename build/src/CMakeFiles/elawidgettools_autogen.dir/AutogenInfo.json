@@ -1,0 +1,156 @@
+{
+	"BUILD_DIR" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen",
+	"CMAKE_BINARY_DIR" : "D:/workspace/ElaWidgetTools/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "D:/workspace/ElaWidgetTools/build/src",
+	"CMAKE_CURRENT_SOURCE_DIR" : "D:/workspace/ElaWidgetTools/src",
+	"CMAKE_EXECUTABLE" : "C:/CUDA/CMake/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/CMakeLists.txt",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5Config.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake",
+		"C:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "D:/workspace/ElaWidgetTools",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : [],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/include",
+	"INCLUDE_DIR_Debug" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/include_Debug",
+	"INCLUDE_DIR_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/include_MinSizeRel",
+	"INCLUDE_DIR_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/include_RelWithDebInfo",
+	"INCLUDE_DIR_Release" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/include_Release",
+	"MOC_COMPILATION_FILE" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/mocs_compilation.cpp",
+	"MOC_COMPILATION_FILE_Debug" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/mocs_compilation_Debug.cpp",
+	"MOC_COMPILATION_FILE_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/mocs_compilation_MinSizeRel.cpp",
+	"MOC_COMPILATION_FILE_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/mocs_compilation_RelWithDebInfo.cpp",
+	"MOC_COMPILATION_FILE_Release" : "D:/workspace/ElaWidgetTools/build/src/elawidgettools_autogen/mocs_compilation_Release.cpp",
+	"MOC_DEFINITIONS" : [],
+	"MOC_DEFINITIONS_Debug" : 
+	[
+		"ELAWIDGETTOOLS_LIBRARY",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_WIDGETS_LIB",
+		"WIN32"
+	],
+	"MOC_DEFINITIONS_MinSizeRel" : 
+	[
+		"ELAWIDGETTOOLS_LIBRARY",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"WIN32"
+	],
+	"MOC_DEFINITIONS_RelWithDebInfo" : 
+	[
+		"ELAWIDGETTOOLS_LIBRARY",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"WIN32"
+	],
+	"MOC_DEFINITIONS_Release" : 
+	[
+		"ELAWIDGETTOOLS_LIBRARY",
+		"QT_CORE_LIB",
+		"QT_GUI_LIB",
+		"QT_NO_DEBUG",
+		"QT_WIDGETS_LIB",
+		"WIN32"
+	],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : [],
+	"MOC_INCLUDES_Debug" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/src/private",
+		"D:/workspace/ElaWidgetTools/src/DeveloperComponents",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_INCLUDES_MinSizeRel" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/src/private",
+		"D:/workspace/ElaWidgetTools/src/DeveloperComponents",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_INCLUDES_RelWithDebInfo" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/src/private",
+		"D:/workspace/ElaWidgetTools/src/DeveloperComponents",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_INCLUDES_Release" : 
+	[
+		"D:/workspace/ElaWidgetTools/src/include",
+		"D:/workspace/ElaWidgetTools/src/private",
+		"D:/workspace/ElaWidgetTools/src/DeveloperComponents",
+		"C:/Qt/5.15.2/msvc2019_64/include",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtWidgets",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtGui",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtANGLE",
+		"C:/Qt/5.15.2/msvc2019_64/include/QtCore",
+		"C:/Qt/5.15.2/msvc2019_64/mkspecs/win32-msvc"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : true,
+	"PARALLEL" : 16,
+	"PARSE_CACHE_FILE" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE_Debug" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/ParseCache_Debug.txt",
+	"PARSE_CACHE_FILE_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/ParseCache_MinSizeRel.txt",
+	"PARSE_CACHE_FILE_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/ParseCache_RelWithDebInfo.txt",
+	"PARSE_CACHE_FILE_Release" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/ParseCache_Release.txt",
+	"QT_MOC_EXECUTABLE" : "C:/Qt/5.15.2/msvc2019_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "C:/Qt/5.15.2/msvc2019_64/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE_Debug" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/AutogenUsed_Debug.txt",
+	"SETTINGS_FILE_MinSizeRel" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/AutogenUsed_MinSizeRel.txt",
+	"SETTINGS_FILE_RelWithDebInfo" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/AutogenUsed_RelWithDebInfo.txt",
+	"SETTINGS_FILE_Release" : "D:/workspace/ElaWidgetTools/build/src/CMakeFiles/elawidgettools_autogen.dir/AutogenUsed_Release.txt",
+	"SOURCES" : [],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}
