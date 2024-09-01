@@ -164,6 +164,7 @@ void ElaNavigationBar::setUserInfoCardPixmap(QPixmap pix)
 {
     Q_D(ElaNavigationBar);
     d->_userCard->setCardPixmap(pix);
+    d->_userButton->setPixmap(pix);
 }
 
 void ElaNavigationBar::setUserInfoCardTitle(QString title)
