@@ -30,6 +30,14 @@ ElaSuggestBoxPrivate::~ElaSuggestBoxPrivate()
 {
 }
 
+void ElaSuggestBoxPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
+{
+    _themeMode = themeMode;
+    _searchEdit->removeAction(_themeMode == ElaThemeType::Light ? _darkSearchAction : _lightSearchAction);
+    _searchEdit->addAction(_themeMode == ElaThemeType::Light ? _lightSearchAction : _darkSearchAction, QLineEdit::TrailingPosition);
+    _searchEdit->update();
+}
+
 void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
 {
     Q_Q(ElaSuggestBox);

@@ -20,6 +20,8 @@ class ElaWindowPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(ElaWindow)
     Q_PROPERTY_CREATE_D(int, ThemeChangeTime)
+    Q_PROPERTY_CREATE_D(bool, IsEnableMica)
+    Q_PROPERTY_CREATE_D(QString, MicaImagePath)
     Q_PROPERTY_CREATE_D(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
 
 public:
@@ -33,7 +35,15 @@ public:
     Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
 
+Q_SIGNALS:
+    Q_SIGNAL void initMicaBase(QImage img);
+
 private:
+    friend class ElaMicaBaseInitObject;
+    ElaThemeType::ThemeMode _themeMode;
+    QImage _lightBaseImage;
+    QImage _darkBaseImage;
+
     bool _isInitFinished{false};
     ElaEvent* _focusEvent{nullptr};
     ElaNavigationBar* _navigationBar{nullptr};
@@ -42,7 +52,6 @@ private:
     QLinearGradient* _windowLinearGradient{nullptr};
     QHBoxLayout* _centerLayout{nullptr};
     int _contentsMargins{5};
-    int _compactBarWidth{45};
     bool _isNavigationEnable{true};
     bool _isNavigationBarExpanded{false};
     bool _isWMClickedAnimationFinished{true};
@@ -56,6 +65,8 @@ private:
     qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);
     void _doNavigationDisplayModeChange();
+    void _initMicaBaseImage(QImage img);
+    QRect _calculateWindowVirtualGeometry();
 };
 
 #endif // ELAWINDOWPRIVATE_H

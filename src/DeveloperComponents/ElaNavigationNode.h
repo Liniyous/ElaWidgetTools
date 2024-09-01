@@ -5,7 +5,7 @@
 #include <QObject>
 
 #include "Def.h"
-class ElaNavigationNodePrivate;
+
 class ElaNavigationNode : public QObject
 {
     Q_OBJECT

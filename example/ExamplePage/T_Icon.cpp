@@ -53,7 +53,7 @@ T_Icon::T_Icon(QWidget* parent)
     centerVLayout->addSpacing(13);
     centerVLayout->addWidget(_searchEdit);
     centerVLayout->addWidget(_iconView);
-    this->addCentralWidget(centralWidget);
+    this->addCentralWidget(centralWidget, true, true, 0);
 }
 
 T_Icon::~T_Icon()

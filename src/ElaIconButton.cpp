@@ -2,6 +2,7 @@
 
 #include <QFont>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPropertyAnimation>
 
 #include "ElaTheme.h"
@@ -15,6 +16,27 @@ Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, LightHoverIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, QColor, DarkHoverIconColor);
 Q_PROPERTY_CREATE_Q_CPP(ElaIconButton, bool, IsSelected);
+ElaIconButton::ElaIconButton(QPixmap pix, QWidget* parent)
+    : QPushButton(parent), d_ptr(new ElaIconButtonPrivate())
+{
+    Q_D(ElaIconButton);
+    d->q_ptr = this;
+    d->_iconPix = pix.copy();
+    d->_pHoverAlpha = 0;
+    d->_pOpacity = 1;
+    d->_pLightHoverColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultHover);
+    d->_pDarkHoverColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultHover);
+    d->_pLightIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
+    d->_pDarkIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
+    d->_pLightHoverIconColor = ElaThemeColor(ElaThemeType::Light, IconButtonDefaultIconText);
+    d->_pDarkHoverIconColor = ElaThemeColor(ElaThemeType::Dark, IconButtonDefaultIconText);
+    d->_pIsSelected = false;
+    d->_pBorderRadius = 0;
+    d->_themeMode = eTheme->getThemeMode();
+    connect(this, &ElaIconButton::pIsSelectedChanged, this, [=]() { update(); });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+}
+
 ElaIconButton::ElaIconButton(ElaIconType::IconName awesome, QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaIconButtonPrivate())
 {
@@ -107,6 +129,12 @@ ElaIconType::IconName ElaIconButton::getAwesome() const
     return this->d_ptr->_pAwesome;
 }
 
+void ElaIconButton::setPixmap(QPixmap pix)
+{
+    Q_D(ElaIconButton);
+    d->_iconPix = pix.copy();
+}
+
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 void ElaIconButton::enterEvent(QEnterEvent* event)
 #else
@@ -175,12 +203,19 @@ void ElaIconButton::paintEvent(QPaintEvent* event)
     }
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
     // 图标绘制
-    painter.setPen(isEnabled() ? d->_themeMode == ElaThemeType::Light ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor : underMouse() ? d->_pDarkHoverIconColor
-                                                                                                                                                     : d->_pDarkIconColor
-                               : ElaThemeColor(d->_themeMode, WindowTextDisable));
-    QColor color = isEnabled() ? d->_themeMode == ElaThemeType::Light ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor : underMouse() ? d->_pDarkHoverIconColor
-                                                                                                                                                     : d->_pDarkIconColor
-                               : ElaThemeColor(d->_themeMode, WindowTextDisable);
-    painter.drawText(0, 0, width(), height(), Qt::AlignVCenter | Qt::AlignHCenter, QChar((unsigned short)d->_pAwesome));
+    if (!d->_iconPix.isNull())
+    {
+        QPainterPath path;
+        path.addEllipse(rect());
+        painter.setClipPath(path);
+        painter.drawPixmap(rect(), d->_iconPix);
+    }
+    else
+    {
+        painter.setPen(isEnabled() ? d->_themeMode == ElaThemeType::Light ? underMouse() ? d->_pLightHoverIconColor : d->_pLightIconColor : underMouse() ? d->_pDarkHoverIconColor
+                                                                                                                                                         : d->_pDarkIconColor
+                                   : ElaThemeColor(d->_themeMode, WindowTextDisable));
+        painter.drawText(0, 0, width(), height(), Qt::AlignVCenter | Qt::AlignHCenter, QChar((unsigned short)d->_pAwesome));
+    }
     painter.restore();
 }

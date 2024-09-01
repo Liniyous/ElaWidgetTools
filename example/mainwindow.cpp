@@ -67,6 +67,7 @@ void MainWindow::onCloseButtonClicked()
 
 void MainWindow::initWindow()
 {
+    // setIsEnableMica(true);
     setWindowIcon(QIcon(":/include/Image/Cirno.jpg"));
     resize(1200, 740);
     // ElaLog::getInstance()->initMessageLog(true);

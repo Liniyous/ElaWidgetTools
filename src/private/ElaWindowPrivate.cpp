@@ -1,7 +1,10 @@
 #include "ElaWindowPrivate.h"
 
+#include <QGuiApplication>
 #include <QImage>
 #include <QPropertyAnimation>
+#include <QScreen>
+#include <QThread>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QtMath>
@@ -10,6 +13,7 @@
 #include "ElaAppBarPrivate.h"
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
+#include "ElaMicaBaseInitObject.h"
 #include "ElaNavigationBar.h"
 #include "ElaTheme.h"
 #include "ElaThemeAnimationWidget.h"
@@ -60,6 +64,7 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
             QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
             connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
                 _navigationBar->setIsTransparent(true);
+                _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
                 _isWMClickedAnimationFinished = true;
             });
             navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
@@ -89,14 +94,10 @@ void ElaWindowPrivate::onThemeReadyChange()
         _animationWidget->setOldWindowBackground(q->grab(q->rect()).toImage());
         if (eTheme->getThemeMode() == ElaThemeType::Light)
         {
-            _windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Dark, WindowBaseStart));
-            _windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Dark, WindowBaseEnd));
             eTheme->setThemeMode(ElaThemeType::Dark);
         }
         else
         {
-            _windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
-            _windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
             eTheme->setThemeMode(ElaThemeType::Light);
         }
         _animationWidget->setNewWindowBackground(q->grab(q->rect()).toImage());
@@ -147,10 +148,25 @@ void ElaWindowPrivate::onDisplayModeChanged()
 void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaWindow);
-    _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, WindowBaseStart));
-    _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, WindowBaseEnd));
+    _themeMode = themeMode;
     QPalette palette = q->palette();
-    palette.setBrush(QPalette::Window, *_windowLinearGradient);
+    if (_pIsEnableMica)
+    {
+        if (_themeMode == ElaThemeType::Light)
+        {
+            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()));
+        }
+        else
+        {
+            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()));
+        }
+    }
+    else
+    {
+        _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, WindowBaseStart));
+        _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, WindowBaseEnd));
+        palette.setBrush(QPalette::Window, *_windowLinearGradient);
+    }
     q->setPalette(palette);
 }
 
@@ -261,4 +277,60 @@ void ElaWindowPrivate::_doNavigationDisplayModeChange()
         }
         _isNavigationBarExpanded = false;
     }
+}
+
+void ElaWindowPrivate::_initMicaBaseImage(QImage img)
+{
+    Q_Q(ElaWindow);
+    if (img.isNull())
+    {
+        return;
+    }
+    QThread* initThread = new QThread();
+    ElaMicaBaseInitObject* initObject = new ElaMicaBaseInitObject(this);
+    connect(initThread, &QThread::finished, initObject, &ElaMicaBaseInitObject::deleteLater);
+    connect(initObject, &ElaMicaBaseInitObject::initFinished, initThread, [=]() {
+        QPalette palette = q->palette();
+        if (_themeMode == ElaThemeType::Light)
+        {
+            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()));
+        }
+        else
+        {
+            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()));
+        }
+        q->setPalette(palette);
+        initThread->quit();
+        initThread->wait();
+        initThread->deleteLater();
+    });
+    initObject->moveToThread(initThread);
+    initThread->start();
+    connect(this, &ElaWindowPrivate::initMicaBase, initObject, &ElaMicaBaseInitObject::onInitMicaBase);
+    Q_EMIT initMicaBase(img);
+}
+
+QRect ElaWindowPrivate::_calculateWindowVirtualGeometry()
+{
+    Q_Q(ElaWindow);
+    QRect geometry = q->geometry();
+    qreal xImageRatio = 1, yImageRatio = 1;
+    QRect relativeGeometry;
+    if (qApp->screens().count() > 1)
+    {
+        QScreen* currentScreen = qApp->screenAt(geometry.topLeft());
+        if (currentScreen)
+        {
+            QRect screenGeometry = currentScreen->availableGeometry();
+            xImageRatio = (qreal)_lightBaseImage.width() / screenGeometry.width();
+            yImageRatio = (qreal)_lightBaseImage.height() / screenGeometry.height();
+            relativeGeometry = QRect((geometry.x() - screenGeometry.x()) * xImageRatio, (geometry.y() - screenGeometry.y()) * yImageRatio, geometry.width() * xImageRatio, geometry.height() * yImageRatio);
+            return relativeGeometry;
+        }
+    }
+    QRect primaryScreenGeometry = qApp->primaryScreen()->availableGeometry();
+    xImageRatio = (qreal)_lightBaseImage.width() / primaryScreenGeometry.width();
+    yImageRatio = (qreal)_lightBaseImage.height() / primaryScreenGeometry.height();
+    relativeGeometry = QRect((geometry.x() - primaryScreenGeometry.x()) * xImageRatio, (geometry.y() - primaryScreenGeometry.y()) * yImageRatio, geometry.width() * xImageRatio, geometry.height() * yImageRatio);
+    return relativeGeometry;
 }

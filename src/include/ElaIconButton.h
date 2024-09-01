@@ -21,12 +21,15 @@ class ELA_EXPORT ElaIconButton : public QPushButton
     Q_PROPERTY_CREATE_Q_H(bool, IsSelected);
 
 public:
+    ElaIconButton(QPixmap pix, QWidget* parent = nullptr);
     ElaIconButton(ElaIconType::IconName awesome, QWidget* parent = nullptr);
     ElaIconButton(ElaIconType::IconName awesome, int pixelSize, QWidget* parent = nullptr);
     ElaIconButton(ElaIconType::IconName awesome, int pixelSize, int fixedWidth, int fixedHeight, QWidget* parent = nullptr);
     ~ElaIconButton();
     void setAwesome(ElaIconType::IconName awesome);
     ElaIconType::IconName getAwesome() const;
+
+    void setPixmap(QPixmap pix);
 
 protected:
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)

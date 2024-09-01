@@ -8,10 +8,9 @@
 #include <QVBoxLayout>
 
 #include "ElaBaseListView.h"
-#include "ElaCompactDelegate.h"
-#include "ElaCompactModel.h"
 #include "ElaFooterDelegate.h"
 #include "ElaFooterModel.h"
+#include "ElaIconButton.h"
 #include "ElaInteractiveCard.h"
 #include "ElaMenu.h"
 #include "ElaNavigationModel.h"
@@ -33,13 +32,53 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, NavigationBaseStart));
     d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, NavigationBaseEnd));
 
-    d->_navigationModel = new ElaNavigationModel(this);
-    d->_navigationView = new ElaNavigationView(this);
-    d->_navigationView->setModel(d->_navigationModel);
-    connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
+    //用户卡片
+    d->_userCard = new ElaInteractiveCard(this);
+    d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
+    d->_userCard->setTitle("Ela Tool");
+    d->_userCard->setSubTitle("Liniyous@gmail.com");
+    connect(d->_userCard, &ElaInteractiveCard::clicked, this, &ElaNavigationBar::userInfoCardClicked);
+    d->_userButton = new ElaIconButton(QPixmap(":/include/Image/Cirno.jpg"), this);
+    d->_userButton->setFixedSize(36, 36);
+    d->_userButton->setVisible(false);
+    d->_userButton->setBorderRadius(8);
+    d->_userButtonLayout = new QVBoxLayout();
+    d->_userButtonLayout->setAlignment(Qt::AlignLeft);
+    d->_userButtonLayout->setContentsMargins(0, 0, 0, 6);
+    d->_userButtonLayout->setSpacing(0);
+    d->_userButtonLayout->addWidget(d->_userButton);
+
+    connect(d->_userButton, &ElaIconButton::clicked, this, &ElaNavigationBar::userInfoCardClicked);
+    QHBoxLayout* userCardLayout = new QHBoxLayout();
+    userCardLayout->setContentsMargins(0, 0, 0, 0);
+    userCardLayout->addSpacing(3);
+    userCardLayout->addLayout(d->_userButtonLayout);
+    userCardLayout->addWidget(d->_userCard);
+
+    // 搜索栏和按钮组
+    d->_navigationButton = new ElaIconButton(ElaIconType::Bars, 16, 40, 38, this);
+    d->_navigationButton->setBorderRadius(8);
+    connect(d->_navigationButton, &ElaIconButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
+
+    d->_searchButton = new ElaIconButton(ElaIconType::MagnifyingGlass, 16, 40, 38, this);
+    d->_searchButton->setBorderRadius(8);
+    connect(d->_searchButton, &ElaIconButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
+    d->_searchButton->setVisible(false);
 
     d->_navigationSuggestBox = new ElaSuggestBox(this);
-    d->_navigationSuggestBox->setMaximumWidth(300);
+    d->_navigationSuggestBox->setMinimumWidth(0);
+    d->_navigationButtonLayout = new QVBoxLayout();
+    d->_navigationButtonLayout->setContentsMargins(0, 0, 0, 0);
+    d->_navigationButtonLayout->setSpacing(0);
+    d->_navigationButtonLayout->addWidget(d->_navigationButton);
+    d->_navigationButtonLayout->addWidget(d->_searchButton);
+
+    d->_navigationSuggestLayout = new QHBoxLayout();
+    d->_navigationSuggestLayout->setContentsMargins(0, 0, 10, 0);
+    d->_navigationSuggestLayout->setSpacing(6);
+    d->_navigationSuggestLayout->addLayout(d->_navigationButtonLayout);
+    d->_navigationSuggestLayout->addWidget(d->_navigationSuggestBox);
+
     // 搜索跳转
     connect(d->_navigationSuggestBox, &ElaSuggestBox::suggestionClicked, this, [=](QString suggestText, QVariantMap suggestData) {
         ElaNavigationNode* node = nullptr;
@@ -61,11 +100,11 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
         }
     });
 
-    d->_userCard = new ElaInteractiveCard(this);
-    d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
-    d->_userCard->setTitle("Ela Tool");
-    d->_userCard->setSubTitle("Liniyous@gmail.com");
-    connect(d->_userCard, &ElaInteractiveCard::clicked, this, &ElaNavigationBar::userInfoCardClicked);
+    // 导航模型
+    d->_navigationModel = new ElaNavigationModel(this);
+    d->_navigationView = new ElaNavigationView(this);
+    d->_navigationView->setModel(d->_navigationModel);
+    connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
 
     // 页脚
     d->_footerView = new ElaBaseListView(this);
@@ -85,60 +124,22 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
         d->_footerDelegate->setPressIndex(index);
         d->_footerView->viewport()->update();
     });
-
     connect(d->_footerView, &ElaBaseListView::mouseRelease, this, [=](const QModelIndex& index) {
         d->_footerDelegate->setPressIndex(QModelIndex());
         d->_footerView->viewport()->update();
     });
-
     connect(d->_footerView, &ElaBaseListView::clicked, this, [=](const QModelIndex& index) { d->onFooterViewClicked(index); });
 
-    //Maximal导航栏
-    d->_maximalWidget = new QWidget(this);
-    QVBoxLayout* maximalLayout = new QVBoxLayout(d->_maximalWidget);
-    maximalLayout->setContentsMargins(5, 10, 10, 0);
-    maximalLayout->addWidget(d->_userCard);
-    maximalLayout->addSpacing(6);
-    maximalLayout->addWidget(d->_navigationSuggestBox);
-    maximalLayout->addSpacing(6);
-    maximalLayout->addWidget(d->_navigationView);
-    maximalLayout->addWidget(d->_footerView);
-
-    //compact
-    d->_compactWidget = new QWidget(this);
-    QVBoxLayout* compactLayout = new QVBoxLayout(d->_compactWidget);
-    compactLayout->setContentsMargins(0, 10, 0, 0);
-
-    d->_compactView = new ElaBaseListView(this);
-    d->_compactView->setFixedWidth(40);
-    d->_compactView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    d->_compactView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    d->_compactModel = new ElaCompactModel(this);
-    d->_compactView->setModel(d->_compactModel);
-    d->_compactDelegate = new ElaCompactDelegate(this);
-    d->_compactDelegate->setElaListView(d->_compactView);
-    d->_compactView->setItemDelegate(d->_compactDelegate);
-    compactLayout->addWidget(d->_compactView);
-    connect(d->_compactView, &ElaBaseListView::clicked, this, [=](const QModelIndex& index) { d->onCompactViewClicked(index); });
-    QScroller::grabGesture(d->_compactView->viewport(), QScroller::LeftMouseButtonGesture);
-    QScrollerProperties properties = QScroller::scroller(d->_compactView->viewport())->scrollerProperties();
-#if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3))
-    properties.setScrollMetric(QScrollerProperties::MousePressEventDelay, 0);
-#endif
-    properties.setScrollMetric(QScrollerProperties::HorizontalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
-    properties.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOn);
-    properties.setScrollMetric(QScrollerProperties::OvershootDragResistanceFactor, 0.35);
-    properties.setScrollMetric(QScrollerProperties::OvershootScrollTime, 0.5);
-    properties.setScrollMetric(QScrollerProperties::FrameRate, QScrollerProperties::Fps60);
-    QScroller::scroller(d->_compactView->viewport())->setScrollerProperties(properties);
-
-    d->_mainLayout = new QHBoxLayout(this);
-    d->_mainLayout->setAlignment(Qt::AlignLeft);
-    d->_mainLayout->setSpacing(0);
-    d->_mainLayout->setContentsMargins(0, 0, 0, 0);
-    d->_mainLayout->addWidget(d->_maximalWidget);
-    d->_mainLayout->addWidget(d->_compactWidget);
-    d->_compactWidget->setVisible(false);
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+    mainLayout->setAlignment(Qt::AlignLeft);
+    mainLayout->setSpacing(0);
+    mainLayout->setContentsMargins(0, 10, 5, 0);
+    mainLayout->addLayout(userCardLayout);
+    mainLayout->addSpacing(4);
+    mainLayout->addLayout(d->_navigationSuggestLayout);
+    mainLayout->addSpacing(4);
+    mainLayout->addWidget(d->_navigationView);
+    mainLayout->addWidget(d->_footerView);
 
     //主题设置
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
@@ -151,7 +152,12 @@ ElaNavigationBar::~ElaNavigationBar()
 void ElaNavigationBar::setUserInfoCardVisible(bool isVisible)
 {
     Q_D(ElaNavigationBar);
+    d->_isShowUserCard = isVisible;
     d->_userCard->setVisible(isVisible);
+    if (!isVisible)
+    {
+        d->_userButton->setVisible(false);
+    }
 }
 
 void ElaNavigationBar::setUserInfoCardPixmap(QPixmap pix)
@@ -178,8 +184,6 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addExpanderNode(QStri
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addExpanderNode(expanderTitle, expanderKey, awesome);
     if (returnType == ElaNavigationType::Success)
     {
-        ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(expanderKey);
-        d->_compactModel->addCompactNode(node);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
     }
@@ -209,12 +213,6 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addPageNode(pageTitle, pageKey, awesome);
     if (returnType == ElaNavigationType::Success)
     {
-        ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(pageKey);
-        d_ptr->_compactModel->addCompactNode(node);
-        if (!d_ptr->_compactModel->getSelectedNode())
-        {
-            d_ptr->_compactModel->setSelectedNode(d_ptr->_navigationModel->getSelectedNode()->getOriginalNode());
-        }
         d_ptr->_addStackedPage(page, pageKey);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
@@ -274,12 +272,6 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addPageNode(pageTitle, pageKey, keyPoints, awesome);
     if (returnType == ElaNavigationType::Success)
     {
-        ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(pageKey);
-        d_ptr->_compactModel->addCompactNode(node);
-        if (!d_ptr->_compactModel->getSelectedNode())
-        {
-            d_ptr->_compactModel->setSelectedNode(d_ptr->_navigationModel->getSelectedNode()->getOriginalNode());
-        }
         d_ptr->_addStackedPage(page, pageKey);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
@@ -338,8 +330,6 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_footerModel->addFooterNode(footerTitle, footerKey, page ? true : false, keyPoints, awesome);
     if (returnType == ElaNavigationType::Success)
     {
-        ElaNavigationNode* node = d_ptr->_footerModel->getNavigationNode(footerKey);
-        d_ptr->_compactModel->addCompactNode(node);
         d_ptr->_addFooterPage(page, footerKey);
     }
     return returnType;
@@ -406,92 +396,8 @@ void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode d
     {
         return;
     }
-    ElaNavigationType::NavigationDisplayMode lastMode = d->_currentDisplayMode;
+    d->_doComponentAnimation(displayMode, isAnimation);
     d->_raiseNavigationBar();
-    switch (displayMode)
-    {
-    case ElaNavigationType::Minimal:
-    {
-        QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(this, "maximumWidth");
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            setFixedWidth(value.toUInt());
-        });
-        navigationBarWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        navigationBarWidthAnimation->setStartValue(width());
-        navigationBarWidthAnimation->setEndValue(0);
-        navigationBarWidthAnimation->setDuration(isAnimation ? 300 : 0);
-        navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-
-        while (d->_mainLayout->count() > 0)
-        {
-            d->_mainLayout->takeAt(0);
-        }
-        d->_compactWidget->resize(40, height());
-        d->_compactWidget->setVisible(true);
-        d->_startContentWidgetAnimation(d->_compactWidget->pos(), QPoint(-45, d->_compactWidget->pos().y()), isAnimation);
-        break;
-    }
-    case ElaNavigationType::Compact:
-    {
-        QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(this, "maximumWidth");
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            setFixedWidth(value.toUInt());
-        });
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
-            d->_switchContentLayout(true);
-        });
-        navigationBarWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        navigationBarWidthAnimation->setStartValue(width());
-        navigationBarWidthAnimation->setEndValue(45);
-        navigationBarWidthAnimation->setDuration(isAnimation ? 300 : 0);
-        navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        if (lastMode == ElaNavigationType::Maximal)
-        {
-            while (d->_mainLayout->count() > 0)
-            {
-                d->_mainLayout->takeAt(0);
-            }
-            d->_compactWidget->resize(40, height());
-            d->_compactWidget->setVisible(true);
-            d->_startContentWidgetAnimation(QPoint(width(), d->_compactWidget->pos().y()), QPoint(0, d->_compactWidget->pos().y()), isAnimation);
-        }
-        else
-        {
-            d->_resetNavigationLayout(ElaNavigationType::Minimal);
-            d->_startContentWidgetAnimation(d->_compactWidget->pos(), QPoint(0, d->_compactWidget->pos().y()), isAnimation);
-        }
-        break;
-    }
-    case ElaNavigationType::Maximal:
-    {
-        QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(this, "maximumWidth");
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            setFixedWidth(value.toUInt());
-        });
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
-            d->_switchContentLayout(false);
-        });
-        navigationBarWidthAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        navigationBarWidthAnimation->setStartValue(width());
-        navigationBarWidthAnimation->setEndValue(300);
-        navigationBarWidthAnimation->setDuration(isAnimation ? 300 : 0);
-        navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-
-        while (d->_mainLayout->count() > 0)
-        {
-            d->_mainLayout->takeAt(0);
-        }
-        d->_maximalWidget->resize(300, height());
-        d->_maximalWidget->setVisible(true);
-        d->_startContentWidgetAnimation(d->_compactWidget->pos(), QPoint(300, d->_compactWidget->pos().y()), isAnimation);
-        break;
-    }
-    default:
-    {
-        return;
-    }
-    }
-    d->_currentDisplayMode = displayMode;
 }
 
 void ElaNavigationBar::paintEvent(QPaintEvent* event)
@@ -511,14 +417,4 @@ void ElaNavigationBar::paintEvent(QPaintEvent* event)
     painter.drawRoundedRect(rect(), 8, 8);
     painter.restore();
     QWidget::paintEvent(event);
-}
-
-void ElaNavigationBar::resizeEvent(QResizeEvent* event)
-{
-    Q_D(ElaNavigationBar);
-    if (d->_currentDisplayMode == ElaNavigationType::Compact)
-    {
-        d->_compactWidget->resize(d->_compactWidget->width(), this->height());
-    }
-    QWidget::resizeEvent(event);
 }

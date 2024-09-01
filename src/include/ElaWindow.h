@@ -12,8 +12,9 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_OBJECT
     Q_Q_CREATE(ElaWindow)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
+    Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
+    Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
-
 public:
     explicit ElaWindow(QWidget* parent = nullptr);
     ~ElaWindow();
@@ -65,6 +66,7 @@ Q_SIGNALS:
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
 
 protected:
+    virtual void moveEvent(QMoveEvent* event) override;
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual void resizeEvent(QResizeEvent* event) override;
     virtual QMenu* createPopupMenu() override;

@@ -3,6 +3,7 @@
 
 #include <QColor>
 #include <QObject>
+#include <QPixmap>
 
 #include "Def.h"
 #include "stdafx.h"
@@ -27,6 +28,7 @@ public:
     ~ElaIconButtonPrivate();
 
 private:
+    QPixmap _iconPix;
     bool _isAlphaAnimationFinished{true};
     ElaThemeType::ThemeMode _themeMode;
 };

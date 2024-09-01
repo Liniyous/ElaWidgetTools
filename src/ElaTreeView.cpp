@@ -19,7 +19,7 @@ ElaTreeView::ElaTreeView(QWidget* parent)
     ElaScrollBar* hScrollBar = new ElaScrollBar(this);
     hScrollBar->setisAnimation(true);
     connect(hScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
-        this->viewport()->update();
+        doItemsLayout();
     });
     setHorizontalScrollBar(hScrollBar);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -27,7 +27,7 @@ ElaTreeView::ElaTreeView(QWidget* parent)
     ElaScrollBar* vScrollBar = new ElaScrollBar(this);
     vScrollBar->setisAnimation(true);
     connect(vScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
-        this->viewport()->update();
+        doItemsLayout();
     });
     setVerticalScrollBar(vScrollBar);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);

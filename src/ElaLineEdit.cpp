@@ -20,6 +20,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
 {
     Q_D(ElaLineEdit);
     d->q_ptr = this;
+    setObjectName("ElaLineEdit");
     d->_themeMode = eTheme->getThemeMode();
     d->_pAwesome = ElaIconType::None;
     d->_pBorderRadius = 6;
@@ -34,8 +35,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
     setFont(textFont);
     setStyle(new ElaLineEditStyle(style()));
-    setStyleSheet(
-        "QLineEdit{padding-left: 10px;}");
+    setStyleSheet("#ElaLineEdit{padding-left: 10px;}");
     d->onThemeChanged(eTheme->getThemeMode());
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
 }

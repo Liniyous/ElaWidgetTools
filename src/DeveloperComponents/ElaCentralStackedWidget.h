@@ -17,7 +17,6 @@ protected:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
-    QLinearGradient* _windowLinearGradient{nullptr};
 };
 
 #endif // ELACENTRALSTACKEDWIDGET_H

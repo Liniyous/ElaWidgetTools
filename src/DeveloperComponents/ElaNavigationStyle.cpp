@@ -170,6 +170,20 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                 painter->setOpacity(_pOpacity);
             }
 
+            // 选中特效
+            if (_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
+            {
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pSelectMarkTop, 3, itemRect.height() - _pSelectMarkTop - _pSelectMarkBottom), 3, 3);
+            }
+            if (node == _lastSelectedNode)
+            {
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 3, 3);
+            }
+
             // 图标绘制
             painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
             if (node->getAwesome() != ElaIconType::None)
@@ -181,80 +195,8 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                 painter->drawText(QRect(itemRect.x() + _leftPadding, itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignLeft | Qt::AlignVCenter, QChar((unsigned short)node->getAwesome()));
                 painter->restore();
             }
-            // 展开图标 KeyPoints
-            if (node->getIsExpanderNode())
-            {
-                if (node->getIsHasChild())
-                {
-                    QRectF expandIconRect(itemRect.right() - _indicatorIconAreaWidth, itemRect.y(), 17, itemRect.height());
-                    painter->save();
-                    QFont iconFont = QFont("ElaAwesome");
-                    iconFont.setPixelSize(17);
-                    painter->setFont(iconFont);
-                    painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
-                    if (node == _expandAnimationTargetNode)
-                    {
-                        painter->rotate(_pRotate);
-                    }
-                    else
-                    {
-                        if (node->getIsExpanded())
-                        {
-                            //展开
-                            painter->rotate(-180);
-                        }
-                        else
-                        {
-                            // 未展开
-                            painter->rotate(0);
-                        }
-                    }
-                    painter->translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2 + 1, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);
-                    painter->drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short)ElaIconType::AngleDown));
-                    painter->restore();
-                }
-                if (node->getIsChildHasKeyPoints())
-                {
-                    painter->save();
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(ElaThemeColor(_themeMode, NavigationExpanderNodeKeyPoint));
-                    painter->drawEllipse(QPoint(itemRect.right() - 7, itemRect.y() + 12), 3, 3);
-                    painter->restore();
-                }
-            }
-            else
-            {
-                int keyPoints = node->getKeyPoints();
-                if (keyPoints)
-                {
-                    // KeyPoints
-                    painter->save();
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointBase));
-                    painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 10, 10);
-                    painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointCenter));
-                    painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 9, 9);
-                    painter->setPen(QPen(ElaThemeColor(_themeMode, NavigationKeyPointText), 2));
-                    QFont font = painter->font();
-                    font.setBold(true);
-                    if (keyPoints > 99)
-                    {
-                        keyPoints = 99;
-                    }
-                    if (keyPoints > 9)
-                    {
-                        font.setPixelSize(11);
-                    }
-                    else
-                    {
-                        font.setPixelSize(12);
-                    }
-                    painter->setFont(font);
-                    painter->drawText(keyPoints > 9 ? itemRect.right() - 23 : itemRect.right() - 20, itemRect.y() + itemRect.height() / 2 + 4, QString::number(keyPoints));
-                    painter->restore();
-                }
-            }
 
+            int viewWidth = widget->width();
             // 文字绘制
             painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
             QRect textRect;
@@ -268,18 +210,83 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
             }
             QString text = painter->fontMetrics().elidedText(node->getNodeTitle(), Qt::ElideRight, textRect.width());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, text);
-            // 选中特效
-            if (_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
+
+            if (viewWidth > 260)
             {
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pSelectMarkTop, 3, itemRect.height() - _pSelectMarkTop - _pSelectMarkBottom), 3, 3);
-            }
-            if (node == _lastSelectedNode)
-            {
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 3, 3);
+                // 展开图标 KeyPoints
+                if (node->getIsExpanderNode())
+                {
+                    if (node->getIsHasChild())
+                    {
+                        QRectF expandIconRect(itemRect.right() - _indicatorIconAreaWidth, itemRect.y(), 17, itemRect.height());
+
+                        painter->save();
+                        QFont iconFont = QFont("ElaAwesome");
+                        iconFont.setPixelSize(17);
+                        painter->setFont(iconFont);
+                        painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
+                        if (node == _expandAnimationTargetNode)
+                        {
+                            painter->rotate(_pRotate);
+                        }
+                        else
+                        {
+                            if (node->getIsExpanded())
+                            {
+                                //展开
+                                painter->rotate(-180);
+                            }
+                            else
+                            {
+                                // 未展开
+                                painter->rotate(0);
+                            }
+                        }
+                        painter->translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2 + 1, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);
+                        painter->drawText(expandIconRect, Qt::AlignVCenter, QChar((unsigned short)ElaIconType::AngleDown));
+                        painter->restore();
+                    }
+                    if (node->getIsChildHasKeyPoints())
+                    {
+                        painter->save();
+                        painter->setPen(Qt::NoPen);
+                        painter->setBrush(ElaThemeColor(_themeMode, NavigationExpanderNodeKeyPoint));
+                        painter->drawEllipse(QPoint(itemRect.right() - 7, itemRect.y() + 12), 3, 3);
+                        painter->restore();
+                    }
+                }
+                else
+                {
+                    int keyPoints = node->getKeyPoints();
+                    if (keyPoints)
+                    {
+                        // KeyPoints
+                        painter->save();
+                        painter->setPen(Qt::NoPen);
+                        painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointBase));
+                        painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 10, 10);
+                        painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointCenter));
+                        painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 9, 9);
+                        painter->setPen(QPen(ElaThemeColor(_themeMode, NavigationKeyPointText), 2));
+                        QFont font = painter->font();
+                        font.setBold(true);
+                        if (keyPoints > 99)
+                        {
+                            keyPoints = 99;
+                        }
+                        if (keyPoints > 9)
+                        {
+                            font.setPixelSize(11);
+                        }
+                        else
+                        {
+                            font.setPixelSize(12);
+                        }
+                        painter->setFont(font);
+                        painter->drawText(keyPoints > 9 ? itemRect.right() - 23 : itemRect.right() - 20, itemRect.y() + itemRect.height() / 2 + 4, QString::number(keyPoints));
+                        painter->restore();
+                    }
+                }
             }
             painter->restore();
         }

@@ -256,3 +256,29 @@ ElaNavigationNode* ElaNavigationModel::getNavigationNode(QString nodeKey) const
     }
     return nullptr;
 }
+
+QList<ElaNavigationNode*> ElaNavigationModel::getRootExpanderNodes() const
+{
+    QList<ElaNavigationNode*> expandedNodeList;
+    for (auto node : _rootNode->getChildrenNodes())
+    {
+        if (node->getIsExpanderNode())
+        {
+            expandedNodeList.append(node);
+        }
+    }
+    return expandedNodeList;
+}
+
+QList<ElaNavigationNode*> ElaNavigationModel::getRootExpandedNodes() const
+{
+    QList<ElaNavigationNode*> expandedNodeList;
+    for (auto node : _rootNode->getChildrenNodes())
+    {
+        if (node->getIsExpanderNode() && node->getIsExpanded())
+        {
+            expandedNodeList.append(node);
+        }
+    }
+    return expandedNodeList;
+}

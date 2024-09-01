@@ -12,6 +12,7 @@
 #include "ElaNavigationNode.h"
 #include "ElaNavigationStyle.h"
 #include "ElaScrollBar.h"
+
 ElaNavigationView::ElaNavigationView(QWidget* parent)
     : QTreeView(parent)
 {
@@ -21,13 +22,14 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setHeaderHidden(true);
     setRootIsDecorated(false);
     setExpandsOnDoubleClick(false);
+    setAutoScroll(false);
     setMouseTracking(true);
     setSelectionMode(QAbstractItemView::NoSelection);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ElaScrollBar* vScrollBar = new ElaScrollBar(this);
     vScrollBar->setisAnimation(true);
     connect(vScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
-        this->viewport()->update();
+        doItemsLayout();
     });
     setVerticalScrollBar(vScrollBar);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);

@@ -120,5 +120,6 @@
         <file>Resource/Image/Model/RainMan.jpg</file>
         <file>Resource/Image/Model/RunningInTheDark.jpg</file>
         <file>Resource/Image/Model/STYXHELIX.jpg</file>
+        <file>Resource/Image/MicaBase.png</file>
     </qresource>
 </RCC>

@@ -126,7 +126,8 @@ T_Home::T_Home(QWidget* parent)
     cardScrollArea->setWidgetResizable(true);
     cardScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     cardScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    cardScrollArea->setIsGrabGesture(Qt::Horizontal, true);
+    cardScrollArea->setIsGrabGesture(true, 0);
+    cardScrollArea->setIsOverShoot(Qt::Horizontal, true);
     QWidget* cardScrollAreaWidget = new QWidget(this);
     cardScrollAreaWidget->setStyleSheet("background-color:transparent;");
     cardScrollArea->setWidget(cardScrollAreaWidget);

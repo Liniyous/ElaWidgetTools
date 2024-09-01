@@ -462,8 +462,6 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::WindowTabBarSelected] = QColor(0x2D, 0x2D, 0x2D);
     _lightThemeColorList[ElaThemeType::WindowTabBarSeparator] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[ElaThemeType::WindowTabBarSeparator] = QColor(0x4C, 0xA0, 0xE0);
-    _lightThemeColorList[ElaThemeType::WindowCentralStackBaseStart] = QColor(0xF9, 0xF9, 0xFC);
-    _darkThemeColorList[ElaThemeType::WindowCentralStackBaseStart] = QColor(0x24, 0x29, 0x2D);
-    _lightThemeColorList[ElaThemeType::WindowCentralStackBaseEnd] = QColor(0xFA, 0xF8, 0xFC);
-    _darkThemeColorList[ElaThemeType::WindowCentralStackBaseEnd] = QColor(0x2E, 0x26, 0x33);
+    _lightThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0xF9, 0xF9, 0xF9, 120);
+    _darkThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0x27, 0x27, 0x27, 100);
 }

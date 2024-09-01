@@ -31,6 +31,8 @@ ElaWindow::ElaWindow(QWidget* parent)
 {
     Q_D(ElaWindow);
     d->q_ptr = this;
+    d->_pIsEnableMica = false;
+    d->_pMicaImagePath = ":/Resource/Image/MicaBase.png";
     setProperty("ElaBaseClassName", "ElaWindow");
     resize(1020, 680); // 默认宽高
 
@@ -97,10 +99,42 @@ ElaWindow::ElaWindow(QWidget* parent)
         palette.setBrush(QPalette::Window, *d->_windowLinearGradient);
         this->setPalette(palette);
     });
+
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaWindow::~ElaWindow()
 {
+}
+
+void ElaWindow::setIsEnableMica(bool isEnable)
+{
+    Q_D(ElaWindow);
+    d->_pIsEnableMica = isEnable;
+    if (isEnable)
+    {
+        d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+    }
+    Q_EMIT pIsEnableMicaChanged();
+}
+
+bool ElaWindow::getIsEnableMica() const
+{
+    Q_D(const ElaWindow);
+    return d->_pIsEnableMica;
+}
+
+void ElaWindow::setMicaImagePath(QString micaImagePath)
+{
+    Q_D(ElaWindow);
+    d->_pMicaImagePath = micaImagePath;
+}
+
+QString ElaWindow::getMicaImagePath() const
+{
+    Q_D(const ElaWindow);
+    return d->_pMicaImagePath;
 }
 
 void ElaWindow::moveToCenter()
@@ -309,6 +343,26 @@ void ElaWindow::closeWindow()
 {
     Q_D(ElaWindow);
     d->_appBar->closeWindow();
+}
+
+void ElaWindow::moveEvent(QMoveEvent* event)
+{
+    Q_D(ElaWindow);
+    if (isVisible() && d->_pIsEnableMica)
+    {
+        QPalette palette = this->palette();
+        if (d->_themeMode == ElaThemeType::Light)
+        {
+            palette.setBrush(QPalette::Window, d->_lightBaseImage.copy(d->_calculateWindowVirtualGeometry()));
+        }
+        else
+        {
+            palette.setBrush(QPalette::Window, d->_darkBaseImage.copy(d->_calculateWindowVirtualGeometry()));
+        }
+        this->setPalette(palette);
+        QApplication::processEvents();
+    }
+    QMainWindow::moveEvent(event);
 }
 
 bool ElaWindow::eventFilter(QObject* watched, QEvent* event)

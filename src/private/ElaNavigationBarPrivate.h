@@ -23,36 +23,37 @@ class ElaInteractiveCard;
 class ElaBaseListView;
 class ElaFooterModel;
 class ElaFooterDelegate;
-class ElaCompactModel;
-class ElaCompactDelegate;
-
+class ElaIconButton;
 class ElaNavigationBarPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaNavigationBar)
     Q_PROPERTY_CREATE_D(bool, IsTransparent)
+    Q_PROPERTY_CREATE(int, NavigationViewWidth);
+
 public:
     explicit ElaNavigationBarPrivate(QObject* parent = nullptr);
     ~ElaNavigationBarPrivate();
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
+    Q_SLOT void onNavigationButtonClicked();
+
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
     //核心跳转逻辑
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true);
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true);
-    void onCompactViewClicked(const QModelIndex& index);
 
 private:
     ElaThemeType::ThemeMode _themeMode;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
-    QWidget* _maximalWidget{nullptr};
-    QWidget* _compactWidget{nullptr};
-    QHBoxLayout* _mainLayout{nullptr};
-    ElaBaseListView* _compactView{nullptr};
-    ElaCompactModel* _compactModel{nullptr};
-    ElaCompactDelegate* _compactDelegate{nullptr};
-
+    QVBoxLayout* _navigationButtonLayout{nullptr};
+    QHBoxLayout* _navigationSuggestLayout{nullptr};
+    QVBoxLayout* _userButtonLayout{nullptr};
     QLinearGradient* _windowLinearGradient{nullptr};
+
+    ElaIconButton* _userButton{nullptr};
+    ElaIconButton* _searchButton{nullptr};
+    ElaIconButton* _navigationButton{nullptr};
     ElaNavigationModel* _navigationModel{nullptr};
     ElaNavigationView* _navigationView{nullptr};
     ElaBaseListView* _footerView{nullptr};
@@ -60,6 +61,9 @@ private:
     ElaFooterDelegate* _footerDelegate{nullptr};
     ElaSuggestBox* _navigationSuggestBox{nullptr};
     ElaInteractiveCard* _userCard{nullptr};
+    bool _isShowUserCard{true};
+
+    QList<ElaNavigationNode*> _lastExpandedNodesList;
 
     ElaNavigationType::NavigationDisplayMode _currentDisplayMode{ElaNavigationType::NavigationDisplayMode::Maximal};
     void _resetNodeSelected();
@@ -70,9 +74,18 @@ private:
     void _addFooterPage(QWidget* page, QString footKey);
 
     void _raiseNavigationBar();
-    void _switchContentLayout(bool direction);
-    void _startContentWidgetAnimation(QPoint startPoint, QPoint endPoint, bool isAnimation);
-    void _resetNavigationLayout(ElaNavigationType::NavigationDisplayMode displayMode);
+
+    void _doComponentAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
+    void _handleNavigationExpandState(bool isSave);
+    void _handleMaximalToCompactLayout();
+    void _handleCompactToMaximalLayout();
+    void _resetLayout();
+
+    void _doNavigationBarWidthAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
+    void _doNavigationViewWidthAnimation(bool isAnimation);
+    void _doNavigationButtonAnimation(bool isCompact, bool isAnimation);
+    void _doSearchButtonAnimation(bool isCompact, bool isAnimation);
+    void _doUserButtonAnimation(bool isCompact, bool isAnimation);
 };
 
 #endif // ELANAVIGATIONBARPRIVATE_H

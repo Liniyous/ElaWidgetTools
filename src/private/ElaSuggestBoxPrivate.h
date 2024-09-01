@@ -1,6 +1,7 @@
 #ifndef ELASUGGESTBOXPRIVATE_H
 #define ELASUGGESTBOXPRIVATE_H
 
+#include <QAction>
 #include <QObject>
 #include <QSize>
 #include <QVariantMap>
@@ -36,10 +37,14 @@ class ElaSuggestBoxPrivate : public QObject
 public:
     explicit ElaSuggestBoxPrivate(QObject* parent = nullptr);
     ~ElaSuggestBoxPrivate();
+    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
     Q_SLOT void onSearchEditTextEdit(const QString& searchText);
     Q_SLOT void onSearchViewClicked(const QModelIndex& index);
 
 private:
+    ElaThemeType::ThemeMode _themeMode;
+    QAction* _lightSearchAction{nullptr};
+    QAction* _darkSearchAction{nullptr};
     QVector<ElaSuggestion*> _suggestionVector;
     ElaSuggestBoxSearchViewContainer* _searchViewBaseWidget{nullptr};
     ElaLineEdit* _searchEdit{nullptr};
