@@ -11,6 +11,7 @@ ElaDxgi::ElaDxgi(QObject* parent)
     _pGrabFrameRate = 120;
     _pTimeoutMsValue = 50;
     _pIsGrabStoped = true;
+    _pIsGrabCenter = false;
 }
 
 ElaDxgi::~ElaDxgi()
@@ -253,7 +254,14 @@ void ElaDxgi::onGrabScreen()
         surface->Unmap();
         surface->Release();
         _texture->Release();
-        _grabImg = grabImage.copy(_pGrabArea);
+        if (_pIsGrabCenter)
+        {
+            _grabImg = grabImage.copy(QRect((texDesc.Width - _pGrabArea.width()) / 2, (texDesc.Height - _pGrabArea.height()) / 2, _pGrabArea.width(), _pGrabArea.height()));
+        }
+        else
+        {
+            _grabImg = grabImage.copy(_pGrabArea);
+        }
         Q_EMIT grabScreenOver();
         endTime = QDateTime::currentMSecsSinceEpoch();
         if (_lastGrabTime == 0)

@@ -176,7 +176,8 @@ void ElaDxgiManager::setGrabArea(int width, int height)
     {
         height = maxHeight;
     }
-    d->_dxgi->setGrabArea(QRect((maxWidth - width) / 2, (maxHeight - height) / 2, width, height));
+    d->_dxgi->setIsGrabCenter(true);
+    d->_dxgi->setGrabArea(QRect(0, 0, width, height));
 }
 
 void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
@@ -192,6 +193,7 @@ void ElaDxgiManager::setGrabArea(int x, int y, int width, int height)
     {
         height = maxHeight;
     }
+    d->_dxgi->setIsGrabCenter(false);
     d->_dxgi->setGrabArea(QRect(x, y, width, height));
 }
 
