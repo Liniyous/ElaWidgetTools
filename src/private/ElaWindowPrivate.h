@@ -61,12 +61,12 @@ private:
 
     QMap<QString, int> _routeMap; // key__nodeKey title可以一致  value__stackIndex
     int _navigationTargetIndex{0};
-
     qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);
     void _doNavigationDisplayModeChange();
     void _initMicaBaseImage(QImage img);
     QRect _calculateWindowVirtualGeometry();
+    void _updateMica();
 };
 
 #endif // ELAWINDOWPRIVATE_H

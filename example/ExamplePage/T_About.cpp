@@ -66,3 +66,8 @@ T_About::T_About(QWidget* parent)
     mainLayout->setContentsMargins(0, 25, 0, 0);
     mainLayout->addLayout(contentLayout);
 }
+
+T_About::~T_About()
+{
+
+}

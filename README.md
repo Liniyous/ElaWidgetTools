@@ -39,6 +39,7 @@
 |ElaBreadcrumbBar|面包屑组件|自动处理点击事件|
 |ElaCheckBox|勾选框||
 |ElaComboBox|下拉框||
+|ElaColorDialog|颜色选择器||
 |ElaMultiSelectComboBox|多选下拉框||
 |ElaContentDialog|带遮罩的对话框||
 |ElaDockWidget|停靠窗口||

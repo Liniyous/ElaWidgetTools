@@ -12,7 +12,6 @@
 #include "ElaMenu.h"
 #include "ElaTheme.h"
 #include "private/ElaLineEditPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaLineEdit, ElaIconType::IconName, Awesome)
 Q_PROPERTY_CREATE_Q_CPP(ElaLineEdit, int, BorderRadius)
 
 ElaLineEdit::ElaLineEdit(QWidget* parent)
@@ -22,14 +21,13 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     d->q_ptr = this;
     setObjectName("ElaLineEdit");
     d->_themeMode = eTheme->getThemeMode();
-    d->_pAwesome = ElaIconType::None;
     d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;
+    d->_pIsClearButtonEnable = true;
     setFocusPolicy(Qt::StrongFocus);
     // 事件总线
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
     d->_focusEvent->registerAndInit();
-    setClearButtonEnabled(true);
     setMouseTracking(true);
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
@@ -38,17 +36,25 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     setStyleSheet("#ElaLineEdit{padding-left: 10px;}");
     d->onThemeChanged(eTheme->getThemeMode());
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
-}
-
-ElaLineEdit::ElaLineEdit(ElaIconType::IconName awesome, QWidget* parent)
-    : ElaLineEdit(parent)
-{
-    Q_D(ElaLineEdit);
-    d->_pAwesome = awesome;
+    setVisible(true);
 }
 
 ElaLineEdit::~ElaLineEdit()
 {
+}
+
+void ElaLineEdit::setIsClearButtonEnable(bool isClearButtonEnable)
+{
+    Q_D(ElaLineEdit);
+    d->_pIsClearButtonEnable = isClearButtonEnable;
+    setClearButtonEnabled(isClearButtonEnable);
+    Q_EMIT pIsClearButtonEnableChanged();
+}
+
+bool ElaLineEdit::getIsClearButtonEnable() const
+{
+    Q_D(const ElaLineEdit);
+    return d->_pIsClearButtonEnable;
 }
 
 void ElaLineEdit::focusInEvent(QFocusEvent* event)
@@ -57,6 +63,10 @@ void ElaLineEdit::focusInEvent(QFocusEvent* event)
     Q_EMIT focusIn(this->text());
     if (event->reason() == Qt::MouseFocusReason)
     {
+        if (d->_pIsClearButtonEnable)
+        {
+            setClearButtonEnabled(true);
+        }
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
         connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();
@@ -76,6 +86,10 @@ void ElaLineEdit::focusOutEvent(QFocusEvent* event)
     Q_EMIT focusOut(this->text());
     if (event->reason() != Qt::PopupFocusReason)
     {
+        if (d->_pIsClearButtonEnable)
+        {
+            setClearButtonEnabled(false);
+        }
         QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
         connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             update();

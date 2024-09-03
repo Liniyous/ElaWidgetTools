@@ -348,21 +348,16 @@ void ElaWindow::closeWindow()
 void ElaWindow::moveEvent(QMoveEvent* event)
 {
     Q_D(ElaWindow);
-    if (isVisible() && d->_pIsEnableMica)
-    {
-        QPalette palette = this->palette();
-        if (d->_themeMode == ElaThemeType::Light)
-        {
-            palette.setBrush(QPalette::Window, d->_lightBaseImage.copy(d->_calculateWindowVirtualGeometry()));
-        }
-        else
-        {
-            palette.setBrush(QPalette::Window, d->_darkBaseImage.copy(d->_calculateWindowVirtualGeometry()));
-        }
-        this->setPalette(palette);
-        QApplication::processEvents();
-    }
+    d->_updateMica();
     QMainWindow::moveEvent(event);
+}
+
+void ElaWindow::resizeEvent(QResizeEvent* event)
+{
+    Q_D(ElaWindow);
+    d->_updateMica();
+    d->_windowLinearGradient->setFinalStop(width(), height());
+    QWidget::resizeEvent(event);
 }
 
 bool ElaWindow::eventFilter(QObject* watched, QEvent* event)
@@ -381,13 +376,6 @@ bool ElaWindow::eventFilter(QObject* watched, QEvent* event)
     }
     }
     return QMainWindow::eventFilter(watched, event);
-}
-
-void ElaWindow::resizeEvent(QResizeEvent* event)
-{
-    Q_D(ElaWindow);
-    d->_windowLinearGradient->setFinalStop(width(), height());
-    QWidget::resizeEvent(event);
 }
 
 QMenu* ElaWindow::createPopupMenu()

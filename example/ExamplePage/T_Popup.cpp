@@ -3,28 +3,33 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include "ElaColorDialog.h"
 #include "ElaMenu.h"
+#include "ElaPushButton.h"
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
 #include "ElaToolButton.h"
 T_Popup::T_Popup(QWidget* parent)
-    : ElaScrollPage(parent)
+    : T_BasePage(parent)
 {
+    // 顶部元素
+    QVBoxLayout* topLayout = createTopLayout("一些常用的弹出组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaPopup");
-    QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
-    centerVLayout->setContentsMargins(0, 0, 0, 0);
 
     _toolButton = new ElaToolButton(this);
     _toolButton->setIsTransparent(false);
     _toolButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     //_toolButton->setPopupMode(QToolButton::MenuButtonPopup);
     _toolButton->setText("ElaToolButton");
+
     ElaMenu* menu = new ElaMenu(this);
     menu->addElaIconAction(ElaIconType::JackOLantern, "JackOLantern");
     menu->addElaIconAction(ElaIconType::LacrosseStick, "LacrosseStick");
     _toolButton->setMenu(menu);
     _toolButton->setElaIcon(ElaIconType::Broom);
+
     ElaScrollPageArea* toolButtonArea = new ElaScrollPageArea(this);
     QHBoxLayout* toolButtonLayout = new QHBoxLayout(toolButtonArea);
     ElaText* toolButtonText = new ElaText("ElaToolButton", this);
@@ -32,7 +37,46 @@ T_Popup::T_Popup(QWidget* parent)
     toolButtonLayout->addWidget(toolButtonText);
     toolButtonLayout->addWidget(_toolButton);
     toolButtonLayout->addStretch();
+
+    _colorDialog = new ElaColorDialog(this);
+    ElaText* colorText = new ElaText(_colorDialog->getCurrentColorRGB(), this);
+    colorText->setTextPixelSize(15);
+    ElaPushButton* colorDialogButton = new ElaPushButton(this);
+    colorDialogButton->setFixedSize(35, 35);
+    colorDialogButton->setLightDefaultColor(_colorDialog->getCurrentColor());
+    colorDialogButton->setLightHoverColor(_colorDialog->getCurrentColor());
+    colorDialogButton->setLightPressColor(_colorDialog->getCurrentColor());
+    colorDialogButton->setDarkDefaultColor(_colorDialog->getCurrentColor());
+    colorDialogButton->setDarkHoverColor(_colorDialog->getCurrentColor());
+    colorDialogButton->setDarkPressColor(_colorDialog->getCurrentColor());
+    connect(colorDialogButton, &ElaPushButton::clicked, this, [=]() {
+        _colorDialog->exec();
+    });
+    connect(_colorDialog, &ElaColorDialog::colorSelected, this, [=](const QColor& color) {
+        colorDialogButton->setLightDefaultColor(color);
+        colorDialogButton->setLightHoverColor(color);
+        colorDialogButton->setLightPressColor(color);
+        colorDialogButton->setDarkDefaultColor(color);
+        colorDialogButton->setDarkHoverColor(color);
+        colorDialogButton->setDarkPressColor(color);
+        colorText->setText(_colorDialog->getCurrentColorRGB());
+    });
+
+    ElaScrollPageArea* colorDialogArea = new ElaScrollPageArea(this);
+    QHBoxLayout* colorDialogLayout = new QHBoxLayout(colorDialogArea);
+    ElaText* colorDialogText = new ElaText("ElaColorDialog", this);
+    colorDialogText->setTextPixelSize(15);
+    colorDialogLayout->addWidget(colorDialogText);
+    colorDialogLayout->addWidget(colorDialogButton);
+    colorDialogLayout->addWidget(colorText);
+    colorDialogLayout->addStretch();
+
+    QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
+    centerVLayout->setContentsMargins(0, 0, 0, 0);
+    centerVLayout->addLayout(topLayout);
+    centerVLayout->addSpacing(5);
     centerVLayout->addWidget(toolButtonArea);
+    centerVLayout->addWidget(colorDialogArea);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }

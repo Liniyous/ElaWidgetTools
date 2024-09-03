@@ -45,6 +45,16 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::CheckBoxCheckedPress] = QColor(0x00, 0x85, 0xEA);
     _darkThemeColorList[ElaThemeType::CheckBoxCheckedPress] = QColor(0x3A, 0x7B, 0xAC);
 
+    // ElaColorDialog
+    _lightThemeColorList[ElaThemeType::ColorDialogPickerBorder] = QColor(0xF0, 0xF0, 0xF0);
+    _darkThemeColorList[ElaThemeType::ColorDialogPickerBorder] = QColor(0x4C, 0x4C, 0x4C);
+    _lightThemeColorList[ElaThemeType::ColorDialogDisplayBorder] = QColor(0xA6, 0xA6, 0xA6);
+    _darkThemeColorList[ElaThemeType::ColorDialogDisplayBorder] = QColor(0x4C, 0x4C, 0x4C);
+    _lightThemeColorList[ElaThemeType::ColorDialogBase] = Qt::white;
+    _darkThemeColorList[ElaThemeType::ColorDialogBase] = QColor(0x2B, 0x2B, 0x2B);
+    _lightThemeColorList[ElaThemeType::ColorDialogButtonAreaBase] = QColor(0xF3, 0xF3, 0xF3);
+    _darkThemeColorList[ElaThemeType::ColorDialogButtonAreaBase] = QColor(0x20, 0x20, 0x20);
+
     //ElaComboBox ElaMultiComboBoxs
     _lightThemeColorList[ElaThemeType::ComboBoxMark] = QColor(0x0E, 0x6F, 0xC3);
     _darkThemeColorList[ElaThemeType::ComboBoxMark] = QColor(0x4C, 0xA0, 0xE0);

@@ -19,6 +19,7 @@
 #include "ElaProgressBar.h"
 #include "ElaStatusBar.h"
 #include "ElaText.h"
+#include "ElaTheme.h"
 #include "ElaToolBar.h"
 #include "ElaToolButton.h"
 #include "T_About.h"

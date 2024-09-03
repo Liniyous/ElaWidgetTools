@@ -3,7 +3,6 @@
 
 #include <QLineEdit>
 
-#include "Def.h"
 #include "stdafx.h"
 
 class ElaLineEditPrivate;
@@ -11,11 +10,10 @@ class ELA_EXPORT ElaLineEdit : public QLineEdit
 {
     Q_OBJECT
     Q_Q_CREATE(ElaLineEdit)
-    Q_PROPERTY_CREATE_Q_H(ElaIconType::IconName, Awesome)
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(bool, IsClearButtonEnable)
 public:
     explicit ElaLineEdit(QWidget* parent = nullptr);
-    explicit ElaLineEdit(ElaIconType::IconName awesome, QWidget* parent = nullptr);
     ~ElaLineEdit();
 
 Q_SIGNALS:

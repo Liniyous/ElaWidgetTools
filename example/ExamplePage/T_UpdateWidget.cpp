@@ -16,7 +16,7 @@ T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     ElaText* update2 = new ElaText("2、ElaNavigationBar整体重构", 13, this);
     ElaText* update3 = new ElaText("3、ElaWindow新增Mica模式", 13, this);
     ElaText* update4 = new ElaText("4、ElaIcon界面搜索框灵敏问题修正", 13, this);
-    ElaText* update5 = new ElaText("5、ELaIconButton新增图片模式, 多个组件细节风格优化", 13, this);
+    ElaText* update5 = new ElaText("5、ElaIconButton新增图片模式, 多个组件细节风格优化", 13, this);
     update1->setIsWrapAnywhere(true);
     update2->setIsWrapAnywhere(true);
     update3->setIsWrapAnywhere(true);

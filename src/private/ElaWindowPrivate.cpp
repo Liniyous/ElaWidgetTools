@@ -1,5 +1,6 @@
 #include "ElaWindowPrivate.h"
 
+#include <QApplication>
 #include <QGuiApplication>
 #include <QImage>
 #include <QPropertyAnimation>
@@ -154,11 +155,11 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
     {
         if (_themeMode == ElaThemeType::Light)
         {
-            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()));
+            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
         }
         else
         {
-            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()));
+            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
         }
     }
     else
@@ -293,11 +294,11 @@ void ElaWindowPrivate::_initMicaBaseImage(QImage img)
         QPalette palette = q->palette();
         if (_themeMode == ElaThemeType::Light)
         {
-            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()));
+            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
         }
         else
         {
-            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()));
+            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
         }
         q->setPalette(palette);
         initThread->quit();
@@ -333,4 +334,23 @@ QRect ElaWindowPrivate::_calculateWindowVirtualGeometry()
     yImageRatio = (qreal)_lightBaseImage.height() / primaryScreenGeometry.height();
     relativeGeometry = QRect((geometry.x() - primaryScreenGeometry.x()) * xImageRatio, (geometry.y() - primaryScreenGeometry.y()) * yImageRatio, geometry.width() * xImageRatio, geometry.height() * yImageRatio);
     return relativeGeometry;
+}
+
+void ElaWindowPrivate::_updateMica()
+{
+    Q_Q(ElaWindow);
+    if (q->isVisible() && _pIsEnableMica)
+    {
+        QPalette palette = q->palette();
+        if (_themeMode == ElaThemeType::Light)
+        {
+            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        }
+        else
+        {
+            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        }
+        q->setPalette(palette);
+        QApplication::processEvents();
+    }
 }

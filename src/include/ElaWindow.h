@@ -67,8 +67,8 @@ Q_SIGNALS:
 
 protected:
     virtual void moveEvent(QMoveEvent* event) override;
-    virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual void resizeEvent(QResizeEvent* event) override;
+    virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual QMenu* createPopupMenu() override;
 };
 
