@@ -10,7 +10,7 @@ class T_ElaScreen : public ElaScrollPage
 {
     Q_OBJECT
 public:
-    explicit T_ElaScreen(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_ElaScreen(QWidget* parent = nullptr);
     ~T_ElaScreen();
 
 private:

@@ -7,7 +7,7 @@ class T_Home : public ElaScrollPage
 {
     Q_OBJECT
 public:
-    explicit T_Home(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_Home(QWidget* parent = nullptr);
     ~T_Home();
 Q_SIGNALS:
     Q_SIGNAL void elaScreenNavigation();

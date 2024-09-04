@@ -8,8 +8,9 @@ class ElaTableView;
 class ElaTreeView;
 class T_View : public T_BasePage
 {
+    Q_OBJECT
 public:
-    explicit T_View(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_View(QWidget* parent = nullptr);
     ~T_View();
 
 private:

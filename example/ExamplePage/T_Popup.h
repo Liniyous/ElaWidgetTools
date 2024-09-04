@@ -9,7 +9,7 @@ class T_Popup : public T_BasePage
 {
     Q_OBJECT
 public:
-    explicit T_Popup(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_Popup(QWidget* parent = nullptr);
     ~T_Popup();
 
 private:

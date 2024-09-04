@@ -12,7 +12,7 @@ class T_Icon : public T_BasePage
 {
     Q_OBJECT
 public:
-    explicit T_Icon(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_Icon(QWidget* parent = nullptr);
     ~T_Icon();
     Q_SLOT void onSearchEditTextEdit(const QString& searchText);
 

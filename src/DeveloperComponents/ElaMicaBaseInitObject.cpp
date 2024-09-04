@@ -41,13 +41,13 @@ void ElaMicaBaseInitObject::onInitMicaBase(QImage img)
             h = originColor.hsvHue();
             s = originColor.hsvSaturation();
             v = originColor.value();
-            if (s / 20 > 10)
+            if (s / 20 > 11)
             {
-                lightColor.setHsv(h, (s / 20 + 10) / 2, 250);
+                lightColor.setHsv(h, (s / 20 + 11) / 2, 250);
             }
             else
             {
-                lightColor.setHsv(h, 10, 250);
+                lightColor.setHsv(h, 11, 250);
             }
             lightColor = lightColor.toRgb();
             if (v / 1.1 > 40)
@@ -58,7 +58,6 @@ void ElaMicaBaseInitObject::onInitMicaBase(QImage img)
             {
                 darkColor.setHsv(h, s / 2, 40);
             }
-            darkColor.setHsv(h, s / 2, 40);
             darkColor = darkColor.toRgb();
             lightImage.setPixel(x, y, qRgb(lightColor.red(), lightColor.green(), lightColor.blue()));
             darkImage.setPixel(x, y, qRgb(darkColor.red(), darkColor.green(), darkColor.blue()));

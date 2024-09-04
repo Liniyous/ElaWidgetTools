@@ -10,7 +10,7 @@ class T_Navigation : public T_BasePage
 {
     Q_OBJECT
 public:
-    explicit T_Navigation(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_Navigation(QWidget* parent = nullptr);
     ~T_Navigation();
 
 private:

@@ -36,6 +36,7 @@ public:
     ~ElaNavigationBarPrivate();
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
     Q_SLOT void onNavigationButtonClicked();
+    Q_SLOT void onNavigationOpenNewWindow(QString nodeKey);
 
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
@@ -45,6 +46,7 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
+    QMap<QString, const QMetaObject*> _pageMetaMap;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
     QVBoxLayout* _navigationButtonLayout{nullptr};
     QHBoxLayout* _navigationSuggestLayout{nullptr};

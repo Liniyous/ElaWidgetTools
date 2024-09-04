@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include <QScroller>
 
+#include "ElaMenu.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationStyle.h"
@@ -85,7 +86,13 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
     ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
     if (!posNode->getIsExpanderNode())
     {
-        //qDebug() << posNode;
+        ElaMenu menu;
+        menu.setMenuItemHeight(27);
+        QAction* openAction = menu.addElaIconAction(ElaIconType::ObjectGroup, "在新窗口中打开");
+        connect(openAction, &QAction::triggered, this, [=]() {
+            Q_EMIT navigationOpenNewWindow(posNode->getNodeKey());
+        });
+        menu.exec(mapToGlobal(pos));
     }
 }
 

@@ -16,6 +16,7 @@ public:
     Q_SLOT void onCustomContextMenuRequested(const QPoint& pos);
 Q_SIGNALS:
     Q_SIGNAL void navigationClicked(const QModelIndex& index);
+    Q_SIGNAL void navigationOpenNewWindow(QString nodeKey);
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent* event) override;

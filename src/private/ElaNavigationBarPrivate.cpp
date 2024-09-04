@@ -45,6 +45,22 @@ void ElaNavigationBarPrivate::onNavigationButtonClicked()
     }
 }
 
+void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
+{
+    const QMetaObject* meta = _pageMetaMap.value(nodeKey);
+    if (!meta)
+    {
+        return;
+    }
+    QWidget* widget = static_cast<QWidget*>(meta->newInstance());
+    if (widget)
+    {
+        widget->resize(600, 600);
+        widget->setAttribute(Qt::WA_DeleteOnClose);
+        widget->show();
+    }
+}
+
 void ElaNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)
 {
     Q_Q(ElaNavigationBar);

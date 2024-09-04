@@ -105,6 +105,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_navigationView = new ElaNavigationView(this);
     d->_navigationView->setModel(d->_navigationModel);
     connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
+    connect(d->_navigationView, &ElaNavigationView::navigationOpenNewWindow, d, &ElaNavigationBarPrivate::onNavigationOpenNewWindow);
 
     // 页脚
     d->_footerView = new ElaBaseListView(this);
@@ -214,7 +215,8 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addPageNode(pageTitle, pageKey, awesome);
     if (returnType == ElaNavigationType::Success)
     {
-        d_ptr->_addStackedPage(page, pageKey);
+        d->_pageMetaMap.insert(pageKey, page->metaObject());
+        d->_addStackedPage(page, pageKey);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
     }
@@ -233,17 +235,18 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
         return ElaNavigationType::TargetNodeInvalid;
     }
     QString pageKey;
-    ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addPageNode(pageTitle, pageKey, targetExpanderKey, awesome);
+    ElaNavigationType::NodeOperateReturnType returnType = d->_navigationModel->addPageNode(pageTitle, pageKey, targetExpanderKey, awesome);
     if (returnType == ElaNavigationType::NodeOperateReturnType::Success)
     {
-        ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(pageKey);
+        d->_pageMetaMap.insert(pageKey, page->metaObject());
+        ElaNavigationNode* node = d->_navigationModel->getNavigationNode(pageKey);
         ElaNavigationNode* originalNode = node->getOriginalNode();
-        if (d_ptr->_compactMenuMap.contains(originalNode))
+        if (d->_compactMenuMap.contains(originalNode))
         {
-            ElaMenu* menu = d_ptr->_compactMenuMap.value(originalNode);
+            ElaMenu* menu = d->_compactMenuMap.value(originalNode);
             QAction* action = menu->addElaIconAction(node->getAwesome(), node->getNodeTitle());
             connect(action, &QAction::triggered, this, [=]() {
-                d_ptr->onTreeViewClicked(node->getModelIndex());
+                d->onTreeViewClicked(node->getModelIndex());
             });
         }
         else
@@ -273,7 +276,8 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addPageNode(pageTitle, pageKey, keyPoints, awesome);
     if (returnType == ElaNavigationType::Success)
     {
-        d_ptr->_addStackedPage(page, pageKey);
+        d->_pageMetaMap.insert(pageKey, page->metaObject());
+        d->_addStackedPage(page, pageKey);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
     }
@@ -295,6 +299,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_navigationModel->addPageNode(pageTitle, pageKey, targetExpanderKey, keyPoints, awesome);
     if (returnType == ElaNavigationType::Success)
     {
+        d->_pageMetaMap.insert(pageKey, page->metaObject());
         ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(pageKey);
         ElaNavigationNode* originalNode = node->getOriginalNode();
         if (d_ptr->_compactMenuMap.contains(originalNode))

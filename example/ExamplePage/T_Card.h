@@ -9,7 +9,7 @@ class T_Card : public T_BasePage
 {
     Q_OBJECT
 public:
-    explicit T_Card(QWidget* parent = nullptr);
+    Q_INVOKABLE explicit T_Card(QWidget* parent = nullptr);
     ~T_Card();
 
 private:
