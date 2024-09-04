@@ -25,7 +25,7 @@ protected:
 
 private:
     int _leftPadding{11};
-    int _iconAreaWidth{38};
+    int _iconAreaWidth{40};
     int _textRightSpacing{3};
     int _indicatorIconAreaWidth{24};
     qreal _lastSelectMarkTop{10};

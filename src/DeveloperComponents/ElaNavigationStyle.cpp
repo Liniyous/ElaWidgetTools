@@ -192,7 +192,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                 QFont iconFont = QFont("ElaAwesome");
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
-                painter->drawText(QRect(itemRect.x() + _leftPadding, itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignLeft | Qt::AlignVCenter, QChar((unsigned short)node->getAwesome()));
+                painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter, QChar((unsigned short)node->getAwesome()));
                 painter->restore();
             }
 
