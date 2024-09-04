@@ -16,14 +16,17 @@ void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_Q(ElaLineEdit);
     ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
-    if (actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
+    if (actionType == ElaAppBarType::WMLBUTTONDOWN || actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
     {
-        if (ElaApplication::containsCursorToItem(q) || q->hasSelectedText())
+        if (ElaApplication::containsCursorToItem(q) || (actionType == ElaAppBarType::WMLBUTTONUP && q->hasSelectedText()))
         {
             return;
         }
-        q->clearFocus();
-        Q_EMIT q->wmFocusOut(q->text());
+        if (q->hasFocus())
+        {
+            q->clearFocus();
+            Q_EMIT q->wmFocusOut(q->text());
+        }
     }
 }
 
