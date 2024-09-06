@@ -41,7 +41,8 @@ Q_ENUM_CREATE(ThemeMode)
 enum ThemeColor
 {
     AcrylicUrlCardBorder = 0x0000,
-    AcrylicUrlCardBase = 0x0001,
+    AcrylicUrlCardHoverBorder = 0x0001,
+    AcrylicUrlCardBase = 0x0002,
     AcrylicUrlCardHover,
     AcrylicUrlCardSubTitleText,
     BreadcrumbBarText,

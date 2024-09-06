@@ -3,6 +3,8 @@
 
 #include <QListView>
 #include <QModelIndex>
+
+class ElaScrollBar;
 class ElaBaseListView : public QListView
 {
     Q_OBJECT
@@ -15,9 +17,9 @@ Q_SIGNALS:
     Q_SIGNAL void mouseDoubleClick(const QModelIndex& index);
 
 protected:
-    void mousePressEvent(QMouseEvent* event) override;
-    void mouseReleaseEvent(QMouseEvent* event) override;
-    void mouseDoubleClickEvent(QMouseEvent* event) override;
+    virtual void mousePressEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
 };
 
 #endif // ELABASELISTVIEW_H

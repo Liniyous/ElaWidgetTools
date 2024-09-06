@@ -35,6 +35,8 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     comboBoxView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     ElaScrollBar* scrollBar = new ElaScrollBar(this);
     comboBoxView->setVerticalScrollBar(scrollBar);
+    ElaScrollBar* floatVScrollBar = new ElaScrollBar(scrollBar, comboBoxView);
+    floatVScrollBar->setIsAnimation(true);
     comboBoxView->setAutoScroll(false);
     comboBoxView->setSelectionMode(QAbstractItemView::NoSelection);
     comboBoxView->setSelectionBehavior(QAbstractItemView::SelectRows);

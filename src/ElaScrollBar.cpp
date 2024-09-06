@@ -1,5 +1,6 @@
 #include "ElaScrollBar.h"
 
+#include <QDebug>
 #include <QPainter>
 #include <QPointer>
 #include <QPropertyAnimation>
@@ -9,7 +10,7 @@
 #include "ElaMenu.h"
 #include "ElaScrollBarStyle.h"
 #include "private/ElaScrollBarPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, bool, isAnimation)
+Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, bool, IsAnimation)
 ElaScrollBar::ElaScrollBar(QWidget* parent)
     : QScrollBar(parent), d_ptr(new ElaScrollBarPrivate())
 {
@@ -19,7 +20,7 @@ ElaScrollBar::ElaScrollBar(QWidget* parent)
     setObjectName("ElaScrollBar");
     setAttribute(Qt::WA_OpaquePaintEvent, false);
     d->_pTargetMaximum = 0;
-    d->_pisAnimation = false;
+    d->_pIsAnimation = false;
     connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
     ElaScrollBarStyle* scrollBarStyle = new ElaScrollBarStyle(style());
     scrollBarStyle->setScrollBar(this);
@@ -41,6 +42,33 @@ ElaScrollBar::ElaScrollBar(Qt::Orientation orientation, QWidget* parent)
     : ElaScrollBar(parent)
 {
     setOrientation(orientation);
+}
+
+ElaScrollBar::ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* parent)
+    : ElaScrollBar(parent)
+{
+    Q_D(ElaScrollBar);
+    if (!originScrollBar || !parent)
+    {
+        qCritical() << "Invalid origin or parent!";
+        return;
+    }
+    d->_originScrollArea = parent;
+    Qt::Orientation orientation = originScrollBar->orientation();
+    orientation == Qt::Horizontal ? parent->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff) : parent->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    parent->installEventFilter(this);
+
+    d->_originScrollBar = originScrollBar;
+    setOrientation(orientation);
+    connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value) {
+        d->_handleScrollBarValueChanged(this, value);
+    });
+    connect(this, &QScrollBar::valueChanged, this, [=](int value) {
+        d->_handleScrollBarValueChanged(d->_originScrollBar, value);
+    });
+    connect(d->_originScrollBar, &QScrollBar::rangeChanged, this, [=](int min, int max) {
+        d->_handleScrollBarRangeChanged(min, max);
+    });
 }
 
 ElaScrollBar::~ElaScrollBar()
@@ -76,6 +104,34 @@ bool ElaScrollBar::event(QEvent* event)
     }
     }
     return QScrollBar::event(event);
+}
+
+bool ElaScrollBar::eventFilter(QObject* watched, QEvent* event)
+{
+    Q_D(ElaScrollBar);
+    switch (event->type())
+    {
+    case QEvent::Show:
+    {
+        d->_handleScrollBarGeometry();
+        break;
+    }
+    case QEvent::Resize:
+    {
+        d->_handleScrollBarGeometry();
+        break;
+    }
+    case QEvent::LayoutRequest:
+    {
+        d->_handleScrollBarGeometry();
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QScrollBar::eventFilter(watched, event);
 }
 
 void ElaScrollBar::mousePressEvent(QMouseEvent* event)

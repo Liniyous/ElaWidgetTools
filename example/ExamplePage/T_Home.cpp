@@ -4,6 +4,7 @@
 #include <QDesktopServices>
 #include <QHBoxLayout>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QVBoxLayout>
 
 #include "ElaAcrylicUrlCard.h"
@@ -18,14 +19,77 @@
 T_Home::T_Home(QWidget* parent)
     : ElaScrollPage(parent)
 {
-    QWidget* centralWidget = new QWidget(this);
-    centralWidget->setWindowTitle("Home");
-    QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
-    centerVLayout->setContentsMargins(0, 0, 0, 0);
+    setTitleVisible(false);
+    setContentsMargins(2, 2, 0, 0);
+    // 标题卡片区域
+    ElaText* desText = new ElaText("FluentUI For QWidget", this);
+    desText->setTextPixelSize(18);
+    ElaText* titleText = new ElaText("ElaWidgetTools", this);
+    titleText->setTextPixelSize(35);
+
+    QVBoxLayout* titleLayout = new QVBoxLayout();
+    titleLayout->setContentsMargins(30, 60, 0, 0);
+    titleLayout->addWidget(desText);
+    titleLayout->addWidget(titleText);
+
     ElaImageCard* backgroundCard = new ElaImageCard(this);
+    backgroundCard->setBorderRadius(10);
+    backgroundCard->setFixedHeight(400);
+    backgroundCard->setMaximumAspectRatio(1.7);
     backgroundCard->setCardImage(QImage(":/Resource/Image/Home_Background.png"));
 
-    ElaText* flowLayoutText = new ElaText("热门免费应用", this);
+    ElaAcrylicUrlCard* urlCard1 = new ElaAcrylicUrlCard(this);
+    urlCard1->setCardPixmapSize(QSize(62, 62));
+    urlCard1->setFixedSize(195, 225);
+    urlCard1->setTitlePixelSize(17);
+    urlCard1->setTitleSpacing(25);
+    urlCard1->setSubTitleSpacing(13);
+    urlCard1->setUrl("https://github.com/Liniyous/ElaWidgetTools");
+    urlCard1->setCardPixmap(QPixmap(":/Resource/Image/github.png"));
+    urlCard1->setTitle("ElaTool Github");
+    urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
+    ElaAcrylicUrlCard* urlCard2 = new ElaAcrylicUrlCard(this);
+    urlCard2->setCardPixmapSize(QSize(62, 62));
+    urlCard2->setFixedSize(195, 225);
+    urlCard2->setTitlePixelSize(17);
+    urlCard2->setTitleSpacing(25);
+    urlCard2->setSubTitleSpacing(13);
+    urlCard2->setUrl("https://space.bilibili.com/21256707");
+    urlCard2->setCardPixmap(QPixmap(":/Resource/Image/Moon.jpg"));
+    urlCard2->setTitle("ElaWidgetTool");
+    urlCard2->setSubTitle("8009963@qq.com");
+
+    ElaScrollArea* cardScrollArea = new ElaScrollArea(this);
+    cardScrollArea->setWidgetResizable(true);
+    cardScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    cardScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    cardScrollArea->setIsGrabGesture(true, 0);
+    cardScrollArea->setIsOverShoot(Qt::Horizontal, true);
+    QWidget* cardScrollAreaWidget = new QWidget(this);
+    cardScrollAreaWidget->setStyleSheet("background-color:transparent;");
+    cardScrollArea->setWidget(cardScrollAreaWidget);
+    QHBoxLayout* urlCardLayout = new QHBoxLayout();
+    urlCardLayout->setSpacing(15);
+    urlCardLayout->setContentsMargins(30, 0, 0, 6);
+    urlCardLayout->addWidget(urlCard1);
+    urlCardLayout->addWidget(urlCard2);
+    urlCardLayout->addStretch();
+    QVBoxLayout* cardScrollAreaWidgetLayout = new QVBoxLayout(cardScrollAreaWidget);
+    cardScrollAreaWidgetLayout->setContentsMargins(0, 0, 0, 0);
+    cardScrollAreaWidgetLayout->addStretch();
+    cardScrollAreaWidgetLayout->addLayout(urlCardLayout);
+
+    QVBoxLayout* backgroundLayout = new QVBoxLayout(backgroundCard);
+    backgroundLayout->setContentsMargins(0, 0, 0, 0);
+    backgroundLayout->addLayout(titleLayout);
+    backgroundLayout->addWidget(cardScrollArea);
+
+    // 推荐卡片
+    ElaText* flowText = new ElaText("热门免费应用", this);
+    flowText->setTextPixelSize(20);
+    QHBoxLayout* flowTextLayout = new QHBoxLayout();
+    flowTextLayout->setContentsMargins(33, 0, 0, 0);
+    flowTextLayout->addWidget(flowText);
     // ElaFlowLayout
     ElaPopularCard* homeCard = new ElaPopularCard(this);
     connect(homeCard, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
@@ -84,6 +148,7 @@ T_Home::T_Home(QWidget* parent)
     homeCard5->setCardFloatPixmap(QPixmap(":/Resource/Image/IARC/IARC_7+.svg.png"));
 
     ElaFlowLayout* flowLayout = new ElaFlowLayout(0, 5, 5);
+    flowLayout->setContentsMargins(30, 0, 0, 0);
     flowLayout->setIsAnimation(true);
     flowLayout->addWidget(homeCard);
     flowLayout->addWidget(homeCard1);
@@ -91,56 +156,6 @@ T_Home::T_Home(QWidget* parent)
     flowLayout->addWidget(homeCard3);
     flowLayout->addWidget(homeCard4);
     flowLayout->addWidget(homeCard5);
-
-    centerVLayout->addWidget(backgroundCard);
-    centerVLayout->addWidget(flowLayoutText);
-    centerVLayout->addLayout(flowLayout);
-    centerVLayout->setSpacing(20);
-    centerVLayout->addStretch();
-    addCentralWidget(centralWidget);
-    ElaText* homeStack1 = new ElaText("HomeStack1", this);
-    QFont font = homeStack1->font();
-    font.setPixelSize(32);
-    homeStack1->setFont(font);
-    homeStack1->setAlignment(Qt::AlignCenter);
-    homeStack1->setWindowTitle("HomeStack1");
-    addCentralWidget(homeStack1);
-    ElaText* homeStack2 = new ElaText("HomeStack2", this);
-    homeStack2->setFont(font);
-    homeStack2->setAlignment(Qt::AlignCenter);
-    homeStack2->setWindowTitle("HomeStack2");
-    addCentralWidget(homeStack2);
-
-    ElaAcrylicUrlCard* urlCard1 = new ElaAcrylicUrlCard(this);
-    urlCard1->setUrl("https://github.com/Liniyous/ElaWidgetTools");
-    urlCard1->setCardPixmap(QPixmap(":/Resource/Image/github.png"));
-    urlCard1->setTitle("ElaTool Github");
-    urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
-    ElaAcrylicUrlCard* urlCard2 = new ElaAcrylicUrlCard(this);
-    urlCard2->setUrl("https://space.bilibili.com/21256707");
-    urlCard2->setCardPixmap(QPixmap(":/Resource/Image/Moon.jpg"));
-    urlCard2->setTitle("ElaWidgetTool");
-    urlCard2->setSubTitle("8009963@qq.com");
-
-    ElaScrollArea* cardScrollArea = new ElaScrollArea(backgroundCard);
-    cardScrollArea->setWidgetResizable(true);
-    cardScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    cardScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    cardScrollArea->setIsGrabGesture(true, 0);
-    cardScrollArea->setIsOverShoot(Qt::Horizontal, true);
-    QWidget* cardScrollAreaWidget = new QWidget(this);
-    cardScrollAreaWidget->setStyleSheet("background-color:transparent;");
-    cardScrollArea->setWidget(cardScrollAreaWidget);
-    QHBoxLayout* cardScrollAreaWidgetLayout = new QHBoxLayout(cardScrollAreaWidget);
-    cardScrollAreaWidgetLayout->setSpacing(15);
-    cardScrollAreaWidgetLayout->setContentsMargins(20, 40, 0, 0);
-    cardScrollAreaWidgetLayout->addWidget(urlCard1);
-    cardScrollAreaWidgetLayout->addWidget(urlCard2);
-    cardScrollAreaWidgetLayout->addStretch();
-
-    QHBoxLayout* backgroundLayout = new QHBoxLayout(backgroundCard);
-    backgroundLayout->addWidget(cardScrollArea);
-    backgroundLayout->setContentsMargins(0, 0, 0, 0);
 
     // 菜单
     _homeMenu = new ElaMenu(this);
@@ -175,6 +190,19 @@ T_Home::T_Home(QWidget* parent)
     _homeMenu->addElaIconAction(ElaIconType::Copy, "复制");
     _homeMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
 
+    QWidget* centralWidget = new QWidget(this);
+    centralWidget->setWindowTitle("Home");
+    QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
+    centerVLayout->setSpacing(0);
+    centerVLayout->setContentsMargins(0, 0, 0, 0);
+    centerVLayout->addWidget(backgroundCard);
+    centerVLayout->addSpacing(20);
+    centerVLayout->addLayout(flowTextLayout);
+    centerVLayout->addSpacing(10);
+    centerVLayout->addLayout(flowLayout);
+    centerVLayout->addStretch();
+    addCentralWidget(centralWidget);
+
     // 初始化提示
     ElaMessageBar::success(ElaMessageBarType::BottomRight, "Success", "初始化成功!", 2000);
     qDebug() << "初始化成功";
@@ -188,12 +216,6 @@ void T_Home::mouseReleaseEvent(QMouseEvent* event)
 {
     switch (event->button())
     {
-    case Qt::LeftButton:
-    {
-        //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
-        //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
-        break;
-    }
     case Qt::RightButton:
     {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -201,21 +223,6 @@ void T_Home::mouseReleaseEvent(QMouseEvent* event)
 #else
         _homeMenu->popup(event->globalPos());
 #endif
-        break;
-    }
-    case Qt::BackButton:
-    {
-        this->navigation(0);
-        break;
-    }
-    case Qt::ForwardButton:
-    {
-        this->navigation(1);
-        break;
-    }
-    case Qt::MiddleButton:
-    {
-        this->navigation(2);
         break;
     }
     default:

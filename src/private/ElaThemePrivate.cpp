@@ -12,8 +12,10 @@ ElaThemePrivate::~ElaThemePrivate()
 void ElaThemePrivate::_initThemeColor()
 {
     //ElaAcrylicUrlCard
-    _lightThemeColorList[ElaThemeType::AcrylicUrlCardBorder] = QColor(0xBE, 0xBA, 0xBE);
-    _darkThemeColorList[ElaThemeType::AcrylicUrlCardBorder] = QColor(0x52, 0x50, 0x52);
+    _lightThemeColorList[ElaThemeType::AcrylicUrlCardBorder] = QColor(0xEA, 0xEA, 0xED);
+    _darkThemeColorList[ElaThemeType::AcrylicUrlCardBorder] = QColor(0x3D, 0x3E, 0x3E);
+    _lightThemeColorList[ElaThemeType::AcrylicUrlCardHoverBorder] = QColor(0xC9, 0xC9, 0xCC);
+    _darkThemeColorList[ElaThemeType::AcrylicUrlCardHoverBorder] = QColor(0x4D, 0x4D, 0x4D);
     _lightThemeColorList[ElaThemeType::AcrylicUrlCardBase] = QColor(0xFB, 0xFB, 0xFD);
     _darkThemeColorList[ElaThemeType::AcrylicUrlCardBase] = QColor(0x04, 0x09, 0x11);
     _lightThemeColorList[ElaThemeType::AcrylicUrlCardHover] = QColor(0xE9, 0xE9, 0xF0);

@@ -3,14 +3,20 @@
 #include <QScrollBar>
 #include <QScroller>
 
+#include "ElaScrollAreaPrivate.h"
 #include "ElaScrollBar.h"
+
 ElaScrollArea::ElaScrollArea(QWidget* parent)
-    : QScrollArea(parent)
+    : QScrollArea(parent), d_ptr(new ElaScrollAreaPrivate())
 {
+    Q_D(ElaScrollArea);
+    d->q_ptr = this;
     setObjectName("ElaScrollArea");
-    setStyleSheet("#ElaScrollArea{border-radius:2px;background-color:transparent;border:0px;}");
+    setStyleSheet("#ElaScrollArea{background-color:transparent;border:0px;}");
     setHorizontalScrollBar(new ElaScrollBar(this));
     setVerticalScrollBar(new ElaScrollBar(this));
+    QScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
 ElaScrollArea::~ElaScrollArea()
@@ -52,11 +58,11 @@ void ElaScrollArea::setIsAnimation(Qt::Orientation orientation, bool isAnimation
 {
     if (orientation == Qt::Horizontal)
     {
-        dynamic_cast<ElaScrollBar*>(this->horizontalScrollBar())->setisAnimation(isAnimation);
+        dynamic_cast<ElaScrollBar*>(this->horizontalScrollBar())->setIsAnimation(isAnimation);
     }
     else
     {
-        dynamic_cast<ElaScrollBar*>(this->verticalScrollBar())->setisAnimation(isAnimation);
+        dynamic_cast<ElaScrollBar*>(this->verticalScrollBar())->setIsAnimation(isAnimation);
     }
 }
 
@@ -64,10 +70,10 @@ bool ElaScrollArea::getIsAnimation(Qt::Orientation orientation) const
 {
     if (orientation == Qt::Horizontal)
     {
-        return dynamic_cast<ElaScrollBar*>(this->horizontalScrollBar())->getisAnimation();
+        return dynamic_cast<ElaScrollBar*>(this->horizontalScrollBar())->getIsAnimation();
     }
     else
     {
-        return dynamic_cast<ElaScrollBar*>(this->verticalScrollBar())->getisAnimation();
+        return dynamic_cast<ElaScrollBar*>(this->verticalScrollBar())->getIsAnimation();
     }
 }

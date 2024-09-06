@@ -229,8 +229,54 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);
     addCentralWidget(centralWidget, true, true, 0);
+
+    ElaText* homeStack1 = new ElaText("HomeStack1", this);
+    QFont font = homeStack1->font();
+    font.setPixelSize(32);
+    homeStack1->setFont(font);
+    homeStack1->setAlignment(Qt::AlignCenter);
+    homeStack1->setWindowTitle("HomeStack1");
+    addCentralWidget(homeStack1);
+    ElaText* homeStack2 = new ElaText("HomeStack2", this);
+    homeStack2->setFont(font);
+    homeStack2->setAlignment(Qt::AlignCenter);
+    homeStack2->setWindowTitle("HomeStack2");
+    addCentralWidget(homeStack2);
 }
 
 T_BaseComponents::~T_BaseComponents()
 {
+}
+
+void T_BaseComponents::mouseReleaseEvent(QMouseEvent* event)
+{
+    switch (event->button())
+    {
+    case Qt::LeftButton:
+    {
+        //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 2500);
+        //ElaMessageBar::success(ElaMessageBarType::TopRight, "Success", "Never Close Your Eyes", 1500);
+        break;
+    }
+    case Qt::BackButton:
+    {
+        this->navigation(0);
+        break;
+    }
+    case Qt::ForwardButton:
+    {
+        this->navigation(1);
+        break;
+    }
+    case Qt::MiddleButton:
+    {
+        this->navigation(2);
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    ElaScrollPage::mouseReleaseEvent(event);
 }

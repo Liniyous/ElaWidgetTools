@@ -4,13 +4,16 @@
 #include <QWidget>
 
 #include "stdafx.h"
+
+class ElaImageCardPrivate;
 class ELA_EXPORT ElaImageCard : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(QImage, CardImage);
-    Q_PROPERTY_CREATE(int, BorderRadius)
-    Q_PROPERTY_CREATE(bool, IsPreserveAspectCrop)
-    Q_PROPERTY_CREATE(qreal, MaximumAspectRatio)
+    Q_Q_CREATE(ElaImageCard)
+    Q_PROPERTY_CREATE_Q_H(QImage, CardImage);
+    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    Q_PROPERTY_CREATE_Q_H(bool, IsPreserveAspectCrop)
+    Q_PROPERTY_CREATE_Q_H(qreal, MaximumAspectRatio)
 public:
     explicit ElaImageCard(QWidget* parent = nullptr);
     ~ElaImageCard();

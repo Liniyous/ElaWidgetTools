@@ -551,10 +551,6 @@ void ElaNavigationBarPrivate::_doNavigationBarWidthAnimation(ElaNavigationType::
         });
         connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             q->setFixedWidth(value.toUInt());
-            if (q->width() > 260)
-            {
-                _navigationView->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-            }
         });
         navigationBarWidthAnimation->setEndValue(300);
         break;
@@ -572,10 +568,6 @@ void ElaNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation)
     QPropertyAnimation* navigationViewWidthAnimation = new QPropertyAnimation(this, "pNavigationViewWidth");
     connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _navigationView->setColumnWidth(0, value.toUInt());
-        if (_navigationView->width() < 260)
-        {
-            _navigationView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        }
     });
     navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
     navigationViewWidthAnimation->setStartValue(_navigationView->columnWidth(0));

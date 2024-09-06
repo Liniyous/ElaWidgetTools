@@ -26,15 +26,19 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setAutoScroll(false);
     setMouseTracking(true);
     setSelectionMode(QAbstractItemView::NoSelection);
+
+    // 滚动条设置
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     ElaScrollBar* vScrollBar = new ElaScrollBar(this);
-    vScrollBar->setisAnimation(true);
     connect(vScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
         doItemsLayout();
     });
     setVerticalScrollBar(vScrollBar);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+    ElaScrollBar* floatVScrollBar = new ElaScrollBar(vScrollBar, this);
+    floatVScrollBar->setIsAnimation(true);
 
     _navigationStyle = new ElaNavigationStyle(this->style());
     _navigationStyle->setNavigationView(this);

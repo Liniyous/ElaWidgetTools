@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTreeView>
 
+class ElaScrollBar;
 class ElaNavigationStyle;
 class ElaNavigationView : public QTreeView
 {
@@ -19,8 +20,8 @@ Q_SIGNALS:
     Q_SIGNAL void navigationOpenNewWindow(QString nodeKey);
 
 protected:
-    void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
+    virtual void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
     ElaNavigationStyle* _navigationStyle{nullptr};

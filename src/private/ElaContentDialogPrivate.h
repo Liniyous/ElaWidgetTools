@@ -8,6 +8,7 @@
 class QVBoxLayout;
 class ElaPushButton;
 class ElaContentDialog;
+class ElaMaskWidget;
 class ElaContentDialogPrivate : public QObject
 {
     Q_OBJECT
@@ -17,9 +18,8 @@ public:
     ~ElaContentDialogPrivate();
 
 private:
-    bool _isHandleNativeEvent{false};
     ElaThemeType::ThemeMode _themeMode;
-    QWidget* _shadowWidget{nullptr};
+    ElaMaskWidget* _maskWidget{nullptr};
     QWidget* _centralWidget{nullptr};
     QWidget* _buttonWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
@@ -29,6 +29,8 @@ private:
     ElaPushButton* _leftButton{nullptr};
     ElaPushButton* _middleButton{nullptr};
     ElaPushButton* _rightButton{nullptr};
+
+    void _doCloseAnimation();
 };
 
 #endif // ELACONTENTDIALOGPRIVATE_H

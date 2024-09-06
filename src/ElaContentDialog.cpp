@@ -1,6 +1,8 @@
 ﻿#include "ElaContentDialog.h"
 
 #include <ElaPushButton.h>
+
+#include "ElaMaskWidget.h"
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #include <dwmapi.h>
@@ -17,7 +19,6 @@
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "private/ElaContentDialogPrivate.h"
-
 #ifdef Q_OS_WIN
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
@@ -44,13 +45,10 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     Q_D(ElaContentDialog);
     d->q_ptr = this;
 
-    d->_shadowWidget = new QWidget(parent);
-    d->_shadowWidget->createWinId();
-    d->_shadowWidget->move(0, 0);
-    d->_shadowWidget->setFixedSize(parent->size());
-    d->_shadowWidget->setObjectName("ElaShadowWidget");
-    d->_shadowWidget->setStyleSheet("#ElaShadowWidget{background-color:rgba(0,0,0,90);}");
-    d->_shadowWidget->setVisible(true);
+    d->_maskWidget = new ElaMaskWidget(parent);
+    d->_maskWidget->move(0, 0);
+    d->_maskWidget->setFixedSize(parent->size());
+    d->_maskWidget->setVisible(false);
 
     resize(400, height());
     setWindowModality(Qt::ApplicationModal);
@@ -59,7 +57,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     installEventFilter(this);
-    setShadow((HWND)winId());
 #endif
 #else
     window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint);
@@ -68,7 +65,8 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_leftButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
         onLeftButtonClicked();
-        close();
+        d->_maskWidget->doMaskAnimation(0);
+        d->_doCloseAnimation();
     });
     d->_leftButton->setMinimumSize(0, 0);
     d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -78,7 +76,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_middleButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT middleButtonClicked();
         onMiddleButtonClicked();
-        close();
+        d->_doCloseAnimation();
     });
     d->_middleButton->setMinimumSize(0, 0);
     d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -88,7 +86,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_rightButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT rightButtonClicked();
         onRightButtonClicked();
-        close();
+        d->_doCloseAnimation();
     });
     d->_rightButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonBase));
     d->_rightButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonHover));
@@ -128,7 +126,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
-    d->_isHandleNativeEvent = true;
 }
 
 ElaContentDialog::~ElaContentDialog()
@@ -137,7 +134,7 @@ ElaContentDialog::~ElaContentDialog()
 #if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
     removeEventFilter(this);
 #endif
-    delete d->_shadowWidget;
+    d->_maskWidget->deleteLater();
 }
 
 void ElaContentDialog::onLeftButtonClicked()
@@ -183,17 +180,19 @@ void ElaContentDialog::setRightButtonText(QString text)
 void ElaContentDialog::showEvent(QShowEvent* event)
 {
     Q_D(ElaContentDialog);
+    d->_maskWidget->setVisible(true);
+    d->_maskWidget->doMaskAnimation(90);
+#ifdef Q_OS_WIN
+#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+    setShadow((HWND)winId());
+#endif
+#endif
     QDialog::showEvent(event);
-    d->_shadowWidget->show();
-    d->_isHandleNativeEvent = true;
 }
 
 void ElaContentDialog::closeEvent(QCloseEvent* event)
 {
-    Q_D(ElaContentDialog);
     QDialog::closeEvent(event);
-    d->_shadowWidget->hide();
-    d->_isHandleNativeEvent = false;
 }
 
 void ElaContentDialog::paintEvent(QPaintEvent* event)
@@ -238,19 +237,13 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, q
 bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, long* result)
 #endif
 {
-    Q_D(ElaContentDialog);
-    if ((eventType != "windows_generic_MSG") || !message || !d->_isHandleNativeEvent)
+    if ((eventType != "windows_generic_MSG") || !message)
     {
         return false;
     }
     const auto msg = static_cast<const MSG*>(message);
     const HWND hwnd = msg->hwnd;
     if (!hwnd || !msg)
-    {
-        return false;
-    }
-    const qint64 wid = reinterpret_cast<qint64>(hwnd);
-    if (wid != winId())
     {
         return false;
     }
@@ -320,6 +313,6 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
 #endif
     }
     }
-    return QWidget::nativeEvent(eventType, message, result);
+    return QDialog::nativeEvent(eventType, message, result);
 }
 #endif

@@ -21,7 +21,6 @@ void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
         if (q->hasSelectedText() && q->hasFocus())
         {
             q->clearFocus();
-            Q_EMIT q->wmFocusOut(q->text());
         }
     }
     else if (actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
@@ -33,7 +32,6 @@ void ElaLineEditPrivate::onWMWindowClickedEvent(QVariantMap data)
         if (q->hasFocus())
         {
             q->clearFocus();
-            Q_EMIT q->wmFocusOut(q->text());
         }
     }
 }

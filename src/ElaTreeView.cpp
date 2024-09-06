@@ -17,7 +17,7 @@ ElaTreeView::ElaTreeView(QWidget* parent)
     setMouseTracking(true);
 
     ElaScrollBar* hScrollBar = new ElaScrollBar(this);
-    hScrollBar->setisAnimation(true);
+    hScrollBar->setIsAnimation(true);
     connect(hScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
         doItemsLayout();
     });
@@ -25,7 +25,7 @@ ElaTreeView::ElaTreeView(QWidget* parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     ElaScrollBar* vScrollBar = new ElaScrollBar(this);
-    vScrollBar->setisAnimation(true);
+    vScrollBar->setIsAnimation(true);
     connect(vScrollBar, &ElaScrollBar::rangeAnimationFinished, this, [=]() {
         doItemsLayout();
     });

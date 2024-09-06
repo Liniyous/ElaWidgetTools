@@ -251,7 +251,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                         painter->save();
                         painter->setPen(Qt::NoPen);
                         painter->setBrush(ElaThemeColor(_themeMode, NavigationExpanderNodeKeyPoint));
-                        painter->drawEllipse(QPoint(itemRect.right() - 7, itemRect.y() + 12), 3, 3);
+                        painter->drawEllipse(QPoint(itemRect.right() - 17, itemRect.y() + 12), 3, 3);
                         painter->restore();
                     }
                 }
@@ -264,9 +264,9 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                         painter->save();
                         painter->setPen(Qt::NoPen);
                         painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointBase));
-                        painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 10, 10);
+                        painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), 10, 10);
                         painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointCenter));
-                        painter->drawEllipse(QPoint(itemRect.right() - 16, itemRect.y() + itemRect.height() / 2), 9, 9);
+                        painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), 9, 9);
                         painter->setPen(QPen(ElaThemeColor(_themeMode, NavigationKeyPointText), 2));
                         QFont font = painter->font();
                         font.setBold(true);
@@ -283,7 +283,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                             font.setPixelSize(12);
                         }
                         painter->setFont(font);
-                        painter->drawText(keyPoints > 9 ? itemRect.right() - 23 : itemRect.right() - 20, itemRect.y() + itemRect.height() / 2 + 4, QString::number(keyPoints));
+                        painter->drawText(keyPoints > 9 ? itemRect.right() - 33 : itemRect.right() - 30, itemRect.y() + itemRect.height() / 2 + 4, QString::number(keyPoints));
                         painter->restore();
                     }
                 }

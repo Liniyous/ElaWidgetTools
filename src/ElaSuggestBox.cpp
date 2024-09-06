@@ -13,6 +13,7 @@
 #include "ElaBaseListView.h"
 #include "ElaIcon.h"
 #include "ElaLineEdit.h"
+#include "ElaScrollBar.h"
 #include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestDelegate.h"
 #include "ElaSuggestModel.h"
@@ -62,6 +63,8 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     d->_shadowLayout = new QVBoxLayout(d->_searchViewBaseWidget);
     d->_shadowLayout->setContentsMargins(0, 0, 0, 0);
     d->_searchView = new ElaBaseListView(d->_searchViewBaseWidget);
+    ElaScrollBar* floatVScrollBar = new ElaScrollBar(d->_searchView->verticalScrollBar(), d->_searchView);
+    floatVScrollBar->setIsAnimation(true);
     d->_searchViewBaseWidget->resize(292, 300);
     d->_shadowLayout->addWidget(d->_searchView);
     d->_searchModel = new ElaSuggestModel(this);

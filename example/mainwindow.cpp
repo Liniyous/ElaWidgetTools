@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget* parent)
     initContent();
 
     // 拦截默认关闭事件
+
     this->setIsDefaultClosed(false);
     connect(this, &MainWindow::closeButtonClicked, this, &MainWindow::onCloseButtonClicked);
 
@@ -57,10 +58,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::onCloseButtonClicked()
 {
-    ElaContentDialog dialog(this);
-    connect(&dialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(&dialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
-    dialog.exec();
+    ElaContentDialog closeDialog(this);
+    connect(&closeDialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(&closeDialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
+    closeDialog.exec();
 }
 
 void MainWindow::initWindow()

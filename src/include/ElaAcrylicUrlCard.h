@@ -20,6 +20,7 @@ class ELA_EXPORT ElaAcrylicUrlCard : public QPushButton
     Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize);
     Q_PROPERTY_CREATE_Q_H(int, SubTitlePixelSize);
     Q_PROPERTY_CREATE_Q_H(int, TitleSpacing);
+    Q_PROPERTY_CREATE_Q_H(int, SubTitleSpacing);
     Q_PROPERTY_CREATE_Q_H(QPixmap, CardPixmap);
     Q_PROPERTY_CREATE_Q_H(QSize, CardPixmapSize);
     Q_PROPERTY_CREATE_Q_H(int, CardPixmapBorderRadius)

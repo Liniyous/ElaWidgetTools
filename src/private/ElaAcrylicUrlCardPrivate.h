@@ -21,6 +21,7 @@ class ElaAcrylicUrlCardPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, TitlePixelSize);
     Q_PROPERTY_CREATE_D(int, SubTitlePixelSize);
     Q_PROPERTY_CREATE_D(int, TitleSpacing);
+    Q_PROPERTY_CREATE_D(int, SubTitleSpacing);
     Q_PROPERTY_CREATE_D(QPixmap, CardPixmap);
     Q_PROPERTY_CREATE_D(QSize, CardPixmapSize);
     Q_PROPERTY_CREATE_D(int, CardPixmapBorderRadius)
@@ -32,9 +33,9 @@ public:
     ~ElaAcrylicUrlCardPrivate();
 
 private:
-    int _shadowBorderWidth{6};
     QPixmap _noisePix;
     ElaThemeType::ThemeMode _themeMode;
+    qreal _borderWidth{1.5};
 };
 
 #endif // ELAACRYLICURLCARDPRIVATE_H

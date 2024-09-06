@@ -12,6 +12,7 @@
 #include "ElaBreadcrumbBar.h"
 #include "ElaNavigationRouter.h"
 #include "ElaScrollArea.h"
+#include "ElaScrollBar.h"
 #include "private/ElaScrollPagePrivate.h"
 ElaScrollPage::ElaScrollPage(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaScrollPagePrivate())
@@ -72,7 +73,8 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
     scrollArea->setIsGrabGesture(isVerticalGrabGesture, mousePressEventDelay);
     scrollArea->setIsOverShoot(Qt::Vertical, true);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ElaScrollBar* floatVScrollBar = new ElaScrollBar(scrollArea->verticalScrollBar(), scrollArea);
+    floatVScrollBar->setIsAnimation(true);
     scrollArea->setWidget(centralWidget);
     centralWidget->setObjectName("ElaScrollPage_CentralPage");
     centralWidget->setStyleSheet("#ElaScrollPage_CentralPage{background-color:transparent;}");

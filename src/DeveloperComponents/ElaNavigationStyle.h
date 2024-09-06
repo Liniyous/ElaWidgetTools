@@ -34,7 +34,7 @@ private:
     int _leftPadding{11};
     int _iconAreaWidth{40};
     int _textRightSpacing{3};
-    int _indicatorIconAreaWidth{24};
+    int _indicatorIconAreaWidth{34};
     ElaNavigationNode* _opacityAnimationTargetNode{nullptr};
     ElaNavigationNode* _expandAnimationTargetNode{nullptr};
     ElaNavigationNode* _lastSelectedNode{nullptr};

@@ -110,8 +110,6 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     // 页脚
     d->_footerView = new ElaBaseListView(this);
     d->_footerView->setFixedHeight(0);
-    d->_footerView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    d->_footerView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     d->_footerModel = new ElaFooterModel(this);
     d->_footerView->setModel(d->_footerModel);
     d->_footerDelegate = new ElaFooterDelegate(this);

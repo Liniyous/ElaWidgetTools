@@ -31,12 +31,15 @@ T_Graphics::T_Graphics(QWidget* parent)
     ElaGraphicsView* view = new ElaGraphicsView(scene);
     view->setScene(scene);
     view->setFixedHeight(600);
+    QHBoxLayout* viewLayout = new QHBoxLayout();
+    viewLayout->setContentsMargins(0, 0, 12, 0);
+    viewLayout->addWidget(view);
 
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
     centerVLayout->addLayout(topLayout);
     centerVLayout->addSpacing(5);
-    centerVLayout->addWidget(view);
+    centerVLayout->addLayout(viewLayout);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }

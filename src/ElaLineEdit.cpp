@@ -99,6 +99,7 @@ void ElaLineEdit::focusOutEvent(QFocusEvent* event)
         markAnimation->setStartValue(d->_pExpandMarkWidth);
         markAnimation->setEndValue(0);
         markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        Q_EMIT wmFocusOut(text());
     }
     QLineEdit::focusOutEvent(event);
 }

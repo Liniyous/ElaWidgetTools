@@ -4,9 +4,12 @@
 #include <QScrollArea>
 
 #include "stdafx.h"
+
+class ElaScrollAreaPrivate;
 class ELA_EXPORT ElaScrollArea : public QScrollArea
 {
     Q_OBJECT
+    Q_Q_CREATE(ElaScrollArea)
 public:
     explicit ElaScrollArea(QWidget* parent = nullptr);
     ~ElaScrollArea();

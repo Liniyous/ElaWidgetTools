@@ -13,7 +13,7 @@ ElaScrollBarStyle::ElaScrollBarStyle(QStyle* style)
     _pIsExpand = false;
     _pOpacity = 0;
     _pScrollBar = nullptr;
-    _pSliderExtent = 3;
+    _pSliderExtent = 2.4;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
 }
@@ -72,22 +72,24 @@ void ElaScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleO
                 {
                     QRect upIndicatorRect = subControlRect(control, sopt, QStyle::SC_ScrollBarSubLine, widget);
                     QRect downIndicatorRect = subControlRect(control, sopt, QStyle::SC_ScrollBarAddLine, widget);
+                    qreal centerToTop = (sideLength / 2) / qCos(30 * M_PI / 180.0);
+                    qreal centerToBottom = (sideLength / 2) * qTan(30 * M_PI / 180.0);
                     // 上三角
-                    qreal centerX = upIndicatorRect.width() / 2;
-                    qreal centerUpY = upIndicatorRect.bottom() - upIndicatorRect.height() / 2;
-                    qreal centerDownY = downIndicatorRect.bottom() - downIndicatorRect.height() / 2;
+                    qreal centerX = upIndicatorRect.width() / 2.0;
+                    qreal centerUpY = upIndicatorRect.center().y() + 2;
+                    qreal centerDownY = downIndicatorRect.center().y() + 2;
                     QPainterPath upPath;
-                    upPath.moveTo(centerX - qCos(30 * M_PI / 180.0) * sideLength / 2, centerUpY + sideLength / 2);
-                    upPath.lineTo(centerX + qCos(30 * M_PI / 180.0) * sideLength / 2, centerUpY + sideLength / 2);
-                    upPath.lineTo(centerX, centerUpY - sideLength / 2);
+                    upPath.moveTo(centerX, centerUpY - centerToTop);
+                    upPath.lineTo(centerX + sideLength / 2, centerUpY + centerToBottom);
+                    upPath.lineTo(centerX - sideLength / 2, centerUpY + centerToBottom);
                     upPath.closeSubpath();
                     painter->drawPath(upPath);
 
                     // 下三角
                     QPainterPath downPath;
-                    downPath.moveTo(centerX, centerDownY + sideLength / 2);
-                    downPath.lineTo(centerX + qCos(30 * M_PI / 180.0) * sideLength / 2, centerDownY - sideLength / 2);
-                    downPath.lineTo(centerX - qCos(30 * M_PI / 180.0) * sideLength / 2, centerDownY - sideLength / 2);
+                    downPath.moveTo(centerX, centerDownY + centerToBottom);
+                    downPath.lineTo(centerX + sideLength / 2, centerDownY - centerToTop);
+                    downPath.lineTo(centerX - sideLength / 2, centerDownY - centerToTop);
                     downPath.closeSubpath();
                     painter->drawPath(downPath);
                 }
@@ -124,7 +126,7 @@ int ElaScrollBarStyle::pixelMetric(PixelMetric metric, const QStyleOption* optio
     {
     case QStyle::PM_ScrollBarExtent:
     {
-        return 12;
+        return _scrollBarExtent;
     }
     default:
     {
@@ -162,7 +164,7 @@ void ElaScrollBarStyle::startExpandAnimation(bool isExpand)
         extentAnimation->setDuration(250);
         extentAnimation->setEasingCurve(QEasingCurve::InOutSine);
         extentAnimation->setStartValue(_pSliderExtent);
-        extentAnimation->setEndValue(12 - 2 * _sliderMargin);
+        extentAnimation->setEndValue(_scrollBarExtent - 2 * _sliderMargin);
         extentAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
     else
@@ -184,7 +186,7 @@ void ElaScrollBarStyle::startExpandAnimation(bool isExpand)
         extentAnimation->setDuration(250);
         extentAnimation->setEasingCurve(QEasingCurve::InOutSine);
         extentAnimation->setStartValue(_pSliderExtent);
-        extentAnimation->setEndValue(3);
+        extentAnimation->setEndValue(2.4);
         extentAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     }
 }
