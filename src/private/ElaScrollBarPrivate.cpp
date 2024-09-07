@@ -97,6 +97,14 @@ int ElaScrollBarPrivate::_pixelPosToRangeValue(int pos) const
                                            sliderMax - sliderMin, opt.upsideDown);
 }
 
+void ElaScrollBarPrivate::_initAllConfig()
+{
+    Q_Q(ElaScrollBar);
+    _handleScrollBarRangeChanged(_originScrollBar->minimum(), _originScrollBar->maximum());
+    q->setSingleStep(_originScrollBar->singleStep());
+    q->setPageStep(_originScrollBar->pageStep());
+}
+
 void ElaScrollBarPrivate::_handleScrollBarValueChanged(QScrollBar* scrollBar, int value)
 {
     scrollBar->setValue(value);

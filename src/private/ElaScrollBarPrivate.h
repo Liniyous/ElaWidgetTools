@@ -33,6 +33,7 @@ private:
     int _pixelPosToRangeValue(int pos) const;
 
     // 映射处理函数
+    void _initAllConfig();
     void _handleScrollBarValueChanged(QScrollBar* scrollBar, int value);
     void _handleScrollBarRangeChanged(int min, int max);
     void _handleScrollBarGeometry();

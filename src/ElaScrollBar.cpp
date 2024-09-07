@@ -55,12 +55,13 @@ ElaScrollBar::ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* par
     }
     d->_originScrollArea = parent;
     Qt::Orientation orientation = originScrollBar->orientation();
+    setOrientation(orientation);
     orientation == Qt::Horizontal ? parent->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff) : parent->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     parent->installEventFilter(this);
 
     d->_originScrollBar = originScrollBar;
-    d->_handleScrollBarRangeChanged(d->_originScrollBar->minimum(), d->_originScrollBar->maximum());
-    setOrientation(orientation);
+    d->_initAllConfig();
+
     connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value) {
         d->_handleScrollBarValueChanged(this, value);
     });
