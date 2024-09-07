@@ -48,12 +48,13 @@ T_Navigation::T_Navigation(QWidget* parent)
     pivotText->setTextPixelSize(18);
     _pivot = new ElaPivot(this);
     _pivot->setPivotSpacing(8);
-    _pivot->setMarkWidth(45);
+    _pivot->setMarkWidth(75);
     _pivot->appendPivot("本地歌曲");
     _pivot->appendPivot("下载歌曲");
     _pivot->appendPivot("下载视频");
     _pivot->appendPivot("正在下载");
     _pivot->setCurrentIndex(0);
+
     ElaScrollPageArea* pivotArea = new ElaScrollPageArea(this);
     QVBoxLayout* pivotLayout = new QVBoxLayout(pivotArea);
     pivotLayout->addWidget(_pivot);

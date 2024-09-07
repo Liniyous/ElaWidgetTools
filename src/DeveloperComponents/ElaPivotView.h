@@ -10,6 +10,7 @@ class ElaPivotView : public QListView
     Q_OBJECT
     Q_PROPERTY_CREATE(int, MarkX)
     Q_PRIVATE_CREATE(int, MarkWidth)
+    Q_PROPERTY_CREATE(int, MarkAnimationWidth)
     Q_PRIVATE_CREATE(ElaPivotStyle*, PivotStyle)
 public:
     explicit ElaPivotView(QWidget* parent = nullptr);

@@ -62,8 +62,8 @@ ElaPivot::ElaPivot(QWidget* parent)
         {
             Q_EMIT pCurrentIndexChanged();
         }
-        d->_listStyle->setCurrentIndex(index.row());
         d->_listView->doCurrentIndexChangedAnimation(index);
+        d->_listStyle->setCurrentIndex(index.row());
         Q_EMIT pivotClicked(index.row());
     });
     connect(d->_listView, &ElaPivotView::doubleClicked, this, [=](const QModelIndex& index) {
@@ -82,12 +82,14 @@ void ElaPivot::appendPivot(QString pivotTitle)
 {
     Q_D(ElaPivot);
     d->_listModel->appendPivot(pivotTitle);
+    d->_checkCurrentIndex();
 }
 
 void ElaPivot::removePivot(QString pivotTitle)
 {
     Q_D(ElaPivot);
     d->_listModel->removePivot(pivotTitle);
+    d->_checkCurrentIndex();
 }
 
 void ElaPivot::setTextPixelSize(int textPixelSize)
@@ -113,12 +115,15 @@ int ElaPivot::getTextPixelSize() const
 void ElaPivot::setCurrentIndex(int currentIndex)
 {
     Q_D(ElaPivot);
-    if (currentIndex >= 0 && currentIndex < d->_listModel->getPivotListCount())
+    if (currentIndex < d->_listModel->getPivotListCount())
     {
-        d->_listStyle->setCurrentIndex(currentIndex);
         QModelIndex index = d->_listModel->index(currentIndex, 0);
         d->_listView->doCurrentIndexChangedAnimation(index);
-        Q_EMIT pCurrentIndexChanged();
+        if (index.row() != d->_listStyle->getCurrentIndex())
+        {
+            Q_EMIT pCurrentIndexChanged();
+        }
+        d->_listStyle->setCurrentIndex(currentIndex);
     }
 }
 

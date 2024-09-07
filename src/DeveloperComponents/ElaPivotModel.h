@@ -12,7 +12,6 @@ public:
 
     void appendPivot(QString pivot);
     void removePivot(QString pivot);
-    void removePivot(int index);
 
     int getPivotListCount() const;
 

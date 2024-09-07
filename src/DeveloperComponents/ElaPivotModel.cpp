@@ -13,9 +13,9 @@ void ElaPivotModel::appendPivot(QString pivot)
 {
     if (!pivot.isEmpty())
     {
-        beginResetModel();
+        beginInsertRows(QModelIndex(), _pivotList.count(), _pivotList.count());
         _pivotList.append(pivot);
-        endResetModel();
+        endInsertRows();
         return;
     }
 }
@@ -24,32 +24,11 @@ void ElaPivotModel::removePivot(QString pivot)
 {
     if (_pivotList.contains(pivot))
     {
-        beginResetModel();
-        _pivotList.removeAt(_pivotList.lastIndexOf(pivot));
-        endResetModel();
+        int index = _pivotList.lastIndexOf(pivot);
+        beginRemoveRows(QModelIndex(), index, index);
+        _pivotList.removeAt(index);
+        endRemoveRows();
     }
-}
-
-void ElaPivotModel::removePivot(int index)
-{
-    if (index >= _pivotList.count())
-    {
-        return;
-    }
-    beginResetModel();
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    _pivotList.remove(index, _pivotList.count() - index);
-#else
-    for (int i = _pivotList.count() - 1; i >= 0; i--)
-    {
-        if (i < index)
-        {
-            break;
-        }
-        _pivotList.removeAt(i);
-    }
-#endif
-    endResetModel();
 }
 
 int ElaPivotModel::getPivotListCount() const

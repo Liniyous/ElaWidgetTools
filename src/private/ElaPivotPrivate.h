@@ -22,6 +22,7 @@ private:
     ElaPivotModel* _listModel{nullptr};
     ElaPivotStyle* _listStyle{nullptr};
     ElaPivotView* _listView{nullptr};
+    void _checkCurrentIndex();
 };
 
 #endif // ELAPIVOTPRIVATE_H
