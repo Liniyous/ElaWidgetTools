@@ -29,6 +29,14 @@
 [download-badge]: https://img.shields.io/github/downloads/Liniyous/ElaWidgetTools/total.svg "Download status"
 [download-latest]: https://img.shields.io/github/downloads/Liniyous/ElaWidgetTools/latest/total.svg "latest status"
 
+## 主界面预览
+<div align=center>
+  <img src="doc/preview/ElaWidgetTools_Light.png">
+</div>
+<div align=center>
+  <img src="doc/preview/ElaWidgetTools_Dark.png">
+</div> 
+
 ## 支持的组件
 
 |目录|说明|备注|
