@@ -58,9 +58,12 @@ ElaPivot::ElaPivot(QWidget* parent)
         }
     });
     connect(d->_listView, &ElaPivotView::clicked, this, [=](const QModelIndex& index) {
+        if (index.row() != d->_listStyle->getCurrentIndex())
+        {
+            Q_EMIT pCurrentIndexChanged();
+        }
         d->_listStyle->setCurrentIndex(index.row());
         d->_listView->doCurrentIndexChangedAnimation(index);
-        Q_EMIT pCurrentIndexChanged();
         Q_EMIT pivotClicked(index.row());
     });
     connect(d->_listView, &ElaPivotView::doubleClicked, this, [=](const QModelIndex& index) {
