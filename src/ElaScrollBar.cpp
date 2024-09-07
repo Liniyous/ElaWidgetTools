@@ -59,6 +59,7 @@ ElaScrollBar::ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* par
     parent->installEventFilter(this);
 
     d->_originScrollBar = originScrollBar;
+    d->_handleScrollBarRangeChanged(d->_originScrollBar->minimum(), d->_originScrollBar->maximum());
     setOrientation(orientation);
     connect(d->_originScrollBar, &QScrollBar::valueChanged, this, [=](int value) {
         d->_handleScrollBarValueChanged(this, value);
@@ -112,15 +113,7 @@ bool ElaScrollBar::eventFilter(QObject* watched, QEvent* event)
     switch (event->type())
     {
     case QEvent::Show:
-    {
-        d->_handleScrollBarGeometry();
-        break;
-    }
     case QEvent::Resize:
-    {
-        d->_handleScrollBarGeometry();
-        break;
-    }
     case QEvent::LayoutRequest:
     {
         d->_handleScrollBarGeometry();
