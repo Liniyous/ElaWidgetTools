@@ -12,7 +12,7 @@ public:
     ~T_BasePage();
 
 protected:
-    QVBoxLayout* createTopLayout(QString desText);
+    void createCustomWidget(QString desText);
 };
 
 #endif // T_BASEPAGE_H

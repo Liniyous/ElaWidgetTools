@@ -15,7 +15,7 @@ T_Icon::T_Icon(QWidget* parent)
     : T_BasePage(parent)
 {
     // 顶部元素
-    QVBoxLayout* topLayout = createTopLayout("一堆常用图标被放置于此，左键单击以复制其枚举");
+    createCustomWidget("一堆常用图标被放置于此，左键单击以复制其枚举");
 
     _metaEnum = QMetaEnum::fromType<ElaIconType::IconName>();
     QWidget* centralWidget = new QWidget(this);
@@ -49,7 +49,6 @@ T_Icon::T_Icon(QWidget* parent)
     connect(_searchEdit, &ElaLineEdit::textEdited, this, &T_Icon::onSearchEditTextEdit);
     connect(_searchEdit, &ElaLineEdit::focusIn, this, &T_Icon::onSearchEditTextEdit);
 
-    centerVLayout->addLayout(topLayout);
     centerVLayout->addSpacing(13);
     centerVLayout->addWidget(_searchEdit);
     centerVLayout->addWidget(_iconView);

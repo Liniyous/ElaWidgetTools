@@ -13,7 +13,7 @@ T_Popup::T_Popup(QWidget* parent)
     : T_BasePage(parent)
 {
     // 顶部元素
-    QVBoxLayout* topLayout = createTopLayout("一些常用的弹出组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+    createCustomWidget("一些常用的弹出组件被放置于此，可在此界面体验其效果并按需添加进项目中");
 
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaPopup");
@@ -73,8 +73,6 @@ T_Popup::T_Popup(QWidget* parent)
 
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
-    centerVLayout->addLayout(topLayout);
-    centerVLayout->addSpacing(5);
     centerVLayout->addWidget(toolButtonArea);
     centerVLayout->addWidget(colorDialogArea);
     centerVLayout->addStretch();

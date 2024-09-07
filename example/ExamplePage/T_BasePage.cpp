@@ -22,9 +22,10 @@ T_BasePage::~T_BasePage()
 {
 }
 
-QVBoxLayout* T_BasePage::createTopLayout(QString desText)
+void T_BasePage::createCustomWidget(QString desText)
 {
     // 顶部元素
+    QWidget* customWidget = new QWidget(this);
     ElaText* subTitleText = new ElaText(this);
     subTitleText->setText("https://github.com/Liniyous/ElaWidgetTools");
     subTitleText->setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -73,12 +74,12 @@ QVBoxLayout* T_BasePage::createTopLayout(QString desText)
     descText->setText(desText);
     descText->setTextPixelSize(13);
 
-    QVBoxLayout* topLayout = new QVBoxLayout();
+    QVBoxLayout* topLayout = new QVBoxLayout(customWidget);
     topLayout->setContentsMargins(0, 0, 0, 0);
     topLayout->addWidget(subTitleText);
     topLayout->addSpacing(5);
     topLayout->addLayout(buttonLayout);
     topLayout->addSpacing(5);
     topLayout->addWidget(descText);
-    return topLayout;
+    setCustomWidget(customWidget);
 }

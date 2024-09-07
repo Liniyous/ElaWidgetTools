@@ -19,7 +19,7 @@ T_View::T_View(QWidget* parent)
     : T_BasePage(parent)
 {
     // 顶部元素
-    QVBoxLayout* topLayout = createTopLayout("一些常用的图表组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+    createCustomWidget("一些常用的图表组件被放置于此，可在此界面体验其效果并按需添加进项目中");
 
     //ElaListView
     ElaText* listText = new ElaText("ElaListView", this);
@@ -174,8 +174,6 @@ T_View::T_View(QWidget* parent)
     centralWidget->setWindowTitle("ElaView");
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
-    centerVLayout->addLayout(topLayout);
-    centerVLayout->addSpacing(5);
     centerVLayout->addWidget(listText);
     centerVLayout->addSpacing(10);
     centerVLayout->addLayout(listViewLayout);

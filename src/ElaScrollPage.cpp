@@ -20,6 +20,7 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     Q_D(ElaScrollPage);
     setProperty("ElaBaseClassName", "ElaScrollPage");
     d->q_ptr = this;
+    d->_pCustomWidget = nullptr;
     d->_breadcrumbBar = new ElaBreadcrumbBar(this);
     d->_breadcrumbBar->setTextPixelSize(28);
     connect(d->_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList) {
@@ -40,10 +41,10 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     d->_centralStackedWidget = new QStackedWidget(this);
     d->_centralStackedWidget->setContentsMargins(0, 0, 0, 0);
 
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->addLayout(d->_pageTitleLayout);
-    mainLayout->addWidget(d->_centralStackedWidget);
+    d->_mainLayout = new QVBoxLayout(this);
+    d->_mainLayout->setContentsMargins(0, 0, 0, 0);
+    d->_mainLayout->addLayout(d->_pageTitleLayout);
+    d->_mainLayout->addWidget(d->_centralStackedWidget);
     setContentsMargins(20, 20, 0, 0);
 }
 
@@ -80,6 +81,28 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
     centralWidget->setStyleSheet("#ElaScrollPage_CentralPage{background-color:transparent;}");
     d->_centralWidgetMap.insert(centralWidget->windowTitle(), d->_centralStackedWidget->count());
     d->_centralStackedWidget->addWidget(scrollArea);
+}
+
+void ElaScrollPage::setCustomWidget(QWidget* widget)
+{
+    Q_D(ElaScrollPage);
+    if (!widget || widget == this)
+    {
+        return;
+    }
+    if (d->_pCustomWidget)
+    {
+        d->_mainLayout->removeWidget(d->_pCustomWidget);
+    }
+    d->_mainLayout->insertWidget(1, widget);
+    d->_pCustomWidget = widget;
+    Q_EMIT pCustomWidgetChanged();
+}
+
+QWidget* ElaScrollPage::getCustomWidget() const
+{
+    Q_D(const ElaScrollPage);
+    return d->_pCustomWidget;
 }
 
 void ElaScrollPage::navigation(int widgetIndex, bool isLogRoute)

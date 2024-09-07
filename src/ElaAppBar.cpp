@@ -235,12 +235,8 @@ void ElaAppBar::setCustomWidget(QWidget* widget)
     if (d->_pCustomWidget)
     {
         d->_mainLayout->removeWidget(d->_pCustomWidget);
-        d->_mainLayout->insertWidget(7, widget);
     }
-    else
-    {
-        d->_mainLayout->insertWidget(7, widget);
-    }
+    d->_mainLayout->insertWidget(7, widget);
     d->_pCustomWidget = widget;
     Q_EMIT pCustomWidgetChanged();
 }

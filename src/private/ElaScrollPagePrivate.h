@@ -8,6 +8,7 @@
 class ElaScrollPage;
 class ElaScrollArea;
 class QHBoxLayout;
+class QVBoxLayout;
 class ElaText;
 class QStackedWidget;
 class ElaBreadcrumbBar;
@@ -15,6 +16,7 @@ class ElaScrollPagePrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaScrollPage)
+    Q_PROPERTY_CREATE_D(QWidget*, CustomWidget)
 public:
     explicit ElaScrollPagePrivate(QObject* parent = nullptr);
     ~ElaScrollPagePrivate();
@@ -22,6 +24,7 @@ public:
 
 private:
     QHBoxLayout* _pageTitleLayout{nullptr};
+    QVBoxLayout* _mainLayout{nullptr};
     QStackedWidget* _centralStackedWidget{nullptr};
     ElaBreadcrumbBar* _breadcrumbBar{nullptr};
     QMap<QString, int> _centralWidgetMap;

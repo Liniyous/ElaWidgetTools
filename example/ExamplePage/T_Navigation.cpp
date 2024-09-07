@@ -14,7 +14,7 @@ T_Navigation::T_Navigation(QWidget* parent)
     : T_BasePage(parent)
 {
     // 顶部元素
-    QVBoxLayout* topLayout = createTopLayout("一些导航组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+    createCustomWidget("一些导航组件被放置于此，可在此界面体验其效果并按需添加进项目中");
 
     //ElaBreadcrumbBar
     ElaText* breadcrumbBarText = new ElaText("ElaBreadcrumbBar", this);
@@ -85,8 +85,6 @@ T_Navigation::T_Navigation(QWidget* parent)
     centralWidget->setWindowTitle("ElaNavigation");
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
-    centerVLayout->addLayout(topLayout);
-    centerVLayout->addSpacing(5);
     centerVLayout->addLayout(breadcrumbBarTextLayout);
     centerVLayout->addSpacing(10);
     centerVLayout->addWidget(breadcrumbBarArea);
