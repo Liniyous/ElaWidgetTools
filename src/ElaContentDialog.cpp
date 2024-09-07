@@ -20,7 +20,7 @@
 #include "ElaTheme.h"
 #include "private/ElaContentDialogPrivate.h"
 #ifdef Q_OS_WIN
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
 {
     const MARGINS shadow = {1, 0, 0, 0};
@@ -54,7 +54,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     setWindowModality(Qt::ApplicationModal);
 #ifdef Q_OS_WIN
     createWinId();
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     installEventFilter(this);
 #endif
@@ -131,7 +131,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 ElaContentDialog::~ElaContentDialog()
 {
     Q_D(ElaContentDialog);
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     removeEventFilter(this);
 #endif
     d->_maskWidget->deleteLater();
@@ -183,7 +183,7 @@ void ElaContentDialog::showEvent(QShowEvent* event)
     d->_maskWidget->setVisible(true);
     d->_maskWidget->doMaskAnimation(90);
 #ifdef Q_OS_WIN
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     setShadow((HWND)winId());
 #endif
 #endif
@@ -212,7 +212,7 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
 }
 
 #ifdef Q_OS_WIN
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
 [[maybe_unused]] bool ElaContentDialog::eventFilter(QObject* obj, QEvent* event)
 {
     if (event->type() == QEvent::WindowActivate)
@@ -270,7 +270,7 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
     }
     case WM_NCCALCSIZE:
     {
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         if (wParam == FALSE)
         {
             return false;

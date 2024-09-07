@@ -30,7 +30,7 @@ protected:
     virtual void showEvent(QShowEvent* event) override;
     virtual void closeEvent(QCloseEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     bool eventFilter(QObject* obj, QEvent* event) override;
 #endif
 

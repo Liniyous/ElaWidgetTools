@@ -33,7 +33,7 @@ Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsFixedSize)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsDefaultClosed)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsOnlyAllowMinAndClose)
 #ifdef Q_OS_WIN
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
 [[maybe_unused]] static inline void setShadow(HWND hwnd)
 {
     const MARGINS shadow = {1, 0, 0, 0};
@@ -73,7 +73,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     setShadow((HWND)(window()->winId()));
 #endif
@@ -330,7 +330,7 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
     Q_D(ElaAppBar);
     switch (event->type())
     {
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     case QEvent::WindowActivate:
     {
         HWND hwnd = reinterpret_cast<HWND>(window()->winId());
@@ -346,7 +346,7 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
     case QEvent::Resize:
     {
         QSize size = parentWidget()->size();
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         if (::IsZoomed((HWND)d->_currentWinID))
         {
             this->resize(size.width() - 7, this->height());
@@ -538,7 +538,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
     }
     case WM_NCCALCSIZE:
     {
-#if (QT_VERSION == QT_VERSION_CHECK(6, 5, 3) || QT_VERSION == QT_VERSION_CHECK(6, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         if (wParam == FALSE)
         {
             return false;
