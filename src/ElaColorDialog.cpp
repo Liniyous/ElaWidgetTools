@@ -37,7 +37,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     d->_appBar->setWindowButtonFlags(ElaAppBarType::CloseButtonHint);
     d->_appBar->setIsDefaultClosed(false);
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, [=]() {
-        hide();
+        close();
     });
 
     // 颜色选择器
@@ -252,12 +252,12 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     d->_overButton->setDarkTextColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonText));
     connect(d->_overButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT colorSelected(d->_pCurrentColor);
-        hide();
+        close();
     });
     d->_cancelButton = new ElaPushButton("取消", this);
     d->_cancelButton->setBorderRadius(6);
     connect(d->_cancelButton, &ElaPushButton::clicked, this, [=]() {
-        hide();
+        close();
     });
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     buttonLayout->setContentsMargins(0, 0, 0, 0);
@@ -319,6 +319,13 @@ QString ElaColorDialog::getCurrentColorRGB() const
 {
     Q_D(const ElaColorDialog);
     return d->_getHexRgbValue();
+}
+
+void ElaColorDialog::showEvent(QShowEvent* event)
+{
+    Q_D(ElaColorDialog);
+    d->_moveToCenter();
+    QDialog::showEvent(event);
 }
 
 void ElaColorDialog::paintEvent(QPaintEvent* event)

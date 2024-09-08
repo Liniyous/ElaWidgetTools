@@ -1,6 +1,8 @@
 #include "ElaColorDialogPrivate.h"
 
+#include <QApplication>
 #include <QPainter>
+#include <QScreen>
 #include <QSlider>
 
 #include "ElaBaseListView.h"
@@ -232,6 +234,21 @@ void ElaColorDialogPrivate::_updateColorValueSlider()
     _colorValueSlider->blockSignals(false);
     _colorValueSliderStyle->setBaseColor(_pCurrentColor);
     _colorValueSlider->update();
+}
+
+void ElaColorDialogPrivate::_moveToCenter()
+{
+    Q_Q(ElaColorDialog);
+    if (q->isMaximized() || q->isFullScreen())
+    {
+        return;
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    auto geometry = q->screen()->availableGeometry();
+#else
+    auto geometry = qApp->screenAt(q->geometry().center())->geometry();
+#endif
+    q->setGeometry((geometry.left() + geometry.right() - q->width()) / 2, (geometry.top() + geometry.bottom() - q->height()) / 2, q->width(), q->height());
 }
 
 QString ElaColorDialogPrivate::_completeColorText(QString text) const

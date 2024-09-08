@@ -23,7 +23,6 @@
 #include <QVBoxLayout>
 
 #include "Def.h"
-#include "ElaApplication.h"
 #include "ElaEventBus.h"
 #include "ElaIconButton.h"
 #include "ElaTheme.h"
@@ -68,7 +67,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_pIsOnlyAllowMinAndClose = false;
     d->_pCustomWidget = nullptr;
     d->_pCustomWidgetMaximumWidth = 550;
-    d->_currentWinID = window()->winId();
 
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
@@ -76,7 +74,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     setShadow((HWND)(window()->winId()));
 #endif
-    QGuiApplication::instance()->installNativeEventFilter(this);
 #else
     window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     if (!d->_pIsFixedSize)
@@ -198,9 +195,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
 ElaAppBar::~ElaAppBar()
 {
-#ifdef Q_OS_WIN
-    QGuiApplication::instance()->removeNativeEventFilter(this);
-#endif
 }
 
 void ElaAppBar::setAppBarHeight(int height)
@@ -326,14 +320,18 @@ void ElaAppBar::setRouteBackButtonEnable(bool isEnable)
 void ElaAppBar::closeWindow()
 {
     Q_D(ElaAppBar);
-    eApp->setIsApplicationClosed(true);
     QPropertyAnimation* closeOpacityAnimation = new QPropertyAnimation(window(), "windowOpacity");
-    connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() { window()->close(); });
+    connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
+#ifdef Q_OS_WIN
+        QGuiApplication::instance()->removeNativeEventFilter(this);
+#endif
+        window()->close();
+    });
     closeOpacityAnimation->setStartValue(1);
     closeOpacityAnimation->setEndValue(0);
     closeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
     closeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    if (window()->isMaximized() || window()->isFullScreen())
+    if (window()->isMaximized() || window()->isFullScreen() || d->_pIsFixedSize)
     {
         return;
     }
@@ -382,6 +380,19 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
 #endif
         break;
     }
+#ifdef Q_OS_WIN
+    case QEvent::Show:
+    {
+        d->_currentWinID = window()->winId();
+        QGuiApplication::instance()->installNativeEventFilter(this);
+        HWND hwnd = reinterpret_cast<HWND>(window()->winId());
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
+        setShadow(hwnd);
+#endif
+        SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+        break;
+    }
+#endif
     case QEvent::Close:
     {
         QCloseEvent* closeEvent = dynamic_cast<QCloseEvent*>(event);
@@ -396,7 +407,9 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
         }
         else
         {
-            eApp->setIsApplicationClosed(true);
+#ifdef Q_OS_WIN
+            QGuiApplication::instance()->removeNativeEventFilter(this);
+#endif
         }
         return true;
     }

@@ -17,7 +17,6 @@ ElaWidget::ElaWidget(QWidget* parent)
     resize(500, 500); // 默认宽高
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
-    setWindowModality(Qt::ApplicationModal);
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
     d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
     d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
@@ -26,30 +25,17 @@ ElaWidget::ElaWidget(QWidget* parent)
     d->_appBar = new ElaAppBar(this);
     d->_appBar->setIsStayTop(true);
     d->_appBar->setWindowButtonFlags(ElaAppBarType::StayTopButtonHint | ElaAppBarType::MinimizeButtonHint | ElaAppBarType::MaximizeButtonHint | ElaAppBarType::CloseButtonHint);
-    d->_appBar->setIsDefaultClosed(false);
-    connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, [=]() {
-        hide();
-    });
-    setAttribute(Qt::WA_DeleteOnClose);
+    connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, &ElaWidget::routeBackButtonClicked);
+    connect(d->_appBar, &ElaAppBar::navigationButtonClicked, this, &ElaWidget::navigationButtonClicked);
+    connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, this, &ElaWidget::themeChangeButtonClicked);
+    connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWidget::closeButtonClicked);
+
+    // 主题
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
 }
 
 ElaWidget::~ElaWidget()
 {
-}
-
-void ElaWidget::moveToCenter()
-{
-    if (isMaximized() || isFullScreen())
-    {
-        return;
-    }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-    auto geometry = screen()->availableGeometry();
-#else
-    auto geometry = qApp->screenAt(this->geometry().center())->geometry();
-#endif
-    setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
 }
 
 void ElaWidget::setIsStayTop(bool isStayTop)
@@ -72,6 +58,33 @@ void ElaWidget::setIsFixedSize(bool isFixedSize)
 bool ElaWidget::getIsFixedSize() const
 {
     return d_ptr->_appBar->getIsFixedSize();
+}
+
+void ElaWidget::setIsDefaultClosed(bool isDefaultClosed)
+{
+    Q_D(ElaWidget);
+    d->_appBar->setIsDefaultClosed(isDefaultClosed);
+    Q_EMIT pIsDefaultClosedChanged();
+}
+
+bool ElaWidget::getIsDefaultClosed() const
+{
+    Q_D(const ElaWidget);
+    return d->_appBar->getIsDefaultClosed();
+}
+
+void ElaWidget::moveToCenter()
+{
+    if (isMaximized() || isFullScreen())
+    {
+        return;
+    }
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    auto geometry = screen()->availableGeometry();
+#else
+    auto geometry = qApp->screenAt(this->geometry().center())->geometry();
+#endif
+    setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
 }
 
 void ElaWidget::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)

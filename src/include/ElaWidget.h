@@ -10,18 +10,22 @@ class ELA_EXPORT ElaWidget : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaWidget)
+    Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
+    Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
+    Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
 public:
     explicit ElaWidget(QWidget* parent = nullptr);
     ~ElaWidget();
     void moveToCenter();
-    void setIsStayTop(bool isStayTop);
-    bool getIsStayTop() const;
-    void setIsFixedSize(bool isFixedSize);
-    bool getIsFixedSize() const;
 
     void setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;
+Q_SIGNALS:
+    Q_SIGNAL void routeBackButtonClicked();
+    Q_SIGNAL void navigationButtonClicked();
+    Q_SIGNAL void themeChangeButtonClicked();
+    Q_SIGNAL void closeButtonClicked();
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

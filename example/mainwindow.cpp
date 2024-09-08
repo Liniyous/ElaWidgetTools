@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget* parent)
     initContent();
 
     // 拦截默认关闭事件
-
+    _closeDialog = new ElaContentDialog(this);
     this->setIsDefaultClosed(false);
     connect(this, &MainWindow::closeButtonClicked, this, &MainWindow::onCloseButtonClicked);
 
@@ -54,14 +54,14 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+    delete this->_aboutPage;
 }
 
 void MainWindow::onCloseButtonClicked()
 {
-    ElaContentDialog closeDialog(this);
-    connect(&closeDialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(&closeDialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
-    closeDialog.exec();
+    connect(_closeDialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(_closeDialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
+    _closeDialog->exec();
 }
 
 void MainWindow::initWindow()
@@ -247,14 +247,15 @@ void MainWindow::initContent()
     addExpanderNode("TEST17", testKey_1, ElaIconType::Acorn);
 
     addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
-    T_About* aboutPage = new T_About();
-    aboutPage->hide();
+    _aboutPage = new T_About();
+
+    _aboutPage->hide();
     connect(this, &ElaWindow::navigationNodeClicked, this, [=](ElaNavigationType::NavigationNodeType nodeType, QString nodeKey) {
         if (_aboutKey == nodeKey)
         {
-            aboutPage->setFixedSize(400, 400);
-            aboutPage->moveToCenter();
-            aboutPage->show();
+            _aboutPage->setFixedSize(400, 400);
+            _aboutPage->moveToCenter();
+            _aboutPage->show();
         }
     });
     addFooterNode("Setting", new QWidget(this), _settingKey, 0, ElaIconType::GearComplex);

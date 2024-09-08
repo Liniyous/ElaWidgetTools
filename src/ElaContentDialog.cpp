@@ -181,6 +181,8 @@ void ElaContentDialog::showEvent(QShowEvent* event)
 {
     Q_D(ElaContentDialog);
     d->_maskWidget->setVisible(true);
+    d->_maskWidget->setFixedSize(parentWidget()->size());
+    d->_moveToCenter();
     d->_maskWidget->doMaskAnimation(90);
 #ifdef Q_OS_WIN
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
@@ -188,11 +190,6 @@ void ElaContentDialog::showEvent(QShowEvent* event)
 #endif
 #endif
     QDialog::showEvent(event);
-}
-
-void ElaContentDialog::closeEvent(QCloseEvent* event)
-{
-    QDialog::closeEvent(event);
 }
 
 void ElaContentDialog::paintEvent(QPaintEvent* event)
@@ -281,7 +278,7 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
         }
         else
         {
-            // setContentsMargins(0, 0, 0, 0);
+            setContentsMargins(0, 0, 0, 0);
         }
         *result = 0;
         return true;

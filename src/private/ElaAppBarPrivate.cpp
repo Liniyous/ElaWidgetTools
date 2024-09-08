@@ -46,7 +46,7 @@ void ElaAppBarPrivate::onCloseButtonClicked()
     Q_Q(ElaAppBar);
     if (_pIsDefaultClosed)
     {
-        q->closeWindow();
+        q->window()->close();
     }
     else
     {

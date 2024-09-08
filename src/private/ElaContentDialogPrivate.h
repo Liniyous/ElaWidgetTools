@@ -29,7 +29,7 @@ private:
     ElaPushButton* _leftButton{nullptr};
     ElaPushButton* _middleButton{nullptr};
     ElaPushButton* _rightButton{nullptr};
-
+    void _moveToCenter();
     void _doCloseAnimation();
 };
 

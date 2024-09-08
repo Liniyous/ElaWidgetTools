@@ -13,6 +13,7 @@
 #include <QVBoxLayout>
 
 #include "ElaAppBar.h"
+#include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
 #include "ElaEventBus.h"
 #include "ElaMenu.h"
@@ -107,6 +108,82 @@ ElaWindow::ElaWindow(QWidget* parent)
 ElaWindow::~ElaWindow()
 {
 }
+
+void ElaWindow::setIsStayTop(bool isStayTop)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setIsStayTop(isStayTop);
+    Q_EMIT pIsStayTopChanged();
+}
+
+bool ElaWindow::getIsStayTop() const
+{
+    return d_ptr->_appBar->getIsStayTop();
+}
+
+void ElaWindow::setIsFixedSize(bool isFixedSize)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setIsFixedSize(isFixedSize);
+    Q_EMIT pIsFixedSizeChanged();
+}
+
+bool ElaWindow::getIsFixedSize() const
+{
+    return d_ptr->_appBar->getIsFixedSize();
+}
+
+void ElaWindow::setIsDefaultClosed(bool isDefaultClosed)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setIsDefaultClosed(isDefaultClosed);
+    Q_EMIT pIsDefaultClosedChanged();
+}
+
+bool ElaWindow::getIsDefaultClosed() const
+{
+    return d_ptr->_appBar->getIsDefaultClosed();
+}
+
+void ElaWindow::setAppBarHeight(int appBarHeight)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setAppBarHeight(appBarHeight);
+    Q_EMIT pAppBarHeightChanged();
+}
+
+int ElaWindow::getAppBarHeight() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getAppBarHeight();
+}
+
+void ElaWindow::setCustomWidget(QWidget* widget)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setCustomWidget(widget);
+    Q_EMIT pCustomWidgetChanged();
+}
+
+QWidget* ElaWindow::getCustomWidget() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getCustomWidget();
+}
+
+void ElaWindow::setCustomWidgetMaximumWidth(int width)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setCustomWidgetMaximumWidth(width);
+    Q_EMIT pCustomWidgetMaximumWidthChanged();
+}
+
+int ElaWindow::getCustomWidgetMaximumWidth() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getCustomWidgetMaximumWidth();
+}
+
 void ElaWindow::setIsCentralStackedWidgetTransparent(bool isTransparent)
 {
     Q_D(ElaWindow);
@@ -173,28 +250,6 @@ void ElaWindow::setIsNavigationBarEnable(bool isVisible)
 bool ElaWindow::getIsNavigationBarEnable() const
 {
     return d_ptr->_isNavigationEnable;
-}
-
-void ElaWindow::setIsStayTop(bool isStayTop)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setIsStayTop(isStayTop);
-}
-
-bool ElaWindow::getIsStayTop() const
-{
-    return d_ptr->_appBar->getIsStayTop();
-}
-
-void ElaWindow::setIsFixedSize(bool isFixedSize)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setIsFixedSize(isFixedSize);
-}
-
-bool ElaWindow::getIsFixedSize() const
-{
-    return d_ptr->_appBar->getIsFixedSize();
 }
 
 void ElaWindow::setUserInfoCardVisible(bool isVisible)
@@ -304,56 +359,10 @@ ElaAppBarType::ButtonFlags ElaWindow::getWindowButtonFlags() const
     return d_ptr->_appBar->getWindowButtonFlags();
 }
 
-void ElaWindow::setCustomWidget(QWidget* widget)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setCustomWidget(widget);
-}
-
-QWidget* ElaWindow::getCustomWidget() const
-{
-    Q_D(const ElaWindow);
-    return d->_appBar->getCustomWidget();
-}
-
-void ElaWindow::setAppBarHeight(int appBarHeight)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setAppBarHeight(appBarHeight);
-}
-
-int ElaWindow::getAppBarHeight() const
-{
-    Q_D(const ElaWindow);
-    return d->_appBar->getAppBarHeight();
-}
-
-void ElaWindow::setCustomWidgetMaximumWidth(int width)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setCustomWidgetMaximumWidth(width);
-}
-
-int ElaWindow::getCustomWidgetMaximumWidth() const
-{
-    Q_D(const ElaWindow);
-    return d->_appBar->getCustomWidgetMaximumWidth();
-}
-
-void ElaWindow::setIsDefaultClosed(bool isDefaultClosed)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setIsDefaultClosed(isDefaultClosed);
-}
-
-bool ElaWindow::getIsDefaultClosed() const
-{
-    return d_ptr->_appBar->getIsDefaultClosed();
-}
-
 void ElaWindow::closeWindow()
 {
     Q_D(ElaWindow);
+    eApp->setIsApplicationClosed(true);
     d->_appBar->closeWindow();
 }
 

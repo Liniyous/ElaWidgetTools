@@ -11,6 +11,12 @@ class ELA_EXPORT ElaWindow : public QMainWindow
 {
     Q_OBJECT
     Q_Q_CREATE(ElaWindow)
+    Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
+    Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
+    Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
+    Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
+    Q_PROPERTY_CREATE_Q_H(QWidget*, CustomWidget)
+    Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
     Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
@@ -24,10 +30,6 @@ public:
 
     void setIsNavigationBarEnable(bool isEnable);
     bool getIsNavigationBarEnable() const;
-    void setIsStayTop(bool isStayTop);
-    bool getIsStayTop() const;
-    void setIsFixedSize(bool isFixedSize);
-    bool getIsFixedSize() const;
     void setUserInfoCardVisible(bool isVisible);
     void setUserInfoCardPixmap(QPixmap pix);
     void setUserInfoCardTitle(QString title);
@@ -49,17 +51,6 @@ public:
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;
 
-    void setCustomWidget(QWidget* widget);
-    QWidget* getCustomWidget() const;
-
-    void setAppBarHeight(int appBarHeight);
-    int getAppBarHeight() const;
-
-    void setCustomWidgetMaximumWidth(int width);
-    int getCustomWidgetMaximumWidth() const;
-
-    void setIsDefaultClosed(bool isDefaultClosed);
-    bool getIsDefaultClosed() const;
     void closeWindow();
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
