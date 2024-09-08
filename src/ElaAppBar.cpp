@@ -75,11 +75,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     setShadow((HWND)(window()->winId()));
 #endif
 #else
-    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-    if (!d->_pIsFixedSize)
-    {
-        window()->setWindowFlag(Qt::WindowMaximizeButtonHint);
-    }
+    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
 #endif
     setMouseTracking(true);
     setObjectName("ElaAppBar");
@@ -259,6 +255,7 @@ void ElaAppBar::setIsFixedSize(bool isFixedSize)
 {
     Q_D(ElaAppBar);
     d->_pIsFixedSize = isFixedSize;
+#ifdef Q_OS_WIN
     HWND hwnd = reinterpret_cast<HWND>(window()->winId());
     DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
     if (d->_pIsFixedSize)
@@ -271,6 +268,13 @@ void ElaAppBar::setIsFixedSize(bool isFixedSize)
     {
         ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
     }
+#else
+    window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    if (!isFixedSize)
+    {
+        window()->setWindowFlag(Qt::WindowMaximizeButtonHint);
+    }
+#endif
     Q_EMIT pIsFixedSizeChanged();
 }
 
