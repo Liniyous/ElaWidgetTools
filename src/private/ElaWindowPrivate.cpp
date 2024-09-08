@@ -186,14 +186,14 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
     _navigationTargetIndex = nodeIndex;
     QTimer::singleShot(180, this, [=]() {
         QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
+        _centerStackedWidget->setCurrentIndex(nodeIndex);
         QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
-        currentWidgetAnimation->setEasingCurve(QEasingCurve::InOutCubic);
-        currentWidgetAnimation->setDuration(280);
+        currentWidgetAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        currentWidgetAnimation->setDuration(300);
         QPoint currentWidgetPos = currentWidget->pos();
         currentWidgetAnimation->setEndValue(currentWidgetPos);
-        currentWidgetPos.setY(currentWidgetPos.y() + 60);
+        currentWidgetPos.setY(currentWidgetPos.y() + 80);
         currentWidgetAnimation->setStartValue(currentWidgetPos);
-        _centerStackedWidget->setCurrentIndex(nodeIndex);
         currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped); });
 }
 
