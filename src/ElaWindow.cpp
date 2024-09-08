@@ -167,6 +167,7 @@ void ElaWindow::setIsNavigationBarEnable(bool isVisible)
     Q_D(ElaWindow);
     d->_isNavigationEnable = isVisible;
     d->_navigationBar->setVisible(isVisible);
+    d->_centerLayout->setContentsMargins(isVisible ? d->_contentsMargins : 0, 0, 0, 0);
 }
 
 bool ElaWindow::getIsNavigationBarEnable() const
