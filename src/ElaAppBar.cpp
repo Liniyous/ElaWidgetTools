@@ -29,7 +29,6 @@
 #include "ElaTheme.h"
 #include "private/ElaAppBarPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsStayTop)
-Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsFixedSize)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsDefaultClosed)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsOnlyAllowMinAndClose)
 #ifdef Q_OS_WIN
@@ -175,19 +174,17 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 #ifdef Q_OS_WIN
     HWND hwnd = reinterpret_cast<HWND>(window()->winId());
     DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-    if (d->_pIsFixedSize)
+    ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
+    for (int i = 0; i < qApp->screens().count(); ++i)
     {
-        //切换DPI处理
-        ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_THICKFRAME);
-        for (int i = 0; i < qApp->screens().count(); ++i)
-        {
-            connect(qApp->screens().at(i), &QScreen::logicalDotsPerInchChanged, this, [=] { SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_FRAMECHANGED); });
-        }
+        connect(qApp->screens().at(i), &QScreen::logicalDotsPerInchChanged, this, [=] {
+            if (d->_pIsFixedSize)
+            {
+                SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_FRAMECHANGED);
+            }
+        });
     }
-    else
-    {
-        ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
-    }
+
     SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
 
     //主屏幕变更处理
@@ -262,6 +259,31 @@ int ElaAppBar::getCustomWidgetMaximumWidth() const
 {
     Q_D(const ElaAppBar);
     return d->_pCustomWidgetMaximumWidth;
+}
+
+void ElaAppBar::setIsFixedSize(bool isFixedSize)
+{
+    Q_D(ElaAppBar);
+    d->_pIsFixedSize = isFixedSize;
+    HWND hwnd = reinterpret_cast<HWND>(window()->winId());
+    DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
+    if (d->_pIsFixedSize)
+    {
+        //切换DPI处理
+        style &= ~WS_THICKFRAME;
+        ::SetWindowLongPtr(hwnd, GWL_STYLE, style);
+    }
+    else
+    {
+        ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
+    }
+    Q_EMIT pIsFixedSizeChanged();
+}
+
+bool ElaAppBar::getIsFixedSize() const
+{
+    Q_D(const ElaAppBar);
+    return d->_pIsFixedSize;
 }
 
 void ElaAppBar::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)
