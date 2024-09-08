@@ -107,6 +107,17 @@ ElaWindow::ElaWindow(QWidget* parent)
 ElaWindow::~ElaWindow()
 {
 }
+void ElaWindow::setIsCentralStackedWidgetTransparent(bool isTransparent)
+{
+    Q_D(ElaWindow);
+    d->_centerStackedWidget->setIsTransparent(isTransparent);
+}
+
+bool ElaWindow::getIsCentralStackedWidgetTransparent() const
+{
+    Q_D(const ElaWindow);
+    return d->_centerStackedWidget->getIsTransparent();
+}
 
 void ElaWindow::setIsEnableMica(bool isEnable)
 {

@@ -23,6 +23,7 @@ public:
     QImage grabScreenToImage() const;
     void startGrabScreen();
     void stopGrabScreen();
+    bool getIsGrabScreen() const;
     bool setDxDeviceID(int dxID);
     int getDxDeviceID() const;
     bool setOutputDeviceID(int deviceID);

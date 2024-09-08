@@ -18,6 +18,9 @@
 T_View::T_View(QWidget* parent)
     : T_BasePage(parent)
 {
+    // 预览窗口标题
+    setWindowTitle("ElaView");
+
     // 顶部元素
     createCustomWidget("一些常用的图表组件被放置于此，可在此界面体验其效果并按需添加进项目中");
 

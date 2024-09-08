@@ -12,6 +12,7 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_OBJECT
     Q_Q_CREATE(ElaWindow)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
+    Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
     Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
     Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)

@@ -100,6 +100,12 @@ void ElaDxgiManager::stopGrabScreen()
     d->_dxgi->setIsGrabActive(false);
 }
 
+bool ElaDxgiManager::getIsGrabScreen() const
+{
+    Q_D(const ElaDxgiManager);
+    return d->_dxgi->getIsGrabActive();
+}
+
 bool ElaDxgiManager::setDxDeviceID(int dxID)
 {
     Q_D(ElaDxgiManager);
@@ -257,13 +263,16 @@ ElaDxgiScreen::~ElaDxgiScreen()
 void ElaDxgiScreen::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaDxgiScreen);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
-    QPainterPath path;
-    path.addRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
-    painter.drawImage(rect(), d->_dxgiManager->grabScreenToImage());
-    painter.restore();
+    if (d->_dxgiManager->getIsGrabScreen())
+    {
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+        QPainterPath path;
+        path.addRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
+        painter.drawImage(rect(), d->_dxgiManager->grabScreenToImage());
+        painter.restore();
+    }
 }
 
 void ElaDxgiScreen::setIsSyncGrabSize(bool isSyncGrabSize)
