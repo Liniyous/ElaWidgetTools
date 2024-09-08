@@ -15,13 +15,23 @@ void ElaPlainTextEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     Q_Q(ElaPlainTextEdit);
     ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
-    if (actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
+    if (actionType == ElaAppBarType::WMLBUTTONDOWN)
     {
-        if (ElaApplication::containsCursorToItem(q) || !q->textCursor().selectedText().isEmpty())
+        if (!q->toPlainText().isEmpty() && q->hasFocus())
+        {
+            q->clearFocus();
+        }
+    }
+    else if (actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
+    {
+        if (ElaApplication::containsCursorToItem(q) || (actionType == ElaAppBarType::WMLBUTTONUP && !q->toPlainText().isEmpty()))
         {
             return;
         }
-        q->clearFocus();
+        if (q->hasFocus())
+        {
+            q->clearFocus();
+        }
     }
 }
 
