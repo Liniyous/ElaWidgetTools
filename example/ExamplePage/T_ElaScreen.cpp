@@ -6,8 +6,11 @@
 #include "ElaDxgiManager.h"
 #include "ElaText.h"
 T_ElaScreen::T_ElaScreen(QWidget* parent)
-    : ElaScrollPage(parent)
+    : T_BasePage(parent)
 {
+    // 预览窗口标题
+    setWindowTitle("ElaScreen");
+
     ElaDxgiManager* dxgiManager = ElaDxgiManager::getInstance();
     dxgiManager->setGrabArea(1920, 1080);
     dxgiManager->startGrabScreen();

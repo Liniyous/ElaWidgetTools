@@ -9,6 +9,8 @@
 T_Graphics::T_Graphics(QWidget* parent)
     : T_BasePage(parent)
 {
+    // 预览窗口标题
+    setWindowTitle("ElaGraphics");
     // 顶部元素
     createCustomWidget("图形视图框架被放置于此，可在此界面体验其效果，按住Ctrl进行缩放，按住Shitf进行连接");
 

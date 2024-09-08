@@ -13,6 +13,9 @@
 T_Navigation::T_Navigation(QWidget* parent)
     : T_BasePage(parent)
 {
+    // 预览窗口标题
+    setWindowTitle("ElaNavigation");
+
     // 顶部元素
     createCustomWidget("一些导航组件被放置于此，可在此界面体验其效果并按需添加进项目中");
 

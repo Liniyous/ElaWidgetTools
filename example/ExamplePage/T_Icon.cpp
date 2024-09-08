@@ -14,6 +14,8 @@
 T_Icon::T_Icon(QWidget* parent)
     : T_BasePage(parent)
 {
+    // 预览窗口标题
+    setWindowTitle("ElaIcon");
     // 顶部元素
     createCustomWidget("一堆常用图标被放置于此，左键单击以复制其枚举");
 
