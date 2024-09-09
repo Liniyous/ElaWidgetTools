@@ -328,6 +328,7 @@ void ElaAppBar::closeWindow()
     connect(closeOpacityAnimation, &QPropertyAnimation::finished, this, [=]() {
 #ifdef Q_OS_WIN
         QGuiApplication::instance()->removeNativeEventFilter(this);
+        d->_isOriginShow = true;
 #endif
         window()->close();
     });
@@ -387,13 +388,17 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
 #ifdef Q_OS_WIN
     case QEvent::Show:
     {
-        d->_currentWinID = window()->winId();
-        QGuiApplication::instance()->installNativeEventFilter(this);
-        HWND hwnd = reinterpret_cast<HWND>(window()->winId());
+        if (d->_isOriginShow)
+        {
+            d->_isOriginShow = false;
+            d->_currentWinID = window()->winId();
+            QGuiApplication::instance()->installNativeEventFilter(this);
+            HWND hwnd = reinterpret_cast<HWND>(window()->winId());
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-        setShadow(hwnd);
+            setShadow(hwnd);
 #endif
-        SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+            SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+        }
         break;
     }
 #endif
@@ -413,6 +418,7 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
         {
 #ifdef Q_OS_WIN
             QGuiApplication::instance()->removeNativeEventFilter(this);
+            d->_isOriginShow = true;
 #endif
         }
         return true;
@@ -617,7 +623,13 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
             auto geometry = window()->screen()->geometry();
 #else
-            auto geometry = qApp->screenAt(window()->geometry().center())->geometry();
+            QScreen* screen = qApp->screenAt(window()->geometry().center());
+            QRect geometry;
+            if (!screen)
+            {
+                screen = qApp->screenAt(QCursor::pos());
+            }
+            geometry = screen->geometry();
 #endif
             clientRect->top = geometry.top();
         }

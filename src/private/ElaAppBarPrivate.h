@@ -46,6 +46,7 @@ private:
     qint64 _currentWinID{0};
     int _lastMinTrackWidth{0};
     quint64 _clickTimer{0};
+    bool _isOriginShow{true};
     int _edges{0};
     int _margins{8};
     bool _isHoverMaxButton{false};
