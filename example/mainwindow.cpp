@@ -45,8 +45,12 @@ MainWindow::MainWindow(QWidget* parent)
 
     // 拦截默认关闭事件
     _closeDialog = new ElaContentDialog(this);
+    connect(_closeDialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
+    connect(_closeDialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
     this->setIsDefaultClosed(false);
-    connect(this, &MainWindow::closeButtonClicked, this, &MainWindow::onCloseButtonClicked);
+    connect(this, &MainWindow::closeButtonClicked, this, [=]() {
+        _closeDialog->exec();
+    });
 
     //移动到中心
     moveToCenter();
@@ -55,13 +59,6 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     delete this->_aboutPage;
-}
-
-void MainWindow::onCloseButtonClicked()
-{
-    connect(_closeDialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(_closeDialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
-    _closeDialog->exec();
 }
 
 void MainWindow::initWindow()

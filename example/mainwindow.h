@@ -22,7 +22,6 @@ class MainWindow : public ElaWindow
 public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
-    Q_SLOT void onCloseButtonClicked();
 
     void initWindow();
     void initEdgeLayout();
