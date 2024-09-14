@@ -103,6 +103,10 @@ QVariant T_TableViewModel::data(const QModelIndex& index, int role) const
     {
         return Qt::AlignCenter;
     }
+    else if (role == Qt::TextAlignmentRole && index.column() == 4)
+    {
+        return Qt::AlignCenter;
+    }
     return QVariant();
 }
 

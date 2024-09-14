@@ -194,8 +194,11 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             // QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
             QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
             QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
-            iconRect.adjust(_horizontalPadding, 0, _horizontalPadding, 0);
-            textRect.adjust(_horizontalPadding, 0, -_horizontalPadding, 0);
+            if (vopt->index.column() == 0)
+            {
+                iconRect.adjust(_horizontalPadding, 0, _horizontalPadding, 0);
+                textRect.adjust(_horizontalPadding, 0, 0, 0);
+            }
             // 图标绘制
             if (!vopt->icon.isNull())
             {
@@ -223,14 +226,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
             if (vopt->state.testFlag(QStyle::State_Selected))
             {
-                if (selectionBehavior == QAbstractItemView::SelectRows)
-                {
-                    if (vopt->index.column() == 0)
-                    {
-                        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
-                    }
-                }
-                else
+                if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
                 {
                     painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
                 }
