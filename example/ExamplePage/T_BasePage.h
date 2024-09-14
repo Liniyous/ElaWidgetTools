@@ -13,7 +13,6 @@ public:
 
 protected:
     void createCustomWidget(QString desText);
-    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // T_BASEPAGE_H

@@ -90,8 +90,8 @@ void MainWindow::initEdgeLayout()
     customLayout->setContentsMargins(0, 0, 0, 0);
     customLayout->addWidget(menuBar);
     customLayout->addStretch();
-    //this->setMenuBar(menuBar);
-    this->setCustomWidget(customWidget);
+    // this->setMenuBar(menuBar);
+    this->setCustomWidget(ElaAppBarType::MiddleArea, customWidget);
     this->setCustomWidgetMaximumWidth(500);
 
     menuBar->addElaIconAction(ElaIconType::AtomSimple, "动作菜单");
@@ -116,7 +116,6 @@ void MainWindow::initEdgeLayout()
 
     menuBar->addMenu("样例菜单(&B)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
     menuBar->addMenu("样例菜单(&C)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
-    menuBar->addMenu("样例菜单(&D)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
     menuBar->addMenu("样例菜单(&E)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
     menuBar->addMenu("样例菜单(&F)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");
     menuBar->addMenu("样例菜单(&G)")->addElaIconAction(ElaIconType::ArrowRotateRight, "样例选项");

@@ -103,31 +103,32 @@ void ElaMenuStyle::drawControl(ControlElement element, const QStyleOption* optio
                 }
                 else
                 {
-                    if (!menuIcon.isNull())
+                    QString iconText;
+                    const ElaMenu* menu = dynamic_cast<const ElaMenu*>(widget);
+                    if (menu)
                     {
-                        painter->drawPixmap(QRect(menuRect.x() + contentPadding, menuRect.center().y() - _iconWidth / 2, _iconWidth, _iconWidth), menuIcon.pixmap(_iconWidth, _iconWidth));
+                        QAction* action = menu->actionAt(menuRect.center());
+                        if (action)
+                        {
+                            iconText = action->property("ElaIconType").toString();
+                        }
+                    }
+                    if (!iconText.isEmpty())
+                    {
+                        painter->save();
+                        painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
+                                                                                                                                    : Qt::white);
+                        QFont iconFont = QFont("ElaAwesome");
+                        iconFont.setPixelSize(_pMenuItemHeight * 0.57);
+                        painter->setFont(iconFont);
+                        painter->drawText(QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter, iconText);
+                        painter->restore();
                     }
                     else
                     {
-                        const ElaMenu* menu = dynamic_cast<const ElaMenu*>(widget);
-                        if (menu)
+                        if (!menuIcon.isNull())
                         {
-                            QAction* action = menu->actionAt(menuRect.center());
-                            if (action)
-                            {
-                                QString iconText = action->property("ElaIconType").toString();
-                                if (!iconText.isEmpty())
-                                {
-                                    painter->save();
-                                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
-                                                                                                                                                : Qt::white);
-                                    QFont iconFont = QFont("ElaAwesome");
-                                    iconFont.setPixelSize(_pMenuItemHeight * 0.57);
-                                    painter->setFont(iconFont);
-                                    painter->drawText(QRectF(menuRect.x() + contentPadding, menuRect.y(), _iconWidth, menuRect.height()), Qt::AlignCenter, iconText);
-                                    painter->restore();
-                                }
-                            }
+                            painter->drawPixmap(QRect(menuRect.x() + contentPadding, menuRect.center().y() - _iconWidth / 2, _iconWidth, _iconWidth), menuIcon.pixmap(_iconWidth, _iconWidth));
                         }
                     }
                 }

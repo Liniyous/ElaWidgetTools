@@ -163,7 +163,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 painter->drawPixmap(iconRect.x(), iconRect.y(), iconPix);
             }
             //文字绘制
-            painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+            painter->setPen(ElaThemeColor(_themeMode, WindowText));
             QString text = painter->fontMetrics().elidedText(topt->text, Qt::ElideRight, textRect.width());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextDontClip, text);
             painter->restore();

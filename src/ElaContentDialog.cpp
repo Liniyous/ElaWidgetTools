@@ -181,8 +181,8 @@ void ElaContentDialog::showEvent(QShowEvent* event)
 {
     Q_D(ElaContentDialog);
     d->_maskWidget->setVisible(true);
+    d->_maskWidget->raise();
     d->_maskWidget->setFixedSize(parentWidget()->size());
-    d->_moveToCenter();
     d->_maskWidget->doMaskAnimation(90);
 #ifdef Q_OS_WIN
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))

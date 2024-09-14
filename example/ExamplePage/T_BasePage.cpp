@@ -1,7 +1,6 @@
 #include "T_BasePage.h"
 
 #include <QHBoxLayout>
-#include <QPainter>
 #include <QVBoxLayout>
 
 #include "ElaMenu.h"
@@ -83,19 +82,4 @@ void T_BasePage::createCustomWidget(QString desText)
     topLayout->addSpacing(5);
     topLayout->addWidget(descText);
     setCustomWidget(customWidget);
-}
-
-void T_BasePage::paintEvent(QPaintEvent* event)
-{
-    if (!parent())
-    {
-        QPainter painter(this);
-        painter.save();
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(eTheme->getThemeMode(), WindowBaseStart));
-        painter.drawRect(rect());
-        painter.restore();
-    }
-    ElaScrollPage::paintEvent(event);
 }

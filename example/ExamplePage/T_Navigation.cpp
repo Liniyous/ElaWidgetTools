@@ -100,7 +100,7 @@ T_Navigation::T_Navigation(QWidget* parent)
     centerVLayout->addWidget(tabWidgetText);
     centerVLayout->addSpacing(10);
     centerVLayout->addWidget(_tabWidget);
-    addCentralWidget(centralWidget, true, true, 0);
+    addCentralWidget(centralWidget, true, false, 0);
 }
 
 T_Navigation::~T_Navigation()

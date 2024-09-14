@@ -99,6 +99,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 
     //图标
     d->_iconLabel = new QLabel(this);
+    d->_iconLabelLayout = d->_createVLayout(d->_iconLabel);
     if (parent->windowIcon().isNull())
     {
         d->_iconLabel->setVisible(false);
@@ -106,16 +107,19 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     else
     {
         d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
+        d->_iconLabelLayout->setContentsMargins(10, 0, 0, 0);
     }
     connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
         d->_iconLabel->setPixmap(icon.pixmap(18, 18));
         d->_iconLabel->setVisible(icon.isNull() ? false : true);
+        d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
     });
 
     //标题
     d->_titleLabel = new ElaText(this);
     d->_titleLabel->setIsWrapAnywhere(false);
     d->_titleLabel->setTextPixelSize(13);
+    d->_titleLabelLayout = d->_createVLayout(d->_titleLabel);
     if (parent->windowTitle().isEmpty())
     {
         d->_titleLabel->setVisible(false);
@@ -123,10 +127,12 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     else
     {
         d->_titleLabel->setText(parent->windowTitle());
+        d->_titleLabelLayout->setContentsMargins(10, 0, 0, 0);
     }
     connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title) {
         d->_titleLabel->setText(title);
         d->_titleLabel->setVisible(title.isEmpty() ? false : true);
+        d->_titleLabelLayout->setContentsMargins(title.isEmpty() ? 0 : 10, 0, 0, 0);
     });
 
     // 主题变更
@@ -153,10 +159,8 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_mainLayout->setSpacing(0);
     d->_mainLayout->addLayout(d->_createVLayout(d->_routeBackButton));
     d->_mainLayout->addLayout(d->_createVLayout(d->_navigationButton));
-    d->_mainLayout->addSpacing(10);
-    d->_mainLayout->addLayout(d->_createVLayout(d->_iconLabel));
-    d->_mainLayout->addSpacing(10);
-    d->_mainLayout->addLayout(d->_createVLayout(d->_titleLabel));
+    d->_mainLayout->addLayout(d->_iconLabelLayout);
+    d->_mainLayout->addLayout(d->_titleLabelLayout);
     d->_mainLayout->addStretch();
     d->_mainLayout->addStretch();
     d->_mainLayout->addLayout(d->_createVLayout(d->_stayTopButton));
@@ -169,7 +173,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     HWND hwnd = reinterpret_cast<HWND>(window()->winId());
     DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
     ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
-    for (int i = 0; i < qApp->screens().count(); ++i)
+    for (int i = 0; i < qApp->screens().count(); i++)
     {
         connect(qApp->screens().at(i), &QScreen::logicalDotsPerInchChanged, this, [=] {
             if (d->_pIsFixedSize)
@@ -209,7 +213,7 @@ int ElaAppBar::getAppBarHeight() const
     return d->_pAppBarHeight;
 }
 
-void ElaAppBar::setCustomWidget(QWidget* widget)
+void ElaAppBar::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget)
 {
     Q_D(ElaAppBar);
     if (!widget || widget == this)
@@ -224,9 +228,26 @@ void ElaAppBar::setCustomWidget(QWidget* widget)
     {
         d->_mainLayout->removeWidget(d->_pCustomWidget);
     }
-    d->_mainLayout->insertWidget(7, widget);
+    switch (customArea)
+    {
+    case ElaAppBarType::LeftArea:
+    {
+        d->_mainLayout->insertWidget(4, widget);
+        break;
+    }
+    case ElaAppBarType::MiddleArea:
+    {
+        d->_mainLayout->insertWidget(5, widget);
+        break;
+    }
+    case ElaAppBarType::RightArea:
+    {
+        d->_mainLayout->insertWidget(6, widget);
+        break;
+    }
+    }
     d->_pCustomWidget = widget;
-    Q_EMIT pCustomWidgetChanged();
+    Q_EMIT customWidgetChanged();
 }
 
 QWidget* ElaAppBar::getCustomWidget() const

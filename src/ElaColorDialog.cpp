@@ -321,13 +321,6 @@ QString ElaColorDialog::getCurrentColorRGB() const
     return d->_getHexRgbValue();
 }
 
-void ElaColorDialog::showEvent(QShowEvent* event)
-{
-    Q_D(ElaColorDialog);
-    d->_moveToCenter();
-    QDialog::showEvent(event);
-}
-
 void ElaColorDialog::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaColorDialog);

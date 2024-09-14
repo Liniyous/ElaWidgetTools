@@ -15,7 +15,6 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
     Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(QWidget*, CustomWidget)
     Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
@@ -28,6 +27,8 @@ public:
 
     void moveToCenter();
 
+    void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget);
+    QWidget* getCustomWidget() const;
     void setIsNavigationBarEnable(bool isEnable);
     bool getIsNavigationBarEnable() const;
     void setUserInfoCardVisible(bool isVisible);
@@ -56,6 +57,7 @@ Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void closeButtonClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
+    Q_SIGNAL void customWidgetChanged();
 
 protected:
     virtual void moveEvent(QMoveEvent* event) override;

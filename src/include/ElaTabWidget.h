@@ -4,9 +4,12 @@
 #include <QTabWidget>
 
 #include "stdafx.h"
+
+class ElaTabWidgetPrivate;
 class ELA_EXPORT ElaTabWidget : public QTabWidget
 {
     Q_OBJECT
+    Q_Q_CREATE(ElaTabWidget)
     Q_PROPERTY_CREATE(bool, IsTabTransparent);
 
 public:
@@ -15,7 +18,9 @@ public:
     void setTabPosition(TabPosition position);
 
 protected:
-    void paintEvent(QPaintEvent* event) override;
+    virtual void paintEvent(QPaintEvent* event) override;
+    virtual void dragEnterEvent(QDragEnterEvent* event) override;
+    virtual void dropEvent(QDropEvent* event) override;
 };
 
 #endif // ELATABWIDGET_H

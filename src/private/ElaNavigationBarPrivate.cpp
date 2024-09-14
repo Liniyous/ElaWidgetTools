@@ -4,6 +4,7 @@
 #include <QPropertyAnimation>
 
 #include "ElaBaseListView.h"
+#include "ElaCustomWidget.h"
 #include "ElaFooterDelegate.h"
 #include "ElaFooterModel.h"
 #include "ElaIconButton.h"
@@ -52,13 +53,12 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     {
         return;
     }
+    ElaCustomWidget* floatWidget = new ElaCustomWidget();
     QWidget* widget = static_cast<QWidget*>(meta->newInstance());
-    if (widget)
-    {
-        widget->resize(600, 600);
-        widget->setAttribute(Qt::WA_DeleteOnClose);
-        widget->show();
-    }
+    floatWidget->setWindowIcon(widget->windowIcon());
+    floatWidget->setWindowTitle(widget->windowTitle());
+    floatWidget->setCentralWidget(widget);
+    floatWidget->show();
 }
 
 void ElaNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)

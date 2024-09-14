@@ -21,9 +21,6 @@ public:
 
     QAction* addElaIconAction(ElaIconType::IconName icon, const QString& text);
     QAction* addElaIconAction(ElaIconType::IconName icon, const QString& text, const QKeySequence& shortcut);
-
-protected:
-    void resizeEvent(QResizeEvent* event) override;
 };
 
 #endif // ELAMENUBAR_H

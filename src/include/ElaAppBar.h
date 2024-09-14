@@ -16,11 +16,13 @@ class ELA_EXPORT ElaAppBar : public QWidget, QAbstractNativeEventFilter
     Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_Q_H(bool, IsOnlyAllowMinAndClose)
     Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(QWidget*, CustomWidget)
     Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
 public:
     explicit ElaAppBar(QWidget* parent = nullptr);
     ~ElaAppBar();
+
+    void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget);
+    QWidget* getCustomWidget() const;
 
     void setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
@@ -34,6 +36,7 @@ Q_SIGNALS:
     Q_SIGNAL void navigationButtonClicked();
     Q_SIGNAL void themeChangeButtonClicked();
     Q_SIGNAL void closeButtonClicked();
+    Q_SIGNAL void customWidgetChanged();
 
 protected:
     virtual bool eventFilter(QObject* obj, QEvent* event) override;

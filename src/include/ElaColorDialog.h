@@ -21,7 +21,6 @@ Q_SIGNALS:
     Q_SIGNAL void colorSelected(const QColor& color);
 
 protected:
-    virtual void showEvent(QShowEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };
 

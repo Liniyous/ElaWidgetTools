@@ -255,6 +255,14 @@ enum ButtonType
 Q_ENUM_CREATE(ButtonType)
 Q_DECLARE_FLAGS(ButtonFlags, ButtonType)
 
+enum CustomArea
+{
+    LeftArea = 0x0001,
+    MiddleArea = 0x0002,
+    RightArea = 0x0003,
+};
+Q_ENUM_CREATE(CustomArea)
+
 enum WMMouseActionType
 {
     WMLBUTTONDOWN = 0x0001,

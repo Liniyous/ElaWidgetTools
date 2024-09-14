@@ -32,6 +32,8 @@ public:
 
 private:
     QHBoxLayout* _mainLayout{nullptr};
+    QVBoxLayout* _iconLabelLayout{nullptr};
+    QVBoxLayout* _titleLabelLayout{nullptr};
     ElaAppBarType::ButtonFlags _buttonFlags;
     ElaIconButton* _routeBackButton{nullptr};
     ElaIconButton* _navigationButton{nullptr};

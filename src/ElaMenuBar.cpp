@@ -1,5 +1,6 @@
 #include "ElaMenuBar.h"
 
+#include <QEvent>
 #include <QPainter>
 #include <QToolButton>
 
@@ -12,6 +13,19 @@ ElaMenuBar::ElaMenuBar(QWidget* parent)
     setMouseTracking(true);
     setObjectName("ElaMenuBar");
     setStyle(new ElaMenuBarStyle(style()));
+    QToolButton* tool = this->findChild<QToolButton*>();
+    if (tool->objectName() == "qt_menubar_ext_button")
+    {
+        QMenu* oldMenu = tool->menu();
+        ElaMenu* menu = new ElaMenu(this);
+        menu->setObjectName("ElaExtendMenu");
+        menu->setMenuItemHeight(27);
+        if (oldMenu)
+        {
+            oldMenu->deleteLater();
+        }
+        tool->setMenu(menu);
+    }
 }
 
 ElaMenuBar::~ElaMenuBar()
@@ -49,9 +63,9 @@ ElaMenu* ElaMenuBar::addMenu(ElaIconType::IconName icon, const QString& title)
 {
     ElaMenu* menu = new ElaMenu(title, this);
     menu->setMenuItemHeight(27);
-    QMenuBar::addAction(menu->menuAction());
     menu->menuAction()->setProperty("ElaIconType", QChar((unsigned short)icon));
     menu->menuAction()->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
+    QMenuBar::addAction(menu->menuAction());
     return menu;
 }
 
@@ -62,22 +76,4 @@ QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString&
     action->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
     QMenuBar::addAction(action);
     return action;
-}
-
-void ElaMenuBar::resizeEvent(QResizeEvent* event)
-{
-    QMenuBar::resizeEvent(event);
-    QToolButton* tool = this->findChild<QToolButton*>();
-    if (tool->objectName() == "qt_menubar_ext_button")
-    {
-        QMenu* oldMenu = tool->menu();
-        if (oldMenu && oldMenu->objectName() != "ElaMenu")
-        {
-            ElaMenu* menu = new ElaMenu(this);
-            menu->setMenuItemHeight(27);
-            menu->addActions(oldMenu->actions());
-            oldMenu->deleteLater();
-            tool->setMenu(menu);
-        }
-    }
 }

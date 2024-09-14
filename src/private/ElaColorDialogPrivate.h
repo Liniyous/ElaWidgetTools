@@ -79,7 +79,6 @@ private:
     void _updateEditValue();
     void _updateColorPreview();
     void _updateColorValueSlider();
-    void _moveToCenter();
     QString _completeColorText(QString text) const;
     QString _getHexRgbValue() const;
     QColor _getColorFromEdit() const;
