@@ -177,6 +177,12 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     }
                     else
                     {
+                        if (originNode == _navigationModel->getSelectedExpandedNode())
+                        {
+                            _navigationModel->setSelectedNode(node);
+                            _resetNodeSelected();
+                            return;
+                        }
                         _navigationModel->setSelectedExpandedNode(originNode);
                         postData.insert("SelectedNode", QVariant::fromValue(originNode));
                     }

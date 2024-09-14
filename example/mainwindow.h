@@ -12,7 +12,9 @@ class T_Graphics;
 class T_Navigation;
 class T_Popup;
 class T_Card;
-class T_View;
+class T_ListView;
+class T_TableView;
+class T_TreeView;
 class T_About;
 class ElaContentDialog;
 class MainWindow : public ElaWindow
@@ -39,9 +41,12 @@ private:
     T_Navigation* _navigationPage{nullptr};
     T_Popup* _popupPage{nullptr};
     T_Card* _cardPage{nullptr};
-    T_View* _viewPage{nullptr};
+    T_ListView* _listViewPage{nullptr};
+    T_TableView* _tableViewPage{nullptr};
+    T_TreeView* _treeViewPage{nullptr};
     T_About* _aboutPage{nullptr};
     QString _elaDxgiKey{""};
+    QString _viewKey{""};
     QString _aboutKey{""};
     QString _settingKey{""};
 };

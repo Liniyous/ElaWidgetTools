@@ -84,7 +84,6 @@ void ElaPushButton::mouseReleaseEvent(QMouseEvent* event)
 {
     Q_D(ElaPushButton);
     d->_isPressed = false;
-    Q_EMIT clicked();
     QPushButton::mouseReleaseEvent(event);
 }
 

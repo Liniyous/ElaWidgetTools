@@ -22,7 +22,9 @@
 #include "T_BaseComponents.h"
 #include "T_Card.h"
 #include "T_Graphics.h"
-#include "T_View.h"
+#include "T_ListView.h"
+#include "T_TableView.h"
+#include "T_TreeView.h"
 #ifdef Q_OS_WIN
 #include "ExamplePage/T_ElaScreen.h"
 #endif
@@ -209,7 +211,9 @@ void MainWindow::initContent()
     _navigationPage = new T_Navigation(this);
     _popupPage = new T_Popup(this);
     _cardPage = new T_Card(this);
-    _viewPage = new T_View(this);
+    _listViewPage = new T_ListView(this);
+    _tableViewPage = new T_TableView(this);
+    _treeViewPage = new T_TreeView(this);
 
     QString testKey_1;
     QString testKey_2;
@@ -220,12 +224,17 @@ void MainWindow::initContent()
 #endif
     // navigation(elaScreenWidget->property("ElaPageKey").toString());
     addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
-    addPageNode("ElaView", _viewPage, ElaIconType::CameraViewfinder);
-    addPageNode("ElaGraphics", _graphicsPage, 9, ElaIconType::KeySkeleton);
+
+    addExpanderNode("ElaView", _viewKey, ElaIconType::CameraViewfinder);
+    addPageNode("ElaListView", _listViewPage, _viewKey, 9, ElaIconType::List);
+    addPageNode("ElaTableView", _tableViewPage, _viewKey, ElaIconType::Table);
+    addPageNode("ElaTreeView", _treeViewPage, _viewKey, ElaIconType::ListTree);
+
+    addPageNode("ElaGraphics", _graphicsPage, 9, ElaIconType::Paintbrush);
     addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
-    addPageNode("ElaNavigation", _navigationPage, ElaIconType::Table);
+    addPageNode("ElaNavigation", _navigationPage, ElaIconType::LocationArrow);
     addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
-    addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontAwesome);
+    addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontCase);
     addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
     addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);
     addPageNode("Third Level", new QWidget(this), testKey_1, ElaIconType::Acorn);
