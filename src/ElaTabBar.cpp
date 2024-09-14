@@ -73,7 +73,11 @@ void ElaTabBar::dropEvent(QDropEvent* event)
     {
         event->accept();
         QMimeData* data = const_cast<QMimeData*>(event->mimeData());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         data->setProperty("TabDropIndex", tabAt(event->position().toPoint()));
+#else
+        data->setProperty("TabDropIndex", tabAt(event->pos()));
+#endif
         Q_EMIT tabDragDrop(data);
     }
     QTabBar::dropEvent(event);
