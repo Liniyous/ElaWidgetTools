@@ -12,11 +12,13 @@ class ELA_EXPORT ElaScrollBar : public QScrollBar
     Q_OBJECT
     Q_Q_CREATE(ElaScrollBar)
     Q_PROPERTY_CREATE_Q_H(bool, IsAnimation)
+    Q_PROPERTY_CREATE_Q_H(qreal, SpeedLimit)
 public:
     explicit ElaScrollBar(QWidget* parent = nullptr);
     explicit ElaScrollBar(Qt::Orientation orientation, QWidget* parent = nullptr);
     explicit ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* parent = nullptr);
     ~ElaScrollBar();
+
 Q_SIGNALS:
     Q_SIGNAL void rangeAnimationFinished();
 

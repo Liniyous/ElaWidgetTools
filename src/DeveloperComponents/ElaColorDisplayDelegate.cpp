@@ -20,7 +20,7 @@ void ElaColorDisplayDelegate::paint(QPainter* painter, const QStyleOptionViewIte
 {
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing);
-    QRect itemRect = option.rect;
+    QRectF itemRect = option.rect;
     // 颜色球绘制
     QColor displayColor = index.data(Qt::UserRole).value<QColor>();
     if (displayColor.isValid())

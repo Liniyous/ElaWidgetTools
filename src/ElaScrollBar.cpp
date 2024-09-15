@@ -11,6 +11,7 @@
 #include "ElaScrollBarStyle.h"
 #include "private/ElaScrollBarPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, bool, IsAnimation)
+Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, qreal, SpeedLimit)
 ElaScrollBar::ElaScrollBar(QWidget* parent)
     : QScrollBar(parent), d_ptr(new ElaScrollBarPrivate())
 {
@@ -19,6 +20,7 @@ ElaScrollBar::ElaScrollBar(QWidget* parent)
     setSingleStep(1);
     setObjectName("ElaScrollBar");
     setAttribute(Qt::WA_OpaquePaintEvent, false);
+    d->_pSpeedLimit = 20;
     d->_pTargetMaximum = 0;
     d->_pIsAnimation = false;
     connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
@@ -156,17 +158,16 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
 {
     Q_D(ElaScrollBar);
     int verticalDelta = event->angleDelta().y();
+    if (d->_slideSmoothAnimation->state() == QAbstractAnimation::Stopped)
+    {
+        d->_scrollValue = value();
+    }
     if (verticalDelta != 0)
     {
         if ((value() == minimum() && verticalDelta > 0) || (value() == maximum() && verticalDelta < 0))
         {
             QScrollBar::wheelEvent(event);
             return;
-        }
-        if (d->_lastVerticalDeltaAngle != verticalDelta || d->_scrollValue == -1)
-        {
-            d->_scrollValue = value();
-            d->_lastVerticalDeltaAngle = verticalDelta;
         }
         d->_scroll(event->modifiers(), verticalDelta);
     }
@@ -177,11 +178,6 @@ void ElaScrollBar::wheelEvent(QWheelEvent* event)
         {
             QScrollBar::wheelEvent(event);
             return;
-        }
-        if (d->_lastHorizontalDeltaAngle != horizontalDelta || d->_scrollValue == -1)
-        {
-            d->_scrollValue = value();
-            d->_lastHorizontalDeltaAngle = horizontalDelta;
         }
         d->_scroll(event->modifiers(), horizontalDelta);
     }

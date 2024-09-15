@@ -60,6 +60,10 @@ void ElaScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta)
     {
         stepsToScroll = QApplication::wheelScrollLines() * offset * singleStep;
     }
+    if (abs(_scrollValue - q->value()) > abs(stepsToScroll * _pSpeedLimit))
+    {
+        _scrollValue = q->value();
+    }
     _scrollValue -= stepsToScroll;
     _slideSmoothAnimation->stop();
     _slideSmoothAnimation->setStartValue(q->value());
