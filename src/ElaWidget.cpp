@@ -18,8 +18,8 @@ ElaWidget::ElaWidget(QWidget* parent)
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
     d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, WindowBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, WindowBaseEnd));
+    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(eTheme->getThemeMode(), WindowBaseStart));
+    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(eTheme->getThemeMode(), WindowBaseEnd));
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
