@@ -473,7 +473,14 @@ void ElaNavigationBarPrivate::_handleMaximalToCompactLayout()
     {
         _navigationButtonLayout->takeAt(0);
     }
-    _navigationButtonLayout->addSpacing(76);
+    if (_isShowUserCard)
+    {
+        _navigationButtonLayout->addSpacing(76);
+    }
+    else
+    {
+        _navigationButtonLayout->addSpacing(40);
+    }
 
     _navigationSuggestLayout->addStretch();
 
@@ -498,7 +505,10 @@ void ElaNavigationBarPrivate::_handleCompactToMaximalLayout()
     {
         _userButtonLayout->takeAt(0);
     }
-    _userButtonLayout->addSpacing(74);
+    if (_isShowUserCard)
+    {
+        _userButtonLayout->addSpacing(74);
+    }
 }
 
 void ElaNavigationBarPrivate::_resetLayout()
