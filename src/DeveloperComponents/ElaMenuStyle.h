@@ -4,7 +4,7 @@
 #include <QProxyStyle>
 
 #include "Def.h"
-#include "stdafx.h"
+
 class ElaMenuStyle : public QProxyStyle
 {
     Q_OBJECT

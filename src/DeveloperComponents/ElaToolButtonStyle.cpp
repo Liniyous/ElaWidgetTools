@@ -255,15 +255,8 @@ void ElaToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const Q
         {
         case Qt::ToolButtonTextOnly:
         {
-            if (bopt->features.testFlag(QStyleOptionToolButton::HasMenu) && !bopt->features.testFlag(QStyleOptionToolButton::MenuButtonPopup))
-            {
-                contentRect.setLeft(contentRect.left() + _contentMargin);
-                painter->drawText(contentRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
-            }
-            else
-            {
-                painter->drawText(contentRect, Qt::AlignCenter, bopt->text);
-            }
+            contentRect.setLeft(contentRect.left() + _contentMargin);
+            painter->drawText(contentRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             break;
         }
         case Qt::ToolButtonTextBesideIcon:

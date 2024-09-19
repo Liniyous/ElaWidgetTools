@@ -29,6 +29,18 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::BreadcrumbBarTextHasFocus] = QColor(0x86, 0x86, 0x8A);
     _darkThemeColorList[ElaThemeType::BreadcrumbBarTextHasFocus] = QColor(0x86, 0x86, 0x8A);
 
+    // ElaCalendar
+    _lightThemeColorList[ElaThemeType::CalendarBorder] = QColor(0xE5, 0xE5, 0xE5);
+    _darkThemeColorList[ElaThemeType::CalendarBorder] = QColor(0x30, 0x30, 0x30);
+    _lightThemeColorList[ElaThemeType::CalendarBase] = QColor(0xFF, 0xFF, 0xFF);
+    _darkThemeColorList[ElaThemeType::CalendarBase] = QColor(0x1F, 0x1F, 0x1F);
+    _lightThemeColorList[ElaThemeType::CalendarHover] = QColor(0xF6, 0xF6, 0xF6);
+    _darkThemeColorList[ElaThemeType::CalendarHover] = QColor(0x2C, 0x2C, 0x2C);
+    _lightThemeColorList[ElaThemeType::CalendarSelected] = QColor(0x00, 0x67, 0xC0);
+    _darkThemeColorList[ElaThemeType::CalendarSelected] = QColor(0x4C, 0xC2, 0xFF);
+    _lightThemeColorList[ElaThemeType::CalendarSelectedHover] = QColor(0x1A, 0x76, 0xC6);
+    _darkThemeColorList[ElaThemeType::CalendarSelectedHover] = QColor(0x47, 0xB1, 0xE8);
+
     //ElaCheckBox
     _lightThemeColorList[ElaThemeType::CheckBoxBorder] = QColor(0x87, 0x87, 0x87);
     _darkThemeColorList[ElaThemeType::CheckBoxBorder] = QColor(0xA0, 0xA0, 0xA0);

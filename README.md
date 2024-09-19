@@ -17,17 +17,6 @@
 [ubuntu-link]: https://github.com/Liniyous/ElaWidgetTools/actions?query=workflow%3AUbuntu "UbuntuAction"
 [ubuntu-badge]: https://img.shields.io/badge/Ubuntu-Passing-61C263
 
-## 发布
-
-|[已发布][release-link]|[下载][download-link]|下载次数|
-|:--:|:--:|:--:|
-|![release-badge] |![download-badge]|![download-latest]|
-
-[release-link]: https://github.com/Liniyous/ElaWidgetTools/releases "Release status"
-[release-badge]: https://img.shields.io/github/release/Liniyous/ElaWidgetTools.svg?style=flat-square "Release status"
-[download-link]: https://github.com/Liniyous/ElaWidgetTools/releases/latest "Download status"
-[download-badge]: https://img.shields.io/github/downloads/Liniyous/ElaWidgetTools/total.svg "Download status"
-[download-latest]: https://img.shields.io/github/downloads/Liniyous/ElaWidgetTools/latest/total.svg "latest status"
 
 ## 主界面预览
 <div align=center>
@@ -48,6 +37,8 @@
 |ElaCheckBox|勾选框||
 |ElaComboBox|下拉框||
 |ElaColorDialog|颜色选择器||
+|ElaCalendar|日历视图||
+|ElaCalendarPicker|日期选择器||
 |ElaMultiSelectComboBox|多选下拉框||
 |ElaContentDialog|带遮罩的对话框||
 |ElaDockWidget|停靠窗口||
