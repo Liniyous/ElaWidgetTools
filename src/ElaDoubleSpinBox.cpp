@@ -10,6 +10,8 @@
 ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
     : QDoubleSpinBox(parent), d_ptr(new ElaDoubleSpinBoxPrivate())
 {
+    Q_D(ElaDoubleSpinBox);
+    d->q_ptr = this;
     setFixedSize(120, 30);
     setStyle(new ElaSpinBoxStyle(style()));
     lineEdit()->setAlignment(Qt::AlignCenter);
