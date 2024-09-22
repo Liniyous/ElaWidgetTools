@@ -150,8 +150,8 @@ void ElaPopularCard::paintEvent(QPaintEvent* event)
     QRectF foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth - d->_pHoverYOffset + 1, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
     //背景绘制
     painter.setOpacity(1);
-    painter.setPen(underMouse() ? ElaThemeColor(d->_themeMode, PopularCardFloaterBorder) : ElaThemeColor(d->_themeMode, PopularCardBorder));
-    painter.setBrush(ElaThemeColor(d->_themeMode, PopularCardBase));
+    painter.setPen(underMouse() ? ElaThemeColor(d->_themeMode, PopupBorderHover) : ElaThemeColor(d->_themeMode, BasicBorder));
+    painter.setBrush(ElaThemeColor(d->_themeMode, BasicBaseAlpha));
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     //图片绘制
     painter.save();
@@ -173,7 +173,7 @@ void ElaPopularCard::paintEvent(QPaintEvent* event)
     d->_buttonTargetRect = QRect(QPoint(width() + 2 * d->_floater->_floatGeometryOffset - d->_shadowBorderWidth + 3 - foregroundRect.height() * 0.15 - buttonTargetWidth, foregroundRect.height() * 0.15 - 3), QSize(buttonTargetWidth, 36));
 
     // Title
-    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     QFont font = painter.font();
     font.setWeight(QFont::Bold);
     font.setPixelSize(15);
@@ -204,14 +204,14 @@ void ElaPopularCard::paintEvent(QPaintEvent* event)
         //覆盖背景绘制
         QRectF tipRect(foregroundRect.right() - d->_textHSpacing - tipWidth, foregroundRect.bottom() - d->_textHSpacing - tipHeight, foregroundRect.width() / 2 - d->_textHSpacing, tipHeight);
         painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(d->_themeMode, PopularCardInteractiveTipsBase));
+        painter.setBrush(ElaThemeColor(d->_themeMode, BasicBaseDeep));
         QRectF baseRect = tipRect;
         baseRect.setRight(tipRect.x() + tipWidth);
         baseRect.adjust(-7, -3, 4, 3);
         d->_interactiveTipsBaseRect = baseRect;
         painter.drawRoundedRect(baseRect, 6, 6);
         //文字绘制
-        painter.setPen(ElaThemeColor(d->_themeMode, PopularCardInteractiveTips));
+        painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
         painter.drawText(tipRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, d->_pInteractiveTips);
     }
     else

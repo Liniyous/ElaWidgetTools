@@ -16,12 +16,6 @@ ElaCheckBoxStyle::~ElaCheckBoxStyle()
 {
 }
 
-void ElaCheckBoxStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
-{
-    //qDebug() << element << option->rect;
-    QProxyStyle::drawPrimitive(element, option, painter, widget);
-}
-
 void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
 {
     // qDebug() << element << option->rect;
@@ -41,20 +35,20 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             painter->setPen(Qt::NoPen);
             if (bopt->state.testFlag(QStyle::State_On) || bopt->state.testFlag(QStyle::State_NoChange))
             {
-                painter->setPen(ElaThemeColor(_themeMode, CheckBoxCheckedBorder));
+                painter->setPen(Qt::NoPen);
                 if (bopt->state.testFlag(QStyle::State_Sunken))
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, CheckBoxCheckedPress));
+                    painter->setBrush(ElaThemeColor(_themeMode, PrimaryPress));
                 }
                 else
                 {
                     if (bopt->state.testFlag(QStyle::State_MouseOver))
                     {
-                        painter->setBrush(ElaThemeColor(_themeMode, CheckBoxCheckedHover));
+                        painter->setBrush(ElaThemeColor(_themeMode, PrimaryHover));
                     }
                     else
                     {
-                        painter->setBrush(ElaThemeColor(_themeMode, CheckBoxCheckedBase));
+                        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                     }
                 }
             }
@@ -62,24 +56,24 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             {
                 if (bopt->state.testFlag(QStyle::State_Sunken))
                 {
-                    painter->setPen(ElaThemeColor(_themeMode, CheckBoxPressBorder));
+                    painter->setPen(ElaThemeColor(_themeMode, BasicBorderDeep));
                 }
                 else
                 {
-                    painter->setPen(ElaThemeColor(_themeMode, CheckBoxBorder));
+                    painter->setPen(ElaThemeColor(_themeMode, BasicBorderDeep));
                     if (bopt->state.testFlag(QStyle::State_MouseOver))
                     {
-                        painter->setBrush(ElaThemeColor(_themeMode, CheckBoxHover));
+                        painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
                     }
                     else
                     {
-                        painter->setBrush(ElaThemeColor(_themeMode, CheckBoxBase));
+                        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
                     }
                 }
             }
             painter->drawRoundedRect(checkRect, 2, 2);
             //图标绘制
-            painter->setPen(ElaThemeColor(ElaThemeType::Dark, WindowText));
+            painter->setPen(ElaThemeColor(ElaThemeType::Dark, BasicText));
             if (bopt->state.testFlag(QStyle::State_On))
             {
                 painter->save();
@@ -95,7 +89,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
                 painter->drawLine(checkLine);
             }
             //文字绘制
-            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
+            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
             QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             painter->restore();

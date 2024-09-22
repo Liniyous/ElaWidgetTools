@@ -40,12 +40,12 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 if (vopt->state & QStyle::State_MouseOver)
                 {
                     // 选中时覆盖
-                    painter->fillPath(path, ElaThemeColor(_themeMode, ListViewItemSelectedHover));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
                 }
                 else
                 {
                     // 选中
-                    painter->fillPath(path, ElaThemeColor(_themeMode, ListViewItemSelected));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 }
             }
             else
@@ -53,7 +53,7 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 if (vopt->state & QStyle::State_MouseOver)
                 {
                     // 覆盖时颜色
-                    painter->fillPath(path, ElaThemeColor(_themeMode, ListViewItemHover));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
             }
             painter->restore();
@@ -70,7 +70,7 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 painter->save();
                 painter->setRenderHint(QPainter::Antialiasing);
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, ListViewAlternatingRow));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicAlternating));
                 painter->drawRect(vopt->rect);
                 painter->restore();
             }
@@ -102,8 +102,8 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
             frameRect.adjust(1, 1, -1, -1);
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing);
-            painter->setPen(ElaThemeColor(_themeMode, ListViewBorder));
-            painter->setBrush(ElaThemeColor(_themeMode, ListViewBase));
+            painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
             painter->drawRoundedRect(frameRect, 3, 3);
             painter->restore();
         }
@@ -145,7 +145,7 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
             // 文字绘制
             if (!vopt->text.isEmpty())
             {
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(textRect, vopt->displayAlignment, vopt->text);
             }
             // 选中特效
@@ -153,7 +153,7 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
             {
                 int heightOffset = itemRect.height() / 4;
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
             }
             painter->restore();

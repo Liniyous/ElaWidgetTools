@@ -165,7 +165,7 @@ void ElaCalendar::paintEvent(QPaintEvent* event)
     QRect baseRect = rect();
     baseRect.adjust(d->_borderWidth, d->_borderWidth, -d->_borderWidth, -d->_borderWidth);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, CalendarBase));
+    painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
     painter.drawRoundedRect(baseRect, d->_pBorderRaiuds, d->_pBorderRaiuds);
     // 缩放动画
     if (!d->_isSwitchAnimationFinished)
@@ -180,7 +180,7 @@ void ElaCalendar::paintEvent(QPaintEvent* event)
         painter.restore();
     }
     // 分割线
-    painter.setPen(QPen(ElaThemeColor(d->_themeMode, CalendarBorder), d->_borderWidth));
+    painter.setPen(QPen(ElaThemeColor(d->_themeMode, BasicBorder), d->_borderWidth));
     painter.setBrush(Qt::NoBrush);
     painter.drawRoundedRect(baseRect, d->_pBorderRaiuds, d->_pBorderRaiuds);
     painter.drawLine(QPointF(baseRect.x(), 45), QPointF(baseRect.right(), 45));

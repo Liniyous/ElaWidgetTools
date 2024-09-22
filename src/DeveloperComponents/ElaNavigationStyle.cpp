@@ -88,19 +88,19 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
                 if (index == _pPressIndex)
                 {
                     // 选中时点击
-                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
                     if (vopt->state & QStyle::State_MouseOver)
                     {
                         // 选中时覆盖
-                        painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+                        painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
                     }
                     else
                     {
                         // 选中
-                        painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelected));
+                        painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
                     }
                 }
             }
@@ -109,14 +109,14 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
                 if (index == _pPressIndex)
                 {
                     // 点击时颜色
-                    painter->fillPath(path, ElaThemeColor(_themeMode, NavigationSelectedHover));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
                 }
                 else
                 {
                     if (vopt->state & QStyle::State_MouseOver)
                     {
                         // 覆盖时颜色
-                        painter->fillPath(path, ElaThemeColor(_themeMode, NavigationHover));
+                        painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
                     }
                 }
             }
@@ -174,18 +174,18 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
             if (_isSelectMarkDisplay && (node == model->getSelectedNode() || node == model->getSelectedExpandedNode()))
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pSelectMarkTop, 3, itemRect.height() - _pSelectMarkTop - _pSelectMarkBottom), 3, 3);
             }
             if (node == _lastSelectedNode)
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 3, 3);
             }
 
             // 图标绘制
-            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
+            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, BasicTextPress) : ElaThemeColor(_themeMode, BasicText));
             if (node->getAwesome() != ElaIconType::None)
             {
                 painter->save();
@@ -198,7 +198,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
 
             int viewWidth = widget->width();
             // 文字绘制
-            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, WindowTextPress) : ElaThemeColor(_themeMode, WindowText));
+            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, BasicTextPress) : ElaThemeColor(_themeMode, BasicText));
             QRect textRect;
             if (node->getAwesome() != ElaIconType::None)
             {
@@ -250,7 +250,7 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                     {
                         painter->save();
                         painter->setPen(Qt::NoPen);
-                        painter->setBrush(ElaThemeColor(_themeMode, NavigationExpanderNodeKeyPoint));
+                        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                         painter->drawEllipse(QPoint(itemRect.right() - 17, itemRect.y() + 12), 3, 3);
                         painter->restore();
                     }
@@ -263,11 +263,11 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                         // KeyPoints
                         painter->save();
                         painter->setPen(Qt::NoPen);
-                        painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointBase));
+                        painter->setBrush(Qt::white);
                         painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), 10, 10);
-                        painter->setBrush(ElaThemeColor(_themeMode, NavigationKeyPointCenter));
+                        painter->setBrush(ElaThemeColor(_themeMode, StatusDanger));
                         painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), 9, 9);
-                        painter->setPen(QPen(ElaThemeColor(_themeMode, NavigationKeyPointText), 2));
+                        painter->setPen(QPen(Qt::white, 2));
                         QFont font = painter->font();
                         font.setBold(true);
                         if (keyPoints > 99)

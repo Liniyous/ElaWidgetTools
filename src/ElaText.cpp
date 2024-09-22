@@ -147,7 +147,7 @@ void ElaText::paintEvent(QPaintEvent* event)
         QPainter painter(this);
         painter.save();
         painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-        painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+        painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
         painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
         painter.restore();
     }

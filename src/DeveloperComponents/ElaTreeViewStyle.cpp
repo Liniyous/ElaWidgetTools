@@ -38,12 +38,12 @@ void ElaTreeViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 if (vopt->state & QStyle::State_MouseOver)
                 {
                     // 选中时覆盖
-                    painter->fillPath(path, ElaThemeColor(_themeMode, ListViewItemSelectedHover));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
                 }
                 else
                 {
                     // 选中
-                    painter->fillPath(path, ElaThemeColor(_themeMode, ListViewItemSelected));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 }
             }
             else
@@ -51,7 +51,7 @@ void ElaTreeViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 if (vopt->state & QStyle::State_MouseOver)
                 {
                     // 覆盖时颜色
-                    painter->fillPath(path, ElaThemeColor(_themeMode, ListViewItemHover));
+                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
             }
             painter->restore();
@@ -71,7 +71,7 @@ void ElaTreeViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 QFont iconFont = QFont("ElaAwesome");
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight, vopt->state.testFlag(QStyle::State_Open) ? QChar((unsigned short)ElaIconType::AngleDown) : QChar((unsigned short)ElaIconType::AngleRight));
                 painter->restore();
             }
@@ -109,8 +109,8 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
         frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, TableViewBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, TableViewBase));
+        painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;
@@ -125,7 +125,7 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
             if (!hopt->text.isEmpty())
             {
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(headerRect, hopt->textAlignment, hopt->text);
             }
             painter->restore();
@@ -138,7 +138,7 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, TableViewHeaderBase));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeepAlpha));
         painter->drawRect(option->rect);
         painter->restore();
         return;
@@ -162,30 +162,29 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
             {
                 painter->save();
                 //图标绘制
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
                 if (vopt->checkState == Qt::Checked)
                 {
-                    painter->setPen(QPen(ElaThemeColor(_themeMode, CheckBoxCheckedBorder), 1.2));
-                    painter->setBrush(ElaThemeColor(_themeMode, CheckBoxCheckedBase));
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                     painter->drawRoundedRect(checkRect, 2, 2);
                     QFont iconFont = QFont("ElaAwesome");
                     iconFont.setPixelSize(checkRect.width() * 0.85);
                     painter->setFont(iconFont);
-                    painter->setPen(ElaThemeColor(ElaThemeType::Dark, WindowText));
+                    painter->setPen(ElaThemeColor(ElaThemeType::Dark, BasicText));
                     painter->drawText(checkRect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::Check));
                 }
                 else if (vopt->checkState == Qt::PartiallyChecked)
                 {
-                    painter->setPen(QPen(ElaThemeColor(_themeMode, CheckBoxCheckedBorder), 1.2));
-                    painter->setBrush(ElaThemeColor(_themeMode, CheckBoxCheckedBase));
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                     painter->drawRoundedRect(checkRect, 2, 2);
-                    painter->setPen(ElaThemeColor(ElaThemeType::Dark, WindowText));
+                    painter->setPen(ElaThemeColor(ElaThemeType::Dark, BasicText));
                     QLine checkLine(checkRect.x() + 3, checkRect.center().y(), checkRect.right() - 3, checkRect.center().y());
                     painter->drawLine(checkLine);
                 }
                 else
                 {
-                    painter->setPen(QPen(ElaThemeColor(_themeMode, WindowText), 1.2));
+                    painter->setPen(QPen(ElaThemeColor(_themeMode, BasicBorderDeep), 1.2));
                     painter->setBrush(Qt::transparent);
                     painter->drawRoundedRect(checkRect, 2, 2);
                 }
@@ -201,13 +200,13 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
             // 文字绘制
             if (!vopt->text.isEmpty())
             {
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(textRect, vopt->displayAlignment, vopt->text);
             }
             // 选中特效
             int heightOffset = itemRect.height() / 4;
             painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             if (vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning || vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne))
             {
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);

@@ -80,7 +80,7 @@ void ElaColorPicker::paintEvent(QPaintEvent* event)
     // 色相图绘制
     QRect pickerRect = rect();
     pickerRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
-    painter.setPen(QPen(ElaThemeColor(_pThemeMode, ColorDialogPickerBorder), penWidth));
+    painter.setPen(QPen(ElaThemeColor(_pThemeMode, BasicBorder), penWidth));
     painter.drawRoundedRect(pickerRect, borderRadius, borderRadius);
     QPainterPath path;
     path.addRoundedRect(pickerRect, borderRadius, borderRadius);

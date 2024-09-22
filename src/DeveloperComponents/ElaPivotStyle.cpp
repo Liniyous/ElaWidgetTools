@@ -62,17 +62,17 @@ void ElaPivotStyle::drawControl(ControlElement element, const QStyleOption* opti
             {
                 if (_pPressIndex == vopt->index)
                 {
-                    painter->setPen(ElaThemeColor(_themeMode, PivotTextHasFocus));
+                    painter->setPen(ElaThemeColor(_themeMode, BasicTextPress));
                 }
                 else
                 {
                     if (_pCurrentIndex == vopt->index.row() || vopt->state.testFlag(QStyle::State_MouseOver))
                     {
-                        painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                        painter->setPen(ElaThemeColor(_themeMode, BasicText));
                     }
                     else
                     {
-                        painter->setPen(ElaThemeColor(_themeMode, PivotText));
+                        painter->setPen(ElaThemeColor(_themeMode, BasicTextNoFocus));
                     }
                 }
                 painter->drawText(textRect, Qt::AlignCenter, vopt->text);
@@ -108,5 +108,5 @@ int ElaPivotStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, c
 
 const QColor& ElaPivotStyle::getMarkColor()
 {
-    return ElaThemeColor(_themeMode, PivotMark);
+    return ElaThemeColor(_themeMode, PrimaryNormal);
 }

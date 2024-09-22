@@ -30,8 +30,8 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
         //背景
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, SpinBoxBase));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
         painter->drawRoundedRect(sopt->rect, 4, 4);
         //添加按钮
         QRect addLineRect = subControlRect(control, sopt, SC_ScrollBarAddLine, widget);
@@ -39,23 +39,23 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         {
             if (sopt->state & QStyle::State_Sunken && sopt->state & QStyle::State_MouseOver)
             {
-                painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonPress));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
             }
             else
             {
                 if (sopt->state & QStyle::State_MouseOver)
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonHover));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonBase));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
                 }
             }
         }
         else
         {
-            painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonBase));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
         }
         QPainterPath addLinePath;
         addLinePath.moveTo(addLineRect.topLeft());
@@ -73,23 +73,23 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         {
             if (sopt->state & QStyle::State_Sunken && sopt->state & QStyle::State_MouseOver)
             {
-                painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonPress));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
             }
             else
             {
                 if (sopt->state & QStyle::State_MouseOver)
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonHover));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonBase));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
                 }
             }
         }
         else
         {
-            painter->setBrush(ElaThemeColor(_themeMode, SpinBoxButtonBase));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
         }
         QPainterPath subLinePath;
         subLinePath.moveTo(subLineRect.topRight());
@@ -103,20 +103,20 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         //底边线
         if (sopt->state & QStyle::State_HasFocus)
         {
-            painter->setPen(QPen(ElaThemeColor(_themeMode, SpinBoxMarkHasFocus), 2));
-            painter->drawLine(subLineRect.right() + 1, subLineRect.bottom() - 2, addLineRect.left() - 1, addLineRect.bottom() - 2);
+            painter->setPen(QPen(ElaThemeColor(_themeMode, PrimaryNormal), 2));
+            painter->drawLine(subLineRect.right() + 1, subLineRect.y() + subLineRect.height() - 2, addLineRect.left() - 1, subLineRect.y() + subLineRect.height() - 2);
         }
         else
         {
-            painter->setPen(ElaThemeColor(_themeMode, SpinBoxMarkNoFocus));
-            painter->drawLine(subLineRect.right() + 1, subLineRect.bottom() - 1, addLineRect.left() - 1, addLineRect.bottom() - 1);
+            painter->setPen(ElaThemeColor(_themeMode, BasicHemline));
+            painter->drawLine(subLineRect.right() + 1, subLineRect.y() + subLineRect.height() - 1, addLineRect.left() - 1, subLineRect.y() + subLineRect.height() - 1);
         }
 
         //添加图标
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(17);
         painter->setFont(iconFont);
-        painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+        painter->setPen(ElaThemeColor(_themeMode, BasicText));
         painter->drawText(addLineRect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::Plus));
         //减小图标
         painter->drawText(subLineRect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::Minus));

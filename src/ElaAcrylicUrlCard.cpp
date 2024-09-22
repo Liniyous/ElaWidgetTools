@@ -63,9 +63,9 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 亚克力绘制
     painter.save();
-    painter.setPen(QPen(underMouse() ? ElaThemeColor(d->_themeMode, AcrylicUrlCardHoverBorder) : ElaThemeColor(d->_themeMode, AcrylicUrlCardBorder), d->_borderWidth));
+    painter.setPen(QPen(underMouse() ? ElaThemeColor(d->_themeMode, BasicBorderHover) : ElaThemeColor(d->_themeMode, BasicBorder), d->_borderWidth));
     QColor brushColor;
-    brushColor = underMouse() ? ElaThemeColor(d->_themeMode, AcrylicUrlCardHover) : ElaThemeColor(d->_themeMode, AcrylicUrlCardBase);
+    brushColor = underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase);
     brushColor.setAlpha(d->_pBrushAlpha);
     painter.setBrush(brushColor);
     QRect foregroundRect = rect();
@@ -104,17 +104,16 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
 
     // 文字绘制
     painter.save();
-    painter.setPen(QPen(Qt::black));
     QFont font = this->font();
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setFont(font);
-    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     painter.drawText(QRect(pixRect.x(), pixRect.bottom() + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, d->_pTitle);
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
-    painter.setPen(ElaThemeColor(d->_themeMode, AcrylicUrlCardSubTitleText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicDetailsText));
     int titleHeight = painter.fontMetrics().boundingRect(d->_pTitle).height() * 1.1;
     painter.drawText(QRect(pixRect.x(), d->_pSubTitleSpacing + titleHeight + pixRect.bottom() + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
     painter.restore();
@@ -124,7 +123,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(13);
     painter.setFont(iconFont);
-    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(), QChar((unsigned short)ElaIconType::UpRightFromSquare));
     painter.restore();
 }

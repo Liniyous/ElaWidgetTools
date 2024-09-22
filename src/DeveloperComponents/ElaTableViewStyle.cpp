@@ -32,20 +32,28 @@ void ElaTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         {
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
-            if (!vopt->state.testFlag(QStyle::State_Selected) && !vopt->state.testFlag(QStyle::State_MouseOver))
+
+            const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
+            QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
+            if (selectionBehavior == QAbstractItemView::SelectRows)
             {
-                const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
-                QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
-                if (selectionBehavior == QAbstractItemView::SelectRows)
+                if (vopt->index.row() == _pCurrentHoverRow)
                 {
-                    if (vopt->index.row() == _pCurrentHoverRow)
-                    {
-                        painter->setPen(Qt::NoPen);
-                        painter->setBrush(ElaThemeColor(_themeMode, TableViewItemHover));
-                        painter->drawRect(vopt->rect);
-                    }
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
+                    painter->drawRect(vopt->rect);
                 }
             }
+            else
+            {
+                if (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver))
+                {
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
+                    painter->drawRect(vopt->rect);
+                }
+            }
+
             painter->restore();
         }
         return;
@@ -61,26 +69,17 @@ void ElaTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
             if (vopt->state & QStyle::State_Selected)
             {
                 // 选中
-                painter->setBrush(ElaThemeColor(_themeMode, TableViewItemSelected));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 painter->drawRect(itemRect);
             }
             else
             {
-                if (vopt->state & QStyle::State_MouseOver)
+                if (vopt->features.testFlag(QStyleOptionViewItem::Alternate))
                 {
-                    // 覆盖时颜色
-                    painter->setBrush(ElaThemeColor(_themeMode, TableViewItemHover));
-                    painter->drawRect(itemRect);
-                }
-                else
-                {
-                    if (vopt->features.testFlag(QStyleOptionViewItem::Alternate))
-                    {
-                        // Item背景隔行变色
-                        painter->setPen(Qt::NoPen);
-                        painter->setBrush(ElaThemeColor(_themeMode, TableViewAlternatingRow));
-                        painter->drawRect(vopt->rect);
-                    }
+                    // Item背景隔行变色
+                    painter->setPen(Qt::NoPen);
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicAlternating));
+                    painter->drawRect(vopt->rect);
                 }
             }
             painter->restore();
@@ -111,8 +110,8 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, TableViewBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, TableViewBase));
+        painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;
@@ -127,7 +126,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
             if (!hopt->text.isEmpty())
             {
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(headerRect, hopt->textAlignment, hopt->text);
             }
             painter->restore();
@@ -140,26 +139,17 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
+        painter->drawRect(option->rect);
         if (option->state.testFlag(QStyle::State_Sunken))
         {
-            if (option->state.testFlag(QStyle::State_MouseOver))
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, TableViewHeaderSelectedHover));
-            }
-            else
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, TableViewHeaderSelected));
-            }
+            painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
         }
         else
         {
             if (option->state.testFlag(QStyle::State_MouseOver))
             {
-                painter->setBrush(ElaThemeColor(_themeMode, TableViewHeaderHover));
-            }
-            else
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, TableViewHeaderBase));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
             }
         }
         painter->drawRect(option->rect);
@@ -173,7 +163,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, TableViewHeaderBase));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
         painter->drawRect(frameRect);
         painter->restore();
         return;
@@ -217,13 +207,13 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             // 文字绘制
             if (!vopt->text.isEmpty())
             {
-                painter->setPen(ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(textRect, vopt->displayAlignment, vopt->text);
             }
             // 选中特效
             int heightOffset = itemRect.height() / 4;
             painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, NavigationMark));
+            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             if (vopt->state.testFlag(QStyle::State_Selected))
             {
                 if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)

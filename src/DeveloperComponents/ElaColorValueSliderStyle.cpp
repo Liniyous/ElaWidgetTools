@@ -40,6 +40,7 @@ void ElaColorValueSliderStyle::drawComplexControl(ComplexControl control, const 
         QRectF sliderRect = sopt->rect;
         sliderRect.adjust(1.5, 0, -1.5, 0);
         QRect sliderHandleRect = subControlRect(control, sopt, SC_SliderHandle, widget);
+        sliderHandleRect.adjust(1, 1, -1, -1);
         // 滑槽
         painter->setPen(Qt::NoPen);
         painter->setBrush(*_baseGradient);
@@ -48,11 +49,12 @@ void ElaColorValueSliderStyle::drawComplexControl(ComplexControl control, const 
 
         // 滑块
         // 外圆形
-        painter->setBrush(ElaThemeColor(_themeMode, SliderHandleBase));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
         painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), sliderHandleRect.width() / 2, sliderHandleRect.width() / 2);
         // 内圆形
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, SliderHandleCenter));
+        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
         if (_lastState == 0)
         {
             _lastState = sopt->state;

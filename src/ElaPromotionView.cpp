@@ -176,7 +176,7 @@ void ElaPromotionView::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, PromotionViewIndicator));
+    painter.setBrush(ElaThemeColor(d->_themeMode, BasicIndicator));
     //页标指示器绘制
     int promotionCardCount = d->_promotionCardList.count();
     bool isCountOdd = promotionCardCount % 2;

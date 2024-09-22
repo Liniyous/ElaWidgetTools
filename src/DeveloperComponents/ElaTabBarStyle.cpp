@@ -50,13 +50,13 @@ void ElaTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt,
         if (opt->state.testFlag(QStyle::State_MouseOver))
         {
             p->setPen(Qt::NoPen);
-            p->setBrush(ElaThemeColor(_themeMode, TabBarCloseButtonHover));
+            p->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
             p->drawRoundedRect(opt->rect, 2, 2);
         }
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(16);
         p->setFont(iconFont);
-        p->setPen(ElaThemeColor(_themeMode, WindowText));
+        p->setPen(ElaThemeColor(_themeMode, BasicText));
         p->drawText(opt->rect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::Xmark));
         p->restore();
         return;
@@ -92,7 +92,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 {
                     tabRect.setRight(tabRect.right() + margin + 1);
                 }
-                painter->setBrush(ElaThemeColor(_themeMode, TabBarTabSelected));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
@@ -111,11 +111,11 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             {
                 if (topt->state.testFlag(QStyle::State_MouseOver))
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, TabBarTabHover));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, TabBarTabBase));
+                    painter->setBrush(Qt::transparent);
                 }
                 tabRect.setHeight(tabRect.height() + 10);
                 painter->drawRoundedRect(tabRect, 0, 0);
@@ -126,7 +126,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             if (!topt->state.testFlag(QStyle::State_Selected) && topt->position != QStyleOptionTab::End && topt->selectedPosition != QStyleOptionTab::NextIsSelected)
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, TabBarTabMark));
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             painter->restore();
@@ -163,7 +163,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 painter->drawPixmap(iconRect.x(), iconRect.y(), iconPix);
             }
             //文字绘制
-            painter->setPen(ElaThemeColor(_themeMode, WindowText));
+            painter->setPen(ElaThemeColor(_themeMode, BasicText));
             QString text = painter->fontMetrics().elidedText(topt->text, Qt::ElideRight, textRect.width());
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextDontClip, text);
             painter->restore();

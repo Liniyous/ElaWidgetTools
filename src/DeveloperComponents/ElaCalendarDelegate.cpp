@@ -87,7 +87,7 @@ void ElaCalendarDelegate::_drawYearOrMonth(QPainter* painter, const QStyleOption
     if ((displayMode == ElaCalendarType::YearMode && data.year == _nowDate.year()) || (displayMode == ElaCalendarType::MonthMode && data.month == _nowDate.month() && data.year == _nowDate.year()))
     {
         isNow = true;
-        QColor drawColor = option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, CalendarSelectedHover) : ElaThemeColor(_themeMode, CalendarSelected);
+        QColor drawColor = option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, PrimaryHover) : ElaThemeColor(_themeMode, PrimaryNormal);
         painter->setPen(Qt::NoPen);
         painter->setBrush(drawColor);
         painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
@@ -98,13 +98,13 @@ void ElaCalendarDelegate::_drawYearOrMonth(QPainter* painter, const QStyleOption
         if (option.state.testFlag(QStyle::State_MouseOver))
         {
             painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, CalendarHover));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
             painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
         }
     }
 
     // 文字绘制
-    painter->setPen(isNow ? ElaThemeColor(_themeMode == ElaThemeType::Light ? ElaThemeType::Dark : ElaThemeType::Light, WindowText) : ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(isNow ? ElaThemeColor(_themeMode, BasicTextInvert) : ElaThemeColor(_themeMode, BasicText));
     painter->drawText(itemRect, Qt::AlignCenter, displayMode == ElaCalendarType::YearMode ? QString::number(data.year) : QString::number(data.month));
     QString desText = data.desText;
     if (!desText.isEmpty())
@@ -131,7 +131,7 @@ void ElaCalendarDelegate::_drawDays(QPainter* painter, const QStyleOptionViewIte
         if (data.year == _nowDate.year() && data.month == _nowDate.month() && data.day == _nowDate.day())
         {
             isNow = true;
-            QColor drawColor = option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, CalendarSelectedHover) : ElaThemeColor(_themeMode, CalendarSelected);
+            QColor drawColor = option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, PrimaryHover) : ElaThemeColor(_themeMode, PrimaryNormal);
             if (option.state.testFlag(QStyle::State_Selected))
             {
                 painter->setPen(QPen(drawColor, penWidth));
@@ -152,14 +152,14 @@ void ElaCalendarDelegate::_drawDays(QPainter* painter, const QStyleOptionViewIte
             // 覆盖和选中效果绘制
             if (option.state.testFlag(QStyle::State_Selected))
             {
-                painter->setPen(QPen(option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, CalendarSelectedHover) : ElaThemeColor(_themeMode, CalendarSelected), penWidth));
+                painter->setPen(QPen(option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, PrimaryHover) : ElaThemeColor(_themeMode, PrimaryNormal), penWidth));
                 painter->setBrush(Qt::NoBrush);
                 painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
             }
             if (option.state.testFlag(QStyle::State_MouseOver))
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, CalendarHover));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
                 if (option.state.testFlag(QStyle::State_Selected))
                 {
                     painter->drawEllipse(itemRect.center(), baseRadius - penWidth, baseRadius - penWidth);
@@ -172,7 +172,7 @@ void ElaCalendarDelegate::_drawDays(QPainter* painter, const QStyleOptionViewIte
         }
 
         // 文字绘制
-        painter->setPen(isNow ? ElaThemeColor(_themeMode == ElaThemeType::Light ? ElaThemeType::Dark : ElaThemeType::Light, WindowText) : ElaThemeColor(_themeMode, WindowText));
+        painter->setPen(isNow ? ElaThemeColor(_themeMode, BasicTextInvert) : ElaThemeColor(_themeMode, BasicText));
         painter->drawText(itemRect, Qt::AlignCenter, QString::number(data.day));
         QString desText = data.desText;
         if (!desText.isEmpty())

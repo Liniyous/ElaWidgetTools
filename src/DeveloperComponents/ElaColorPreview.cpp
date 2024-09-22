@@ -24,7 +24,7 @@ void ElaColorPreview::paintEvent(QPaintEvent* event)
     painter.setRenderHint(QPainter::Antialiasing);
     QRect viewRect = rect();
     viewRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
-    painter.setPen(QPen(ElaThemeColor(_pThemeMode, ColorDialogPickerBorder), penWidth));
+    painter.setPen(QPen(ElaThemeColor(_pThemeMode, BasicBorder), penWidth));
     painter.setBrush(_pBaseColor);
     painter.drawRoundedRect(viewRect, borderRadius, borderRadius);
     painter.restore();

@@ -36,10 +36,6 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaDockWidgetPrivate::onThemeModeChanged);
 
-    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, DockWidgetBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, DockWidgetBaseEnd));
-
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
@@ -56,7 +52,6 @@ ElaDockWidget::~ElaDockWidget()
 void ElaDockWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaDockWidget);
-    d->_windowLinearGradient->setFinalStop(width(), height());
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing);
@@ -65,8 +60,8 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
         // 高性能阴影
         eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
         //背景
-        painter.setPen(ElaThemeColor(d->_themeMode, DockWidgetFloatBorder));
-        painter.setBrush(*d->_windowLinearGradient);
+        painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
+        painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRoundedRect(foregroundRect, 5, 5);
     }

@@ -49,9 +49,9 @@ private:
     ElaNavigationBar* _navigationBar{nullptr};
     ElaCentralStackedWidget* _centerStackedWidget{nullptr};
     ElaAppBar* _appBar{nullptr};
-    QLinearGradient* _windowLinearGradient{nullptr};
     QHBoxLayout* _centerLayout{nullptr};
     int _contentsMargins{5};
+    bool _isNavigationDisplayModeChanged{false};
     bool _isNavigationEnable{true};
     bool _isNavigationBarExpanded{false};
     bool _isWMClickedAnimationFinished{true};

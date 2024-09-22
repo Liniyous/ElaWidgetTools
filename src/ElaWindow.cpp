@@ -41,9 +41,6 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_pNavigationBarDisplayMode = ElaNavigationType::NavigationDisplayMode::Auto;
     connect(this, &ElaWindow::pNavigationBarDisplayModeChanged, d, &ElaWindowPrivate::onDisplayModeChanged);
 
-    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(eTheme->getThemeMode(), WindowBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(eTheme->getThemeMode(), WindowBaseEnd));
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
     connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
@@ -84,6 +81,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::navigationButtonClicked, d, &ElaWindowPrivate::onNavigationButtonClicked);
 
     // 主题变更动画
+    d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWindowPrivate::onThemeModeChanged);
     connect(d->_appBar, &ElaAppBar::themeChangeButtonClicked, d, &ElaWindowPrivate::onThemeReadyChange);
     d->_isInitFinished = true;
@@ -97,12 +95,9 @@ ElaWindow::ElaWindow(QWidget* parent)
     //延时渲染
     QTimer::singleShot(1, this, [=] {
         QPalette palette = this->palette();
-        palette.setBrush(QPalette::Window, *d->_windowLinearGradient);
+        palette.setBrush(QPalette::Window, ElaThemeColor(d->_themeMode, WindowBase));
         this->setPalette(palette);
     });
-
-    d->_themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
 
 ElaWindow::~ElaWindow()
@@ -190,6 +185,10 @@ void ElaWindow::setIsEnableMica(bool isEnable)
     if (isEnable)
     {
         d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+    }
+    else
+    {
+        d->onThemeModeChanged(d->_themeMode);
     }
     Q_EMIT pIsEnableMicaChanged();
 }
@@ -377,7 +376,6 @@ void ElaWindow::resizeEvent(QResizeEvent* event)
 {
     Q_D(ElaWindow);
     d->_updateMica();
-    d->_windowLinearGradient->setFinalStop(width(), height());
     QWidget::resizeEvent(event);
 }
 

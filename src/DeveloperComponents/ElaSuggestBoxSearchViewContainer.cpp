@@ -23,8 +23,8 @@ void ElaSuggestBoxSearchViewContainer::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing);
     eTheme->drawEffectShadow(&painter, rect(), 6, 8);
-    painter.setPen(ElaThemeColor(_themeMode, ComboBoxShapedFrameBorder));
-    painter.setBrush(ElaThemeColor(_themeMode, SuggestBoxSearchViewContainerBase));
+    painter.setPen(ElaThemeColor(_themeMode, PopupBorder));
+    painter.setBrush(ElaThemeColor(_themeMode, PopupBase));
     QRect foregroundRect(6, 0, rect().width() - 2 * 6, rect().height() - 6);
     painter.drawRoundedRect(foregroundRect, 8, 8);
     painter.restore();

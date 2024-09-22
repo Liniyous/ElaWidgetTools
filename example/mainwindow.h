@@ -16,6 +16,7 @@ class T_ListView;
 class T_TableView;
 class T_TreeView;
 class T_About;
+class T_Setting;
 class ElaContentDialog;
 class MainWindow : public ElaWindow
 {
@@ -45,6 +46,7 @@ private:
     T_TableView* _tableViewPage{nullptr};
     T_TreeView* _treeViewPage{nullptr};
     T_About* _aboutPage{nullptr};
+    T_Setting* _settingPage{nullptr};
     QString _elaDxgiKey{""};
     QString _viewKey{""};
     QString _aboutKey{""};

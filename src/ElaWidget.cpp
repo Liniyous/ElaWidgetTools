@@ -17,9 +17,6 @@ ElaWidget::ElaWidget(QWidget* parent)
     resize(500, 500); // 默认宽高
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
-    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(eTheme->getThemeMode(), WindowBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(eTheme->getThemeMode(), WindowBaseEnd));
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
@@ -31,7 +28,11 @@ ElaWidget::ElaWidget(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWidget::closeButtonClicked);
 
     // 主题
-    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+        update();
+    });
 }
 
 ElaWidget::~ElaWidget()
@@ -111,8 +112,7 @@ void ElaWidget::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    d->_windowLinearGradient->setFinalStop(width(), height());
-    painter.setBrush(*d->_windowLinearGradient);
+    painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
     painter.drawRect(rect());
     painter.restore();
     QWidget::paintEvent(event);

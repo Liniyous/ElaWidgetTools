@@ -112,7 +112,7 @@ void ElaLineEdit::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, LineEditMark));
+    painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
     painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
     painter.restore();
 }

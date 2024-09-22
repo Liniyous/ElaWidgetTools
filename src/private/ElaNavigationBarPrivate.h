@@ -24,6 +24,7 @@ class ElaBaseListView;
 class ElaFooterModel;
 class ElaFooterDelegate;
 class ElaIconButton;
+class ElaToolButton;
 class ElaNavigationBarPrivate : public QObject
 {
     Q_OBJECT
@@ -34,7 +35,6 @@ class ElaNavigationBarPrivate : public QObject
 public:
     explicit ElaNavigationBarPrivate(QObject* parent = nullptr);
     ~ElaNavigationBarPrivate();
-    Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
     Q_SLOT void onNavigationButtonClicked();
     Q_SLOT void onNavigationOpenNewWindow(QString nodeKey);
 
@@ -51,11 +51,10 @@ private:
     QVBoxLayout* _navigationButtonLayout{nullptr};
     QHBoxLayout* _navigationSuggestLayout{nullptr};
     QVBoxLayout* _userButtonLayout{nullptr};
-    QLinearGradient* _windowLinearGradient{nullptr};
 
     ElaIconButton* _userButton{nullptr};
-    ElaIconButton* _searchButton{nullptr};
-    ElaIconButton* _navigationButton{nullptr};
+    ElaToolButton* _searchButton{nullptr};
+    ElaToolButton* _navigationButton{nullptr};
     ElaNavigationModel* _navigationModel{nullptr};
     ElaNavigationView* _navigationView{nullptr};
     ElaBaseListView* _footerView{nullptr};

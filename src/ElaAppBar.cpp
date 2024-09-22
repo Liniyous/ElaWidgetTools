@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include "ElaText.h"
+#include "ElaToolButton.h"
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #include <dwmapi.h>
@@ -80,20 +81,26 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     setMouseTracking(true);
     setObjectName("ElaAppBar");
     setStyleSheet("#ElaAppBar{background-color:transparent;}");
-    d->_routeBackButton = new ElaIconButton(ElaIconType::ArrowLeft, 18, 40, 30, this);
+    d->_routeBackButton = new ElaToolButton(this);
+    d->_routeBackButton->setElaIcon(ElaIconType::ArrowLeft);
+    d->_routeBackButton->setFixedSize(40, 30);
     d->_routeBackButton->setEnabled(false);
     // 路由跳转
     connect(d->_routeBackButton, &ElaIconButton::clicked, this, &ElaAppBar::routeBackButtonClicked);
 
     // 导航栏展开按钮
-    d->_navigationButton = new ElaIconButton(ElaIconType::Bars, 16, 40, 30, this);
+    d->_navigationButton = new ElaToolButton(this);
+    d->_navigationButton->setElaIcon(ElaIconType::Bars);
+    d->_navigationButton->setFixedSize(40, 30);
     d->_navigationButton->setObjectName("NavigationButton");
     d->_navigationButton->setVisible(false);
     // 展开导航栏
     connect(d->_navigationButton, &ElaIconButton::clicked, this, &ElaAppBar::navigationButtonClicked);
 
     // 设置置顶
-    d->_stayTopButton = new ElaIconButton(ElaIconType::ArrowUpToArc, 15, 40, 30, this);
+    d->_stayTopButton = new ElaToolButton(this);
+    d->_stayTopButton->setElaIcon(ElaIconType::ArrowUpToArc);
+    d->_stayTopButton->setFixedSize(40, 30);
     connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
 
@@ -136,20 +143,24 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     });
 
     // 主题变更
-    d->_themeChangeButton = new ElaIconButton(ElaIconType::MoonStars, 15, 40, 30, this);
-    d->_themeChangeButton->setLightHoverColor(QColor(0xE9, 0xE9, 0xF0));
+    d->_themeChangeButton = new ElaToolButton(this);
+    d->_themeChangeButton->setElaIcon(ElaIconType::MoonStars);
+    d->_themeChangeButton->setFixedSize(40, 30);
     connect(d->_themeChangeButton, &ElaIconButton::clicked, this, &ElaAppBar::themeChangeButtonClicked);
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
 
-    d->_minButton = new ElaIconButton(ElaIconType::Dash, 12, 40, 30, this);
-    d->_minButton->setLightHoverColor(QColor(0xE9, 0xE9, 0xF0));
+    d->_minButton = new ElaToolButton(this);
+    d->_minButton->setElaIcon(ElaIconType::Dash);
+    d->_minButton->setFixedSize(40, 30);
     connect(d->_minButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onMinButtonClicked);
-    d->_maxButton = new ElaIconButton(ElaIconType::Square, 13, 40, 30, this);
-    d->_maxButton->setLightHoverColor(QColor(0xE9, 0xE9, 0xF0));
+    d->_maxButton = new ElaToolButton(this);
+    d->_maxButton->setIconSize(QSize(18, 18));
+    d->_maxButton->setElaIcon(ElaIconType::Square);
+    d->_maxButton->setFixedSize(40, 30);
     connect(d->_maxButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onMaxButtonClicked);
-    d->_closeButton = new ElaIconButton(ElaIconType::Xmark, 17, 40, 30, this);
-    d->_closeButton->setLightHoverColor(QColor(0xC4, 0x2B, 0x1C));
-    d->_closeButton->setDarkHoverColor(QColor(0xC4, 0x2B, 0x1C));
+    d->_closeButton = new ElaIconButton(ElaIconType::Xmark, 18, 40, 30, this);
+    d->_closeButton->setLightHoverColor(QColor(0xE8, 0x11, 0x23));
+    d->_closeButton->setDarkHoverColor(QColor(0xE8, 0x11, 0x23));
     d->_closeButton->setLightHoverIconColor(Qt::white);
     d->_closeButton->setDarkHoverIconColor(Qt::white);
     connect(d->_closeButton, &ElaIconButton::clicked, d, &ElaAppBarPrivate::onCloseButtonClicked);
@@ -683,6 +694,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
                 {
                     d->_isHoverMaxButton = true;
                     d->_maxButton->setIsSelected(true);
+                    d->_maxButton->update();
                 }
                 *result = HTZOOM;
             }
@@ -694,6 +706,7 @@ bool ElaAppBar::nativeEventFilter(const QByteArray& eventType, void* message, lo
             {
                 d->_isHoverMaxButton = false;
                 d->_maxButton->setIsSelected(false);
+                d->_maxButton->update();
             }
         }
         POINT nativeLocalPos{GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};

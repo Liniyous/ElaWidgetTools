@@ -27,7 +27,7 @@ void ElaCalendarTitleDelegate::paint(QPainter* painter, const QStyleOptionViewIt
     QString title = index.data(Qt::UserRole).toString();
     if (!title.isEmpty())
     {
-        painter->setPen(ElaThemeColor(_themeMode, WindowText));
+        painter->setPen(ElaThemeColor(_themeMode, BasicText));
         QFont font = painter->font();
         font.setWeight(QFont::Bold);
         painter->setFont(font);

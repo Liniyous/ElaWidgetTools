@@ -62,8 +62,8 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
             eTheme->drawEffectShadow(painter, viewRect, _shadowBorderWidth, 6);
             QRect foregroundRect(viewRect.x() + _shadowBorderWidth, viewRect.y(), viewRect.width() - 2 * _shadowBorderWidth, viewRect.height() - _shadowBorderWidth);
-            painter->setPen(ElaThemeColor(_themeMode, ComboBoxShapedFrameBorder));
-            painter->setBrush(ElaThemeColor(_themeMode, ComboBoxShapedFrameBase));
+            painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
+            painter->setBrush(ElaThemeColor(_themeMode, PopupBase));
             painter->drawRoundedRect(foregroundRect, 3, 3);
             painter->restore();
         }
@@ -90,18 +90,18 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
                 if (option->state & QStyle::State_MouseOver)
                 {
                     // 选中时覆盖
-                    painter->setBrush(ElaThemeColor(_themeMode, ComboBoxItemViewItemSelectedHover));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
                     painter->drawPath(path);
                 }
                 else
                 {
                     // 选中
-                    painter->setBrush(ElaThemeColor(_themeMode, ComboBoxItemViewItemSelected));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
                     painter->drawPath(path);
                 }
                 //选中Mark
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, ComboBoxMark));
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() - +optionRect.height() * 0.4), 2, 2);
             }
             else
@@ -109,12 +109,12 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
                 if (option->state & QStyle::State_MouseOver)
                 {
                     // 覆盖时颜色
-                    painter->setBrush(ElaThemeColor(_themeMode, ComboBoxItemViewItemHover));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                     painter->drawPath(path);
                 }
             }
             // 文字绘制
-            painter->setPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white);
+            painter->setPen(ElaThemeColor(_themeMode, BasicText));
             painter->drawText(QRect(option->rect.x() + 15, option->rect.y(), option->rect.width() - 15, option->rect.height()), Qt::AlignVCenter, vopt->text);
             painter->restore();
         }
@@ -141,19 +141,23 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
             painter->setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
             //背景绘制
             bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
-            painter->setPen(ElaThemeColor(_themeMode, ComboBoxBorder));
-            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, ComboBoxHover) : ElaThemeColor(_themeMode, ComboBoxBase) : Qt::transparent);
+            painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, BasicHover) : ElaThemeColor(_themeMode, BasicBase) : ElaThemeColor(_themeMode, BasicDisable));
             QRect comboBoxRect = copt->rect;
             comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
             painter->drawRoundedRect(comboBoxRect, 3, 3);
+            // 底边线绘制
+            painter->setPen(ElaThemeColor(_themeMode, BasicBaseLine));
+            painter->drawLine(comboBoxRect.x() + 3, comboBoxRect.y() + comboBoxRect.height(), comboBoxRect.x() + comboBoxRect.width() - 3, comboBoxRect.y() + comboBoxRect.height());
+
             //文字绘制
             QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
-            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
+            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
             painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
             //展开指示器绘制
             painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, ComboBoxMark));
-            painter->drawRoundedRect(QRectF(comboBoxRect.center().x() - _pExpandMarkWidth, comboBoxRect.height() - 3, _pExpandMarkWidth * 2, 3), 2, 2);
+            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+            painter->drawRoundedRect(QRectF(comboBoxRect.center().x() - _pExpandMarkWidth, comboBoxRect.y() + comboBoxRect.height() - 3, _pExpandMarkWidth * 2, 3), 2, 2);
             // 展开图标绘制
             QRect expandIconRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarAddPage, widget);
             if (expandIconRect.isValid())
@@ -161,7 +165,7 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
                 QFont iconFont = QFont("ElaAwesome");
                 iconFont.setPixelSize(17);
                 painter->setFont(iconFont);
-                painter->setPen(isEnabled ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
+                painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
                 painter->translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
                 painter->rotate(_pExpandIconRotate);
                 painter->translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);

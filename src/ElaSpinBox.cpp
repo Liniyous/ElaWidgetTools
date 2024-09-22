@@ -20,7 +20,7 @@ ElaSpinBox::ElaSpinBox(QWidget* parent)
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         QPalette palette;
         palette.setColor(QPalette::Base, Qt::transparent);
-        palette.setColor(QPalette::Text, ElaThemeColor(themeMode, WindowText));
+        palette.setColor(QPalette::Text, ElaThemeColor(themeMode, BasicText));
         lineEdit()->setPalette(palette);
     });
 }

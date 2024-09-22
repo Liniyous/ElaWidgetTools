@@ -12,7 +12,7 @@ ElaScrollPageArea::ElaScrollPageArea(QWidget* parent)
     Q_D(ElaScrollPageArea);
     d->q_ptr = this;
     d->_pBorderRadius = 6;
-    setMinimumSize(300, 80);
+    setFixedHeight(75);
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
@@ -26,8 +26,8 @@ void ElaScrollPageArea::paintEvent(QPaintEvent* event)
     Q_D(ElaScrollPageArea);
     QPainter painter(this);
     painter.save();
-    painter.setPen(ElaThemeColor(d->_themeMode, ScrollPageAreaBorder));
-    painter.setBrush(ElaThemeColor(d->_themeMode, ScrollPageAreaBase));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+    painter.setBrush(ElaThemeColor(d->_themeMode, BasicBaseAlpha));
     QRect foregroundRect(1, 1, width() - 2, height() - 2);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     painter.restore();

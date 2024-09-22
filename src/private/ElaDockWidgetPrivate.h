@@ -20,7 +20,6 @@ public:
 private:
     ElaThemeType::ThemeMode _themeMode;
     int _shadowBorderWidth{6};
-    QLinearGradient* _windowLinearGradient{nullptr};
     ElaDockWidgetTitleBar* _titleBar{nullptr};
 };
 

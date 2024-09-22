@@ -25,8 +25,8 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         QRect statusBarRect = option->rect;
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, StatusBarBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, StatusBarBase));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
         painter->drawRect(statusBarRect);
         painter->restore();
         return;
@@ -38,7 +38,7 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, StatusBarSeparator));
+        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
         painter->drawRoundedRect(QRectF(statusBarItemRect.right() - 3, statusBarItemRect.y() + statusBarItemRect.height() * 0.1, 3, statusBarItemRect.height() - statusBarItemRect.height() * 0.2), 2, 2);
         painter->restore();
         return;

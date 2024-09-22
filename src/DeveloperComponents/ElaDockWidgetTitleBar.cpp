@@ -18,12 +18,12 @@ ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     _titleLabel->setTextPixelSize(13);
 
     _floatButton = new ElaIconButton(ElaIconType::WindowRestore, 13, 32, 26, this);
-    _floatButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, DockWidgetTitleBarFloatButtonHover));
-    _floatButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, DockWidgetTitleBarFloatButtonHover));
+    _floatButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, BasicHoverAlpha));
+    _floatButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, BasicHoverAlpha));
     connect(_floatButton, &ElaIconButton::clicked, this, &ElaDockWidgetTitleBar::onFloatButtonClicked);
     _closeButton = new ElaIconButton(ElaIconType::Xmark, 17, 32, 26, this);
-    _closeButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, DockWidgetTitleBarCloseButtonHover));
-    _closeButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, DockWidgetTitleBarCloseButtonHover));
+    _closeButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, StatusDanger));
+    _closeButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, StatusDanger));
     connect(_closeButton, &ElaIconButton::clicked, this, &ElaDockWidgetTitleBar::onCloseButtonClicked);
 
     _setVisibleFromFeatures(_dockWidget->features());
@@ -76,7 +76,7 @@ void ElaDockWidgetTitleBar::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(_dockWidget->isFloating() ? Qt::transparent : ElaThemeColor(_themeMode, DockWidgetTitleBarBase));
+    painter.setBrush(_dockWidget->isFloating() ? Qt::transparent : ElaThemeColor(_themeMode, BasicBaseAlpha));
     painter.drawRect(rect());
     painter.restore();
 }

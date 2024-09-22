@@ -57,8 +57,8 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     // 背景绘制
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(ElaThemeColor(d->_themeMode, ReminderCardBorder));
-    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, ReminderCardHover) : ElaThemeColor(d->_themeMode, ReminderCardBase));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHoverAlpha) : ElaThemeColor(d->_themeMode, BasicBaseAlpha));
     QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
     int width = foregroundRect.width();
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
@@ -90,7 +90,7 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
 
     // 焦点圆型绘制
     painter.save();
-    painter.setBrush(ElaThemeColor(d->_themeMode, ReminderCardMark));
+    painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
     painter.drawEllipse(QPointF(width * 0.95 + d->_shadowBorderWidth, height() * 0.25), height() / 17, height() / 17);
     painter.restore();
 
@@ -98,7 +98,7 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     QFont font = this->font();
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);
-    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     painter.setFont(font);
     // 主标题
     int textLeftMargin = width / 11;
@@ -109,7 +109,7 @@ void ElaReminderCard::paintEvent(QPaintEvent* event)
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
-    painter.setPen(ElaThemeColor(d->_themeMode, ReminderCardSubTitleText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicDetailsText));
     painter.drawText(QRect(textStartX, height() / 2 + d->_pTitleSpacing, textWidth, height() / 2 - d->_pTitleSpacing), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap | Qt::TextWrapAnywhere, d->_pSubTitle);
     painter.restore();
 }

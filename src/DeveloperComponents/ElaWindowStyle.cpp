@@ -34,11 +34,11 @@ void ElaWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption*
             painter->setPen(Qt::NoPen);
             if (option->state.testFlag(QStyle::State_Sunken))
             {
-                painter->setBrush(ElaThemeColor(_themeMode, TabBarPanelButtonToolHover));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
             }
             else if (option->state.testFlag(QStyle::State_MouseOver))
             {
-                painter->setBrush(ElaThemeColor(_themeMode, TabBarPanelButtonToolPress));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
             }
             else
             {
@@ -54,7 +54,7 @@ void ElaWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption*
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(option->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
+        painter->setBrush(option->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
         // 左三角
         int sideLength = 10;
         QRect indicatorRect = option->rect;
@@ -72,7 +72,7 @@ void ElaWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption*
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(option->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowText) : ElaThemeColor(_themeMode, WindowTextDisable));
+        painter->setBrush(option->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
         // 右三角
         int sideLength = 10;
         QRect indicatorRect = option->rect;
@@ -93,7 +93,7 @@ void ElaWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption*
     {
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
-        painter->setPen(QPen(ElaThemeColor(_themeMode, WindowBaseLine), 2));
+        painter->setPen(QPen(ElaThemeColor(_themeMode, BasicBaseLine), 2));
         QRectF handleRect = option->rect;
         if (option->state.testFlag(QStyle::State_Horizontal))
         {
@@ -126,7 +126,7 @@ void ElaWindowStyle::drawControl(ControlElement element, const QStyleOption* opt
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, WindowRubberBand));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
         painter->drawRect(rubberBandRect);
         painter->restore();
         return;
@@ -140,20 +140,41 @@ void ElaWindowStyle::drawControl(ControlElement element, const QStyleOption* opt
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
             painter->setPen(Qt::NoPen);
-            if (topt->state.testFlag(QStyle::State_Selected))
+            if (topt->state & QStyle::State_Selected)
             {
-                // 选中背景绘制
-                painter->setBrush(ElaThemeColor(_themeMode, WindowTabBarSelected));
-            }
-            else
-            {
-                if (topt->state.testFlag(QStyle::State_MouseOver))
+                if (topt->state & QStyle::State_Sunken)
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, WindowTabBarHover));
+                    // 选中时点击
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, WindowTabBarBase));
+                    if (topt->state & QStyle::State_MouseOver)
+                    {
+                        // 选中时覆盖
+                        painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
+                    }
+                    else
+                    {
+                        // 选中
+                        painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
+                    }
+                }
+            }
+            else
+            {
+                if (topt->state & QStyle::State_Sunken)
+                {
+                    // 点击时颜色
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
+                }
+                else
+                {
+                    if (topt->state & QStyle::State_MouseOver)
+                    {
+                        // 覆盖时颜色
+                        painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
+                    }
                 }
             }
             painter->drawRect(tabRect);
@@ -161,7 +182,7 @@ void ElaWindowStyle::drawControl(ControlElement element, const QStyleOption* opt
             if (topt->position != QStyleOptionTab::End)
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, WindowTabBarSeparator));
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             painter->restore();
@@ -175,7 +196,7 @@ void ElaWindowStyle::drawControl(ControlElement element, const QStyleOption* opt
         {
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-            painter->setPen(ElaThemeColor(_themeMode, WindowText));
+            painter->setPen(ElaThemeColor(_themeMode, BasicText));
             painter->drawText(topt->rect, Qt::AlignCenter, topt->text);
             painter->restore();
         }

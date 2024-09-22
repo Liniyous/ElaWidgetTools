@@ -52,8 +52,8 @@ ElaPromotionCard::ElaPromotionCard(QWidget* parent)
     setStyleSheet("#ElaPromotionCard{background-color:transparent;}");
     d->_hoverGradient = new QRadialGradient();
     d->_hoverGradient->setRadius(170);
-    d->_hoverGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, PromotionCardDefaultHighlightStart));
-    d->_hoverGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, PromotionCardDefaultHighlightEnd));
+    d->_hoverGradient->setColorAt(0, QColor(0xFF, 0xFF, 0xFF, 40));
+    d->_hoverGradient->setColorAt(1, QColor(0xFF, 0xFF, 0xFF, 0));
 
     d->_pressGradient = new QRadialGradient();
     d->_pressGradient->setRadius(170);

@@ -31,14 +31,14 @@ void ElaPlainTextEditStyle::drawControl(ControlElement element, const QStyleOpti
             painter->setRenderHints(QPainter::Antialiasing);
             painter->setPen(Qt::NoPen);
             // 边框绘制
-            painter->setBrush(ElaThemeColor(_themeMode, LineEditBorder));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBorder));
             painter->drawRoundedRect(editRect, 6, 6);
 
-            painter->setBrush(ElaThemeColor(_themeMode, LineEditBase));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
             painter->drawRoundedRect(QRectF(editRect.x() + 1.5, editRect.y() + 1.5, editRect.width() - 3, editRect.height() - 3), 6, 6);
 
             // 底边线绘制
-            painter->setBrush(ElaThemeColor(_themeMode, LineEditHemline));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicHemline));
             QPainterPath path;
             path.moveTo(6, editRect.height());
             path.lineTo(editRect.width() - 6, editRect.height());
@@ -50,7 +50,7 @@ void ElaPlainTextEditStyle::drawControl(ControlElement element, const QStyleOpti
 
             //焦点指示器
             painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, LineEditMark));
+            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             painter->drawRoundedRect(QRectF(editRect.width() / 2 - _pExpandMarkWidth, editRect.height() - 2.5, _pExpandMarkWidth * 2, 2.5), 2, 2);
 
             painter->restore();

@@ -45,7 +45,7 @@ void ElaCustomWidget::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(_themeMode, WindowBaseStart));
+    painter.setBrush(ElaThemeColor(_themeMode, WindowBase));
     painter.drawRect(rect());
     painter.restore();
 }

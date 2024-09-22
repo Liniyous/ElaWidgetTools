@@ -2,6 +2,7 @@
 
 #include <QEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QResizeEvent>
 #include <QScroller>
@@ -18,6 +19,7 @@
 #include "ElaNavigationView.h"
 #include "ElaSuggestBox.h"
 #include "ElaTheme.h"
+#include "ElaToolButton.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaSuggestBoxPrivate.h"
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationBar, bool, IsTransparent)
@@ -28,9 +30,6 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->q_ptr = this;
     setFixedWidth(300);
     d->_pIsTransparent = true;
-    d->_windowLinearGradient = new QLinearGradient(0, 0, width(), height());
-    d->_windowLinearGradient->setColorAt(0, ElaThemeColor(ElaThemeType::Light, NavigationBaseStart));
-    d->_windowLinearGradient->setColorAt(1, ElaThemeColor(ElaThemeType::Light, NavigationBaseEnd));
 
     //用户卡片
     d->_userCard = new ElaInteractiveCard(this);
@@ -56,13 +55,17 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     userCardLayout->addWidget(d->_userCard);
 
     // 搜索栏和按钮组
-    d->_navigationButton = new ElaIconButton(ElaIconType::Bars, 16, 40, 38, this);
+    d->_navigationButton = new ElaToolButton(this);
+    d->_navigationButton->setFixedSize(40, 38);
+    d->_navigationButton->setElaIcon(ElaIconType::Bars);
     d->_navigationButton->setBorderRadius(8);
-    connect(d->_navigationButton, &ElaIconButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
+    connect(d->_navigationButton, &ElaToolButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
 
-    d->_searchButton = new ElaIconButton(ElaIconType::MagnifyingGlass, 16, 40, 38, this);
+    d->_searchButton = new ElaToolButton(this);
+    d->_searchButton->setFixedSize(40, 38);
+    d->_searchButton->setElaIcon(ElaIconType::MagnifyingGlass);
     d->_searchButton->setBorderRadius(8);
-    connect(d->_searchButton, &ElaIconButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
+    connect(d->_searchButton, &ElaToolButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
     d->_searchButton->setVisible(false);
 
     d->_navigationSuggestBox = new ElaSuggestBox(this);
@@ -141,7 +144,10 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     mainLayout->addWidget(d->_footerView);
 
     //主题设置
-    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaNavigationBarPrivate::onThemeChanged);
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 ElaNavigationBar::~ElaNavigationBar()
@@ -407,18 +413,24 @@ void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode d
 void ElaNavigationBar::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaNavigationBar);
-    QPainter painter(this);
-    painter.save();
-    painter.setPen(Qt::NoPen);
-    if (d->_pIsTransparent)
+    if (!d->_pIsTransparent)
     {
-        painter.setBrush(Qt::transparent);
+        QPainter painter(this);
+        painter.save();
+        painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
+        painter.setBrush(ElaThemeColor(d->_themeMode, PopupBase));
+        QRect baseRect = this->rect();
+        baseRect.adjust(-1, 0, -1, 0);
+        QPainterPath path;
+        path.moveTo(baseRect.topLeft());
+        path.lineTo(QPoint(baseRect.right() - 8, baseRect.y()));
+        path.arcTo(QRectF(baseRect.right() - 16, baseRect.y(), 16, 16), 90, -90);
+        path.lineTo(QPoint(baseRect.right(), baseRect.bottom() - 8));
+        path.arcTo(QRectF(baseRect.right() - 16, baseRect.bottom() - 16, 16, 16), 0, -90);
+        path.lineTo(baseRect.bottomLeft());
+        path.closeSubpath();
+        painter.drawPath(path);
+        painter.restore();
     }
-    else
-    {
-        painter.setBrush(*d->_windowLinearGradient);
-    }
-    painter.drawRoundedRect(rect(), 8, 8);
-    painter.restore();
     QWidget::paintEvent(event);
 }

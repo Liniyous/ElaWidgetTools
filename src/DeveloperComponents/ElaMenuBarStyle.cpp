@@ -47,12 +47,11 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->setPen(Qt::NoPen);
             if (topt->state.testFlag(QStyle::State_Enabled) && topt->state.testFlag(QStyle::State_MouseOver))
             {
-                painter->setBrush(ElaThemeColor(_themeMode, MenuBarExpandButtonHover));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                 painter->drawRect(topt->rect);
             }
             //展开图标
-            painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : _themeMode == ElaThemeType::Light ? Qt::black
-                                                                                                                        : Qt::white);
+            painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : ElaThemeColor(_themeMode, BasicText));
             QFont iconFont = QFont("ElaAwesome");
             iconFont.setPixelSize(18);
             painter->setFont(iconFont);
@@ -83,11 +82,11 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             {
                 if (mopt->state.testFlag(QStyle::State_Sunken))
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, MenuBarItemPress));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
                 }
                 else if (mopt->state.testFlag(QStyle::State_Selected))
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, MenuBarItemSelected));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 }
                 painter->drawRoundedRect(menuItemRect, 3, 3);
             }
@@ -111,7 +110,7 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
                 if (!iconText.isEmpty())
                 {
                     painter->save();
-                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowTextDisable) : ElaThemeColor(_themeMode, WindowText));
+                    painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, BasicTextDisable) : ElaThemeColor(_themeMode, BasicText));
                     QFont iconFont = QFont("ElaAwesome");
                     iconFont.setPixelSize(menuBarHeight * 0.7);
                     painter->setFont(iconFont);
@@ -127,7 +126,7 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             else
             {
                 //图标 + 文字
-                painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, WindowTextDisable) : ElaThemeColor(_themeMode, WindowText));
+                painter->setPen(!mopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, BasicTextDisable) : ElaThemeColor(_themeMode, BasicText));
                 if (icon.isNull() && iconText.isEmpty())
                 {
                     painter->drawText(menuItemRect, Qt::AlignCenter, menuText);

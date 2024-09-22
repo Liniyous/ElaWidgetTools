@@ -23,6 +23,7 @@
 #include "T_Card.h"
 #include "T_Graphics.h"
 #include "T_ListView.h"
+#include "T_Setting.h"
 #include "T_TableView.h"
 #include "T_TreeView.h"
 #ifdef Q_OS_WIN
@@ -214,6 +215,7 @@ void MainWindow::initContent()
     _listViewPage = new T_ListView(this);
     _tableViewPage = new T_TableView(this);
     _treeViewPage = new T_TreeView(this);
+    _settingPage = new T_Setting(this);
 
     QString testKey_1;
     QString testKey_2;
@@ -263,7 +265,7 @@ void MainWindow::initContent()
             _aboutPage->show();
         }
     });
-    addFooterNode("Setting", new QWidget(this), _settingKey, 0, ElaIconType::GearComplex);
+    addFooterNode("Setting", _settingPage, _settingKey, 0, ElaIconType::GearComplex);
     connect(this, &MainWindow::userInfoCardClicked, this, [=]() { this->navigation(_homePage->property("ElaPageKey").toString()); });
 #ifdef Q_OS_WIN
     connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() { this->navigation(_elaScreenPage->property("ElaPageKey").toString()); });

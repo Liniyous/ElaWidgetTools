@@ -29,25 +29,25 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             painter->setRenderHints(QPainter::Antialiasing);
             painter->setPen(Qt::NoPen);
             // 边框绘制
-            painter->setBrush(ElaThemeColor(_themeMode, LineEditBorder));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBorder));
             painter->drawRoundedRect(lineEditRect, 6, 6);
             //  背景绘制
             if (fopt->state & QStyle::State_HasFocus)
             {
-                painter->setBrush(ElaThemeColor(_themeMode, LineEditHasFocus));
+                painter->setBrush(ElaThemeColor(_themeMode, DialogBase));
             }
             else if (fopt->state & QStyle::State_MouseOver)
             {
-                painter->setBrush(ElaThemeColor(_themeMode, LineEditHover));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
             }
             else
             {
-                painter->setBrush(ElaThemeColor(_themeMode, LineEditBase));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
             }
             painter->drawRoundedRect(QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3), 6, 6);
 
             // 底边线绘制
-            painter->setBrush(ElaThemeColor(_themeMode, LineEditHemline));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicHemline));
             QPainterPath path;
             path.moveTo(6, lineEditRect.height());
             path.lineTo(lineEditRect.width() - 6, lineEditRect.height());

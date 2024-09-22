@@ -21,7 +21,6 @@ private:
     bool _isAlphaAnimationFinished{true};
     bool _isToggled{false};
     bool _isPressed{false};
-    int _shadowBorderWidth{3};
     ElaThemeType::ThemeMode _themeMode;
 };
 

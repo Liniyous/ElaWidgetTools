@@ -25,6 +25,32 @@ ElaToolButton::~ElaToolButton()
 {
 }
 
+void ElaToolButton::setBorderRadius(int borderRadius)
+{
+    Q_D(ElaToolButton);
+    d->_toolButtonStyle->setBorderRadius(borderRadius);
+    Q_EMIT pBorderRadiusChanged();
+}
+
+int ElaToolButton::getBorderRadius() const
+{
+    Q_D(const ElaToolButton);
+    return d->_toolButtonStyle->getBorderRadius();
+}
+
+void ElaToolButton::setIsSelected(bool isSelected)
+{
+    Q_D(ElaToolButton);
+    d->_toolButtonStyle->setIsSelected(isSelected);
+    Q_EMIT pIsSelectedChanged();
+}
+
+bool ElaToolButton::getIsSelected() const
+{
+    Q_D(const ElaToolButton);
+    return d->_toolButtonStyle->getIsSelected();
+}
+
 void ElaToolButton::setIsTransparent(bool isTransparent)
 {
     Q_D(ElaToolButton);

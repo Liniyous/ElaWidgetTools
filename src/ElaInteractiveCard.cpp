@@ -51,7 +51,7 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, InteractiveCardHover) : Qt::transparent);
+    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHoverAlpha) : Qt::transparent);
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
     // 图片绘制
     if (!d->_pCardPixmap.isNull())
@@ -77,7 +77,7 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
         painter.restore();
     }
     // 文字绘制
-    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     QFont font = this->font();
     font.setWeight(QFont::Bold);
     font.setPixelSize(d->_pTitlePixelSize);

@@ -242,14 +242,14 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     // 确定取消按钮
     d->_overButton = new ElaPushButton("确定", this);
     d->_overButton->setBorderRadius(6);
-    d->_overButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonBase));
-    d->_overButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonHover));
-    d->_overButton->setLightPressColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonPress));
-    d->_overButton->setLightTextColor(ElaThemeColor(ElaThemeType::Light, ContentDialogRightButtonText));
-    d->_overButton->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonBase));
-    d->_overButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonHover));
-    d->_overButton->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonPress));
-    d->_overButton->setDarkTextColor(ElaThemeColor(ElaThemeType::Dark, ContentDialogRightButtonText));
+    d->_overButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, PrimaryNormal));
+    d->_overButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, PrimaryHover));
+    d->_overButton->setLightPressColor(ElaThemeColor(ElaThemeType::Light, PrimaryPress));
+    d->_overButton->setLightTextColor(Qt::white);
+    d->_overButton->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, PrimaryNormal));
+    d->_overButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, PrimaryHover));
+    d->_overButton->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, PrimaryPress));
+    d->_overButton->setDarkTextColor(Qt::white);
     connect(d->_overButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT colorSelected(d->_pCurrentColor);
         close();
@@ -329,11 +329,11 @@ void ElaColorDialog::paintEvent(QPaintEvent* event)
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     // 背景绘制
-    painter.setBrush(ElaThemeColor(d->_themeMode, ColorDialogBase));
+    painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
     painter.drawRect(rect());
 
     // 按钮背景绘制
-    painter.setBrush(ElaThemeColor(d->_themeMode, ColorDialogButtonAreaBase));
+    painter.setBrush(ElaThemeColor(d->_themeMode, DialogLayoutArea));
     painter.drawRect(QRect(0, height() - 78, width(), 78));
     painter.restore();
     QDialog::paintEvent(event);

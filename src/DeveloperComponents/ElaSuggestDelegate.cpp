@@ -40,12 +40,12 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         if (option.state & QStyle::State_MouseOver)
         {
             //选中时覆盖
-            painter->fillPath(path, ElaThemeColor(_themeMode, SuggestBoxViewItemSelectedHover));
+            painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
         }
         else
         {
             //选中
-            painter->fillPath(path, ElaThemeColor(_themeMode, SuggestBoxViewItemSelected));
+            painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
         }
     }
     else
@@ -53,11 +53,11 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         if (option.state & QStyle::State_MouseOver)
         {
             //覆盖时颜色
-            painter->fillPath(path, ElaThemeColor(_themeMode, SuggestBoxViewItemHover));
+            painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
         }
     }
     //文字绘制
-    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(ElaThemeColor(_themeMode, BasicText));
     painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());
 
     //图标绘制

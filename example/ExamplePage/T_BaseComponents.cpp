@@ -43,7 +43,8 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     toggleSwitchLayout->addWidget(toggleSwitchDisableText);
     toggleSwitchLayout->addSpacing(10);
 
-    _toggleButton = new ElaToggleButton("Head", this);
+    _toggleButton = new ElaToggleButton("ToggleButton", this);
+    _toggleButton->setFixedWidth(120);
     ElaScrollPageArea* toggleButtonArea = new ElaScrollPageArea(this);
     QHBoxLayout* toggleButtonLayout = new QHBoxLayout(toggleButtonArea);
     ElaText* toggleButtonText = new ElaText("ElaToggleButton", this);

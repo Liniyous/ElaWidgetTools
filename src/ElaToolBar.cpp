@@ -90,8 +90,8 @@ void ElaToolBar::paintEvent(QPaintEvent* event)
         // 高性能阴影
         eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
         //背景
-        painter.setPen(ElaThemeColor(d->_themeMode, ToolBarWindowBorder));
-        painter.setBrush(ElaThemeColor(d->_themeMode, ToolBarWindowBase));
+        painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
+        painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRoundedRect(foregroundRect, 5, 5);
         QStyle* style = this->style();

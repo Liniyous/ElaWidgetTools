@@ -61,14 +61,14 @@ void ElaCalendarPicker::paintEvent(QPaintEvent* event)
     // 边框和背景绘制
     QRect baseRect = rect();
     baseRect.adjust(1, 1, -1, -1);
-    painter.setPen(ElaThemeColor(d->_themeMode, CalendarBorder));
-    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, CalendarHover) : ElaThemeColor(d->_themeMode, CalendarBase));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase));
     painter.drawRoundedRect(baseRect, d->_pBorderRadius, d->_pBorderRadius);
 
     // 日期绘制
     QDate selectedDate = getSelectedDate();
     QString date = QString("%1/%2/%3").arg(selectedDate.year()).arg(selectedDate.month()).arg(selectedDate.day());
-    painter.setPen(ElaThemeColor(d->_themeMode, WindowText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     QRect textRect = baseRect;
     textRect.adjust(10, 0, 0, 0);
     painter.drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, date);

@@ -20,7 +20,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
 {
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(ElaThemeColor(_themeMode, BasicText));
     QRect itemRect = option.rect;
     QString breadcrumbDisplayData = index.data(Qt::DisplayRole).toString();
     QString breadcrumbUserData = index.data(Qt::UserRole).toString();
@@ -29,14 +29,14 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
         if (_pPressIndex == index)
         {
             //鼠标按下
-            painter->setPen(ElaThemeColor(_themeMode, BreadcrumbBarTextHasFocus));
+            painter->setPen(ElaThemeColor(_themeMode, BasicTextPress));
         }
         else
         {
             //不为最后一个 且没有被鼠标覆盖
             if (!(option.state & QStyle::State_MouseOver))
             {
-                painter->setPen(ElaThemeColor(_themeMode, BreadcrumbBarText));
+                painter->setPen(ElaThemeColor(_themeMode, BasicTextNoFocus));
             }
         }
     }

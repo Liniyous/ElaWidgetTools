@@ -37,11 +37,11 @@ void T_IconDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(22);
     painter->setFont(iconFont);
-    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(ElaThemeColor(_themeMode, BasicText));
     painter->drawText(option.rect.x() + option.rect.width() / 2 - 11, option.rect.y() + option.rect.height() / 2 - 11, iconValue);
     painter->restore();
     // 文字绘制
-    painter->setPen(ElaThemeColor(_themeMode, WindowText));
+    painter->setPen(ElaThemeColor(_themeMode, BasicText));
     QFont titlefont = painter->font();
     titlefont.setPixelSize(13);
     painter->setFont(titlefont);

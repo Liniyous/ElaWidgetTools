@@ -27,31 +27,31 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
             break;
         }
         QRect buttonRect = bopt->rect;
+        buttonRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
         if (bopt->state & QStyle::State_Off)
         {
-            painter->setPen(QPen(ElaThemeColor(_themeMode, RadioButtonStateOffBorder), 1.5));
+            painter->setPen(QPen(ElaThemeColor(_themeMode, BasicBorder), 1.5));
             if (bopt->state & QStyle::State_MouseOver)
             {
-                painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOffHover));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
             }
             else
             {
-                painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOffBase));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
             }
             painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 8.5, 8.5);
         }
         else
         {
-            painter->setPen(ElaThemeColor(_themeMode, RadioButtonStateOnBorder));
+            painter->setPen(Qt::NoPen);
             // 外圆形
-            painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOnBase));
+            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 2, buttonRect.width() / 2);
             // 内圆形
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, RadioButtonStateOnCenter));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicTextInvert));
             if (bopt->state & QStyle::State_Sunken)
             {
                 if (bopt->state & QStyle::State_MouseOver)

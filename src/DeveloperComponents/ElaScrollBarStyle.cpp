@@ -40,7 +40,7 @@ void ElaScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleO
                 // 背景绘制
                 painter->setOpacity(_pOpacity);
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, ScrollBarBase));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
                 painter->drawRoundedRect(scrollBarRect, 6, 6);
                 //指示器绘制 center()在此处不适用 存在外围边距宽度 需手动计算
                 int sideLength = 8;

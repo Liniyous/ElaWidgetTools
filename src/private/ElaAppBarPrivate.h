@@ -11,6 +11,7 @@ class QVBoxLayout;
 class ElaText;
 class ElaAppBar;
 class ElaIconButton;
+class ElaToolButton;
 class ElaAppBarPrivate : public QObject
 {
     Q_OBJECT
@@ -35,12 +36,12 @@ private:
     QVBoxLayout* _iconLabelLayout{nullptr};
     QVBoxLayout* _titleLabelLayout{nullptr};
     ElaAppBarType::ButtonFlags _buttonFlags;
-    ElaIconButton* _routeBackButton{nullptr};
-    ElaIconButton* _navigationButton{nullptr};
-    ElaIconButton* _themeChangeButton{nullptr};
-    ElaIconButton* _stayTopButton{nullptr};
-    ElaIconButton* _minButton{nullptr};
-    ElaIconButton* _maxButton{nullptr};
+    ElaToolButton* _routeBackButton{nullptr};
+    ElaToolButton* _navigationButton{nullptr};
+    ElaToolButton* _themeChangeButton{nullptr};
+    ElaToolButton* _stayTopButton{nullptr};
+    ElaToolButton* _minButton{nullptr};
+    ElaToolButton* _maxButton{nullptr};
     ElaIconButton* _closeButton{nullptr};
     QScreen* _lastScreen{nullptr};
     ElaText* _titleLabel{nullptr};

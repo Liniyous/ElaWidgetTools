@@ -27,7 +27,7 @@ void ElaProgressBarStyle::drawControl(ControlElement element, const QStyleOption
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, ProgressBarBase));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicChute));
         painter->drawRoundedRect(option->rect, 3, 3);
         painter->restore();
         return;
@@ -44,7 +44,7 @@ void ElaProgressBarStyle::drawControl(ControlElement element, const QStyleOption
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, ProgressBarContentsBase));
+        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
         const bool inverted = popt->invertedAppearance;
         bool reverse = popt->direction == Qt::RightToLeft;
         if (inverted)

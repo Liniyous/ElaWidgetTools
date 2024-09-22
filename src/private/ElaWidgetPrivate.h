@@ -4,10 +4,8 @@
 #include <QObject>
 
 #include "Def.h"
-#include "stdafx.h"
 class ElaWidget;
 class ElaAppBar;
-class QLinearGradient;
 class ElaWidgetPrivate : public QObject
 {
     Q_OBJECT
@@ -15,11 +13,10 @@ class ElaWidgetPrivate : public QObject
 public:
     explicit ElaWidgetPrivate(QObject* parent = nullptr);
     ~ElaWidgetPrivate();
-    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
+    ElaThemeType::ThemeMode _themeMode;
     ElaAppBar* _appBar{nullptr};
-    QLinearGradient* _windowLinearGradient{nullptr};
 };
 
 #endif // ELAWIDGETPRIVATE_H

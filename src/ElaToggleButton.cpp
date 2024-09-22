@@ -1,5 +1,6 @@
 #include "ElaToggleButton.h"
 
+#include <QEvent>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
@@ -17,7 +18,7 @@ ElaToggleButton::ElaToggleButton(QWidget* parent)
     d->_themeMode = eTheme->getThemeMode();
     d->_pToggleAlpha = 0;
     setMouseTracking(true);
-    setFixedSize(80, 38);
+    setFixedSize(80, 32);
     QFont font = this->font();
     font.setPixelSize(15);
     setFont(font);
@@ -51,10 +52,29 @@ bool ElaToggleButton::getIsToggled() const
     return d->_isToggled;
 }
 
+bool ElaToggleButton::event(QEvent* event)
+{
+    switch (event->type())
+    {
+    case QEvent::Enter:
+    case QEvent::Leave:
+    {
+        update();
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QWidget::event(event);
+}
+
 void ElaToggleButton::mousePressEvent(QMouseEvent* event)
 {
     Q_D(ElaToggleButton);
     d->_isPressed = true;
+    update();
     QWidget::mouseReleaseEvent(event);
 }
 
@@ -91,41 +111,39 @@ void ElaToggleButton::paintEvent(QPaintEvent* event)
     Q_D(ElaToggleButton);
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    // 高性能阴影
-    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     painter.save();
-    QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * (d->_shadowBorderWidth), height() - 2 * d->_shadowBorderWidth);
+    QRect foregroundRect(1, 1, width() - 2, height() - 2);
     if (d->_isAlphaAnimationFinished)
     {
         if (d->_isToggled)
         {
-            painter.setPen(ElaThemeColor(d->_themeMode, ToggleButtonToggledBorder));
-            painter.setBrush(isEnabled() ? d->_isPressed ? ElaThemeColor(d->_themeMode, ToggleButtonToggledPress) : (underMouse() ? ElaThemeColor(d->_themeMode, ToggleButtonToggledHover) : ElaThemeColor(d->_themeMode, ToggleButtonToggledBase)) : ElaThemeColor(d->_themeMode, ToggleButtonDisableBase));
+            painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+            painter.setBrush(isEnabled() ? d->_isPressed ? ElaThemeColor(d->_themeMode, PrimaryPress) : (underMouse() ? ElaThemeColor(d->_themeMode, PrimaryHover) : ElaThemeColor(d->_themeMode, PrimaryNormal)) : ElaThemeColor(d->_themeMode, BasicDisable));
         }
         else
         {
-            painter.setPen(QPen(ElaThemeColor(d->_themeMode, ToggleButtonNoToggledBorder), 2));
-            painter.setBrush(isEnabled() ? d->_isPressed ? ElaThemeColor(d->_themeMode, ToggleButtonNoToggledPress) : (underMouse() ? ElaThemeColor(d->_themeMode, ToggleButtonNoToggledHover) : ElaThemeColor(d->_themeMode, ToggleButtonNoToggledBase)) : ElaThemeColor(d->_themeMode, ToggleButtonDisableBase));
+            painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+            painter.setBrush(isEnabled() ? d->_isPressed ? ElaThemeColor(d->_themeMode, BasicPress) : (underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase)) : ElaThemeColor(d->_themeMode, BasicDisable));
         }
     }
     else
     {
         painter.setPen(Qt::NoPen);
-        QColor toggleColor = ElaThemeColor(d->_themeMode, ToggleButtonToggledBase);
+        QColor toggleColor = ElaThemeColor(d->_themeMode, PrimaryNormal);
         toggleColor.setAlpha(d->_pToggleAlpha);
         painter.setBrush(toggleColor);
     }
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     // 底边线绘制
-    if (!d->_isPressed)
+    if (!d->_isPressed && !d->_isToggled)
     {
-        painter.setPen(QPen(ElaThemeColor(d->_themeMode, ToggleButtonHemline), 1));
-        painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(), height() - d->_shadowBorderWidth);
+        painter.setPen(ElaThemeColor(d->_themeMode, BasicBaseLine));
+        painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - 1, foregroundRect.x() + foregroundRect.width() - d->_pBorderRadius, height() - 1);
     }
 
     //文字绘制
-    painter.setPen(isEnabled() ? d->_isToggled ? ElaThemeColor(d->_themeMode, ToggleButtonToggledText) : ElaThemeColor(d->_themeMode, ToggleButtonNoToggledText) : ElaThemeColor(d->_themeMode, WindowTextDisable));
+    painter.setPen(isEnabled() ? d->_isToggled ? ElaThemeColor(d->_themeMode, BasicTextInvert) : ElaThemeColor(d->_themeMode, BasicText) : ElaThemeColor(d->_themeMode, BasicTextDisable));
     painter.drawText(foregroundRect, Qt::AlignCenter, d->_pText);
     painter.restore();
 }

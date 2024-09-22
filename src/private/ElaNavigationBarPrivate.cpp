@@ -17,7 +17,8 @@
 #include "ElaNavigationView.h"
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxPrivate.h"
-#include "ElaTheme.h"
+#include "ElaToolButton.h"
+
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -25,12 +26,6 @@ ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
 
 ElaNavigationBarPrivate::~ElaNavigationBarPrivate()
 {
-}
-
-void ElaNavigationBarPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
-{
-    _windowLinearGradient->setColorAt(0, ElaThemeColor(themeMode, NavigationBaseStart));
-    _windowLinearGradient->setColorAt(1, ElaThemeColor(themeMode, NavigationBaseEnd));
 }
 
 void ElaNavigationBarPrivate::onNavigationButtonClicked()

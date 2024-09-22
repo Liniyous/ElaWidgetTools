@@ -17,13 +17,11 @@ public:
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption* option = nullptr, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;
-    Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
     mutable bool _isAnyoneItemHasIcon{false};
     int _shadowBorderWidth{6};
     ElaThemeType::ThemeMode _themeMode;
-    QLinearGradient* _windowLinearGradient{nullptr};
     int _iconWidth{22};
 };
 

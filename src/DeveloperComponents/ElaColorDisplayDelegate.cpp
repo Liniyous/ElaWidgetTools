@@ -25,12 +25,12 @@ void ElaColorDisplayDelegate::paint(QPainter* painter, const QStyleOptionViewIte
     QColor displayColor = index.data(Qt::UserRole).value<QColor>();
     if (displayColor.isValid())
     {
-        painter->setPen(ElaThemeColor(_pThemeMode, ColorDialogDisplayBorder));
+        painter->setPen(ElaThemeColor(_pThemeMode, PopupBorderHover));
         painter->setBrush(index.data(Qt::UserRole).value<QColor>());
     }
     else
     {
-        QPen pen(ElaThemeColor(_pThemeMode, ColorDialogDisplayBorder));
+        QPen pen(ElaThemeColor(_pThemeMode, PopupBorderHover));
         pen.setStyle(Qt::DashLine);
         painter->setPen(pen);
     }

@@ -26,6 +26,7 @@ public:
 
     void drawEffectShadow(QPainter* painter, QRect widgetRect, int shadowBorderWidth, int borderRadius);
 
+    void setThemeColor(ElaThemeType::ThemeMode themeMode, ElaThemeType::ThemeColor themeColor, QColor newColor);
     const QColor& getThemeColor(ElaThemeType::ThemeMode themeMode, ElaThemeType::ThemeColor themeColor);
 Q_SIGNALS:
     Q_SIGNAL void themeModeChanged(ElaThemeType::ThemeMode themeMode);

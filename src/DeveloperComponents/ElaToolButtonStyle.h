@@ -9,7 +9,10 @@ class ElaToolButtonStyle : public QProxyStyle
 {
     Q_OBJECT
     Q_PRIVATE_CREATE(bool, IsTransparent)
+    Q_PRIVATE_CREATE(int, BorderRadius)
     Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
+    Q_PRIVATE_CREATE(bool, IsSelected);
+
 public:
     explicit ElaToolButtonStyle(QStyle* style = nullptr);
     ~ElaToolButtonStyle();
