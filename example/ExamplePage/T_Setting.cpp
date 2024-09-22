@@ -1,5 +1,6 @@
 #include "T_Setting.h"
 
+#include <QDebug>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
@@ -33,7 +34,7 @@ T_Setting::T_Setting(QWidget* parent)
     themeSwitchLayout->addWidget(themeSwitchText);
     themeSwitchLayout->addStretch();
     themeSwitchLayout->addWidget(_themeComboBox);
-    connect(_themeComboBox, &ElaComboBox::currentIndexChanged, this, [=](int index) {
+    connect(_themeComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [=](int index) {
         if (index == 0)
         {
             eTheme->setThemeMode(ElaThemeType::Light);
