@@ -10,6 +10,8 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
     : ElaCustomWidget(parent)
 {
     resize(700, 500);
+    setWindowTitle("");
+    setWindowIcon(QIcon());
     _customTabWidget = new ElaTabWidget(this);
     QTabBar* originTabBar = _customTabWidget->tabBar();
     originTabBar->hide();

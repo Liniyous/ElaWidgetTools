@@ -53,6 +53,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     resize(400, height());
     setWindowModality(Qt::ApplicationModal);
 #ifdef Q_OS_WIN
+    createWinId();
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     installEventFilter(this);
@@ -291,18 +292,6 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
         {
             clientRect->top -= 1;
             clientRect->bottom -= 1;
-        }
-        else
-        {
-            const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
-            if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
-            {
-                *result = static_cast<long>(hitTestResult);
-                return true;
-            }
-            // qDebug() << clientRect->left << clientRect->top << clientRect->bottom << clientRect->right;
-            clientRect->top = 0;
-            clientRect->left = 0;
         }
         *result = WVR_REDRAW;
         return true;

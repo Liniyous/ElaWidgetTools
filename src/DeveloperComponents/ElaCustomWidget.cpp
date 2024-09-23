@@ -9,8 +9,8 @@ ElaCustomWidget::ElaCustomWidget(QWidget* parent)
     : QDialog{parent}
 {
     resize(500, 500); // 默认宽高
-                      // 自定义AppBar
     setObjectName("ElaCustomWidget");
+    // 自定义AppBar
     _appBar = new ElaAppBar(this);
     _appBar->setWindowButtonFlags(ElaAppBarType::MinimizeButtonHint | ElaAppBarType::MaximizeButtonHint | ElaAppBarType::CloseButtonHint);
     _mainLayout = new QVBoxLayout(this);

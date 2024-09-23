@@ -704,6 +704,12 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
 #ifdef Q_OS_WIN
     case QEvent::Show:
     {
+        if (!d->_pIsFixedSize && !d->_pIsOnlyAllowMinAndClose)
+        {
+            HWND hwnd = (HWND)d->_currentWinID;
+            DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
+            ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
+        }
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         setShadow((HWND)d->_currentWinID);
 #endif
