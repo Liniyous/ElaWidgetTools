@@ -6,9 +6,9 @@
 #include <QScreen>
 #include <QVBoxLayout>
 
-#include "ElaAppBar.h"
 #include "ElaTheme.h"
 #include "private/ElaWidgetPrivate.h"
+Q_TAKEOVER_NATIVEEVENT_CPP(ElaWidget, d_func()->_appBar);
 ElaWidget::ElaWidget(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaWidgetPrivate())
 {

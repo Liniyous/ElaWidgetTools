@@ -40,7 +40,7 @@ void ElaTabWidgetPrivate::onTabDragCreate(QDrag* drag)
         {
             originCustomTabBar->removeTab(index);
         }
-        ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget();
+        ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(q);
         ElaTabBar* customTabBar = floatWidget->getCustomTabBar();
         ElaTabWidget* customTabWidget = floatWidget->getCustomTabWidget();
         customTabWidget->d_ptr->_customTabBar = customTabBar;

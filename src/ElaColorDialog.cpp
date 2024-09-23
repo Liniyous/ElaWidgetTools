@@ -4,7 +4,6 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
-#include "ElaAppBar.h"
 #include "ElaBaseListView.h"
 #include "ElaColorDialogPrivate.h"
 #include "ElaColorDisplayDelegate.h"
@@ -19,6 +18,7 @@
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaToolButton.h"
+Q_TAKEOVER_NATIVEEVENT_CPP(ElaColorDialog, d_func()->_appBar);
 ElaColorDialog::ElaColorDialog(QWidget* parent)
     : QDialog{parent}, d_ptr(new ElaColorDialogPrivate())
 {

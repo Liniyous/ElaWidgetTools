@@ -22,6 +22,7 @@ ElaApplication::~ElaApplication()
 
 void ElaApplication::init()
 {
+    QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
     //默认字体
     QFont font = qApp->font();

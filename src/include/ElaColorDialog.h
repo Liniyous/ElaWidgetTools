@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+#include "ElaAppBar.h"
 #include "stdafx.h"
 class ElaColorDialogPrivate;
 class ELA_EXPORT ElaColorDialog : public QDialog
@@ -10,6 +11,7 @@ class ELA_EXPORT ElaColorDialog : public QDialog
     Q_OBJECT
     Q_Q_CREATE(ElaColorDialog)
     Q_PROPERTY_CREATE_Q_H(QColor, CurrentColor)
+    Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaColorDialog(QWidget* parent = nullptr);
     ~ElaColorDialog();

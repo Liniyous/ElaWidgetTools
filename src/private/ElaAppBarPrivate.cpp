@@ -60,7 +60,7 @@ void ElaAppBarPrivate::onStayTopButtonClicked()
 {
     Q_Q(const ElaAppBar);
 #ifdef Q_OS_WIN
-    HWND hwnd = reinterpret_cast<HWND>(q->window()->winId());
+    HWND hwnd = (HWND)_currentWinID;
     ::SetWindowPos(hwnd, _pIsStayTop ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 #else
     q->window()->setWindowFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);

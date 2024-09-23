@@ -43,7 +43,7 @@ T_Popup::T_Popup(QWidget* parent)
     toolButtonLayout->addWidget(_toolButton);
     toolButtonLayout->addStretch();
 
-    _colorDialog = new ElaColorDialog();
+    _colorDialog = new ElaColorDialog(this);
     ElaText* colorText = new ElaText(_colorDialog->getCurrentColorRGB(), this);
     colorText->setTextPixelSize(15);
     ElaPushButton* colorDialogButton = new ElaPushButton(this);

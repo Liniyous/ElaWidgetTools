@@ -43,12 +43,13 @@ void ElaNavigationBarPrivate::onNavigationButtonClicked()
 
 void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
 {
+    Q_Q(ElaNavigationBar);
     const QMetaObject* meta = _pageMetaMap.value(nodeKey);
     if (!meta)
     {
         return;
     }
-    ElaCustomWidget* floatWidget = new ElaCustomWidget();
+    ElaCustomWidget* floatWidget = new ElaCustomWidget(q);
     QWidget* widget = static_cast<QWidget*>(meta->newInstance());
     floatWidget->setWindowIcon(widget->windowIcon());
     floatWidget->setWindowTitle(widget->windowTitle());

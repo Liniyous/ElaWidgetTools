@@ -53,7 +53,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     resize(400, height());
     setWindowModality(Qt::ApplicationModal);
 #ifdef Q_OS_WIN
-    createWinId();
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
     installEventFilter(this);

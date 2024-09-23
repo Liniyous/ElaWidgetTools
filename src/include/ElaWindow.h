@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "Def.h"
+#include "ElaAppBar.h"
 #include "stdafx.h"
 class ElaWindowPrivate;
 class QStackedWidget;
@@ -21,6 +22,7 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
     Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
+    Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaWindow(QWidget* parent = nullptr);
     ~ElaWindow();

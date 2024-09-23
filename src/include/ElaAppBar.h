@@ -1,13 +1,55 @@
 #ifndef ELAAPPBAR_H
 #define ELAAPPBAR_H
 
-#include <QAbstractNativeEventFilter>
 #include <QWidget>
 
 #include "Def.h"
 #include "stdafx.h"
+
+#ifdef Q_OS_WIN
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#define Q_TAKEOVER_NATIVEEVENT_H virtual bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
+#else
+#define Q_TAKEOVER_NATIVEEVENT_H virtual bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
+#endif
+#else
+#define Q_TAKEOVER_NATIVEEVENT_H
+#endif
+
+#ifdef Q_OS_WIN
+#define ELAAPPBAR_HANDLE(ElaAppBar)                                           \
+    if (ElaAppBar)                                                            \
+    {                                                                         \
+        int ret = ElaAppBar->takeOverNativeEvent(eventType, message, result); \
+        if (ret == -1)                                                        \
+        {                                                                     \
+            return QWidget::nativeEvent(eventType, message, result);          \
+        }                                                                     \
+        return (bool)ret;                                                     \
+    }                                                                         \
+    return QWidget::nativeEvent(eventType, message, result);
+#endif
+
+#ifdef Q_OS_WIN
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, ElaAppBar)                                     \
+    bool CLASS::nativeEvent(const QByteArray& eventType, void* message, qintptr* result) \
+    {                                                                                    \
+        ELAAPPBAR_HANDLE(ElaAppBar)                                                      \
+    }
+#else
+#define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, ElaAppBar)                                  \
+    bool CLASS::nativeEvent(const QByteArray& eventType, void* message, long* result) \
+    {                                                                                 \
+        ELAAPPBAR_HANDLE(ElaAppBar)                                                   \
+    }
+#endif
+#else
+#define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, ElaAppBar)
+#endif
+
 class ElaAppBarPrivate;
-class ELA_EXPORT ElaAppBar : public QWidget, QAbstractNativeEventFilter
+class ELA_EXPORT ElaAppBar : public QWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaAppBar)
@@ -31,6 +73,13 @@ public:
     void setRouteBackButtonEnable(bool isEnable);
 
     void closeWindow();
+#ifdef Q_OS_WIN
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    int takeOverNativeEvent(const QByteArray& eventType, void* message, qintptr* result);
+#else
+    int takeOverNativeEvent(const QByteArray& eventType, void* message, long* result);
+#endif
+#endif
 Q_SIGNALS:
     Q_SIGNAL void routeBackButtonClicked();
     Q_SIGNAL void navigationButtonClicked();
@@ -40,12 +89,6 @@ Q_SIGNALS:
 
 protected:
     virtual bool eventFilter(QObject* obj, QEvent* event) override;
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, qintptr* result) override;
-#else
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result) override;
-#endif
 };
 
 #endif // ELAAPPBAR_H

@@ -1,14 +1,16 @@
 #ifndef ELACUSTOMWIDGET_H
 #define ELACUSTOMWIDGET_H
 
-#include <QWidget>
+#include <QDialog>
 
 #include "Def.h"
-class ElaAppBar;
+#include "ElaAppBar.h"
+
 class QVBoxLayout;
-class ElaCustomWidget : public QWidget
+class ElaCustomWidget : public QDialog
 {
     Q_OBJECT
+    Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaCustomWidget(QWidget* parent = nullptr);
     ~ElaCustomWidget();
