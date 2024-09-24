@@ -90,6 +90,7 @@ void ElaCalendarPrivate::onCalendarViewClicked(const QModelIndex& index)
             _calendarView->clearSelection();
             q->setSelectedDate(date);
         }
+        Q_EMIT q->clicked(_pSelectedDate);
         break;
     }
     }
