@@ -367,9 +367,9 @@ void ElaAppBar::closeWindow()
     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(window(), "geometry");
     QRect geometry = window()->geometry();
     geometryAnimation->setStartValue(geometry);
-    int targetWidth = (geometry.width() - d->_lastMinTrackWidth) * 0.7 + d->_lastMinTrackWidth;
-    int targetHeight = (geometry.height() - window()->minimumHeight()) * 0.7 + window()->minimumHeight();
-    geometryAnimation->setEndValue(QRect(geometry.center().x() - targetWidth / 2, geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
+    qreal targetWidth = (geometry.width() - d->_lastMinTrackWidth) * 0.7 + d->_lastMinTrackWidth;
+    qreal targetHeight = (geometry.height() - window()->minimumHeight()) * 0.7 + window()->minimumHeight();
+    geometryAnimation->setEndValue(QRectF(geometry.center().x() - targetWidth / 2, geometry.center().y() - targetHeight / 2, targetWidth, targetHeight));
     geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
     geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }

@@ -58,7 +58,6 @@ void ElaAppBarPrivate::onCloseButtonClicked()
 
 void ElaAppBarPrivate::onStayTopButtonClicked()
 {
-    Q_Q(const ElaAppBar);
 #ifdef Q_OS_WIN
     HWND hwnd = (HWND)_currentWinID;
     ::SetWindowPos(hwnd, _pIsStayTop ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
@@ -230,7 +229,7 @@ int ElaAppBarPrivate::_calculateMinimumWidth()
     }
     if (_pCustomWidget)
     {
-        int customWidgetWidth = _pCustomWidget->minimumWidth();
+        int customWidgetWidth = _pCustomWidget->width();
         if (isHasNavigationBar)
         {
             if (customWidgetWidth > 300)
