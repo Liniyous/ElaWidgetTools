@@ -1,15 +1,11 @@
 #include "ElaAppBar.h"
 
+#include <QApplication>
 #include <QDebug>
 
 #include "ElaText.h"
 #include "ElaToolButton.h"
-#ifdef Q_OS_WIN
-#include <Windows.h>
-#include <dwmapi.h>
-#include <windowsx.h>
-#endif
-#include <QApplication>
+#include "ElaWinShadowHelper.h"
 #ifndef Q_OS_WIN
 #include <QDateTime>
 #include <QWindow>
@@ -31,25 +27,6 @@
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsStayTop)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsDefaultClosed)
 Q_PROPERTY_CREATE_Q_CPP(ElaAppBar, bool, IsOnlyAllowMinAndClose)
-#ifdef Q_OS_WIN
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-[[maybe_unused]] static inline void setShadow(HWND hwnd)
-{
-    const MARGINS shadow = {1, 0, 0, 0};
-    typedef HRESULT(WINAPI * DwmExtendFrameIntoClientAreaPtr)(HWND hWnd, const MARGINS* pMarInset);
-    HMODULE module = LoadLibraryW(L"dwmapi.dll");
-    if (module)
-    {
-        DwmExtendFrameIntoClientAreaPtr dwm_extendframe_into_client_area_;
-        dwm_extendframe_into_client_area_ = reinterpret_cast<DwmExtendFrameIntoClientAreaPtr>(GetProcAddress(module, "DwmExtendFrameIntoClientArea"));
-        if (dwm_extendframe_into_client_area_)
-        {
-            dwm_extendframe_into_client_area_(hwnd, &shadow);
-        }
-    }
-}
-#endif
-#endif
 
 ElaAppBar::ElaAppBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaAppBarPrivate())
@@ -72,7 +49,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
 #ifdef Q_OS_WIN
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
-    setShadow((HWND)d->_currentWinID);
 #endif
 #else
     window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
@@ -464,7 +440,6 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
                 *result = static_cast<long>(hitTestResult);
                 return 1;
             }
-// qDebug() << clientRect->left << clientRect->top << clientRect->bottom << clientRect->right;
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
             auto geometry = window()->screen()->geometry();
 #else
@@ -671,19 +646,6 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
     Q_D(ElaAppBar);
     switch (event->type())
     {
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-    case QEvent::WindowActivate:
-    {
-        HWND hwnd = (HWND)d->_currentWinID;
-        DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-        bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
-        if (!hasCaption)
-        {
-            QTimer::singleShot(15, this, [=] { ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION); });
-        }
-        break;
-    }
-#endif
     case QEvent::Resize:
     {
         QSize size = parentWidget()->size();
@@ -711,7 +673,14 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
             ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
         }
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-        setShadow((HWND)d->_currentWinID);
+        HWND hwnd = (HWND)d->_currentWinID;
+        setShadow(hwnd);
+        DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
+        bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
+        if (!hasCaption)
+        {
+            ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION);
+        }
 #endif
         break;
     }

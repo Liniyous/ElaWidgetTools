@@ -2,12 +2,6 @@
 
 #include <ElaPushButton.h>
 
-#include "ElaMaskWidget.h"
-#ifdef Q_OS_WIN
-#include <Windows.h>
-#include <dwmapi.h>
-#include <windowsx.h>
-#endif
 #include <QApplication>
 #include <QGuiApplication>
 #include <QHBoxLayout>
@@ -16,28 +10,11 @@
 #include <QTimer>
 #include <QVBoxLayout>
 
+#include "ElaMaskWidget.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
+#include "ElaWinShadowHelper.h"
 #include "private/ElaContentDialogPrivate.h"
-#ifdef Q_OS_WIN
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-[[maybe_unused]] static inline void setShadow(HWND hwnd)
-{
-    const MARGINS shadow = {1, 0, 0, 0};
-    typedef HRESULT(WINAPI * DwmExtendFrameIntoClientAreaPtr)(HWND hWnd, const MARGINS* pMarInset);
-    HMODULE module = LoadLibraryW(L"dwmapi.dll");
-    if (module)
-    {
-        DwmExtendFrameIntoClientAreaPtr dwm_extendframe_into_client_area_;
-        dwm_extendframe_into_client_area_ = reinterpret_cast<DwmExtendFrameIntoClientAreaPtr>(GetProcAddress(module, "DwmExtendFrameIntoClientArea"));
-        if (dwm_extendframe_into_client_area_)
-        {
-            dwm_extendframe_into_client_area_(hwnd, &shadow);
-        }
-    }
-}
-#endif
-#endif
 
 ElaContentDialog::ElaContentDialog(QWidget* parent)
     : QDialog{parent}, d_ptr(new ElaContentDialogPrivate())
@@ -55,8 +32,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 #ifdef Q_OS_WIN
     createWinId();
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-    setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
-    installEventFilter(this);
+    window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
 #endif
 #else
     window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint);
@@ -131,9 +107,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 ElaContentDialog::~ElaContentDialog()
 {
     Q_D(ElaContentDialog);
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-    removeEventFilter(this);
-#endif
     d->_maskWidget->deleteLater();
 }
 
@@ -186,7 +159,14 @@ void ElaContentDialog::showEvent(QShowEvent* event)
     d->_maskWidget->doMaskAnimation(90);
 #ifdef Q_OS_WIN
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-    setShadow((HWND)winId());
+    HWND hwnd = (HWND)d->_currentWinID;
+    setShadow(hwnd);
+    DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
+    bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
+    if (!hasCaption)
+    {
+        ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION);
+    }
 #endif
 #endif
     QDialog::showEvent(event);
@@ -209,31 +189,13 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
 }
 
 #ifdef Q_OS_WIN
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-[[maybe_unused]] bool ElaContentDialog::eventFilter(QObject* obj, QEvent* event)
-{
-    if (event->type() == QEvent::WindowActivate)
-    {
-        HWND hwnd = reinterpret_cast<HWND>(window()->winId());
-        DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
-        bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
-        if (!hasCaption)
-        {
-            QTimer::singleShot(15, this, [=] { ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CAPTION); });
-        }
-    }
-    return QObject::eventFilter(obj, event);
-}
-#endif
-#endif
-
-#ifdef Q_OS_WIN
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
 #else
 bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, long* result)
 #endif
 {
+    Q_D(ElaContentDialog);
     if ((eventType != "windows_generic_MSG") || !message)
     {
         return false;
@@ -244,6 +206,7 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
     {
         return false;
     }
+    d->_currentWinID = (qint64)hwnd;
     const UINT uMsg = msg->message;
     const WPARAM wParam = msg->wParam;
     const LPARAM lParam = msg->lParam;

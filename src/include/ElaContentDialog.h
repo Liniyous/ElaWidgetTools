@@ -30,12 +30,6 @@ protected:
     virtual void showEvent(QShowEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 #ifdef Q_OS_WIN
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
-    bool eventFilter(QObject* obj, QEvent* event) override;
-#endif
-#endif
-
-#ifdef Q_OS_WIN
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     virtual bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
 #else

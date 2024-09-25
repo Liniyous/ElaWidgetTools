@@ -18,6 +18,7 @@ public:
     ~ElaContentDialogPrivate();
 
 private:
+    qint64 _currentWinID{0};
     ElaThemeType::ThemeMode _themeMode;
     ElaMaskWidget* _maskWidget{nullptr};
     QWidget* _centralWidget{nullptr};

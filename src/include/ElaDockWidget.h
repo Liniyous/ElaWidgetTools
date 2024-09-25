@@ -16,6 +16,14 @@ public:
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
+#ifdef Q_OS_WIN
+    virtual bool event(QEvent* event) override;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    virtual bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
+#else
+    virtual bool nativeEvent(const QByteArray& eventType, void* message, long* result) override;
+#endif
+#endif
 };
 
 #endif // ELADOCKWIDGET_H

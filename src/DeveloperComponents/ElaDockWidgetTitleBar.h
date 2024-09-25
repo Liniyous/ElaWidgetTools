@@ -23,6 +23,7 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
+    friend class ElaDockWidgetPrivate;
     ElaThemeType::ThemeMode _themeMode;
     ElaDockWidget* _dockWidget{nullptr};
     QLabel* _iconLabel{nullptr};
