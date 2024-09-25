@@ -7,7 +7,6 @@
 #include "ElaAppBar.h"
 #include "stdafx.h"
 class ElaWindowPrivate;
-class QStackedWidget;
 class ELA_EXPORT ElaWindow : public QMainWindow
 {
     Q_OBJECT

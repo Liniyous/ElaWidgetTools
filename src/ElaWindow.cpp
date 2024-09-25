@@ -32,7 +32,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     Q_D(ElaWindow);
     d->q_ptr = this;
     d->_pIsEnableMica = false;
-    d->_pMicaImagePath = ":/Resource/Image/MicaBase.png";
+    d->_pMicaImagePath = ":/include/Image/MicaBase.png";
     setProperty("ElaBaseClassName", "ElaWindow");
     resize(1020, 680); // 默认宽高
 
