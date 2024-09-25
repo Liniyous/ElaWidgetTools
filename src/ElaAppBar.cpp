@@ -435,7 +435,7 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
         }
         if (::IsZoomed(hwnd))
         {
-            this->move(0, 7);
+            this->move(7, 7);
             window()->setContentsMargins(8, 8 + height(), 8, 8);
         }
         else
@@ -690,7 +690,7 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         if (::IsZoomed((HWND)d->_currentWinID))
         {
-            this->resize(size.width() - 7, this->height());
+            this->resize(size.width() - 14, this->height());
         }
         else
         {
