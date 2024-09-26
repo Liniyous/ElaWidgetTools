@@ -54,13 +54,18 @@ ElaDockWidget::~ElaDockWidget()
 
 void ElaDockWidget::paintEvent(QPaintEvent* event)
 {
-#ifndef Q_OS_WIN
     Q_D(ElaDockWidget);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::Antialiasing);
     if (isFloating())
     {
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHints(QPainter::Antialiasing);
+#ifdef Q_OS_WIN
+        // 背景
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
+        painter.drawRect(rect());
+#else
         // 高性能阴影
         eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, 6);
         // 背景
@@ -68,11 +73,10 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
         painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRoundedRect(foregroundRect, 5, 5);
-    }
-    painter.restore();
-#else
-    QDockWidget::paintEvent(event);
 #endif
+        painter.restore();
+    }
+    QDockWidget::paintEvent(event);
 }
 
 #ifdef Q_OS_WIN
