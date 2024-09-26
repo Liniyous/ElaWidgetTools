@@ -16,6 +16,7 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
+    bool _isEnableMica;
     ElaAppBar* _appBar{nullptr};
 };
 

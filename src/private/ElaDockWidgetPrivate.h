@@ -20,6 +20,7 @@ private:
     qint64 _currentWinID{0};
     int _margins{8};
     ElaThemeType::ThemeMode _themeMode;
+    bool _isEnableMica;
     int _shadowBorderWidth{6};
     ElaDockWidgetTitleBar* _titleBar{nullptr};
 };

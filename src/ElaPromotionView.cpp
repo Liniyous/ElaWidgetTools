@@ -174,7 +174,7 @@ void ElaPromotionView::paintEvent(QPaintEvent* event)
     Q_D(ElaPromotionView);
     QPainter painter(this);
     painter.save();
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
     painter.setBrush(ElaThemeColor(d->_themeMode, BasicIndicator));
     //页标指示器绘制

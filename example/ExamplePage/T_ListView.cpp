@@ -36,6 +36,7 @@ T_ListView::T_ListView(QWidget* parent)
     centerVLayout->addWidget(listText);
     centerVLayout->addSpacing(10);
     centerVLayout->addLayout(listViewLayout);
+    centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }
 

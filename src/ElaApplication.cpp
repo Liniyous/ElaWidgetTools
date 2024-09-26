@@ -5,19 +5,57 @@
 #include <QFontDatabase>
 #include <QWidget>
 
+#include "ElaTheme.h"
 #include "private/ElaApplicationPrivate.h"
 Q_SINGLETON_CREATE_CPP(ElaApplication)
-Q_PROPERTY_CREATE_Q_CPP(ElaApplication, bool, IsApplicationClosed)
 ElaApplication::ElaApplication(QObject* parent)
     : QObject{parent}, d_ptr(new ElaApplicationPrivate())
 {
     Q_D(ElaApplication);
     d->q_ptr = this;
-    d->_pIsApplicationClosed = false;
+    d->_pIsEnableMica = false;
+    d->_pMicaImagePath = ":/include/Image/MicaBase.png";
+    d->_themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaApplicationPrivate::onThemeModeChanged);
 }
 
 ElaApplication::~ElaApplication()
 {
+}
+
+void ElaApplication::setIsEnableMica(bool isEnable)
+{
+    Q_D(ElaApplication);
+    d->_pIsEnableMica = isEnable;
+    if (isEnable)
+    {
+        d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+    }
+    else
+    {
+        d->onThemeModeChanged(d->_themeMode);
+        Q_EMIT pIsEnableMicaChanged();
+    }
+}
+
+bool ElaApplication::getIsEnableMica() const
+{
+    Q_D(const ElaApplication);
+    return d->_pIsEnableMica;
+}
+
+void ElaApplication::setMicaImagePath(QString micaImagePath)
+{
+    Q_D(ElaApplication);
+    d->_pMicaImagePath = micaImagePath;
+    d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+    Q_EMIT pMicaImagePathChanged();
+}
+
+QString ElaApplication::getMicaImagePath() const
+{
+    Q_D(const ElaApplication);
+    return d->_pMicaImagePath;
 }
 
 void ElaApplication::init()
@@ -30,6 +68,27 @@ void ElaApplication::init()
     font.setFamily("Microsoft YaHei");
     font.setHintingPreference(QFont::PreferNoHinting);
     qApp->setFont(font);
+}
+
+void ElaApplication::syncMica(QWidget* widget, bool isSync)
+{
+    Q_D(ElaApplication);
+    if (!widget)
+    {
+        return;
+    }
+    if (isSync)
+    {
+        widget->installEventFilter(d);
+        connect(d, &ElaApplicationPrivate::micaUpdate, widget, [=]() {
+            d->_updateMica(widget, false);
+        });
+    }
+    else
+    {
+        widget->removeEventFilter(d);
+    }
+    d->_updateMica(widget, false);
 }
 
 bool ElaApplication::containsCursorToItem(QWidget* item)

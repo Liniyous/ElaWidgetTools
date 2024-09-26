@@ -32,7 +32,7 @@ void ElaThemeAnimationWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
     painter.save();
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    painter.setRenderHints(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
     painter.drawImage(rect(), _pOldWindowBackground);
     QPainterPath path;

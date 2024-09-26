@@ -18,8 +18,6 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
-    Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
-    Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
@@ -61,8 +59,6 @@ Q_SIGNALS:
     Q_SIGNAL void customWidgetChanged();
 
 protected:
-    virtual void moveEvent(QMoveEvent* event) override;
-    virtual void resizeEvent(QResizeEvent* event) override;
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual QMenu* createPopupMenu() override;
 };

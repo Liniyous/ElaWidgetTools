@@ -2,12 +2,12 @@
 
 #include <QImage>
 
+#include "ElaApplicationPrivate.h"
 #include "ElaExponentialBlur.h"
-#include "ElaWindowPrivate.h"
-ElaMicaBaseInitObject::ElaMicaBaseInitObject(ElaWindowPrivate* windowPrivate, QObject* parent)
+ElaMicaBaseInitObject::ElaMicaBaseInitObject(ElaApplicationPrivate* appPrivate, QObject* parent)
     : QObject{parent}
 {
-    _windowPrivate = windowPrivate;
+    _appPrivate = appPrivate;
 }
 
 ElaMicaBaseInitObject::~ElaMicaBaseInitObject()
@@ -63,9 +63,9 @@ void ElaMicaBaseInitObject::onInitMicaBase(QImage img)
             darkImage.setPixel(x, y, qRgb(darkColor.red(), darkColor.green(), darkColor.blue()));
         }
     }
-    _windowPrivate->_lightBaseImage = lightImage.copy();
-    _windowPrivate->_darkBaseImage = darkImage.copy();
-    // _windowPrivate->_lightBaseImage.save("light.png", "PNG");
-    // _windowPrivate->_darkBaseImage.save("dark.png", "PNG");
+    _appPrivate->_lightBaseImage = lightImage.copy();
+    _appPrivate->_darkBaseImage = darkImage.copy();
+    // _appPrivate->_lightBaseImage.save("light.png", "PNG");
+    // _appPrivate->_darkBaseImage.save("dark.png", "PNG");
     Q_EMIT initFinished();
 }

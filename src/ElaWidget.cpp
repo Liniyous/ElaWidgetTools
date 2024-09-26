@@ -6,6 +6,7 @@
 #include <QScreen>
 #include <QVBoxLayout>
 
+#include "ElaApplication.h"
 #include "ElaTheme.h"
 #include "private/ElaWidgetPrivate.h"
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaWidget, d_func()->_appBar);
@@ -33,6 +34,13 @@ ElaWidget::ElaWidget(QWidget* parent)
         d->_themeMode = themeMode;
         update();
     });
+
+    d->_isEnableMica = eApp->getIsEnableMica();
+    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
+        d->_isEnableMica = eApp->getIsEnableMica();
+        update();
+    });
+    eApp->syncMica(this);
 }
 
 ElaWidget::~ElaWidget()
@@ -108,12 +116,15 @@ ElaAppBarType::ButtonFlags ElaWidget::getWindowButtonFlags() const
 void ElaWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaWidget);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
-    painter.drawRect(rect());
-    painter.restore();
+    if (!d->_isEnableMica)
+    {
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
+        painter.drawRect(rect());
+        painter.restore();
+    }
     QWidget::paintEvent(event);
 }

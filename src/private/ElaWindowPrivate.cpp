@@ -1,11 +1,7 @@
 #include "ElaWindowPrivate.h"
 
 #include <QApplication>
-#include <QGuiApplication>
-#include <QImage>
 #include <QPropertyAnimation>
-#include <QScreen>
-#include <QThread>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QtMath>
@@ -14,7 +10,6 @@
 #include "ElaAppBarPrivate.h"
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
-#include "ElaMicaBaseInitObject.h"
 #include "ElaNavigationBar.h"
 #include "ElaTheme.h"
 #include "ElaThemeAnimationWidget.h"
@@ -155,23 +150,12 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaWindow);
     _themeMode = themeMode;
-    QPalette palette = q->palette();
-    if (_pIsEnableMica)
+    if (!eApp->getIsEnableMica())
     {
-        if (_themeMode == ElaThemeType::Light)
-        {
-            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-        }
-        else
-        {
-            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-        }
-    }
-    else
-    {
+        QPalette palette = q->palette();
         palette.setBrush(QPalette::Window, ElaThemeColor(_themeMode, WindowBase));
+        q->setPalette(palette);
     }
-    q->setPalette(palette);
 }
 
 void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey)
@@ -249,7 +233,7 @@ void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
 void ElaWindowPrivate::_doNavigationDisplayModeChange()
 {
     Q_Q(ElaWindow);
-    if (eApp->getIsApplicationClosed() || !_isNavigationEnable || !_isInitFinished)
+    if (_isWindowClosing || !_isNavigationEnable || !_isInitFinished)
     {
         return;
     }
@@ -281,83 +265,5 @@ void ElaWindowPrivate::_doNavigationDisplayModeChange()
             _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint);
         }
         _isNavigationBarExpanded = false;
-    }
-}
-
-void ElaWindowPrivate::_initMicaBaseImage(QImage img)
-{
-    Q_Q(ElaWindow);
-    if (img.isNull())
-    {
-        return;
-    }
-    QThread* initThread = new QThread();
-    ElaMicaBaseInitObject* initObject = new ElaMicaBaseInitObject(this);
-    connect(initThread, &QThread::finished, initObject, &ElaMicaBaseInitObject::deleteLater);
-    connect(initObject, &ElaMicaBaseInitObject::initFinished, initThread, [=]() {
-        if (_pIsEnableMica)
-        {
-            QPalette palette = q->palette();
-            if (_themeMode == ElaThemeType::Light)
-            {
-                palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-            }
-            else
-            {
-                palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-            }
-            q->setPalette(palette);
-        }
-        initThread->quit();
-        initThread->wait();
-        initThread->deleteLater();
-    });
-    initObject->moveToThread(initThread);
-    initThread->start();
-    connect(this, &ElaWindowPrivate::initMicaBase, initObject, &ElaMicaBaseInitObject::onInitMicaBase);
-    Q_EMIT initMicaBase(img);
-}
-
-QRect ElaWindowPrivate::_calculateWindowVirtualGeometry()
-{
-    Q_Q(ElaWindow);
-    QRect geometry = q->geometry();
-    qreal xImageRatio = 1, yImageRatio = 1;
-    QRect relativeGeometry;
-    if (qApp->screens().count() > 1)
-    {
-        QScreen* currentScreen = qApp->screenAt(geometry.topLeft());
-        if (currentScreen)
-        {
-            QRect screenGeometry = currentScreen->availableGeometry();
-            xImageRatio = (qreal)_lightBaseImage.width() / screenGeometry.width();
-            yImageRatio = (qreal)_lightBaseImage.height() / screenGeometry.height();
-            relativeGeometry = QRect((geometry.x() - screenGeometry.x()) * xImageRatio, (geometry.y() - screenGeometry.y()) * yImageRatio, geometry.width() * xImageRatio, geometry.height() * yImageRatio);
-            return relativeGeometry;
-        }
-    }
-    QRect primaryScreenGeometry = qApp->primaryScreen()->availableGeometry();
-    xImageRatio = (qreal)_lightBaseImage.width() / primaryScreenGeometry.width();
-    yImageRatio = (qreal)_lightBaseImage.height() / primaryScreenGeometry.height();
-    relativeGeometry = QRect((geometry.x() - primaryScreenGeometry.x()) * xImageRatio, (geometry.y() - primaryScreenGeometry.y()) * yImageRatio, geometry.width() * xImageRatio, geometry.height() * yImageRatio);
-    return relativeGeometry;
-}
-
-void ElaWindowPrivate::_updateMica()
-{
-    Q_Q(ElaWindow);
-    if (q->isVisible() && _pIsEnableMica)
-    {
-        QPalette palette = q->palette();
-        if (_themeMode == ElaThemeType::Light)
-        {
-            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-        }
-        else
-        {
-            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry()).scaled(q->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-        }
-        q->setPalette(palette);
-        QApplication::processEvents();
     }
 }

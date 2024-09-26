@@ -3,6 +3,7 @@
 #include <QLayout>
 #include <QPropertyAnimation>
 
+#include "ElaApplication.h"
 #include "ElaBaseListView.h"
 #include "ElaCustomWidget.h"
 #include "ElaFooterDelegate.h"
@@ -49,7 +50,6 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     {
         return;
     }
-
     QWidget* widget = static_cast<QWidget*>(meta->newInstance());
     if (widget)
     {

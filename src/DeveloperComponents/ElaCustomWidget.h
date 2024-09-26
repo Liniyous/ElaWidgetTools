@@ -25,6 +25,7 @@ protected:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
+    bool _isEnableMica;
 };
 
 #endif // ELACUSTOMWIDGET_H

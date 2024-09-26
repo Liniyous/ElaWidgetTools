@@ -110,7 +110,7 @@ void ElaToggleButton::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaToggleButton);
     QPainter painter(this);
-    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
 
     painter.save();
     QRect foregroundRect(1, 1, width() - 2, height() - 2);

@@ -14,7 +14,6 @@ ElaTabWidget::ElaTabWidget(QWidget* parent)
     d->q_ptr = this;
     _pIsTabTransparent = false;
     setObjectName("ElaTabWidget");
-    setStyleSheet("#ElaTabWidget{background-color:transparent;}");
     setAcceptDrops(true);
     ElaTabBar* tabBar = new ElaTabBar(this);
     setTabBar(tabBar);

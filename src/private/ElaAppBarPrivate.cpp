@@ -62,8 +62,13 @@ void ElaAppBarPrivate::onStayTopButtonClicked()
     HWND hwnd = (HWND)_currentWinID;
     ::SetWindowPos(hwnd, _pIsStayTop ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 #else
+    Q_Q(const ElaAppBar);
+    bool isVisible = q->window()->isVisible();
     q->window()->setWindowFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
-    q->window()->show();
+    if (isVisible)
+    {
+        q->window()->show();
+    }
 #endif
     _stayTopButton->setIsSelected(_pIsStayTop);
     _stayTopButton->update();

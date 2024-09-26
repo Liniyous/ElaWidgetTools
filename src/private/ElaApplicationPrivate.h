@@ -5,16 +5,33 @@
 #include <QIcon>
 #include <QObject>
 
-#include "stdafx.h"
+#include "Def.h"
 class ElaApplication;
 class ElaApplicationPrivate : public QObject
 {
     Q_OBJECT
     Q_D_CREATE(ElaApplication)
-    Q_PROPERTY_CREATE_D(bool, IsApplicationClosed)
+    Q_PROPERTY_CREATE_D(bool, IsEnableMica)
+    Q_PROPERTY_CREATE_D(QString, MicaImagePath)
 public:
     explicit ElaApplicationPrivate(QObject* parent = nullptr);
     ~ElaApplicationPrivate();
+    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
+Q_SIGNALS:
+    Q_SIGNAL void initMicaBase(QImage img);
+    Q_SIGNAL void micaUpdate();
+
+protected:
+    virtual bool eventFilter(QObject* watched, QEvent* event) override;
+
+private:
+    friend class ElaMicaBaseInitObject;
+    ElaThemeType::ThemeMode _themeMode;
+    QImage _lightBaseImage;
+    QImage _darkBaseImage;
+    void _initMicaBaseImage(QImage img);
+    QRect _calculateWindowVirtualGeometry(QWidget* widget);
+    void _updateMica(QWidget* widget, bool isProcessEvent = true);
 };
 
 #endif // ELAAPPLICATIONPRIVATE_H

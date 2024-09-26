@@ -31,8 +31,7 @@ ElaWindow::ElaWindow(QWidget* parent)
 {
     Q_D(ElaWindow);
     d->q_ptr = this;
-    d->_pIsEnableMica = false;
-    d->_pMicaImagePath = ":/include/Image/MicaBase.png";
+
     setProperty("ElaBaseClassName", "ElaWindow");
     resize(1020, 680); // 默认宽高
 
@@ -96,6 +95,10 @@ ElaWindow::ElaWindow(QWidget* parent)
         QPalette palette = this->palette();
         palette.setBrush(QPalette::Window, ElaThemeColor(d->_themeMode, WindowBase));
         this->setPalette(palette);
+    });
+    eApp->syncMica(this);
+    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
+        d->onThemeModeChanged(d->_themeMode);
     });
 }
 
@@ -175,41 +178,6 @@ bool ElaWindow::getIsCentralStackedWidgetTransparent() const
 {
     Q_D(const ElaWindow);
     return d->_centerStackedWidget->getIsTransparent();
-}
-
-void ElaWindow::setIsEnableMica(bool isEnable)
-{
-    Q_D(ElaWindow);
-    d->_pIsEnableMica = isEnable;
-    if (isEnable)
-    {
-        d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
-    }
-    else
-    {
-        d->onThemeModeChanged(d->_themeMode);
-    }
-    Q_EMIT pIsEnableMicaChanged();
-}
-
-bool ElaWindow::getIsEnableMica() const
-{
-    Q_D(const ElaWindow);
-    return d->_pIsEnableMica;
-}
-
-void ElaWindow::setMicaImagePath(QString micaImagePath)
-{
-    Q_D(ElaWindow);
-    d->_pMicaImagePath = micaImagePath;
-    d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
-    Q_EMIT pMicaImagePathChanged();
-}
-
-QString ElaWindow::getMicaImagePath() const
-{
-    Q_D(const ElaWindow);
-    return d->_pMicaImagePath;
 }
 
 void ElaWindow::moveToCenter()
@@ -362,22 +330,8 @@ ElaAppBarType::ButtonFlags ElaWindow::getWindowButtonFlags() const
 void ElaWindow::closeWindow()
 {
     Q_D(ElaWindow);
-    eApp->setIsApplicationClosed(true);
+    d->_isWindowClosing = true;
     d->_appBar->closeWindow();
-}
-
-void ElaWindow::moveEvent(QMoveEvent* event)
-{
-    Q_D(ElaWindow);
-    d->_updateMica();
-    QMainWindow::moveEvent(event);
-}
-
-void ElaWindow::resizeEvent(QResizeEvent* event)
-{
-    Q_D(ElaWindow);
-    d->_updateMica();
-    QWidget::resizeEvent(event);
 }
 
 bool ElaWindow::eventFilter(QObject* watched, QEvent* event)

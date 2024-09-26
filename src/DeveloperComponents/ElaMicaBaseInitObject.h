@@ -2,19 +2,19 @@
 #define ELAMICABASEINITOBJECT_H
 
 #include <QObject>
-class ElaWindowPrivate;
+class ElaApplicationPrivate;
 class ElaMicaBaseInitObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit ElaMicaBaseInitObject(ElaWindowPrivate* windowPrivate, QObject* parent = nullptr);
+    explicit ElaMicaBaseInitObject(ElaApplicationPrivate* appPrivate, QObject* parent = nullptr);
     ~ElaMicaBaseInitObject();
     Q_SLOT void onInitMicaBase(QImage img);
 Q_SIGNALS:
     Q_SIGNAL void initFinished();
 
 private:
-    ElaWindowPrivate* _windowPrivate{nullptr};
+    ElaApplicationPrivate* _appPrivate{nullptr};
 };
 
 #endif // ELAMICABASEINITOBJECT_H

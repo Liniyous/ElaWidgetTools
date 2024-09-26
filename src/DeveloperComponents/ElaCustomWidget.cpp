@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
+#include "ElaApplication.h"
 #include "ElaTheme.h"
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaCustomWidget, _appBar);
 ElaCustomWidget::ElaCustomWidget(QWidget* parent)
@@ -21,6 +22,13 @@ ElaCustomWidget::ElaCustomWidget(QWidget* parent)
         _themeMode = themeMode;
         update();
     });
+
+    _isEnableMica = eApp->getIsEnableMica();
+    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
+        _isEnableMica = eApp->getIsEnableMica();
+        update();
+    });
+    eApp->syncMica(this);
     setAttribute(Qt::WA_DeleteOnClose);
 }
 
@@ -41,11 +49,14 @@ void ElaCustomWidget::setCentralWidget(QWidget* widget)
 
 void ElaCustomWidget::paintEvent(QPaintEvent* event)
 {
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(_themeMode, WindowBase));
-    painter.drawRect(rect());
-    painter.restore();
+    if (!_isEnableMica)
+    {
+        QPainter painter(this);
+        painter.save();
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(ElaThemeColor(_themeMode, WindowBase));
+        painter.drawRect(rect());
+        painter.restore();
+    }
 }

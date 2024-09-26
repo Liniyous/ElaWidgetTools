@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include "ElaApplication.h"
 #include "ElaComboBox.h"
 #include "ElaLog.h"
 #include "ElaRadioButton.h"
@@ -71,7 +72,7 @@ T_Setting::T_Setting(QWidget* parent)
     micaSwitchLayout->addStretch();
     micaSwitchLayout->addWidget(_micaSwitchButton);
     connect(_micaSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
-        window->setIsEnableMica(checked);
+        eApp->setIsEnableMica(checked);
     });
 
     _logSwitchButton = new ElaToggleSwitch(this);

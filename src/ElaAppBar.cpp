@@ -273,10 +273,15 @@ void ElaAppBar::setIsFixedSize(bool isFixedSize)
         ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
     }
 #else
+    bool isVisible = window()->isVisible();
     window()->setWindowFlags((window()->windowFlags()) | Qt::FramelessWindowHint | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     if (!isFixedSize)
     {
         window()->setWindowFlag(Qt::WindowMaximizeButtonHint);
+    }
+    if (isVisible)
+    {
+        window()->show();
     }
 #endif
     Q_EMIT pIsFixedSizeChanged();

@@ -19,7 +19,7 @@ ElaBreadcrumbBarDelegate::~ElaBreadcrumbBarDelegate()
 void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     painter->save();
-    painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+    painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter->setPen(ElaThemeColor(_themeMode, BasicText));
     QRect itemRect = option.rect;
     QString breadcrumbDisplayData = index.data(Qt::DisplayRole).toString();
