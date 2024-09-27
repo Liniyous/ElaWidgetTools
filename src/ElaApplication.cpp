@@ -80,15 +80,17 @@ void ElaApplication::syncMica(QWidget* widget, bool isSync)
     if (isSync)
     {
         widget->installEventFilter(d);
-        connect(d, &ElaApplicationPrivate::micaUpdate, widget, [=]() {
+        d->_micaWidgetList.append(widget);
+        if (d->_pIsEnableMica)
+        {
             d->_updateMica(widget, false);
-        });
+        }
     }
     else
     {
         widget->removeEventFilter(d);
+        d->_micaWidgetList.removeOne(widget);
     }
-    d->_updateMica(widget, false);
 }
 
 bool ElaApplication::containsCursorToItem(QWidget* item)

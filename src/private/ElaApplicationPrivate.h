@@ -19,7 +19,6 @@ public:
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 Q_SIGNALS:
     Q_SIGNAL void initMicaBase(QImage img);
-    Q_SIGNAL void micaUpdate();
 
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
@@ -27,11 +26,13 @@ protected:
 private:
     friend class ElaMicaBaseInitObject;
     ElaThemeType::ThemeMode _themeMode;
+    QList<QWidget*> _micaWidgetList;
     QImage _lightBaseImage;
     QImage _darkBaseImage;
     void _initMicaBaseImage(QImage img);
     QRect _calculateWindowVirtualGeometry(QWidget* widget);
     void _updateMica(QWidget* widget, bool isProcessEvent = true);
+    void _updateAllMicaWidget();
 };
 
 #endif // ELAAPPLICATIONPRIVATE_H

@@ -32,7 +32,9 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
         d->_isEnableMica = eApp->getIsEnableMica();
         update();
     });
-    eApp->syncMica(this);
+    connect(this, &ElaDockWidget::topLevelChanged, this, [=](bool topLevel) {
+        eApp->syncMica(this, topLevel);
+    });
 }
 
 ElaDockWidget::ElaDockWidget(const QString& title, QWidget* parent, Qt::WindowFlags flags)

@@ -23,7 +23,7 @@ ElaApplicationPrivate::~ElaApplicationPrivate()
 void ElaApplicationPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     _themeMode = themeMode;
-    Q_EMIT micaUpdate();
+    _updateAllMicaWidget();
 }
 
 bool ElaApplicationPrivate::eventFilter(QObject* watched, QEvent* event)
@@ -41,6 +41,15 @@ bool ElaApplicationPrivate::eventFilter(QObject* watched, QEvent* event)
             {
                 _updateMica(widget);
             }
+        }
+        break;
+    }
+    case QEvent::Destroy:
+    {
+        QWidget* widget = qobject_cast<QWidget*>(watched);
+        if (widget)
+        {
+            _micaWidgetList.removeOne(widget);
         }
         break;
     }
@@ -64,7 +73,7 @@ void ElaApplicationPrivate::_initMicaBaseImage(QImage img)
     connect(initThread, &QThread::finished, initObject, &ElaMicaBaseInitObject::deleteLater);
     connect(initObject, &ElaMicaBaseInitObject::initFinished, initThread, [=]() {
         Q_EMIT q->pIsEnableMicaChanged();
-        Q_EMIT micaUpdate();
+        _updateAllMicaWidget();
         initThread->quit();
         initThread->wait();
         initThread->deleteLater();
@@ -101,24 +110,32 @@ QRect ElaApplicationPrivate::_calculateWindowVirtualGeometry(QWidget* widget)
 
 void ElaApplicationPrivate::_updateMica(QWidget* widget, bool isProcessEvent)
 {
+    if (widget->isVisible())
+    {
+        QPalette palette = widget->palette();
+        if (_themeMode == ElaThemeType::Light)
+        {
+            palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry(widget)).scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        }
+        else
+        {
+            palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry(widget)).scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        }
+        widget->setPalette(palette);
+        if (isProcessEvent)
+        {
+            QApplication::processEvents();
+        }
+    }
+}
+
+void ElaApplicationPrivate::_updateAllMicaWidget()
+{
     if (_pIsEnableMica)
     {
-        if (widget->isVisible())
+        for (auto widget : _micaWidgetList)
         {
-            QPalette palette = widget->palette();
-            if (_themeMode == ElaThemeType::Light)
-            {
-                palette.setBrush(QPalette::Window, _lightBaseImage.copy(_calculateWindowVirtualGeometry(widget)).scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-            }
-            else
-            {
-                palette.setBrush(QPalette::Window, _darkBaseImage.copy(_calculateWindowVirtualGeometry(widget)).scaled(widget->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-            }
-            widget->setPalette(palette);
-            if (isProcessEvent)
-            {
-                QApplication::processEvents();
-            }
+            _updateMica(widget, false);
         }
     }
 }
