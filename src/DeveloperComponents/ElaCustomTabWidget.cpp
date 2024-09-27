@@ -1,6 +1,7 @@
 #include "ElaCustomTabWidget.h"
 
 #include <QVBoxLayout>
+#include <QVariant>
 
 #include "ElaAppBar.h"
 #include "ElaTabBar.h"
