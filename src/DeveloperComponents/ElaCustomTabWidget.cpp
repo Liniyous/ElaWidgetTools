@@ -29,6 +29,7 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
             close();
         }
     });
+    connect(_customTabBar, &ElaTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
 
     QWidget* customWidget = new QWidget(this);
     QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
@@ -41,6 +42,21 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
 
 ElaCustomTabWidget::~ElaCustomTabWidget()
 {
+    while (_customTabWidget->count() > 0)
+    {
+        QWidget* closeWidget = _customTabWidget->widget(0);
+        ElaTabWidget* originTabWidget = closeWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
+
+        if (originTabWidget)
+        {
+            closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
+            originTabWidget->addTab(closeWidget, _customTabWidget->tabIcon(0), _customTabWidget->tabText(0));
+        }
+        else
+        {
+            _customTabWidget->removeTab(0);
+        }
+    }
 }
 
 void ElaCustomTabWidget::addTab(QWidget* widget, QIcon& tabIcon, const QString& tabTitle)

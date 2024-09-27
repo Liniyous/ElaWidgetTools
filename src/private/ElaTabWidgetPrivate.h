@@ -18,6 +18,7 @@ public:
     Q_SLOT void onTabBarPress(int index);
     Q_SLOT void onTabDragCreate(QDrag* drag);
     Q_SLOT void onTabDragDrop(const QMimeData* mimeData);
+    Q_SLOT void onTabCloseRequested(int index);
 
 private:
     ElaTabBar* _customTabBar{nullptr};
