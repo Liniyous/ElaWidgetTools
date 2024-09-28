@@ -98,4 +98,9 @@ void ElaTabWidgetPrivate::onTabCloseRequested(int index)
         }
         originTabWidget->addTab(closeWidget, q->tabIcon(index), q->tabText(index));
     }
+    else
+    {
+        q->removeTab(index);
+        closeWidget->deleteLater();
+    }
 }
