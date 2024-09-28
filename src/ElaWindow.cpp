@@ -213,6 +213,7 @@ void ElaWindow::setIsNavigationBarEnable(bool isVisible)
     d->_isNavigationEnable = isVisible;
     d->_navigationBar->setVisible(isVisible);
     d->_centerLayout->setContentsMargins(isVisible ? d->_contentsMargins : 0, 0, 0, 0);
+    d->_centerStackedWidget->setIsHasRadius(isVisible);
 }
 
 bool ElaWindow::getIsNavigationBarEnable() const

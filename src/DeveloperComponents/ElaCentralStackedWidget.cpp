@@ -21,15 +21,21 @@ void ElaCentralStackedWidget::onThemeModeChanged(ElaThemeType::ThemeMode themeMo
     _themeMode = themeMode;
 }
 
-void ElaCentralStackedWidget::setIsTransparent(bool istransparent)
+void ElaCentralStackedWidget::setIsTransparent(bool isTransparent)
 {
-    this->_isTransparent = istransparent;
+    this->_isTransparent = isTransparent;
     update();
 }
 
 bool ElaCentralStackedWidget::getIsTransparent() const
 {
     return _isTransparent;
+}
+
+void ElaCentralStackedWidget::setIsHasRadius(bool isHasRadius)
+{
+    this->_isHasRadius = isHasRadius;
+    update();
 }
 
 void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
@@ -43,7 +49,14 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(QPen(ElaThemeColor(_themeMode, BasicBaseLine), 1.5));
         painter.setBrush(ElaThemeColor(_themeMode, WindowCentralStackBase));
-        painter.drawRoundedRect(targetRect, 10, 10);
+        if (_isHasRadius)
+        {
+            painter.drawRoundedRect(targetRect, 10, 10);
+        }
+        else
+        {
+            painter.drawRect(targetRect);
+        }
         painter.restore();
     }
     QStackedWidget::paintEvent(event);
