@@ -11,7 +11,7 @@
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
 #include "ElaToolButton.h"
-#include "qdatetime.h"
+
 T_Popup::T_Popup(QWidget* parent)
     : T_BasePage(parent)
 {

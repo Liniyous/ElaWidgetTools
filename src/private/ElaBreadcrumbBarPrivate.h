@@ -14,6 +14,7 @@ class ElaBreadcrumbBarPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(ElaBreadcrumbBar)
     Q_PROPERTY_CREATE_D(int, TextPixelSize)
+    Q_PROPERTY_CREATE_D(bool, IsAutoRemove)
 public:
     explicit ElaBreadcrumbBarPrivate(QObject* parent = nullptr);
     ~ElaBreadcrumbBarPrivate();

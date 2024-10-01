@@ -8,12 +8,14 @@
 #include "DeveloperComponents/ElaBreadcrumbBarModel.h"
 #include "ElaBaseListView.h"
 #include "ElaBreadcrumbBarPrivate.h"
+Q_PROPERTY_CREATE_Q_CPP(ElaBreadcrumbBar, bool, IsAutoRemove);
 ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaBreadcrumbBarPrivate())
 {
     Q_D(ElaBreadcrumbBar);
     d->q_ptr = this;
     d->_pTextPixelSize = 18;
+    d->_pIsAutoRemove = true;
     setFixedHeight(37);
     setObjectName("ElaBreadcrumbBar");
     setStyleSheet("#ElaBreadcrumbBar{background-color:transparent;}");
@@ -29,11 +31,19 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
     d->_listDelegate = new ElaBreadcrumbBarDelegate(this);
     d->_listView->setItemDelegate(d->_listDelegate);
     connect(d->_listView, &QListView::clicked, this, [=](const QModelIndex& index) {
-        if (d->_listModel->getBreadcrumbListCount() != 1 && index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
+        if (d->_pIsAutoRemove)
+        {
+            if (d->_listModel->getBreadcrumbListCount() != 1 && index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
+            {
+                Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
+                d->_listModel->removeBreadcrumb(index.row() / 2 + 1);
+            }
+        }
+        else
         {
             Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
-            d->_listModel->removeBreadcrumb(index.row() / 2 + 1);
-        } });
+        }
+    });
     QFont textFont = this->font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
     textFont.setPixelSize(d->_pTextPixelSize);
