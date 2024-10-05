@@ -16,6 +16,7 @@
 #include "ElaProgressBar.h"
 #include "ElaStatusBar.h"
 #include "ElaText.h"
+#include "ElaTheme.h"
 #include "ElaToolBar.h"
 #include "ElaToolButton.h"
 #include "T_About.h"
@@ -71,7 +72,7 @@ void MainWindow::initWindow()
     setWindowIcon(QIcon(":/include/Image/Cirno.jpg"));
     resize(1200, 740);
     // ElaLog::getInstance()->initMessageLog(true);
-    // eApp->setThemeMode(ElaThemeType::Dark);
+    // eTheme->setThemeMode(ElaThemeType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);

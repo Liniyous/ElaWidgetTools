@@ -16,6 +16,7 @@
 #include "ElaPopularCard.h"
 #include "ElaScrollArea.h"
 #include "ElaText.h"
+#include "ElaToolTip.h"
 T_Home::T_Home(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -51,6 +52,8 @@ T_Home::T_Home(QWidget* parent)
     urlCard1->setCardPixmap(QPixmap(":/Resource/Image/github.png"));
     urlCard1->setTitle("ElaTool Github");
     urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
+    ElaToolTip* urlCard1ToolTip = new ElaToolTip(urlCard1);
+    urlCard1ToolTip->setToolTip("https://github.com/Liniyous/ElaWidgetTools");
     ElaAcrylicUrlCard* urlCard2 = new ElaAcrylicUrlCard(this);
     urlCard2->setCardPixmapSize(QSize(62, 62));
     urlCard2->setFixedSize(195, 225);
