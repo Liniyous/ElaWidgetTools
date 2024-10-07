@@ -172,14 +172,44 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
     {
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
-            // 背景绘制
-            this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
+            painter->save();
 
+            // **检查并处理背景绘制**
+            QBrush backgroundBrush = vopt->backgroundBrush;
+
+            // 如果有自定义背景
+            if (backgroundBrush.style() != Qt::NoBrush)
+            {
+                // 根据鼠标状态调整背景颜色
+                if (vopt->state.testFlag(QStyle::State_MouseOver))
+                {
+                    // 调整为悬停时的颜色，可以根据需求调整亮度或颜色
+                    QColor hoverColor = backgroundBrush.color().lighter(400);
+                    backgroundBrush.setColor(hoverColor);
+                }
+                // else if (vopt->state.testFlag(QStyle::State_Selected))
+                // {
+                //     // 调整为选中时的颜色
+                //     QColor selectedColor = backgroundBrush.color().darker(400);
+                //     backgroundBrush.setColor(selectedColor);
+                // }
+                // 绘制调整后的背景
+                painter->fillRect(option->rect, backgroundBrush);
+            }
+            else
+            {
+                // 没有自定义背景，按照原逻辑绘制背景
+                this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
+            }
+
+
+            // 获取视图和选择行为
             const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
             QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
+
             // 内容绘制
             QRect itemRect = option->rect;
-            painter->save();
+            // painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
             // QRect checkRect = proxy()->subElementRect(SE_ItemViewItemCheckIndicator, vopt, widget);
             QRect iconRect = proxy()->subElementRect(SE_ItemViewItemDecoration, vopt, widget);
@@ -219,6 +249,17 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
                 if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
                 {
                     painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                }
+                if (vopt->backgroundBrush.style() != Qt::NoBrush)
+                {
+                    // 仅当有自定义背景的单元格被选中时，绘制金色边框
+                    QPen pen;
+                    pen.setColor(QColor("#FFD700")); // 金色
+                    pen.setWidth(4); // 边框宽度
+                    painter->setPen(pen);
+                    painter->setBrush(Qt::NoBrush);
+                    QRect borderRect = option->rect.adjusted(1, 1, -1, -1);
+                    painter->drawRect(borderRect);
                 }
             }
             painter->restore();
