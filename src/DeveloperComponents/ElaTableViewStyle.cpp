@@ -184,7 +184,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
                 if (vopt->state.testFlag(QStyle::State_MouseOver))
                 {
                     // 调整为悬停时的颜色，可以根据需求调整亮度或颜色
-                    QColor hoverColor = backgroundBrush.color().lighter(400);
+                    QColor hoverColor = backgroundBrush.color().lighter(150);
                     backgroundBrush.setColor(hoverColor);
                 }
                 // else if (vopt->state.testFlag(QStyle::State_Selected))
@@ -195,6 +195,8 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
                 // }
                 // 绘制调整后的背景
                 painter->fillRect(option->rect, backgroundBrush);
+                QColor matteColor = QColor(255, 255, 255, 100); // 半透明的白色，调整最后一个参数来改变透明度
+                painter->fillRect(option->rect, matteColor);
             }
             else
             {
