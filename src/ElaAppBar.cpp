@@ -174,6 +174,8 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     });
     d->_lastScreen = qApp->screenAt(window()->geometry().center());
 #endif
+
+    d->_routeBackButton->hide();
 }
 
 ElaAppBar::~ElaAppBar()
