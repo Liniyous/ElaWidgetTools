@@ -58,6 +58,14 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
         if (_isNavigationBarExpanded)
         {
             QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
+            connect(navigationMoveAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+                if (_isNavigationDisplayModeChanged)
+                {
+                    _navigationBar->setIsTransparent(true);
+                    _isWMClickedAnimationFinished = true;
+                    navigationMoveAnimation->deleteLater();
+                }
+            });
             connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
                 _navigationBar->setIsTransparent(true);
                 if (!_isNavigationDisplayModeChanged)
