@@ -1,0 +1,110 @@
+export const components = [
+  {
+    text: '基础组件',
+    collapsed: false,
+    items: [
+      { text: 'Application 程序初始化', link: '/components/ElaApplication' },
+      { text: 'AppBar 窗口顶部标题栏', link: '/components/ElaAppBar' },
+      { text: 'Button 按钮', link: '/components/ElaPushButton' },
+      { text: 'CheckBox 勾选框', link: '/components/ElaCheckBox' },
+      { text: 'Icon 图标', link: '/components/ElaIcon' },
+      { text: 'RadioButton 单选按钮', link: '/components/ElaRadioButton' },
+      { text: 'ToggleSwitch 开关按钮', link: '/components/ElaToggleSwitch' },
+      { text: 'ToolButton 工具按钮', link: '/components/ElaToolButton' },
+      { text: 'Text 文本', link: '/components/ElaText' },
+    ],
+  },
+  {
+    text: '布局组件',
+    collapsed: false,
+    items: [
+      { text: 'DockWidget 停靠窗口', link: '/components/ElaDockWidget' },
+      { text: 'FlowLayout 流式布局', link: '/components/ElaFlowLayout' },
+      { text: 'ScrollArea 滚动区域', link: '/components/ElaScrollArea' },
+      { text: 'ScrollPage 滚动页面', link: '/components/ElaScrollPage' },
+      { text: 'ScrollPageArea 滚动页面区域', link: '/components/ElaScrollPageArea' },
+      { text: 'Window 无边框窗口', link: '/components/ElaWindow' },
+      { text: 'Widget 模态窗口', link: '/components/ElaWidget' },
+    ],
+  },
+  {
+    text: '导航组件',
+    collapsed: false,
+    items: [
+      { text: 'BreadcrumbBar 面包屑', link: '/components/ElaBreadcrumbBar' },
+      { text: 'Menu 菜单', link: '/components/ElaMenu' },
+      { text: 'MenuBar 菜单栏', link: '/components/ElaMenuBar' },
+      { text: 'Pivot 轴转导航', link: '/components/ElaPivot' },
+      { text: 'NavigationRouter 路由跳转', link: '/components/ElaNavigationRouter' },
+      { text: 'TabBar 选项卡', link: '/components/ElaTabBar' },
+      { text: 'TabWidget 选项卡页面', link: '/components/ElaTabWidget' },
+      { text: 'ToolBar 工具栏', link: '/components/ElaToolBar' },
+    ],
+  },
+  {
+    text: '数据录入',
+    collapsed: false,
+    items: [
+      { text: 'Calendar日历视图', link: '/components/ElaCalendar' },
+      { text: 'CalendarPicker 日期选择器', link: '/components/ElaCalendarPicker' },
+      { text: 'ColorDialog 颜色选择器', link: '/components/ElaColorDialog' },
+      { text: 'ComboBox 下拉框', link: '/components/ElaComboBox' },
+      { text: 'LineEdit 输入框', link: '/components/ElaLineEdit' },
+      { text: 'PlainTextEdit 文本编辑框', link: '/components/ElaPlainTextEdit' },
+      { text: 'SpinBox 微调框', link: '/components/ElaSpinBox' },
+      { text: 'DoubleSpinBox 浮点微调框', link: '/components/ElaDoubleSpinBox' },
+      { text: 'SuggestBox 建议搜索框', link: '/components/ElaSuggestBox' },
+    ],
+  },
+  {
+    text: '反馈组件',
+    collapsed: false,
+    items: [
+      { text: 'ContentDialog 对话框', link: '/components/ElaContentDialog' },
+      { text: 'MessageBar 信息栏', link: '/components/ElaMessageBar' },
+      { text: 'MessageButton 信息按钮', link: '/components/ElaMessageButton' },
+      { text: 'ProgressBar 进度条', link: '/components/ElaProgressBar' },
+      { text: 'Slider 拖动条', link: '/components/ElaSlider' },
+      { text: 'StatusBar 状态栏', link: '/components/ElaStatusBar' },
+    ],
+  },
+  {
+    text: '展示组件',
+    collapsed: false,
+    items: [
+      { text: 'AcrylicUrlCard 亚克力卡片', link: '/components/ElaAcrylicUrlCard' },
+      { text: 'ImageCard 图片卡片', link: '/components/ElaImageCard' },
+      { text: 'InteractiveCard 交互卡片', link: '/components/ElaInteractiveCard' },
+      { text: 'ListView 列表视图', link: '/components/ElaListView' },
+      { text: 'PopularCard 热门卡片', link: '/components/ElaPopularCard' },
+      { text: 'PromotionCard 促销卡片', link: '/components/ElaPromotionCard' },
+      { text: 'PromotionView 促销视窗', link: '/components/ElaPromotionView' },
+      { text: 'ReminderCard 提醒卡片', link: '/components/ElaReminderCard' },
+      { text: 'TableView 表格视图', link: '/components/ElaTableView' },
+      { text: 'TreeView 树型视图', link: '/components/ElaTreeView' },
+    ],
+  },
+  {
+    text: '图形组件',
+    collapsed: false,
+    items: [
+      { text: 'DxgiManager DXGI采集器', link: '/components/ElaDxgiManager' },
+      { text: 'ExponentialBlur 指数模糊', link: '/components/ElaExponentialBlur' },
+      { text: 'GraphicsScene 高级场景', link: '/components/ElaGraphicsScene' },
+      { text: 'GraphicsView 高级视图', link: '/components/ElaGraphicsView' },
+      { text: 'GraphicsItem 高级图元', link: '/components/ElaGraphicsItem' },
+    ],
+  },
+  {
+    text: '工具组件',
+    collapsed: false,
+    items: [
+      { text: 'EventBus 事件总线', link: '/components/ElaEventBus' },
+      { text: 'Log 消息日志', link: '/components/ElaLog' },
+      { text: 'Theme 主题管理器', link: '/components/ElaTheme' },
+    ],
+  },
+]
+
+
+export const navComponents = components.map(i => ({ text: i.text, link: i.items[0].link }))

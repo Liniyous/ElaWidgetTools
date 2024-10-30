@@ -58,3 +58,6 @@ compile_commands.json
 *.clang-format
 
 build
+node_modules
+cache
+dist
