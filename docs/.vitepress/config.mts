@@ -5,6 +5,10 @@ import { components, navComponents } from './items'
 export default defineConfig({
   title: "ElaWidgetTools Docs",
   description: "ElaWidgetTools 文档",
+  lastUpdated: true,
+  search: {
+    provider: 'local',
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -25,6 +29,14 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
-    ]
-  }
+    ],
+
+    
+  },
+  markdown: {
+    theme: {
+      light: 'vitesse-light',
+      dark: 'vitesse-dark',
+    },
+  },
 })

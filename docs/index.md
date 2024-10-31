@@ -12,7 +12,7 @@ hero:
       link: /guide
     - theme: alt
       text: 组件
-      link: /components
+      link: /components/ElaApplication
 
 features:
   - title: 上手指南
