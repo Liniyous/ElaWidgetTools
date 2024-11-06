@@ -21,7 +21,7 @@ foreach(filepath ${CPP_FILES})
 endforeach(filepath)
 
 set(PROJECT_SOURCES
-        ${example_files}
+    ${example_files}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -64,14 +64,25 @@ else()
     endif()
 endif()
 
-include_directories(
-    ../src/include
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/install/lib/cmake/)
+find_package(ELAWIDGETTOOLS REQUIRED)
+if(ELAWIDGETTOOLS_FOUND)
+    message(STATUS "ELAWIDGETTOOLS_INCLUDE_DIR = ${ELAWIDGETTOOLS_INCLUDE_DIRS}")
+    message(STATUS "ELAWIDGETTOOLS_LIBRARIES = ${ELAWIDGETTOOLS_LIBRARIES}")
+    message(STATUS "ELAWIDGETTOOLS_LIB_DIR = ${ELAWIDGETTOOLS_LIBRARY_DIRS}")
+endif ()
+set(EXECUTABLE_OUTPUT_PATH  ${CMAKE_BINARY_DIR})
+target_include_directories(ElaWidgetToolsExample PUBLIC
+    ${ELAWIDGETTOOLS_INCLUDE_DIRS}
     ExamplePage
     ModelView
 )
-set(EXECUTABLE_OUTPUT_PATH  ${CMAKE_BINARY_DIR})
-target_link_libraries(ElaWidgetToolsExample PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-    elawidgettools
+target_link_libraries(ElaWidgetToolsExample PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    ElaWidgetTools
+)
+target_link_directories(ElaWidgetToolsExample PUBLIC
+    ${ELAWIDGETTOOLS_LIBRARY_DIRS}
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -87,14 +98,6 @@ set_target_properties(ElaWidgetToolsExample PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
-
-include(GNUInstallDirs)
-install(TARGETS ElaWidgetToolsExample
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
-
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ElaWidgetToolsExample)
