@@ -19,15 +19,20 @@ option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." OFF)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-file(GLOB_RECURSE CPP_FILES *.cpp *.h)
-foreach(filepath ${CPP_FILES})
-    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
-    list(APPEND sources_files ${filename})
-endforeach(filepath)
+FILE(GLOB ORIGIN *.h *.cpp)
+FILE(GLOB INCLUDE include/*.h)
+FILE(GLOB PRIVATE private/*.h private/*.cpp)
+FILE(GLOB DEVELOPER DeveloperComponents/*.h DeveloperComponents/*.cpp)
 
+source_group(include FILES ${INCLUDE})
+source_group(private FILES ${PRIVATE})
+source_group(DeveloperComponents FILES ${DEVELOPER})
 
 set(PROJECT_SOURCES
-    ${sources_files}
+    ${ORIGIN}
+    ${INCLUDE}
+    ${PRIVATE}
+    ${DEVELOPER}
 )
 
 if (ELAWIDGETTOOLS_BUILD_STATIC_LIB)
@@ -38,15 +43,15 @@ endif()
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 qt_add_library(${EXPORT_NAME} ${LIB_TYPE}
-    ${sources_files}
+    ${PROJECT_SOURCES}
 )
 else()
 add_library(${EXPORT_NAME} ${LIB_TYPE}
-    ${sources_files}
+    ${PROJECT_SOURCES}
 )
 endif()
 
-file(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.qrc
 )
 target_include_directories(${EXPORT_NAME} PUBLIC
