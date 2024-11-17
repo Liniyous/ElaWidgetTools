@@ -2,19 +2,19 @@
 
 #include <ElaPushButton.h>
 
-#include <QApplication>
-#include <QGuiApplication>
-#include <QHBoxLayout>
-#include <QPainter>
-#include <QScreen>
-#include <QTimer>
-#include <QVBoxLayout>
-
 #include "ElaMaskWidget.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaWinShadowHelper.h"
 #include "private/ElaContentDialogPrivate.h"
+#include <QApplication>
+#include <QGuiApplication>
+#include <QHBoxLayout>
+#include <QKeyEvent>
+#include <QPainter>
+#include <QScreen>
+#include <QTimer>
+#include <QVBoxLayout>
 
 ElaContentDialog::ElaContentDialog(QWidget* parent)
     : QDialog{parent}, d_ptr(new ElaContentDialogPrivate())
@@ -52,7 +52,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_middleButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT middleButtonClicked();
         onMiddleButtonClicked();
-        d->_doCloseAnimation();
     });
     d->_middleButton->setMinimumSize(0, 0);
     d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -101,7 +100,9 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     d->_mainLayout->addWidget(d->_buttonWidget);
 
     d->_themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 ElaContentDialog::~ElaContentDialog()
@@ -150,6 +151,12 @@ void ElaContentDialog::setRightButtonText(QString text)
     d->_rightButton->setText(text);
 }
 
+void ElaContentDialog::close()
+{
+    Q_D(ElaContentDialog);
+    d->_doCloseAnimation();
+}
+
 void ElaContentDialog::showEvent(QShowEvent* event)
 {
     Q_D(ElaContentDialog);
@@ -186,6 +193,11 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
     painter.setBrush(ElaThemeColor(d->_themeMode, DialogLayoutArea));
     painter.drawRoundedRect(QRectF(0, height() - 60, width(), 60), 8, 8);
     painter.restore();
+}
+
+void ElaContentDialog::keyPressEvent(QKeyEvent* event)
+{
+    event->accept();
 }
 
 #ifdef Q_OS_WIN

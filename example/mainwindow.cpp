@@ -50,7 +50,10 @@ MainWindow::MainWindow(QWidget* parent)
     // 拦截默认关闭事件
     _closeDialog = new ElaContentDialog(this);
     connect(_closeDialog, &ElaContentDialog::rightButtonClicked, this, &MainWindow::closeWindow);
-    connect(_closeDialog, &ElaContentDialog::middleButtonClicked, this, &MainWindow::showMinimized);
+    connect(_closeDialog, &ElaContentDialog::middleButtonClicked, this, [=]() {
+        _closeDialog->close();
+        showMinimized();
+    });
     this->setIsDefaultClosed(false);
     connect(this, &MainWindow::closeButtonClicked, this, [=]() {
         _closeDialog->exec();
@@ -267,13 +270,25 @@ void MainWindow::initContent()
         }
     });
     addFooterNode("Setting", _settingPage, _settingKey, 0, ElaIconType::GearComplex);
-    connect(this, &MainWindow::userInfoCardClicked, this, [=]() { this->navigation(_homePage->property("ElaPageKey").toString()); });
+    connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
+        this->navigation(_homePage->property("ElaPageKey").toString());
+    });
 #ifdef Q_OS_WIN
-    connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() { this->navigation(_elaScreenPage->property("ElaPageKey").toString()); });
+    connect(_homePage, &T_Home::elaScreenNavigation, this, [=]() {
+        this->navigation(_elaScreenPage->property("ElaPageKey").toString());
+    });
 #endif
-    connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() { this->navigation(_baseComponentsPage->property("ElaPageKey").toString()); });
-    connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() { this->navigation(_graphicsPage->property("ElaPageKey").toString()); });
-    connect(_homePage, &T_Home::elaIconNavigation, this, [=]() { this->navigation(_iconPage->property("ElaPageKey").toString()); });
-    connect(_homePage, &T_Home::elaCardNavigation, this, [=]() { this->navigation(_cardPage->property("ElaPageKey").toString()); });
+    connect(_homePage, &T_Home::elaBaseComponentNavigation, this, [=]() {
+        this->navigation(_baseComponentsPage->property("ElaPageKey").toString());
+    });
+    connect(_homePage, &T_Home::elaSceneNavigation, this, [=]() {
+        this->navigation(_graphicsPage->property("ElaPageKey").toString());
+    });
+    connect(_homePage, &T_Home::elaIconNavigation, this, [=]() {
+        this->navigation(_iconPage->property("ElaPageKey").toString());
+    });
+    connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
+        this->navigation(_cardPage->property("ElaPageKey").toString());
+    });
     qDebug() << "已注册的事件列表" << ElaEventBus::getInstance()->getRegisteredEventsName();
 }

@@ -6,6 +6,7 @@
 #include "ElaCalendar.h"
 #include "ElaCalendarPicker.h"
 #include "ElaColorDialog.h"
+#include "ElaKeyBinder.h"
 #include "ElaMenu.h"
 #include "ElaPushButton.h"
 #include "ElaScrollPageArea.h"
@@ -88,12 +89,22 @@ T_Popup::T_Popup(QWidget* parent)
     calendarPickerLayout->addWidget(_calendarPicker);
     calendarPickerLayout->addStretch();
 
+    _keyBinder = new ElaKeyBinder(this);
+    ElaScrollPageArea* keyBinderArea = new ElaScrollPageArea(this);
+    QHBoxLayout* keyBinderLayout = new QHBoxLayout(keyBinderArea);
+    ElaText* keyBinderText = new ElaText("ElaKeyBinder", this);
+    keyBinderText->setTextPixelSize(15);
+    keyBinderLayout->addWidget(keyBinderText);
+    keyBinderLayout->addWidget(_keyBinder);
+    keyBinderLayout->addStretch();
+
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
     centerVLayout->addWidget(toolButtonArea);
     centerVLayout->addWidget(colorDialogArea);
     centerVLayout->addWidget(calendarPickerArea);
     centerVLayout->addWidget(_calendar);
+    centerVLayout->addWidget(keyBinderArea);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }

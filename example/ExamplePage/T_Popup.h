@@ -7,6 +7,7 @@ class ElaToolButton;
 class ElaColorDialog;
 class ElaCalendar;
 class ElaCalendarPicker;
+class ElaKeyBinder;
 class T_Popup : public T_BasePage
 {
     Q_OBJECT
@@ -19,6 +20,7 @@ private:
     ElaColorDialog* _colorDialog{nullptr};
     ElaCalendar* _calendar{nullptr};
     ElaCalendarPicker* _calendarPicker{nullptr};
+    ElaKeyBinder* _keyBinder{nullptr};
 };
 
-#endif // T_POPUP_H
+#endif// T_POPUP_H

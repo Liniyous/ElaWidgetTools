@@ -15,8 +15,8 @@ ElaText::ElaText(QWidget* parent)
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
     textFont.setPixelSize(28);
-    setWordWrap(true);
     setFont(textFont);
+    setWordWrap(true);
     d->_themeMode = eTheme->getThemeMode();
     d->onThemeChanged(eTheme->getThemeMode());
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaTextPrivate::onThemeChanged);

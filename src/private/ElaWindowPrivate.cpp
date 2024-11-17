@@ -63,6 +63,7 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
                 {
                     _navigationBar->setIsTransparent(true);
                     _isWMClickedAnimationFinished = true;
+                    _resetWindowLayout(false);
                     navigationMoveAnimation->deleteLater();
                 }
             });
@@ -71,6 +72,7 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
                 if (!_isNavigationDisplayModeChanged)
                 {
                     _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
+                    _resetWindowLayout(false);
                 }
                 _isWMClickedAnimationFinished = true;
             });
@@ -189,7 +191,8 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
         currentWidgetAnimation->setEndValue(currentWidgetPos);
         currentWidgetPos.setY(currentWidgetPos.y() + 80);
         currentWidgetAnimation->setStartValue(currentWidgetPos);
-        currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped); });
+        currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    });
 }
 
 void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page)

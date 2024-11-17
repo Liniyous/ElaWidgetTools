@@ -21,6 +21,8 @@ public:
     void setLeftButtonText(QString text);
     void setMiddleButtonText(QString text);
     void setRightButtonText(QString text);
+
+    void close();
 Q_SIGNALS:
     Q_SIGNAL void leftButtonClicked();
     Q_SIGNAL void middleButtonClicked();
@@ -29,6 +31,7 @@ Q_SIGNALS:
 protected:
     virtual void showEvent(QShowEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
+    virtual void keyPressEvent(QKeyEvent* event) override;
 #ifdef Q_OS_WIN
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     virtual bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
@@ -38,4 +41,4 @@ protected:
 #endif
 };
 
-#endif // ELACONTENTDIALOG_H
+#endif// ELACONTENTDIALOG_H

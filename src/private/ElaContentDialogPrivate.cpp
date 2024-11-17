@@ -15,5 +15,5 @@ void ElaContentDialogPrivate::_doCloseAnimation()
 {
     Q_Q(ElaContentDialog);
     _maskWidget->doMaskAnimation(0);
-    q->close();
+    q->QDialog::close();
 }

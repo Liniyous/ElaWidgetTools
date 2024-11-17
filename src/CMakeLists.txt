@@ -37,19 +37,21 @@ set(PROJECT_SOURCES
 
 if (ELAWIDGETTOOLS_BUILD_STATIC_LIB)
     set(LIB_TYPE "STATIC")
-else()
-    set(LIB_TYPE "SHARED")
-endif()
+else ()
+    set(LIB_TYPE "SHARED"
+        DeveloperComponents/ElaKeyBinderContainer.cpp
+        DeveloperComponents/ElaKeyBinderContainer.h)
+endif ()
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-qt_add_library(${EXPORT_NAME} ${LIB_TYPE}
-    ${PROJECT_SOURCES}
-)
-else()
-add_library(${EXPORT_NAME} ${LIB_TYPE}
-    ${PROJECT_SOURCES}
-)
-endif()
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_library(${EXPORT_NAME} ${LIB_TYPE}
+        ${PROJECT_SOURCES}
+    )
+else ()
+    add_library(${EXPORT_NAME} ${LIB_TYPE}
+        ${PROJECT_SOURCES}
+    )
+endif ()
 
 FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.qrc
@@ -61,38 +63,38 @@ target_include_directories(${EXPORT_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     #遍历所有资源文件
     file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
-    foreach(filepath ${RES_PATHS})
-            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
-            list(APPEND resource_files ${filename})
-    endforeach(filepath)
+    foreach (filepath ${RES_PATHS})
+        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
+        list(APPEND resource_files ${filename})
+    endforeach (filepath)
     qt_add_resources(${EXPORT_NAME} "ElaWidgetTools"
         RESOURCES PREFIX "/"
         FILES
         ${resource_files}
     )
-endif()
+endif ()
 
-if(MINGW)
+if (MINGW)
     set_target_properties(${EXPORT_NAME} PROPERTIES PREFIX "")
-endif()
-if(MSVC)
+endif ()
+if (MSVC)
     set_target_properties(${EXPORT_NAME} PROPERTIES DEBUG_POSTFIX "d")
-endif()
+endif ()
 
-if(WIN32)
+if (WIN32)
     target_link_libraries(${EXPORT_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::Widgets
         D3D11
         DXGI
     )
-else()
-target_link_libraries(${EXPORT_NAME} PUBLIC
-    Qt${QT_VERSION_MAJOR}::Widgets
-)
-endif()
+else ()
+    target_link_libraries(${EXPORT_NAME} PUBLIC
+        Qt${QT_VERSION_MAJOR}::Widgets
+    )
+endif ()
 
 
 install(
@@ -104,6 +106,9 @@ install(
 )
 
 install(FILES ${EXPORT_HEADERS} DESTINATION include)
+install(TARGETS ${EXPORT_NAME}
+    RUNTIME DESTINATION ${CMAKE_BINARY_DIR}
+)
 
 set(INCLUDE_DIRS include)
 set(LIBRARIES ${EXPORT_NAME})
