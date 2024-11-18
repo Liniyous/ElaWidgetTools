@@ -18,6 +18,9 @@ ElaKeyBinderContainer::ElaKeyBinderContainer(QWidget* parent)
     textFont.setPixelSize(16);
     setFont(textFont);
     _themeMode = eTheme->getThemeMode();
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaKeyBinderContainer::~ElaKeyBinderContainer()
@@ -127,7 +130,6 @@ void ElaKeyBinderContainer::paintEvent(QPaintEvent* event)
         return;
     }
     // 中心文字背景绘制
-
     painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
     painter.setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
     qreal textWidth = fontMetrics().horizontalAdvance(_pBinderKeyText) * 1.3;
