@@ -117,7 +117,7 @@ void ElaPromotionView::appendPromotionCard(ElaPromotionCard *card) {
     card->setParent(this);
     d->_promotionCardList.append(card);
     card->show();
-    disconnect(card, &ElaPromotionCard::promotionCardClicked, this, nullptr);//断开现有连接
+    disconnect(card, &ElaPromotionCard::promotionCardClicked, this, nullptr); //断开现有连接
     connect(card, &ElaPromotionCard::promotionCardClicked, this, [=]() {
         d->onPromotionCardClicked(card);
     });
@@ -134,6 +134,7 @@ void ElaPromotionView::clearPromotionCard() {
 
 void ElaPromotionView::wheelEvent(QWheelEvent *event) {
     Q_D(ElaPromotionView);
+    if(d->_promotionCardList.isEmpty())return;
     if (d->_isAllowSwitch) {
         if (event->angleDelta().y() > 0) {
             //右滑
@@ -178,4 +179,11 @@ void ElaPromotionView::paintEvent(QPaintEvent *event) {
         }
     }
     painter.restore();
+}
+void ElaPromotionView::resizeEvent(QResizeEvent *event) {
+    QWidget::resizeEvent(event);
+    Q_D(ElaPromotionView);
+    this->setCardExpandWidth(width() - 90);
+    this->setFixedHeight(width() - 90);
+
 }
