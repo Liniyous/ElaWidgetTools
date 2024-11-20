@@ -21,6 +21,7 @@ public:
     ~ElaPromotionView();
 
     void appendPromotionCard(ElaPromotionCard* card);
+    void clearPromotionCard();
 
 protected:
     virtual void wheelEvent(QWheelEvent* event) override;
