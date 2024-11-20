@@ -13,6 +13,9 @@ ElaPromotionViewPrivate::~ElaPromotionViewPrivate() {
 
 void ElaPromotionViewPrivate::onPromotionCardClicked(ElaPromotionCard *clickedCard) {
     Q_Q(ElaPromotionView);
+    if(clickedCard == nullptr) {
+        return;
+    }
     int newCurrentIndex = _promotionCardList.indexOf(clickedCard);
     int oldCurrentIndex = _pCurrentIndex;
     if (newCurrentIndex == oldCurrentIndex) {
