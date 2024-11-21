@@ -54,16 +54,18 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             painter->drawRoundedRect(QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3), 6, 6);
 
             // 底边线绘制
-            painter->setBrush(ElaThemeColor(_themeMode, BasicHemline));
-            QPainterPath path;
-            path.moveTo(6, lineEditRect.height());
-            path.lineTo(lineEditRect.width() - 6, lineEditRect.height());
-            path.arcTo(QRectF(lineEditRect.width() - 12, lineEditRect.height() - 12, 12, 12), -90, 45);
-            path.lineTo(6 - 3 * std::sqrt(2), lineEditRect.height() - (6 - 3 * std::sqrt(2)));
-            path.arcTo(QRectF(0, lineEditRect.height() - 12, 12, 12), 270, 45);
-            path.closeSubpath();
-            painter->drawPath(path);
-            painter->restore();
+            if (isEnabled) {
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHemline));
+                QPainterPath path;
+                path.moveTo(6, lineEditRect.height());
+                path.lineTo(lineEditRect.width() - 6, lineEditRect.height());
+                path.arcTo(QRectF(lineEditRect.width() - 12, lineEditRect.height() - 12, 12, 12), -90, 45);
+                path.lineTo(6 - 3 * std::sqrt(2), lineEditRect.height() - (6 - 3 * std::sqrt(2)));
+                path.arcTo(QRectF(0, lineEditRect.height() - 12, 12, 12), 270, 45);
+                path.closeSubpath();
+                painter->drawPath(path);
+                painter->restore();
+            }
         }
         return;
     }
