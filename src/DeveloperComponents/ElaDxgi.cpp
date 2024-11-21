@@ -74,7 +74,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
         qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
-        for (auto adapter : dxgiAdapterVector)
+        for (auto adapter: dxgiAdapterVector)
         {
             adapter->Release();
         }
@@ -87,7 +87,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     {
         dxgiOutputVector.append(dxgiOutput);
     }
-    for (auto adapter : dxgiAdapterVector)
+    for (auto adapter: dxgiAdapterVector)
     {
         adapter->Release();
     }
@@ -111,7 +111,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
         qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
-        for (auto output : dxgiOutputVector)
+        for (auto output: dxgiOutputVector)
         {
             output->Release();
         }
@@ -119,7 +119,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     }
     IDXGIOutput6* dxgiOutput6 = nullptr;
     hr = dxgiOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void**>(&dxgiOutput6));
-    for (auto output : dxgiOutputVector)
+    for (auto output: dxgiOutputVector)
     {
         output->Release();
     }
@@ -157,7 +157,15 @@ bool ElaDxgi::initialize(int dxID, int outputID)
 
 QImage ElaDxgi::getGrabImage() const
 {
-    return _grabImg;
+    QImage grabImage(_imageBits, _descWidth, _descHeight, QImage::Format_ARGB32);
+    if (_pIsGrabCenter)
+    {
+        return grabImage.copy(QRect((_descWidth - _pGrabArea.width()) / 2, (_descHeight - _pGrabArea.height()) / 2, _pGrabArea.width(), _pGrabArea.height()));
+    }
+    else
+    {
+        return grabImage.copy(_pGrabArea);
+    }
 }
 
 void ElaDxgi::onGrabScreen()
@@ -249,19 +257,12 @@ void ElaDxgi::onGrabScreen()
 
         DXGI_MAPPED_RECT map;
         surface->Map(&map, DXGI_MAP_READ);
-        QImage grabImage(static_cast<uchar*>(map.pBits), int(desc.Width), int(desc.Height),
-                         QImage::Format_ARGB32);
+        _imageBits = static_cast<uchar*>(map.pBits);
+        _descWidth = desc.Width;
+        _descHeight = desc.Height;
         surface->Unmap();
         surface->Release();
         _texture->Release();
-        if (_pIsGrabCenter)
-        {
-            _grabImg = grabImage.copy(QRect((texDesc.Width - _pGrabArea.width()) / 2, (texDesc.Height - _pGrabArea.height()) / 2, _pGrabArea.width(), _pGrabArea.height()));
-        }
-        else
-        {
-            _grabImg = grabImage.copy(_pGrabArea);
-        }
         Q_EMIT grabScreenOver();
         endTime = QDateTime::currentMSecsSinceEpoch();
         if (_lastGrabTime == 0)

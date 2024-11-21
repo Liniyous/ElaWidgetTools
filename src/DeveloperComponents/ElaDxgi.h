@@ -41,7 +41,9 @@ private:
     ID3D11Texture2D* _texture{nullptr};
     qreal _lastGrabTime{0};
     qreal _cpuSleepTime{0};
-    QImage _grabImg;
+    uchar* _imageBits{nullptr};
+    int _descWidth{0};
+    int _descHeight{0};
     void releaseInterface();
     void cpuSleep(int usec);
 };
