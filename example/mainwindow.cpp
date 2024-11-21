@@ -133,6 +133,7 @@ void MainWindow::initEdgeLayout()
     // toolBar->setFloatable(false);
     // toolBar->setMovable(false);
     ElaToolButton* toolButton1 = new ElaToolButton(this);
+    toolButton1->setEnabled(false);
     toolButton1->setElaIcon(ElaIconType::BadgeCheck);
     toolBar->addWidget(toolButton1);
     ElaToolButton* toolButton2 = new ElaToolButton(this);

@@ -9,6 +9,7 @@
 #include "ElaMultiSelectComboBox.h"
 #include "ElaPlainTextEdit.h"
 #include "ElaProgressBar.h"
+#include "ElaPushButton.h"
 #include "ElaRadioButton.h"
 #include "ElaScrollPageArea.h"
 #include "ElaSlider.h"
@@ -16,6 +17,8 @@
 #include "ElaText.h"
 #include "ElaToggleButton.h"
 #include "ElaToggleSwitch.h"
+#include "ElaLineEdit.h"
+#include "ElaDoubleSpinBox.h"
 T_BaseComponents::T_BaseComponents(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -43,8 +46,51 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     toggleSwitchLayout->addWidget(toggleSwitchDisableText);
     toggleSwitchLayout->addSpacing(10);
 
+    _pushButton = new ElaPushButton("PushButton", this);
+    _pushButton->setFixedWidth(120);
+    ElaScrollPageArea* pushButtonArea = new ElaScrollPageArea(this);
+    QHBoxLayout* pushButtonLayout = new QHBoxLayout(pushButtonArea);
+    ElaText* pushButtonText = new ElaText("ElaPushButton", this);
+    pushButtonText->setTextPixelSize(15);
+    pushButtonLayout->addWidget(pushButtonText);
+    pushButtonLayout->addWidget(_pushButton);
+    pushButtonLayout->addStretch();
+    ElaToggleSwitch* pushButtonDisableSwitch = new ElaToggleSwitch(this);
+    ElaText* pushButtonDisableText = new ElaText("禁用", this);
+    pushButtonDisableText->setTextPixelSize(15);
+    connect(pushButtonDisableSwitch, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        _pushButton->setDisabled(checked);
+    });
+    pushButtonLayout->addWidget(pushButtonDisableSwitch);
+    pushButtonLayout->addWidget(pushButtonDisableText);
+    pushButtonLayout->addSpacing(10);
+
+    _lineEdit = new ElaLineEdit(this);
+    _lineEdit->setFixedWidth(120);
+    _lineEdit->setMinimumSize(120, 30);
+
+
+    ElaScrollPageArea* lineEditArea = new ElaScrollPageArea(this);
+    QHBoxLayout* lineEditLayout = new QHBoxLayout(lineEditArea);
+    ElaText* lineEditText = new ElaText("ElaLineEdit", this);
+    lineEditText->setTextPixelSize(15);
+
+    lineEditLayout->addWidget(lineEditText);
+    lineEditLayout->addWidget(_lineEdit);
+    lineEditLayout->addStretch();
+    ElaToggleSwitch* lineEditDisableSwitch = new ElaToggleSwitch(this);
+    ElaText* lineEditDisableText = new ElaText("禁用", this);
+    lineEditDisableText->setTextPixelSize(15);
+    connect(lineEditDisableSwitch, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        _lineEdit->setDisabled(checked);
+    });
+    lineEditLayout->addWidget(lineEditDisableSwitch);
+    lineEditLayout->addWidget(lineEditDisableText);
+    lineEditLayout->addSpacing(10);
+
     _toggleButton = new ElaToggleButton("ToggleButton", this);
     _toggleButton->setFixedWidth(120);
+
     ElaScrollPageArea* toggleButtonArea = new ElaScrollPageArea(this);
     QHBoxLayout* toggleButtonLayout = new QHBoxLayout(toggleButtonArea);
     ElaText* toggleButtonText = new ElaText("ElaToggleButton", this);
@@ -174,13 +220,27 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     checkBoxLayout->addSpacing(10);
 
     _spinBox = new ElaSpinBox(this);
+   ElaDoubleSpinBox*  _doubleSpinBox = new ElaDoubleSpinBox(this);
+
+
     ElaScrollPageArea* spinBoxArea = new ElaScrollPageArea(this);
     QHBoxLayout* spinBoxLayout = new QHBoxLayout(spinBoxArea);
     ElaText* spinBoxText = new ElaText("ElaSpinBox", this);
     spinBoxText->setTextPixelSize(15);
     spinBoxLayout->addWidget(spinBoxText);
     spinBoxLayout->addWidget(_spinBox);
+    spinBoxLayout->addWidget(_doubleSpinBox);
     spinBoxLayout->addStretch();
+    ElaToggleSwitch* spinBoxDisableSwitch = new ElaToggleSwitch(this);
+    ElaText* spinBoxDisableText = new ElaText("禁用", this);
+    spinBoxDisableText->setTextPixelSize(15);
+    connect(spinBoxDisableSwitch, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        _spinBox->setDisabled(checked);
+        _doubleSpinBox->setDisabled(checked);
+    });
+    spinBoxLayout->addWidget(spinBoxDisableSwitch);
+    spinBoxLayout->addWidget(spinBoxDisableText);
+    spinBoxLayout->addSpacing(10);
 
     _slider = new ElaSlider(this);
     ElaScrollPageArea* sliderArea = new ElaScrollPageArea(this);
@@ -200,6 +260,16 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     radioButtonLayout->addWidget(_radioButton);
     radioButtonLayout->addStretch();
 
+    ElaToggleSwitch* radioButtonDisableSwitch = new ElaToggleSwitch(this);
+    ElaText* radioButtonDisableText = new ElaText("禁用", this);
+    radioButtonDisableText->setTextPixelSize(15);
+    connect(radioButtonDisableSwitch, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        _radioButton->setDisabled(checked);
+    });
+    radioButtonLayout->addWidget(radioButtonDisableSwitch);
+    radioButtonLayout->addWidget(radioButtonDisableText);
+    radioButtonLayout->addSpacing(10);
+
     _progressBar = new ElaProgressBar(this);
     _progressBar->setMinimum(0);
     _progressBar->setMaximum(0);
@@ -218,6 +288,8 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centralWidget->setWindowTitle("ElaBaseComponents");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
     centerLayout->addWidget(toggleSwitchArea);
+    centerLayout->addWidget(pushButtonArea);
+    centerLayout->addWidget(lineEditArea);
     centerLayout->addWidget(toggleButtonArea);
     centerLayout->addWidget(comboBoxArea);
     centerLayout->addWidget(multiSelectComboBoxArea);

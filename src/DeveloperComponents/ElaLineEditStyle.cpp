@@ -28,11 +28,18 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing);
             painter->setPen(Qt::NoPen);
+            bool isEnabled = fopt->state & QStyle::State_Enabled;
             // 边框绘制
-            painter->setBrush(ElaThemeColor(_themeMode, BasicBorder));
+            painter->setBrush(fopt->state & QStyle::State_Enabled ?
+                ElaThemeColor(_themeMode, BasicBorder) :
+                ElaThemeColor(_themeMode, BasicDisable));
             painter->drawRoundedRect(lineEditRect, 6, 6);
             //  背景绘制
-            if (fopt->state & QStyle::State_HasFocus)
+            if (!isEnabled)
+            {
+                painter->setBrush(ElaThemeColor(_themeMode, BasicDisable));
+            }
+            else if (fopt->state & QStyle::State_HasFocus)
             {
                 painter->setBrush(ElaThemeColor(_themeMode, DialogBase));
             }

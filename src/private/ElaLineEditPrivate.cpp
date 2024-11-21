@@ -2,6 +2,7 @@
 
 #include "ElaApplication.h"
 #include "ElaLineEdit.h"
+#include "ElaTheme.h"
 
 ElaLineEditPrivate::ElaLineEditPrivate(QObject* parent)
     : QObject{parent}
@@ -45,6 +46,7 @@ void ElaLineEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
         QPalette palette;
         palette.setColor(QPalette::Text, Qt::black);
         palette.setColor(QPalette::PlaceholderText, QColor(0x00, 0x00, 0x00, 128));
+        palette.setColor(QPalette::Disabled, QPalette::Text, ElaThemeColor(ElaThemeType::Light, BasicTextDisable));
         q->setPalette(palette);
     }
     else
@@ -52,6 +54,7 @@ void ElaLineEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
         QPalette palette;
         palette.setColor(QPalette::Text, Qt::white);
         palette.setColor(QPalette::PlaceholderText, QColor(0xBA, 0xBA, 0xBA));
+        palette.setColor(QPalette::Disabled, QPalette::Text, ElaThemeColor(ElaThemeType::Dark, BasicTextDisable));
         q->setPalette(palette);
     }
 }

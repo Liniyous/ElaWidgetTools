@@ -60,4 +60,5 @@ compile_commands.json
 build
 node_modules
 cache
+.cache
 dist

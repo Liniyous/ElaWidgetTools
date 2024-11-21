@@ -79,6 +79,11 @@ void ElaToolButtonStyle::drawComplexControl(ComplexControl control, const QStyle
                     }
                 }
             }
+            else  // 添加disabled状态处理
+            {
+                painter->setBrush(_pIsTransparent ? ElaThemeColor(_themeMode, BasicDisable) : ElaThemeColor(_themeMode, BasicDisable));
+                painter->drawRoundedRect(toolButtonRect, _pBorderRadius, _pBorderRadius);
+            }
             // 指示器绘制
             _drawIndicator(painter, bopt, widget);
 
@@ -217,7 +222,9 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
         {
             // 绘制ElaIcon
             painter->save();
-            painter->setPen(ElaThemeColor(_themeMode, BasicText));
+            painter->setPen(bopt->state.testFlag(QStyle::State_Enabled) ?
+                ElaThemeColor(_themeMode, BasicText) :
+                ElaThemeColor(_themeMode, BasicTextDisable));
             QFont iconFont = QFont("ElaAwesome");
             switch (bopt->toolButtonStyle)
             {
@@ -263,7 +270,9 @@ void ElaToolButtonStyle::_drawText(QPainter* painter, QRect contentRect, const Q
 {
     if (!bopt->text.isEmpty())
     {
-        painter->setPen(ElaThemeColor(_themeMode, BasicText));
+        painter->setPen(bopt->state.testFlag(QStyle::State_Enabled) ?
+           ElaThemeColor(_themeMode, BasicText) :
+           ElaThemeColor(_themeMode, BasicTextDisable));
         switch (bopt->toolButtonStyle)
         {
         case Qt::ToolButtonTextOnly:

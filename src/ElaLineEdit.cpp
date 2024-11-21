@@ -112,8 +112,18 @@ void ElaLineEdit::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
-    painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
+    if (isEnabled())
+    {
+        painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
+        painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
+    }
+
+    // 添加disabled状态的遮罩
+    if (!isEnabled())
+    {
+        painter.setBrush(ElaThemeColor(d->_themeMode, BasicDisable));
+        painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
+    }
     painter.restore();
 }
 
