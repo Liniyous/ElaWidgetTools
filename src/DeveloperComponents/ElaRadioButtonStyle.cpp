@@ -46,7 +46,7 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
                 // 外圆形
                 painter->setBrush(isEnabled ?
                 ElaThemeColor(_themeMode, PrimaryNormal) :
-                ElaThemeColor(_themeMode, BasicDisable));
+                ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1),
                                      buttonRect.width() / 2, buttonRect.width() / 2);
                 // 内圆形
