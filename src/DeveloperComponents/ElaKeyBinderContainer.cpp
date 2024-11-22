@@ -138,7 +138,7 @@ void ElaKeyBinderContainer::paintEvent(QPaintEvent* event)
     textHeight = qMax(textHeight, 35.0);
     painter.drawRoundedRect(QRectF((width() - textWidth) / 2.0, rect().center().y() + 10, textWidth, textHeight), 5, 5);
     // 文字绘制
-    painter.setPen(Qt::white);
+    painter.setPen(ElaThemeColor(_themeMode, BasicTextInvert));
     painter.drawText(QRectF((width() - textWidth) / 2.0, rect().center().y() + 10, textWidth, textHeight), Qt::AlignCenter, _pBinderKeyText);
     painter.restore();
 }

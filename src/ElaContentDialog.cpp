@@ -70,7 +70,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     d->_rightButton->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, PrimaryNormal));
     d->_rightButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, PrimaryHover));
     d->_rightButton->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, PrimaryPress));
-    d->_rightButton->setDarkTextColor(Qt::white);
+    d->_rightButton->setDarkTextColor(Qt::black);
     d->_rightButton->setMinimumSize(0, 0);
     d->_rightButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     d->_rightButton->setFixedHeight(38);
