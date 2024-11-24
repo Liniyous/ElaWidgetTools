@@ -24,7 +24,9 @@ ElaToggleButton::ElaToggleButton(QWidget* parent)
     setFont(font);
     setObjectName("ElaToggleButton");
     setStyleSheet("#ElaToggleButton{background-color:transparent;}");
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 ElaToggleButton::ElaToggleButton(QString text, QWidget* parent)
@@ -42,6 +44,7 @@ void ElaToggleButton::setIsToggled(bool isToggled)
 {
     Q_D(ElaToggleButton);
     d->_isToggled = isToggled;
+    d->_pToggleAlpha = isToggled ? 255 : 0;
     update();
     Q_EMIT toggled(isToggled);
 }
