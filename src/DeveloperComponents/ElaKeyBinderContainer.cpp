@@ -62,31 +62,31 @@ void ElaKeyBinderContainer::mousePressEvent(QMouseEvent* event)
     {
     case Qt::LeftButton:
     {
-        _pBinderKeyText = "MouseLeft";
+        _pBinderKeyText = "Mouse1";
         _pNativeVirtualBinderKey = 0x01;
         break;
     }
     case Qt::RightButton:
     {
-        _pBinderKeyText = "MouseRight";
+        _pBinderKeyText = "Mouse2";
         _pNativeVirtualBinderKey = 0x02;
         break;
     }
     case Qt::MiddleButton:
     {
-        _pBinderKeyText = "MouseMiddle";
+        _pBinderKeyText = "Middle";
         _pNativeVirtualBinderKey = 0x04;
         break;
     }
     case Qt::BackButton:
     {
-        _pBinderKeyText = "MouseBack";
+        _pBinderKeyText = "Back";
         _pNativeVirtualBinderKey = 0x05;
         break;
     }
     case Qt::ForwardButton:
     {
-        _pBinderKeyText = "MouseForward";
+        _pBinderKeyText = "Forward";
         _pNativeVirtualBinderKey = 0x06;
         break;
     }
