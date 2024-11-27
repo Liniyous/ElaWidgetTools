@@ -32,31 +32,34 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     {
     case ElaMessageBarType::Success:
     {
-        d->_closeButton->setLightHoverColor(QColor(0xE6, 0xFC, 0xE3));
-        d->_closeButton->setDarkHoverColor(QColor(0xE6, 0xFC, 0xE3));
-        d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setLightHoverColor(QColor(0xD7, 0xED, 0xD5));
+        d->_closeButton->setDarkHoverColor(QColor(0x40, 0x44, 0x23));
+        d->_closeButton->setLightIconColor(Qt::black);
+        d->_closeButton->setDarkIconColor(Qt::white);
         break;
     }
     case ElaMessageBarType::Warning:
     {
-        d->_closeButton->setLightHoverColor(QColor(0x5E, 0x4C, 0x22));
+        d->_closeButton->setLightHoverColor(QColor(0xF6, 0xEB, 0xC7));
         d->_closeButton->setDarkHoverColor(QColor(0x5E, 0x4C, 0x22));
-        d->_closeButton->setLightIconColor(Qt::white);
+        d->_closeButton->setLightIconColor(Qt::black);
         d->_closeButton->setDarkIconColor(Qt::white);
         break;
     }
     case ElaMessageBarType::Information:
     {
         d->_closeButton->setLightHoverColor(QColor(0xEB, 0xEB, 0xEB));
-        d->_closeButton->setDarkHoverColor(QColor(0xEB, 0xEB, 0xEB));
-        d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setDarkHoverColor(QColor(0x2F, 0x2F, 0x2F));
+        d->_closeButton->setLightIconColor(Qt::black);
+        d->_closeButton->setDarkIconColor(Qt::white);
         break;
     }
     case ElaMessageBarType::Error:
     {
-        d->_closeButton->setLightHoverColor(QColor(0xF7, 0xE1, 0xE4));
-        d->_closeButton->setDarkHoverColor(QColor(0xF7, 0xE1, 0xE4));
-        d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setLightHoverColor(QColor(0xF4, 0xDF, 0xE1));
+        d->_closeButton->setDarkHoverColor(QColor(0x4B, 0x2F, 0x2E));
+        d->_closeButton->setLightIconColor(Qt::black);
+        d->_closeButton->setDarkIconColor(Qt::white);
         break;
     }
     }
@@ -77,15 +80,15 @@ ElaMessageBar::~ElaMessageBar()
 
 void ElaMessageBar::success(ElaMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget* parent)
 {
-    // qDebug() << QApplication::topLevelWidgets();
     if (!parent)
     {
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow" && !widget->isHidden())
             {
                 parent = widget;
+                break;
             }
         }
         if (!parent)
@@ -105,9 +108,10 @@ void ElaMessageBar::warning(ElaMessageBarType::PositionPolicy policy, QString ti
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow" && !widget->isHidden())
             {
                 parent = widget;
+                break;
             }
         }
         if (!parent)
@@ -126,9 +130,10 @@ void ElaMessageBar::information(ElaMessageBarType::PositionPolicy policy, QStrin
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow" && !widget->isHidden())
             {
                 parent = widget;
+                break;
             }
         }
         if (!parent)
@@ -147,9 +152,10 @@ void ElaMessageBar::error(ElaMessageBarType::PositionPolicy policy, QString titl
         QList<QWidget*> widgetList = QApplication::topLevelWidgets();
         for (auto widget : widgetList)
         {
-            if (widget->property("ElaBaseClassName").toString() == "ElaWindow")
+            if (widget->property("ElaBaseClassName").toString() == "ElaWindow" && !widget->isHidden())
             {
                 parent = widget;
+                break;
             }
         }
         if (!parent)
@@ -172,7 +178,7 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
 
     // 背景和图标绘制
     painter.save();
-    painter.setPen(d->_themeMode == ElaThemeType::Light ? QColor(0xBE, 0xBA, 0xBE) : QColor(0x52, 0x50, 0x52));
+    painter.setPen(d->_themeMode == ElaThemeType::Light ? QColor(0xE5, 0xE5, 0xE5) : QColor(0x1D, 0x1D, 0x1D));
     switch (d->_messageMode)
     {
     case ElaMessageBarType::Success:

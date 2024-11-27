@@ -265,7 +265,14 @@ QVBoxLayout* ElaAppBarPrivate::_createVLayout(QWidget* widget)
         return nullptr;
     }
     QVBoxLayout* vLayout = new QVBoxLayout();
-    vLayout->setContentsMargins(0, 0, 0, 0);
+    if (widget == _routeBackButton) {
+        vLayout->setContentsMargins(5, 5, 0, 0);
+    } else if (widget == _navigationButton) {
+        vLayout->setContentsMargins(0, 5, 0, 0);
+    }  else {
+        vLayout->setContentsMargins(0, 0, 0, 0);
+    }
+
     vLayout->setSpacing(0);
     if (widget == _iconLabel || widget == _titleLabel)
     {

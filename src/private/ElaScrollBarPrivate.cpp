@@ -136,10 +136,10 @@ void ElaScrollBarPrivate::_handleScrollBarGeometry()
     q->setPageStep(_originScrollBar->pageStep());
     if (q->orientation() == Qt::Horizontal)
     {
-        q->setGeometry(0, _originScrollArea->height() - 10, _originScrollArea->width(), 10);
+        q->setGeometry(0, _originScrollArea->height() - _horSpace, _originScrollArea->width(), 10);
     }
     else
     {
-        q->setGeometry(_originScrollArea->width() - 10, 0, 10, _originScrollArea->height());
+        q->setGeometry(_originScrollArea->width() - _verSpace, 0, 10, _originScrollArea->height());
     }
 }

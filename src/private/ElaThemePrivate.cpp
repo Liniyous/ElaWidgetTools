@@ -32,7 +32,7 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::WindowBase] = QColor(0xF3, 0xF3, 0xF3);
     _darkThemeColorList[ElaThemeType::WindowBase] = QColor(0x20, 0x20, 0x20);
     _lightThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0xFF, 0xFF, 0xFF, 120);
-    _darkThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0x3E, 0x3E, 0x3E, 60);
+    _darkThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0x30, 0x30, 0x30, 60);
 
     // 浮动窗体
     _lightThemeColorList[ElaThemeType::PopupBorder] = QColor(0xD6, 0xD6, 0xD6);
@@ -63,8 +63,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::BasicTextDisable] = QColor(0xA7, 0xA7, 0xA7);
     _lightThemeColorList[ElaThemeType::BasicTextPress] = QColor(0x5A, 0x5A, 0x5D);
     _darkThemeColorList[ElaThemeType::BasicTextPress] = QColor(0xBB, 0xBB, 0xBF);
-    _lightThemeColorList[ElaThemeType::BasicBorder] = QColor(0xE5, 0xE5, 0xE5);
-    _darkThemeColorList[ElaThemeType::BasicBorder] = QColor(0x4B, 0x4B, 0x4B);
+    _lightThemeColorList[ElaThemeType::BasicBorder] = QColor(0xE4, 0xE7, 0xEA);
+    _darkThemeColorList[ElaThemeType::BasicBorder] = QColor(0x46, 0x46, 0x46);
     _lightThemeColorList[ElaThemeType::BasicBorderDeep] = QColor(0xA8, 0xA8, 0xA8);
     _darkThemeColorList[ElaThemeType::BasicBorderDeep] = QColor(0x5C, 0x5C, 0x5C);
     _lightThemeColorList[ElaThemeType::BasicBorderHover] = QColor(0xDA, 0xDA, 0xDA);
@@ -79,8 +79,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::BasicHover] = QColor(0x40, 0x40, 0x40);
     _lightThemeColorList[ElaThemeType::BasicPress] = QColor(0xF7, 0xF7, 0xF7);
     _darkThemeColorList[ElaThemeType::BasicPress] = QColor(0x3A, 0x3A, 0x3A);
-    _lightThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0xD1, 0xD1, 0xD1);
-    _darkThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0x45, 0x45, 0x45);
+    _lightThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0xF3, 0xF4, 0xF5);
+    _darkThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0x2D, 0x2D, 0x2D);
     _lightThemeColorList[ElaThemeType::BasicHemline] = QColor(0x86, 0x86, 0x86);
     _darkThemeColorList[ElaThemeType::BasicHemline] = QColor(0x9A, 0x9A, 0x9A);
     _lightThemeColorList[ElaThemeType::BasicIndicator] = QColor(0x75, 0x7C, 0x87);
@@ -92,7 +92,7 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::BasicAlternating] = QColor(0xEF, 0xEF, 0xEF, 160);
     _darkThemeColorList[ElaThemeType::BasicAlternating] = QColor(0x45, 0x45, 0x45, 125);
     _lightThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0xFF, 0xFF, 0xFF, 160);
-    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0x45, 0x45, 0x45, 95);
+    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0x40, 0x40, 0x40, 95);
     _lightThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0xCC, 0xCC, 0xCC, 160);
     _darkThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0x72, 0x72, 0x72, 95);
     _lightThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0xCC, 0xCC, 0xCC, 60);

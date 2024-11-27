@@ -18,6 +18,7 @@ public:
     explicit ElaScrollBar(Qt::Orientation orientation, QWidget* parent = nullptr);
     explicit ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* parent = nullptr);
     ~ElaScrollBar();
+    void setSpace(int verSpcce, int horSpace);
 
 Q_SIGNALS:
     Q_SIGNAL void rangeAnimationFinished();

@@ -229,7 +229,7 @@ void ElaMessageBarPrivate::messageBarEnd(QVariantMap eventData)
     });
     barFinishedOpacityAnimation->setDuration(300);
     barFinishedOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    barFinishedOpacityAnimation->setStartValue(1);
+    barFinishedOpacityAnimation->setStartValue(_pOpacity);
     barFinishedOpacityAnimation->setEndValue(0);
     barFinishedOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
@@ -461,7 +461,7 @@ bool ElaMessageBarPrivate::_judgeCreateOrder(ElaMessageBar* otherMessageBar)
 void ElaMessageBarPrivate::_drawSuccess(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(QColor(0xE0, 0xF6, 0xDD));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xDF, 0xF6, 0xDD) : QColor(0X39, 0X3D, 0X18));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
@@ -477,13 +477,13 @@ void ElaMessageBarPrivate::_drawSuccess(QPainter* painter)
     painter->drawText(_leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)ElaIconType::Check));
     painter->restore();
     // 文字颜色
-    painter->setPen(QPen(Qt::black));
+    painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
 }
 
 void ElaMessageBarPrivate::_drawWarning(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(QColor(0x6B, 0x56, 0x27));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xFF, 0xF4, 0xCE) : QColor(0X43, 0X35, 0X19));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
@@ -497,13 +497,13 @@ void ElaMessageBarPrivate::_drawWarning(QPainter* painter)
     painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "!");
     painter->restore();
     // 文字颜色
-    painter->setPen(QColor(0xFA, 0xFA, 0xFA));
+    painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
 }
 
 void ElaMessageBarPrivate::_drawInformation(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(QColor(0xF4, 0xF4, 0xF4));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xF4, 0xF4, 0xF4) : QColor(0X27, 0X27, 0X27));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
@@ -516,13 +516,13 @@ void ElaMessageBarPrivate::_drawInformation(QPainter* painter)
     painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "i");
     painter->restore();
     // 文字颜色
-    painter->setPen(Qt::black);
+    painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
 }
 
 void ElaMessageBarPrivate::_drawError(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(QColor(0xFE, 0xE7, 0xEA));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xFD, 0xE7, 0xE9) : QColor(0X44, 0X27, 0X26));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
@@ -538,5 +538,5 @@ void ElaMessageBarPrivate::_drawError(QPainter* painter)
     painter->drawText(_leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)ElaIconType::Xmark));
     painter->restore();
     // 文字颜色
-    painter->setPen(Qt::black);
+    painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
 }

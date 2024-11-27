@@ -242,3 +242,10 @@ void ElaScrollBar::contextMenuEvent(QContextMenuEvent* event)
         triggerAction(QAbstractSlider::SliderSingleStepAdd);
     }
 }
+
+void ElaScrollBar::setSpace(int verSpcce, int horSpace)
+{
+    Q_D(ElaScrollBar);
+    d->_horSpace = horSpace;
+    d->_verSpace = verSpcce;
+}

@@ -94,6 +94,8 @@ enum ButtonType
     MinimizeButtonHint = 0x00010,
     MaximizeButtonHint = 0x0020,
     CloseButtonHint = 0x0040,
+    WindowIconHint = 0x0080,
+    WindowTitleHint = 0x100,
 };
 Q_ENUM_CREATE(ButtonType)
 Q_DECLARE_FLAGS(ButtonFlags, ButtonType)

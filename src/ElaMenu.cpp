@@ -140,6 +140,7 @@ void ElaMenu::showEvent(QShowEvent* event)
         d->_animationPix = QPixmap();
     }
     d->_animationPix = this->grab(this->rect());
+    int targetPosY = height();
     QPropertyAnimation* posAnimation = new QPropertyAnimation(d, "pAnimationImagePosY");
     connect(posAnimation, &QPropertyAnimation::finished, this, [=]() {
         d->_animationPix = QPixmap();
@@ -148,9 +149,8 @@ void ElaMenu::showEvent(QShowEvent* event)
     connect(posAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
-    posAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    posAnimation->setDuration(400);
-    int targetPosY = height();
+    posAnimation->setEasingCurve(QEasingCurve::Linear);
+    posAnimation->setDuration(targetPosY*2);
     if (targetPosY > 160)
     {
         if (targetPosY < 320)

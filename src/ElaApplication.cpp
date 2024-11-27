@@ -65,8 +65,8 @@ void ElaApplication::init()
     //默认字体
     QFont font = qApp->font();
     font.setPixelSize(13);
-    font.setFamily("Microsoft YaHei");
-    font.setHintingPreference(QFont::PreferNoHinting);
+    font.setHintingPreference(QFont::PreferFullHinting);
+    font.setStyleStrategy(QFont::PreferAntialias);
     qApp->setFont(font);
 }
 

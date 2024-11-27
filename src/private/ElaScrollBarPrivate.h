@@ -28,6 +28,8 @@ private:
     bool _isExpand{false};
     QPropertyAnimation* _slideSmoothAnimation{nullptr};
     int _scrollValue{-1};
+    int _horSpace{10};
+    int _verSpace{10};
     void _scroll(Qt::KeyboardModifiers modifiers, int value);
     int _pixelPosToRangeValue(int pos) const;
 

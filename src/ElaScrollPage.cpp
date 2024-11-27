@@ -75,6 +75,7 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
     scrollArea->setIsOverShoot(Qt::Vertical, true);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ElaScrollBar* floatVScrollBar = new ElaScrollBar(scrollArea->verticalScrollBar(), scrollArea);
+    floatVScrollBar->setSpace(15, 15);
     floatVScrollBar->setIsAnimation(true);
     scrollArea->setWidget(centralWidget);
     centralWidget->setObjectName("ElaScrollPage_CentralPage");

@@ -89,12 +89,12 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     else
     {
         d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
-        d->_iconLabelLayout->setContentsMargins(10, 0, 0, 0);
+        d->_iconLabelLayout->setContentsMargins(5, 5, 0, 0);
     }
     connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
         d->_iconLabel->setPixmap(icon.pixmap(18, 18));
         d->_iconLabel->setVisible(icon.isNull() ? false : true);
-        d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 10, 0, 0, 0);
+        d->_iconLabelLayout->setContentsMargins(icon.isNull() ? 0 : 5, 5, 0, 0);
     });
 
     //标题
@@ -109,12 +109,12 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     else
     {
         d->_titleLabel->setText(parent->windowTitle());
-        d->_titleLabelLayout->setContentsMargins(10, 0, 0, 0);
+        d->_titleLabelLayout->setContentsMargins(10, 5, 0, 0);
     }
     connect(parent, &QWidget::windowTitleChanged, this, [=](const QString& title) {
         d->_titleLabel->setText(title);
         d->_titleLabel->setVisible(title.isEmpty() ? false : true);
-        d->_titleLabelLayout->setContentsMargins(title.isEmpty() ? 0 : 10, 0, 0, 0);
+        d->_titleLabelLayout->setContentsMargins(title.isEmpty() ? 0 : 10, 5, 0, 0);
     });
 
     // 主题变更
@@ -317,6 +317,8 @@ void ElaAppBar::setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags)
     d->_minButton->setVisible(d->_buttonFlags.testFlag(ElaAppBarType::MinimizeButtonHint));
     d->_maxButton->setVisible(d->_buttonFlags.testFlag(ElaAppBarType::MaximizeButtonHint));
     d->_closeButton->setVisible(d->_buttonFlags.testFlag(ElaAppBarType::CloseButtonHint));
+    d->_iconLabel->setVisible(d->_buttonFlags.testFlag(ElaAppBarType::WindowIconHint));
+    d->_titleLabel->setVisible(d->_buttonFlags.testAnyFlags(ElaAppBarType::WindowTitleHint));
 }
 
 ElaAppBarType::ButtonFlags ElaAppBar::getWindowButtonFlags() const
