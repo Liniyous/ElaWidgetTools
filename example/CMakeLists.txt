@@ -28,7 +28,7 @@ set(PROJECT_SOURCES
     ${EAXMPLEPAGE}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ElaWidgetToolsExample
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
@@ -36,28 +36,28 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
     #遍历所有资源文件
     file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
-    foreach(filepath ${RES_PATHS})
-            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
-            list(APPEND resource_files ${filename})
-    endforeach(filepath)
+    foreach (filepath ${RES_PATHS})
+        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
+        list(APPEND resource_files ${filename})
+    endforeach (filepath)
 
     qt_add_resources(${PROJECT_NAME} "ElaWidgetToolsExample"
         RESOURCES PREFIX "/"
         FILES
         ${resource_files}
     )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET ElaWidgetToolsExample APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
+    # Define target properties for Android with Qt 6 as:
+    #    set_property(TARGET ElaWidgetToolsExample APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+    #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
+    # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+else ()
+    if (ANDROID)
         add_library(ElaWidgetToolsExample SHARED
             ${PROJECT_SOURCES}
         )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
+        # Define properties for Android with Qt 5 after find_package() calls as:
+        #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+    else ()
         qt5_add_big_resources(PROJECT_SOURCES
             ../src/include/ElaWidgetTools.qrc
             ElaWidgetToolsExample.qrc
@@ -65,17 +65,17 @@ else()
         add_executable(ElaWidgetToolsExample
             ${PROJECT_SOURCES}
         )
-    endif()
-endif()
+    endif ()
+endif ()
 
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}/install/lib/cmake/)
-find_package(ELAWIDGETTOOLS REQUIRED)
-if(ELAWIDGETTOOLS_FOUND)
+find_package(ElaWidgetTools REQUIRED)
+if (ELAWIDGETTOOLS_FOUND)
     message(STATUS "ELAWIDGETTOOLS_INCLUDE_DIR = ${ELAWIDGETTOOLS_INCLUDE_DIRS}")
     message(STATUS "ELAWIDGETTOOLS_LIBRARIES = ${ELAWIDGETTOOLS_LIBRARIES}")
     message(STATUS "ELAWIDGETTOOLS_LIB_DIR = ${ELAWIDGETTOOLS_LIBRARY_DIRS}")
 endif ()
-set(EXECUTABLE_OUTPUT_PATH  ${CMAKE_BINARY_DIR})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 target_include_directories(ElaWidgetToolsExample PUBLIC
     ${ELAWIDGETTOOLS_INCLUDE_DIRS}
     ExamplePage
@@ -92,9 +92,9 @@ target_link_directories(ElaWidgetToolsExample PUBLIC
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ElaWidgetToolsExample)
-endif()
+if (${QT_VERSION} VERSION_LESS 6.1.0)
+    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ElaWidgetToolsExample)
+endif ()
 set_target_properties(ElaWidgetToolsExample PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
@@ -103,6 +103,6 @@ set_target_properties(ElaWidgetToolsExample PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
+if (QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(ElaWidgetToolsExample)
-endif()
+endif ()
