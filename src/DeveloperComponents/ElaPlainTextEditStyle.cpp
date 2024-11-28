@@ -40,13 +40,13 @@ void ElaPlainTextEditStyle::drawControl(ControlElement element, const QStyleOpti
             // 底边线绘制
             painter->setBrush(ElaThemeColor(_themeMode, BasicHemline));
             QPainterPath path;
-            path.moveTo(6, editRect.height());
-            path.lineTo(editRect.width() - 6, editRect.height());
-            path.arcTo(QRectF(editRect.width() - 12, editRect.height() - 12, 12, 12), -90, 45);
-            path.lineTo(6 - 3 * std::sqrt(2), editRect.height() - (6 - 3 * std::sqrt(2)));
-            path.arcTo(QRectF(0, editRect.height() - 12, 12, 12), 270, 45);
+            int l = 12;
+            int r = l / 2;
+            path.moveTo(l, editRect.height() - r + (r * 0.70710678118654752440084436210485));
+            path.arcTo(QRect(0, editRect.height() - l, l, l), 225, 45);
+            path.arcTo(QRect(editRect.width() - l, editRect.height() - l, l, l), 270, 45);
             path.closeSubpath();
-            painter->drawPath(path);
+            painter->fillPath(path, ElaThemeColor(_themeMode, BasicHemline));
 
             //焦点指示器
             painter->setPen(Qt::NoPen);
