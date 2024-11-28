@@ -33,11 +33,8 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 
     //用户卡片
     d->_userCard = new ElaInteractiveCard(this);
-    d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
-    d->_userCard->setTitle("Ela Tool");
-    d->_userCard->setSubTitle("Liniyous@gmail.com");
     connect(d->_userCard, &ElaInteractiveCard::clicked, this, &ElaNavigationBar::userInfoCardClicked);
-    d->_userButton = new ElaIconButton(QPixmap(":/include/Image/Cirno.jpg"), this);
+    d->_userButton = new ElaIconButton(QPixmap(), this);
     d->_userButton->setFixedSize(36, 36);
     d->_userButton->setVisible(false);
     d->_userButton->setBorderRadius(8);
@@ -169,7 +166,7 @@ void ElaNavigationBar::setUserInfoCardPixmap(QPixmap pix)
 {
     Q_D(ElaNavigationBar);
     d->_userCard->setCardPixmap(pix);
-    d->_userButton->setPixmap(pix);
+    d->_userButton->setPixmap(pix.scaled(d->_userButton->width(), d->_userButton->height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void ElaNavigationBar::setUserInfoCardTitle(QString title)
