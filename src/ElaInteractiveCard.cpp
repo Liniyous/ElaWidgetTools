@@ -62,17 +62,17 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
         {
             path.addEllipse(QPointF(d->_pCardPixmapSize.width() / 2 + 10, height() / 2), d->_pCardPixmapSize.width() / 2, d->_pCardPixmapSize.height() / 2);
             painter.setClipPath(path);
-            painter.drawPixmap(QRect(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap); // rect为绘制区域，image为要绘制的图片
+            painter.drawPixmap(QRect(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmap.scaled(d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
         else if (d->_pCardPixMode == ElaCardPixType::PixMode::Default)
         {
-            painter.drawPixmap(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
+            painter.drawPixmap(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap.scaled(d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
         else if (d->_pCardPixMode == ElaCardPixType::PixMode::RoundedRect)
         {
             path.addRoundedRect(QRectF(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height()), d->_pCardPixmapBorderRadius, d->_pCardPixmapBorderRadius);
             painter.setClipPath(path);
-            painter.drawPixmap(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap);
+            painter.drawPixmap(10, (height() - d->_pCardPixmapSize.height()) / 2, d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), d->_pCardPixmap.scaled(d->_pCardPixmapSize.width(), d->_pCardPixmapSize.height(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
         }
         painter.restore();
     }
