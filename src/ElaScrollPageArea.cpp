@@ -27,7 +27,7 @@ void ElaScrollPageArea::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicAreaBorder));
     painter.setBrush(ElaThemeColor(d->_themeMode, BasicBaseAlpha));
     QRect foregroundRect(1, 1, width() - 2, height() - 2);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);

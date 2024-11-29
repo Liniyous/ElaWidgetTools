@@ -80,6 +80,7 @@ enum ThemeColor
     BasicSelectedAlpha,
     BasicSelectedHoverAlpha,
     StatusDanger,
+    BasicAreaBorder,
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(ElaThemeType)
