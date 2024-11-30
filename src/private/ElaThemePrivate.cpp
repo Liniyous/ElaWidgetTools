@@ -35,18 +35,18 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0xFF, 0xFF, 0xFF, 8);
 
     // 浮动窗体
-    _lightThemeColorList[ElaThemeType::PopupBorder] = QColor(0xD6, 0xD6, 0xD6);
-    _darkThemeColorList[ElaThemeType::PopupBorder] = QColor(0x47, 0x47, 0x47);
+    _lightThemeColorList[ElaThemeType::PopupBorder] = QColor(0xE5, 0xE5, 0xE5);
+    _darkThemeColorList[ElaThemeType::PopupBorder] = QColor(0x39, 0x39, 0x39);
     _lightThemeColorList[ElaThemeType::PopupBorderHover] = QColor(0xCC, 0xCC, 0xCC);
     _darkThemeColorList[ElaThemeType::PopupBorderHover] = QColor(0x54, 0x54, 0x54);
-    _lightThemeColorList[ElaThemeType::PopupBase] = QColor(0xFA, 0xFA, 0xFA);
-    _darkThemeColorList[ElaThemeType::PopupBase] = QColor(0x2C, 0x2C, 0x2C);
+    _lightThemeColorList[ElaThemeType::PopupBase] = QColor(0xFF, 0xFF, 0xFF, 250);
+    _darkThemeColorList[ElaThemeType::PopupBase] = QColor(0x20, 0x20, 0x20, 250);
     _lightThemeColorList[ElaThemeType::PopupHover] = QColor(0xF0, 0xF0, 0xF0);
     _darkThemeColorList[ElaThemeType::PopupHover] = QColor(0x38, 0x38, 0x38);
 
     // Dialog窗体
     _lightThemeColorList[ElaThemeType::DialogBase] = Qt::white;
-    _darkThemeColorList[ElaThemeType::DialogBase] = QColor(0x1F, 0x1F, 0x1F);
+    _darkThemeColorList[ElaThemeType::DialogBase] = QColor(0x1E, 0x1E, 0x1E);
     _lightThemeColorList[ElaThemeType::DialogLayoutArea] = QColor(0xF3, 0xF3, 0xF3);
     _darkThemeColorList[ElaThemeType::DialogLayoutArea] = QColor(0x20, 0x20, 0x20);
 
@@ -111,4 +111,10 @@ void ElaThemePrivate::_initThemeColor()
     // 状态颜色
     _lightThemeColorList[ElaThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
     _darkThemeColorList[ElaThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
+
+    // UrlCard颜色
+    _lightThemeColorList[ElaThemeType::UrlCardBase] = QColor(0xFD, 0xFD, 0xFD);
+    _darkThemeColorList[ElaThemeType::UrlCardBase] = QColor(0x34, 0x34, 0x34);
+    _lightThemeColorList[ElaThemeType::UrlCardHover] = QColor(0xF3, 0xF3, 0xF3);
+    _darkThemeColorList[ElaThemeType::UrlCardHover] = QColor(0x40, 0x40, 0x40);
 }

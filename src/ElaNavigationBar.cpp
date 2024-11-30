@@ -413,6 +413,7 @@ void ElaNavigationBar::paintEvent(QPaintEvent* event)
     if (!d->_pIsTransparent)
     {
         QPainter painter(this);
+        painter.setRenderHints(QPainter::Antialiasing);
         painter.save();
         painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
         painter.setBrush(ElaThemeColor(d->_themeMode, PopupBase));

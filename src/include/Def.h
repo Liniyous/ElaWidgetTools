@@ -82,6 +82,8 @@ enum ThemeColor
     StatusDanger,
     BasicAreaBorder,
     BasicPageLine,
+    UrlCardBase,
+    UrlCardHover,
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(ElaThemeType)

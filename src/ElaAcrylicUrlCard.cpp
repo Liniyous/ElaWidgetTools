@@ -65,7 +65,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setPen(QPen(underMouse() ? ElaThemeColor(d->_themeMode, BasicBorderHover) : ElaThemeColor(d->_themeMode, BasicBorder), d->_borderWidth));
     QColor brushColor;
-    brushColor = underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase);
+    brushColor = underMouse() ? ElaThemeColor(d->_themeMode, UrlCardHover) : ElaThemeColor(d->_themeMode, UrlCardBase);
     brushColor.setAlpha(d->_pBrushAlpha);
     painter.setBrush(brushColor);
     QRect foregroundRect = rect();
