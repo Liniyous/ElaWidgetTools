@@ -47,7 +47,7 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
         targetRect.adjust(1, 1, 10, 10);
         painter.save();
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setPen(QPen(ElaThemeColor(_themeMode, BasicBaseLine)));
+        painter.setPen(QPen(ElaThemeColor(_themeMode, BasicPageLine)));
         painter.setBrush(ElaThemeColor(_themeMode, WindowCentralStackBase));
         if (_isHasRadius)
         {

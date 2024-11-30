@@ -164,7 +164,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     //顶边线绘制
     if (index.row() == 0)
     {
-        painter->setPen(ElaThemeColor(_themeMode, BasicBaseLine));
+        painter->setPen(ElaThemeColor(_themeMode, BasicPageLine));
         painter->drawLine(option.rect.x(), itemRect.y() + 1, option.rect.x() + option.rect.width(), itemRect.y() + 1);
     }
     // 图标绘制
