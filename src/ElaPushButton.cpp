@@ -93,7 +93,7 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
+    // eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 背景绘制
     painter.save();

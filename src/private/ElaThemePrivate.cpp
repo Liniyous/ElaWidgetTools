@@ -96,7 +96,7 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::BasicAlternating] = QColor(0xEF, 0xEF, 0xEF, 160);
     _darkThemeColorList[ElaThemeType::BasicAlternating] = QColor(0x45, 0x45, 0x45, 125);
     _lightThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0xFF, 0xFF, 0xFF, 170);
-    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0xFF, 0xFF, 0xFF, 14);
+    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0xFF, 0xFF, 0xFF, 13);
     _lightThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0xCC, 0xCC, 0xCC, 160);
     _darkThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0x72, 0x72, 0x72, 95);
     _lightThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0xCC, 0xCC, 0xCC, 60);

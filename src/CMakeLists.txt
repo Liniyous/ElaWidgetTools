@@ -16,8 +16,8 @@ SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install CACHE PATH "Installation pa
 add_definitions(-DELAWIDGETTOOLS_LIBRARY)
 option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Svg)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Svg)
 
 FILE(GLOB ORIGIN *.h *.cpp)
 FILE(GLOB INCLUDE include/*.h)
@@ -87,12 +87,14 @@ endif ()
 if (WIN32)
     target_link_libraries(${EXPORT_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Svg
         D3D11
         DXGI
     )
 else ()
     target_link_libraries(${EXPORT_NAME} PUBLIC
         Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Svg
     )
 endif ()
 

@@ -174,7 +174,7 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
     painter.setOpacity(d->_pOpacity);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 高性能阴影
-    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_borderRadius);
+    // eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_borderRadius);
 
     // 背景和图标绘制
     painter.save();
