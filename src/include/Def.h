@@ -3526,9 +3526,10 @@ Q_END_ENUM_CREATE(ElaIconType)
 Q_BEGIN_ENUM_CREATE(SvgIconType)
 enum IconName
 {
-    UP = 0,
-    ADD = 1,
-    BUS = 2,
+    NONE = 0,
+    UP = 1,
+    ADD = 2,
+    BUS = 3,
     CAR,
     CUT,
     IOT,

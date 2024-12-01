@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QSvgRenderer>
 
 #include "Def.h"
 #include "stdafx.h"
@@ -17,8 +18,12 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode{ElaThemeType::Light};
-    QString getSvgPath(SvgIconType::IconName);
+    QString getSvgPath();
     QMap<SvgIconType::IconName, QString> _svgMap;
+
+    SvgIconType::IconName _iconName = SvgIconType::NONE;
+
+    QSvgRenderer _renderer;
 };
 
 #endif // ELASVGICONPRIVATE_H
