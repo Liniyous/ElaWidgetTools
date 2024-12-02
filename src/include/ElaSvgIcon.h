@@ -21,7 +21,7 @@ public:
     explicit ElaSvgIcon(QWidget* parent = nullptr);
     ~ElaSvgIcon();
 
-    void setSvgIcon(SvgIconType::IconName icon);
+    void setSvgIcon(SvgIconType::IconName icon, int iconW=18, int iconH=18);
 
 private:
 

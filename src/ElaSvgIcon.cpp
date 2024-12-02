@@ -13,10 +13,8 @@ ElaSvgIcon::ElaSvgIcon(QWidget* parent)
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
-        if (!d->getSvgPath().isEmpty()) {
-            d->_renderer.load(d->getSvgPath());
-            update();
-        }
+        d->updateIcon();
+        update();
     });
 }
 
@@ -25,25 +23,26 @@ ElaSvgIcon::~ElaSvgIcon()
 
 }
 
-void ElaSvgIcon::setSvgIcon(SvgIconType::IconName icon)
+void ElaSvgIcon::setSvgIcon(SvgIconType::IconName icon, int iconW, int iconH)
 {
     Q_D(ElaSvgIcon);
-    d->_iconName = icon;
-    if (!d->getSvgPath().isEmpty()) {
-        d->_renderer.load(d->getSvgPath());
-        update();
-    }
+    iconW = iconW < width() ? iconW : width();
+    iconH = iconH < height() ? iconH : height();
+    d->updateIcon(icon, iconW, iconH);
+    update();
 }
 
 
 void ElaSvgIcon::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaSvgIcon);
-    if (!d->_renderer.isValid()) {
+    if (d->_pixmap.isNull()) {
         return;
     }
-
+    QSize pSize = d->_pixmap.size();
+    int x = (width() - pSize.width()) / 2;
+    int y = (height() - pSize.height()) / 2;
     QPainter painter(this);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    d->_renderer.render(&painter);
+    painter.drawPixmap(QRect(x, y, pSize.width(), pSize.height()), d->_pixmap);
 }
