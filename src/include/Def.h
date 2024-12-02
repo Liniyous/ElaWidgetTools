@@ -136,6 +136,8 @@ enum TextStyle
     Title = 0x0005,
     TitleLarge = 0x0006,
     Display = 0x0007,
+    CardTitle = 0x0008,
+    CardsubTitle = 0x0009,
 };
 Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(ElaTextType)

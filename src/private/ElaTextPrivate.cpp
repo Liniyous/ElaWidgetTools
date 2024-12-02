@@ -18,12 +18,12 @@ void ElaTextPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
     QPalette palette = q->palette();
     if (themeMode == ElaThemeType::Light)
     {
-        palette.setColor(QPalette::WindowText, Qt::black);
+        palette.setColor(QPalette::WindowText, _textStyle == ElaTextType::CardsubTitle ? QColor("#606060") : Qt::black);
         q->setPalette(palette);
     }
     else
     {
-        palette.setColor(QPalette::WindowText, Qt::white);
+        palette.setColor(QPalette::WindowText, _textStyle == ElaTextType::CardsubTitle ? QColor("#CCCCCC") : Qt::white);
         q->setPalette(palette);
     }
 }

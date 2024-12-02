@@ -14,7 +14,7 @@ ElaText::ElaText(QWidget* parent)
     setStyleSheet("#ElaText{background-color:transparent;}");
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
-    //textFont.setPixelSize(28);
+    textFont.setPixelSize(28);
     setFont(textFont);
     setWordWrap(true);
     d->_themeMode = eTheme->getThemeMode();
@@ -126,6 +126,18 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
     {
         textFont.setPixelSize(48);
         textFont.setWeight(QFont::DemiBold);
+        break;
+    }
+    case ElaTextType::CardTitle:
+    {
+        textFont.setPixelSize(15);
+        textFont.setWeight(QFont::Medium);
+        break;
+    }
+    case ElaTextType::CardsubTitle:
+    {
+        textFont.setPixelSize(12);
+        textFont.setWeight(QFont::Normal);
         break;
     }
     }

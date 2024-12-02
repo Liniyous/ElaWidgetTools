@@ -64,8 +64,8 @@ void ElaApplication::init()
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
     //默认字体
     QFont font = qApp->font();
-    font.setFamily("Microsoft YaHei");
-    font.setPixelSize(13);
+    font.setFamilies({"Segoe UI", "Microsoft YaHei", "PingFang SC"});
+    font.setPixelSize(14);
     font.setHintingPreference(QFont::PreferFullHinting);
     font.setStyleStrategy(QFont::PreferAntialias);
     qApp->setFont(font);
