@@ -301,7 +301,7 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     }
     default:
     {
-        barPosAnimation->setDuration(450);
+        barPosAnimation->setDuration(250);
         break;
     }
     }
@@ -461,20 +461,12 @@ bool ElaMessageBarPrivate::_judgeCreateOrder(ElaMessageBar* otherMessageBar)
 void ElaMessageBarPrivate::_drawSuccess(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xDF, 0xF6, 0xDD) : QColor(0X39, 0X3D, 0X18));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(223, 246, 221) : QColor(57, 61, 27));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
     painter->save();
-    painter->setPen(Qt::white);
-    QPainterPath textPath;
-    textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
-    painter->setClipPath(textPath);
-    painter->fillPath(textPath, QColor(0x11, 0x77, 0x10));
-    QFont iconFont = QFont("ElaAwesome");
-    iconFont.setPixelSize(12);
-    painter->setFont(iconFont);
-    painter->drawText(_leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)ElaIconType::Check));
+    painter->drawPixmap(_leftPadding, (q->height() - 16) / 2, 16, 16, _pixmap);
     painter->restore();
     // 文字颜色
     painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
@@ -483,18 +475,12 @@ void ElaMessageBarPrivate::_drawSuccess(QPainter* painter)
 void ElaMessageBarPrivate::_drawWarning(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xFF, 0xF4, 0xCE) : QColor(0X43, 0X35, 0X19));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(255, 244, 206) : QColor(67, 53, 25));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
-    // exclamation
     painter->save();
-    painter->setPen(Qt::black);
-    QPainterPath textPath;
-    textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
-    painter->setClipPath(textPath);
-    painter->fillPath(textPath, QColor(0xF8, 0xE2, 0x23));
-    painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "!");
+    painter->drawPixmap(_leftPadding, (q->height() - 16) / 2, 16, 16, _pixmap);
     painter->restore();
     // 文字颜色
     painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
@@ -503,17 +489,12 @@ void ElaMessageBarPrivate::_drawWarning(QPainter* painter)
 void ElaMessageBarPrivate::_drawInformation(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xF4, 0xF4, 0xF4) : QColor(0X27, 0X27, 0X27));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(244, 244, 244) : QColor(39, 39, 39));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
     painter->save();
-    painter->setPen(Qt::white);
-    QPainterPath textPath;
-    textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
-    painter->setClipPath(textPath);
-    painter->fillPath(textPath, QColor(0x00, 0x66, 0xB4));
-    painter->drawText(_leftPadding + 4, 0, q->width(), q->height(), Qt::AlignVCenter, "i");
+    painter->drawPixmap(_leftPadding, (q->height() - 16) / 2, 16, 16, _pixmap);
     painter->restore();
     // 文字颜色
     painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));
@@ -522,20 +503,12 @@ void ElaMessageBarPrivate::_drawInformation(QPainter* painter)
 void ElaMessageBarPrivate::_drawError(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
-    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(0xFD, 0xE7, 0xE9) : QColor(0X44, 0X27, 0X26));
+    painter->setBrush(_themeMode == ElaThemeType::Light ? QColor(253, 231, 233) : QColor(68, 39, 38));
     QRect foregroundRect(_shadowBorderWidth, _shadowBorderWidth, q->width() - 2 * _shadowBorderWidth, q->height() - 2 * _shadowBorderWidth);
     painter->drawRoundedRect(foregroundRect, _borderRadius, _borderRadius);
     // 图标绘制
     painter->save();
-    painter->setPen(Qt::white);
-    QPainterPath textPath;
-    textPath.addEllipse(QPoint(_leftPadding + 6, q->height() / 2), 9, 9);
-    painter->setClipPath(textPath);
-    painter->fillPath(textPath, QColor(0xBA, 0x2D, 0x20));
-    QFont iconFont = QFont("ElaAwesome");
-    iconFont.setPixelSize(13);
-    painter->setFont(iconFont);
-    painter->drawText(_leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)ElaIconType::Xmark));
+    painter->drawPixmap(_leftPadding, (q->height() - 16) / 2, 16, 16, _pixmap);
     painter->restore();
     // 文字颜色
     painter->setPen(QPen(_themeMode == ElaThemeType::Light ? Qt::black : Qt::white));

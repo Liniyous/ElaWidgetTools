@@ -6,7 +6,6 @@
 #include <QPixmap>
 #include <QPainter>
 #include <QSvgRenderer>
-#include <QDebug>
 
 #include "Def.h"
 #include "stdafx.h"
