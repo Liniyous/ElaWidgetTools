@@ -191,14 +191,14 @@ void ElaSvgIconPrivate::updateIcon(SvgIconType::IconName icon, int iconwidget, i
         _iconName = icon;
     }
     if (_pixmap.isNull()) {
-        _pixmap = QPixmap(iconwidget, iconheight);
+        _pixmap = QPixmap(iconwidget*2, iconheight*2);
     }
     static QSvgRenderer renderer;
     renderer.load(QString(":/include/Image/icons/%1_%2.svg")
                       .arg(_svgMap[_iconName]).arg(_themeMode == ElaThemeType::Light ? "black" : "white"));
     _pixmap.fill(Qt::transparent);
     if (iconheight*iconwidget)
-        _pixmap = _pixmap.scaled(iconwidget, iconheight);
+        _pixmap = _pixmap.scaled(iconwidget*2, iconheight*2);
     QPainter painter(&_pixmap);
     renderer.render(&painter);
 }

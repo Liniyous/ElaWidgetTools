@@ -39,7 +39,7 @@ void ElaSvgIcon::paintEvent(QPaintEvent* event)
     if (d->_pixmap.isNull()) {
         return;
     }
-    QSize pSize = d->_pixmap.size();
+    QSize pSize = d->_pixmap.size() / 2;
     int x = (width() - pSize.width()) / 2;
     int y = (height() - pSize.height()) / 2;
     QPainter painter(this);
