@@ -131,7 +131,6 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
     case ElaTextType::CardTitle:
     {
         textFont.setPixelSize(15);
-        textFont.setWeight(QFont::Medium);
         break;
     }
     case ElaTextType::CardsubTitle:
