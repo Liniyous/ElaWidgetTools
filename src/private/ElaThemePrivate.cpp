@@ -63,7 +63,7 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::BasicTextDisable] = QColor(0xA7, 0xA7, 0xA7);
     _lightThemeColorList[ElaThemeType::BasicTextPress] = QColor(0x5A, 0x5A, 0x5D);
     _darkThemeColorList[ElaThemeType::BasicTextPress] = QColor(0xBB, 0xBB, 0xBF);
-    _lightThemeColorList[ElaThemeType::BasicBorder] = QColor(0x00, 0x00, 0x00, 13);
+    _lightThemeColorList[ElaThemeType::BasicBorder] = QColor(0x00, 0x00, 0x00, 22);
     _darkThemeColorList[ElaThemeType::BasicBorder] = QColor(0xFF, 0xFF, 0xFF, 14);
     _lightThemeColorList[ElaThemeType::BasicAreaBorder] = QColor(0x00, 0x00, 0x00, 13);
     _darkThemeColorList[ElaThemeType::BasicAreaBorder] = QColor(0x24, 0x24, 0x24);
@@ -81,7 +81,7 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::BasicHover] = QColor(0xFF, 0xFF, 0xFF, 21);
     _lightThemeColorList[ElaThemeType::BasicPress] = QColor(0xF7, 0xF7, 0xF7);
     _darkThemeColorList[ElaThemeType::BasicPress] = QColor(0x3A, 0x3A, 0x3A);
-    _lightThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0x00, 0x00, 0x00, 47);
+    _lightThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0x00, 0x00, 0x00, 40);
     _darkThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0xFF, 0xFF, 0xFF, 14);
     _lightThemeColorList[ElaThemeType::BasicPageLine] = QColor(0x00, 0x00, 0x00, 17);
     _darkThemeColorList[ElaThemeType::BasicPageLine] = QColor(0x00, 0x00, 0x00, 46);

@@ -5,6 +5,9 @@
 #include <QObject>
 #include <QQueue>
 #include <QVariantMap>
+#include <QPixmap>
+#include <QPainter>
+#include <QSvgRenderer>
 
 #include "Def.h"
 #include "singleton.h"
@@ -69,6 +72,9 @@ private:
     ElaMessageBarType::PositionPolicy _policy;
     ElaMessageBarType::MessageMode _messageMode;
     qreal _createTime{0};
+
+    // 图标数据
+    QPixmap _pixmap;
 
     // 位置数据
     int _leftPadding{20};                // 左边框到图标中心
