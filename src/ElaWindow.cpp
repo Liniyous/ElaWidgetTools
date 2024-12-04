@@ -149,6 +149,12 @@ void ElaWindow::setAppBarHeight(int appBarHeight)
     Q_EMIT pAppBarHeightChanged();
 }
 
+int ElaWindow::getAppBarHeight() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getAppBarHeight();
+}
+
 QWidget* ElaWindow::getCustomWidget() const
 {
     Q_D(const ElaWindow);
@@ -199,12 +205,6 @@ void ElaWindow::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* w
     Q_D(ElaWindow);
     d->_appBar->setCustomWidget(customArea, widget);
     Q_EMIT customWidgetChanged();
-}
-
-int ElaWindow::getAppBarHeight() const
-{
-    Q_D(const ElaWindow);
-    return d->_appBar->getAppBarHeight();
 }
 
 void ElaWindow::setIsNavigationBarEnable(bool isVisible)
