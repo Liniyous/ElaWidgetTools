@@ -82,6 +82,19 @@ bool ElaWidget::getIsDefaultClosed() const
     return d->_appBar->getIsDefaultClosed();
 }
 
+void ElaWidget::setAppBarHeight(int appBarHeight)
+{
+    Q_D(ElaWidget);
+    d->_appBar->setAppBarHeight(appBarHeight);
+    Q_EMIT pAppBarHeightChanged();
+}
+
+int ElaWidget::getAppBarHeight() const
+{
+    Q_D(const ElaWidget);
+    return d->_appBar->getAppBarHeight();
+}
+
 void ElaWidget::moveToCenter()
 {
     if (isMaximized() || isFullScreen())
