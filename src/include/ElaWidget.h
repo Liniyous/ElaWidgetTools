@@ -13,6 +13,7 @@ class ELA_EXPORT ElaWidget : public QWidget
     Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
     Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
     Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
+    Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaWidget(QWidget* parent = nullptr);
