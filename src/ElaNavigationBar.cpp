@@ -28,7 +28,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 {
     Q_D(ElaNavigationBar);
     d->q_ptr = this;
-    setFixedWidth(300);
+    setFixedWidth(300); // navBar宽度
     d->_pIsTransparent = true;
 
     //用户卡片
@@ -59,7 +59,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     connect(d->_navigationButton, &ElaToolButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);
 
     d->_searchButton = new ElaToolButton(this);
-    d->_searchButton->setFixedSize(40, 38);
+    d->_searchButton->setFixedSize(40, 38); // 图标按钮尺寸
     d->_searchButton->setElaIcon(ElaIconType::MagnifyingGlass);
     d->_searchButton->setBorderRadius(8);
     connect(d->_searchButton, &ElaToolButton::clicked, d, &ElaNavigationBarPrivate::onNavigationButtonClicked);

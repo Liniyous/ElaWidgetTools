@@ -32,7 +32,7 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     bool _isSelectMarkDisplay{true};
     int _leftPadding{11};
-    int _iconAreaWidth{40};
+    int _iconAreaWidth{40}; // 图标宽度
     int _textRightSpacing{3};
     int _indicatorIconAreaWidth{34};
     ElaNavigationNode* _opacityAnimationTargetNode{nullptr};

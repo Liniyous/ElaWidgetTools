@@ -12,7 +12,7 @@
 ElaNavigationStyle::ElaNavigationStyle(QStyle* style)
 {
     _pOpacity = 1;
-    _pItemHeight = 40;
+    _pItemHeight = 40; // 未知
     _pLastSelectMarkTop = 10.0;
     _pLastSelectMarkBottom = 10.0;
     _pSelectMarkTop = 10.0;
@@ -184,13 +184,13 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                 painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 3, 3);
             }
 
-            // 图标绘制
+            // 图标绘制 图标按钮
             painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, BasicTextPress) : ElaThemeColor(_themeMode, BasicText));
             if (node->getAwesome() != ElaIconType::None)
             {
                 painter->save();
                 QFont iconFont = QFont("ElaAwesome");
-                iconFont.setPixelSize(17);
+                iconFont.setPixelSize(17); // 图标大小在这里
                 painter->setFont(iconFont);
                 painter->drawText(QRect(itemRect.x(), itemRect.y(), _iconAreaWidth, itemRect.height()), Qt::AlignCenter, QChar((unsigned short)node->getAwesome()));
                 painter->restore();
