@@ -28,7 +28,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 {
     Q_D(ElaNavigationBar);
     d->q_ptr = this;
-    setFixedWidth(300); // navBar宽度
+    setFixedWidth(d->_navBarMaxWidth); // navBar宽度
     d->_pIsTransparent = true;
 
     //用户卡片
@@ -74,7 +74,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_navigationButtonLayout->addWidget(d->_searchButton);
 
     d->_navigationSuggestLayout = new QHBoxLayout();
-    d->_navigationSuggestLayout->setContentsMargins(0, 0, 10, 0);
+    d->_navigationSuggestLayout->setContentsMargins(0, 0, 0, 0);
     d->_navigationSuggestLayout->setSpacing(6);
     d->_navigationSuggestLayout->addLayout(d->_navigationButtonLayout);
     d->_navigationSuggestLayout->addWidget(d->_navigationSuggestBox);
