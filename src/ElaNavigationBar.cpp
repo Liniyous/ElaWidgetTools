@@ -418,7 +418,7 @@ void ElaNavigationBar::paintEvent(QPaintEvent* event)
         painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
         painter.setBrush(ElaThemeColor(d->_themeMode, PopupBase));
         QRect baseRect = this->rect();
-        baseRect.adjust(-1, 0, -1, 0);
+        baseRect.adjust(-1, 2, -1, -1);
         QPainterPath path;
         path.moveTo(baseRect.topLeft());
         path.lineTo(QPoint(baseRect.right() - 8, baseRect.y()));

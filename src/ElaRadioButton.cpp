@@ -13,8 +13,10 @@ ElaRadioButton::ElaRadioButton(QWidget* parent)
     font.setPixelSize(15);
     setFont(font);
     setStyle(new ElaRadioButtonStyle(style()));
-    d->onThemeChanged(eTheme->getThemeMode());
-    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaRadioButtonPrivate::onThemeChanged);
+
+    connect(eTheme, &ElaTheme::themeModeChanged, [=](ElaThemeType::ThemeMode themeMode){
+        setStyleSheet(QString("background-color:transparent;color:%1;").arg(ElaThemeColor(themeMode, BasicText).name()));
+    });
 }
 
 ElaRadioButton::ElaRadioButton(const QString& text, QWidget* parent)

@@ -70,7 +70,7 @@ void ElaToolButton::setMenu(ElaMenu* menu)
     {
         return;
     }
-    menu->setMenuItemHeight(27);
+    menu->setMenuItemHeight(35);
     QToolButton::setMenu(menu);
     menu->installEventFilter(this);
 }

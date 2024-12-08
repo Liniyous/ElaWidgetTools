@@ -18,7 +18,7 @@ void ElaMicaBaseInitObject::onInitMicaBase(QImage img)
 {
     // QColorDialog
     // 统一处理为1920*1080以节省空间
-    img = img.scaled(QSize(1920, 1080), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    img = img.scaled(QSize(2560, 1660), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
     QImage blurImage = ElaExponentialBlur::doExponentialBlur(img, 500).toImage();
     QImage lightImage = blurImage;

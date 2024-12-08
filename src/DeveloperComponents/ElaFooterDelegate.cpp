@@ -162,11 +162,11 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     itemRect = option.rect;
 
     //顶边线绘制
-    if (index.row() == 0)
-    {
-        painter->setPen(ElaThemeColor(_themeMode, BasicPageLine));
-        painter->drawLine(option.rect.x(), itemRect.y() + 1, option.rect.x() + option.rect.width(), itemRect.y() + 1);
-    }
+    //if (index.row() == 0)
+    //{
+        //painter->setPen(ElaThemeColor(_themeMode, BasicPageLine));
+        //painter->drawLine(option.rect.x(), itemRect.y() + 1, option.rect.x() + option.rect.width(), itemRect.y() + 1);
+    //}
     // 图标绘制
     painter->setPen(index == _pPressIndex ? ElaThemeColor(_themeMode, BasicTextPress) : ElaThemeColor(_themeMode, BasicText));
     if (node->getAwesome() != ElaIconType::None)
