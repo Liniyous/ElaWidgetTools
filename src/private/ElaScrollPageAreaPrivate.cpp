@@ -17,7 +17,7 @@ QString ElaScrollPageAreaPrivate::colorToRgbaString(const QColor &color)
 
 QString ElaScrollPageAreaPrivate::getStyleStr()
 {
-    return QString("ElaScrollPageArea#ElaScrollPageArea{background-color:%1;border: 1px solid %2;"
+    return QString("ElaScrollPageArea{background-color:%1;border: 1px solid %2;"
                           "border-top-left-radius: %3px;border-top-right-radius: %4px;"
                           "border-bottom-left-radius: %5px;border-bottom-right-radius: %6px;}")
                       .arg(colorToRgbaString(ElaThemeColor(_themeMode, BasicBaseAlpha)))
