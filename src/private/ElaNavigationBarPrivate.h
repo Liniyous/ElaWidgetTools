@@ -63,7 +63,7 @@ private:
     ElaSuggestBox* _navigationSuggestBox{nullptr};
     ElaInteractiveCard* _userCard{nullptr};
     bool _isShowUserCard{true};
-    int _navBarMaxWidth{300};
+    int _navBarMaxWidth{280};
 
     QList<ElaNavigationNode*> _lastExpandedNodesList;
 

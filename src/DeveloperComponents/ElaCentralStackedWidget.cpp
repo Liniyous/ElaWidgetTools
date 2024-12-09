@@ -19,11 +19,13 @@ ElaCentralStackedWidget::~ElaCentralStackedWidget()
 void ElaCentralStackedWidget::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     _themeMode = themeMode;
+    setStyleSheet(getStyleStr());
 }
 
 void ElaCentralStackedWidget::setIsTransparent(bool isTransparent)
 {
     this->_isTransparent = isTransparent;
+    setStyleSheet(getStyleStr());
     update();
 }
 
@@ -35,29 +37,24 @@ bool ElaCentralStackedWidget::getIsTransparent() const
 void ElaCentralStackedWidget::setIsHasRadius(bool isHasRadius)
 {
     this->_isHasRadius = isHasRadius;
+    setStyleSheet(getStyleStr());
     update();
 }
 
-void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
+QString ElaCentralStackedWidget::colorToRgbaString(const QColor &color)
 {
-    if (!_isTransparent)
-    {
-        QPainter painter(this);
-        QRect targetRect = this->rect();
-        targetRect.adjust(1, 1, 10, 10);
-        painter.save();
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setPen(QPen(ElaThemeColor(_themeMode, BasicPageLine)));
-        painter.setBrush(ElaThemeColor(_themeMode, WindowCentralStackBase));
-        if (_isHasRadius)
-        {
-            painter.drawRoundedRect(targetRect, 10, 10);
-        }
-        else
-        {
-            painter.drawRect(targetRect);
-        }
-        painter.restore();
-    }
-    QStackedWidget::paintEvent(event);
+    return QString("rgba(%1, %2, %3, %4)").arg(color.red()).arg(color.green()).arg(color.blue()).arg(color.alphaF(), 0, 'f', 2);
+}
+
+
+QString ElaCentralStackedWidget::getStyleStr()
+{
+    if (_isTransparent)
+        return "ElaCentralStackedWidget#ElaCentralStackedWidget{background-color: transparent;}";
+    return QString("ElaCentralStackedWidget#ElaCentralStackedWidget{background-color: %1;border-top: 1px solid %2;"
+                   "border-left: 1px solid %2;border-right: none;border-bottom: none;"
+                   "border-top-left-radius: %3px;}")
+        .arg(colorToRgbaString(ElaThemeColor(_themeMode, WindowCentralStackBase)))
+        .arg(colorToRgbaString(ElaThemeColor(_themeMode, BasicPageLine)))
+        .arg(_isHasRadius ? 10 : 0);
 }

@@ -17,13 +17,13 @@ public:
 
     void setIsHasRadius(bool isHasRadius);
 
-protected:
-    virtual void paintEvent(QPaintEvent* event) override;
-
 private:
     ElaThemeType::ThemeMode _themeMode;
     bool _isTransparent{false};
     bool _isHasRadius{true};
+
+    QString colorToRgbaString(const QColor &color);
+    QString getStyleStr();
 };
 
 #endif // ELACENTRALSTACKEDWIDGET_H

@@ -189,7 +189,7 @@ void ElaScrollBar::contextMenuEvent(QContextMenuEvent* event)
     Q_D(ElaScrollBar);
     bool horiz = this->orientation() == Qt::Horizontal;
     QPointer<ElaMenu> menu = new ElaMenu(this);
-    menu->setMenuItemHeight(27);
+    menu->setMenuItemHeight(35);
     // Scroll here
     QAction* actScrollHere = menu->addElaIconAction(ElaIconType::UpDownLeftRight, tr("滚动到此处"));
     menu->addSeparator();

@@ -120,7 +120,7 @@ void ElaLineEdit::paintEvent(QPaintEvent* event)
 void ElaLineEdit::contextMenuEvent(QContextMenuEvent* event)
 {
     ElaMenu* menu = new ElaMenu(this);
-    menu->setMenuItemHeight(27);
+    menu->setMenuItemHeight(35);
     menu->setAttribute(Qt::WA_DeleteOnClose);
     QAction* action = nullptr;
     if (!isReadOnly())
