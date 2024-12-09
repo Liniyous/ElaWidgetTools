@@ -12,7 +12,7 @@ ElaScrollPageArea::ElaScrollPageArea(QWidget* parent)
     Q_D(ElaScrollPageArea);
     d->q_ptr = this;
     d->_pBorderRadius = 6;
-    setFixedHeight(75);
+    //setFixedHeight(75);
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
 }
