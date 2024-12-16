@@ -18,7 +18,7 @@ ElaSpinBox::ElaSpinBox(QWidget* parent)
     setFixedSize(120, 30);
     setStyle(new ElaSpinBoxStyle(style()));
     lineEdit()->setAlignment(Qt::AlignCenter);
-    lineEdit()->setStyleSheet("background-color:transparent");
+    lineEdit()->setStyleSheet(QString("background-color:transparent;color:%1;").arg(ElaThemeColor(eTheme->getThemeMode(), BasicText).name()));
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         lineEdit()->setStyleSheet(QString("background-color:transparent;color:%1;").arg(ElaThemeColor(themeMode, BasicText).name()));
     });

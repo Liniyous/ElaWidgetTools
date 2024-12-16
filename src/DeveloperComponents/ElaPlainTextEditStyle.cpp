@@ -34,7 +34,19 @@ void ElaPlainTextEditStyle::drawControl(ControlElement element, const QStyleOpti
             painter->setBrush(ElaThemeColor(_themeMode, BasicBorder));
             painter->drawRoundedRect(editRect, 6, 6);
 
-            painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+            //  背景绘制
+            if (fopt->state & QStyle::State_HasFocus)
+            {
+                painter->setBrush(ElaThemeColor(_themeMode, DialogBase));
+            }
+            else if (fopt->state & QStyle::State_MouseOver)
+            {
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
+            }
+            else
+            {
+                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+            }
             painter->drawRoundedRect(QRectF(editRect.x() + 1.5, editRect.y() + 1.5, editRect.width() - 3, editRect.height() - 3), 6, 6);
 
             // 底边线绘制
