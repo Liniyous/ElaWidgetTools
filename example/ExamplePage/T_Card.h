@@ -3,6 +3,7 @@
 
 #include "T_BasePage.h"
 
+class ElaLCDNumber;
 class ElaPromotionCard;
 class ElaPromotionView;
 class T_Card : public T_BasePage
@@ -13,6 +14,7 @@ public:
     ~T_Card();
 
 private:
+    ElaLCDNumber* _lcdNumber{nullptr};
     ElaPromotionCard* _promotionCard{nullptr};
     ElaPromotionView* _promotionView{nullptr};
 };

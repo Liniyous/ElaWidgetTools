@@ -2,9 +2,9 @@
 
 #include <QVBoxLayout>
 
+#include "ElaLCDNumber.h"
 #include "ElaPromotionCard.h"
 #include "ElaPromotionView.h"
-
 T_Card::T_Card(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -13,6 +13,12 @@ T_Card::T_Card(QWidget* parent)
 
     // 顶部元素
     createCustomWidget("一些常用的卡片组件被放置于此，可在此界面体验其效果并按需添加进项目中");
+
+    _lcdNumber = new ElaLCDNumber(this);
+    _lcdNumber->setIsUseAutoClock(true);
+    _lcdNumber->setIsTransparent(false);
+    //    _lcdNumber->setAutoClockFormat("hh:mm:ss");
+    _lcdNumber->setFixedHeight(100);
 
     _promotionCard = new ElaPromotionCard(this);
     _promotionCard->setFixedSize(600, 300);
@@ -62,6 +68,8 @@ T_Card::T_Card(QWidget* parent)
     centralWidget->setWindowTitle("ElaCard");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
     centerLayout->setContentsMargins(0, 0, 0, 0);
+    centerLayout->addWidget(_lcdNumber);
+    centerLayout->addSpacing(20);
     centerLayout->addWidget(_promotionCard);
     centerLayout->addSpacing(20);
     centerLayout->addWidget(_promotionView);

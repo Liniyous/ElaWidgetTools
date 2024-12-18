@@ -85,13 +85,13 @@ public:                           \
 private:                          \
     TYPE _p##M;
 
-#define Q_Q_CREATE(CLASS)                               \
-protected:                                              \
-    CLASS(CLASS##Private& dd, CLASS* parent = nullptr); \
-    QScopedPointer<CLASS##Private> d_ptr;               \
-                                                        \
-private:                                                \
-    Q_DISABLE_COPY(CLASS)                               \
+#define Q_Q_CREATE(CLASS)                                        \
+protected:                                                       \
+    explicit CLASS(CLASS##Private& dd, CLASS* parent = nullptr); \
+    QScopedPointer<CLASS##Private> d_ptr;                        \
+                                                                 \
+private:                                                         \
+    Q_DISABLE_COPY(CLASS)                                        \
     Q_DECLARE_PRIVATE(CLASS);
 
 #define Q_D_CREATE(CLASS) \
