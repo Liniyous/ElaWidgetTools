@@ -17,6 +17,7 @@ T_Card::T_Card(QWidget* parent)
     _lcdNumber = new ElaLCDNumber(this);
     _lcdNumber->setIsUseAutoClock(true);
     _lcdNumber->setIsTransparent(false);
+    //    _lcdNumber->setAutoClockFormat("hh:mm:ss");
     _lcdNumber->setFixedHeight(100);
 
     _promotionCard = new ElaPromotionCard(this);

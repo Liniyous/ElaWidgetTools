@@ -11,6 +11,8 @@ ElaLCDNumber::ElaLCDNumber(QWidget* parent)
     Q_D(ElaLCDNumber);
     d->q_ptr = this;
     d->_pIsUseAutoClock = false;
+    d->_pAutoClockFormat = "yyyy-MM-dd hh:mm:ss";
+    setDigitCount(d->_pAutoClockFormat.length());
     setSegmentStyle(QLCDNumber::Flat);
     setObjectName("ElaLCDNumber");
     setStyleSheet("#ElaLCDNumber{background-color:transparent;}");
@@ -18,7 +20,7 @@ ElaLCDNumber::ElaLCDNumber(QWidget* parent)
     setStyle(d->_lcdNumberStyle);
     d->_clockTimer = new QTimer(this);
     connect(d->_clockTimer, &QTimer::timeout, this, [=]() {
-        display(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+        display(QDateTime::currentDateTime().toString(d->_pAutoClockFormat));
     });
 
     d->onThemeModeChanged(eTheme->getThemeMode());
@@ -41,9 +43,9 @@ void ElaLCDNumber::setIsUseAutoClock(bool isUseAutoClock)
     d->_pIsUseAutoClock = isUseAutoClock;
     if (d->_pIsUseAutoClock)
     {
-        display(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+        setDigitCount(d->_pAutoClockFormat.length());
+        display(QDateTime::currentDateTime().toString(d->_pAutoClockFormat));
         d->_clockTimer->start(200);
-        setDigitCount(19);
     }
     else
     {
@@ -57,6 +59,20 @@ bool ElaLCDNumber::getIsUseAutoClock() const
 {
     Q_D(const ElaLCDNumber);
     return d->_pIsUseAutoClock;
+}
+
+void ElaLCDNumber::setAutoClockFormat(QString autoClockFormat)
+{
+    Q_D(ElaLCDNumber);
+    d->_pAutoClockFormat = autoClockFormat;
+    setDigitCount(d->_pAutoClockFormat.length());
+    Q_EMIT pAutoClockFormatChanged();
+}
+
+QString ElaLCDNumber::getAutoClockFormat() const
+{
+    Q_D(const ElaLCDNumber);
+    return d->_pAutoClockFormat;
 }
 
 void ElaLCDNumber::setIsTransparent(bool isTransparent)

@@ -12,6 +12,7 @@ class ElaLCDNumberPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(ElaLCDNumber)
     Q_PROPERTY_CREATE_D(bool, IsUseAutoClock)
+    Q_PROPERTY_CREATE_D(QString, AutoClockFormat)
 public:
     explicit ElaLCDNumberPrivate(QObject* parent = nullptr);
     ~ElaLCDNumberPrivate() override;
