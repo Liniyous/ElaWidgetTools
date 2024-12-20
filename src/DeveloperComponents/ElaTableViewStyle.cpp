@@ -30,10 +30,13 @@ void ElaTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         // 行覆盖绘制
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
+            const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
+            if (!tabView)
+            {
+                return;
+            }
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
-
-            const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
             QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
             if (selectionBehavior == QAbstractItemView::SelectRows)
             {
@@ -53,7 +56,6 @@ void ElaTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
                     painter->drawRect(vopt->rect);
                 }
             }
-
             painter->restore();
         }
         return;
@@ -173,9 +175,12 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
             // 背景绘制
-            this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
-
             const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
+            if (!tabView)
+            {
+                return;
+            }
+            this->drawPrimitive(QStyle::PE_PanelItemViewItem, option, painter, widget);
             QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
             // 内容绘制
             QRect itemRect = option->rect;
