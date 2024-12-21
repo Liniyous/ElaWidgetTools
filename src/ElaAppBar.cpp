@@ -392,11 +392,11 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
         }
         return 0;
     }
-    case WM_NCACTIVATE:
-    {
-        *result = TRUE;
-        return 1;
-    }
+    // case WM_NCACTIVATE:
+    // {
+    //     *result = TRUE;
+    //     return 1;
+    // }
     case WM_SIZE:
     {
         if (wParam == SIZE_RESTORED)

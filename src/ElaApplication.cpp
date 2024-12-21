@@ -58,6 +58,19 @@ QString ElaApplication::getMicaImagePath() const
     return d->_pMicaImagePath;
 }
 
+void ElaApplication::setWindowAttribute(QString windowAttribute)
+{
+    Q_D(ElaApplication);
+    d->_pWindowAttribute = windowAttribute;
+    Q_EMIT eTheme->themeModeChanged(d->_themeMode);
+}
+
+QString ElaApplication::getWindowAttribute() const
+{
+    Q_D(const ElaApplication);
+    return d->_pWindowAttribute;
+}
+
 void ElaApplication::init()
 {
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);

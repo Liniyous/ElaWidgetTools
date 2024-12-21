@@ -139,11 +139,11 @@ bool ElaDockWidget::nativeEvent(const QByteArray& eventType, void* message, long
         }
         return false;
     }
-    case WM_NCACTIVATE:
-    {
-        *result = TRUE;
-        return true;
-    }
+    // case WM_NCACTIVATE:
+    // {
+    //     *result = TRUE;
+    //     return true;
+    // }
     case WM_NCHITTEST:
     {
         POINT nativeLocalPos{GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};

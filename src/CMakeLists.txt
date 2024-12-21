@@ -134,3 +134,8 @@ configure_package_config_file(
 install(
     FILES ${PROJECT_BINARY_DIR}/${EXPORT_NAME}Config.cmake ${PROJECT_BINARY_DIR}/${EXPORT_NAME}ConfigVersion.cmake DESTINATION lib/cmake
 )
+
+# 添加 QWindowKit 安装路径到 CMAKE_PREFIX_PATH
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_SOURCE_DIR}install/lib/cmake/QWindowKit)
+find_package(QWindowKit COMPONENTS Core Widgets REQUIRED)
+target_link_libraries(ElaWidgetTools PUBLIC QWindowKit::Widgets)

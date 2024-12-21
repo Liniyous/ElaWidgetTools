@@ -4,7 +4,7 @@
 #include <QLinearGradient>
 #include <QMap>
 #include <QObject>
-
+#include <QWKWidgets/widgetwindowagent.h>
 #include "Def.h"
 #include "stdafx.h"
 class ElaEvent;
@@ -59,6 +59,10 @@ private:
     qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);
     void _doNavigationDisplayModeChange();
+
+    void _doWindowAttributeModeChange(QString mode);
+    QWK::WidgetWindowAgent *_windowAgent;
+    QString _oldWindowAttribute;
 };
 
 #endif // ELAWINDOWPRIVATE_H

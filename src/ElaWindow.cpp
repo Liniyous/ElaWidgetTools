@@ -32,6 +32,9 @@ ElaWindow::ElaWindow(QWidget* parent)
     Q_D(ElaWindow);
     d->q_ptr = this;
 
+    d->_windowAgent = new QWK::WidgetWindowAgent(this);
+    d->_windowAgent->setup(this);
+
     setProperty("ElaBaseClassName", "ElaWindow");
     resize(1020, 680); // 默认宽高
 
@@ -92,12 +95,6 @@ ElaWindow::ElaWindow(QWidget* parent)
 
     //延时渲染
     QTimer::singleShot(1, this, [=] {
-        QPalette palette = this->palette();
-        palette.setBrush(QPalette::Window, ElaThemeColor(d->_themeMode, WindowBase));
-        this->setPalette(palette);
-    });
-    eApp->syncMica(this);
-    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
         d->onThemeModeChanged(d->_themeMode);
     });
 }

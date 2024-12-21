@@ -15,6 +15,7 @@ class ELA_EXPORT ElaApplication : public QObject
     Q_SINGLETON_CREATE_H(ElaApplication)
     Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
     Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
+    Q_PROPERTY_CREATE_Q_H(QString, WindowAttribute)
 private:
     explicit ElaApplication(QObject* parent = nullptr);
     ~ElaApplication();

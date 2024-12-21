@@ -235,11 +235,11 @@ bool ElaContentDialog::nativeEvent(const QByteArray& eventType, void* message, l
         }
         return false;
     }
-    case WM_NCACTIVATE:
-    {
-        *result = TRUE;
-        return true;
-    }
+    // case WM_NCACTIVATE:
+    // {
+    //     *result = TRUE;
+    //     return true;
+    // }
     case WM_NCCALCSIZE:
     {
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))

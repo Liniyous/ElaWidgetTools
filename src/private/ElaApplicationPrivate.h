@@ -13,6 +13,7 @@ class ElaApplicationPrivate : public QObject
     Q_D_CREATE(ElaApplication)
     Q_PROPERTY_CREATE_D(bool, IsEnableMica)
     Q_PROPERTY_CREATE_D(QString, MicaImagePath)
+    Q_PROPERTY_CREATE_D(QString, WindowAttribute)
 public:
     explicit ElaApplicationPrivate(QObject* parent = nullptr);
     ~ElaApplicationPrivate();
