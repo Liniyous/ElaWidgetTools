@@ -8,15 +8,26 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BUILD_ELAWIDGETTOOLS_SRC FALSE CACHE BOOL "Build Src")
 set(BUILD_ELAWIDGETTOOLS_EXAMPLE FALSE CACHE BOOL "Build Example")
+set(BUILD_ELAWIDGETTOOLS_EXAMPLEX FALSE CACHE BOOL "Build ExampleX")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-add_subdirectory(src)
+add_subdirectory(qwindowkit)
+
+if(BUILD_ELAWIDGETTOOLS_SRC)
+    add_subdirectory(src)
+endif ()
+
 if(BUILD_ELAWIDGETTOOLS_EXAMPLE)
   add_subdirectory(example)
+endif ()
+
+if(BUILD_ELAWIDGETTOOLS_EXAMPLEX)
+  add_subdirectory(examplex)
 endif ()
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

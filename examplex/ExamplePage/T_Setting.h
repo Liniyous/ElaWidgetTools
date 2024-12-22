@@ -2,6 +2,7 @@
 #define T_SETTING_H
 
 #include "T_BasePage.h"
+#include "../Function/database.h"
 
 class ElaRadioButton;
 class ElaToggleSwitch;
@@ -29,6 +30,9 @@ private:
     ElaRadioButton* _micaButton{nullptr};
     ElaRadioButton* _altButton{nullptr};
     ElaRadioButton* _noneButton{nullptr};
+
+    bool initing=false;
+    void initConf();
 };
 
 #endif // T_SETTING_H

@@ -1,0 +1,3 @@
+[submodule "qwindowkit"]
+	path = qwindowkit
+	url = git@github.com:toddming/qwindowkit.git

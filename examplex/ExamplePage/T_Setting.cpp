@@ -38,6 +38,8 @@ T_Setting::T_Setting(QWidget* parent)
     themeSwitchLayout->addStretch();
     themeSwitchLayout->addWidget(_themeComboBox);
     connect(_themeComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [=](int index) {
+        if (initing)
+            return;
         if (index == 0)
         {
             eTheme->setThemeMode(ElaThemeType::Light);
@@ -46,8 +48,11 @@ T_Setting::T_Setting(QWidget* parent)
         {
             eTheme->setThemeMode(ElaThemeType::Dark);
         }
+        DataBase::getInstance()->setConf("ui", "theme", index);
     });
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        if (initing)
+            return;
         _themeComboBox->blockSignals(true);
         if (themeMode == ElaThemeType::Light)
         {
@@ -58,6 +63,7 @@ T_Setting::T_Setting(QWidget* parent)
             _themeComboBox->setCurrentIndex(1);
         }
         _themeComboBox->blockSignals(false);
+        //DataBase::getInstance()->setConf("theme", int(themeMode));
     });
 
     ElaText* helperText = new ElaText("应用程序设置", this);
@@ -76,7 +82,10 @@ T_Setting::T_Setting(QWidget* parent)
     micaSwitchLayout->addStretch();
     micaSwitchLayout->addWidget(_micaSwitchButton);
     connect(_micaSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         eApp->setIsEnableMica(checked);
+        DataBase::getInstance()->setConf("ui", "mica", checked);
     });
 
     _logSwitchButton = new ElaToggleSwitch(this);
@@ -91,12 +100,15 @@ T_Setting::T_Setting(QWidget* parent)
     logSwitchLayout->addStretch();
     logSwitchLayout->addWidget(_logSwitchButton);
     connect(_logSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         ElaLog::getInstance()->initMessageLog(checked);
         if (checked) {
             qDebug() << "日志已启用!";
         } else {
             qDebug() << "日志已关闭!";
         }
+        DataBase::getInstance()->setConf("ui", "log", checked);
     });
 
     _minimumButton = new ElaRadioButton("Minimum", this);
@@ -118,23 +130,35 @@ T_Setting::T_Setting(QWidget* parent)
     displayModeLayout->addWidget(_maximumButton);
     displayModeLayout->addWidget(_autoButton);
     connect(_minimumButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             window->setNavigationBarDisplayMode(ElaNavigationType::Minimal);
+            DataBase::getInstance()->setConf("ui", "navBar", ElaNavigationType::Minimal);
         }
     });
     connect(_compactButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             window->setNavigationBarDisplayMode(ElaNavigationType::Compact);
+            DataBase::getInstance()->setConf("ui", "navBar", ElaNavigationType::Compact);
         }
     });
     connect(_maximumButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             window->setNavigationBarDisplayMode(ElaNavigationType::Maximal);
+            DataBase::getInstance()->setConf("ui", "navBar", ElaNavigationType::Maximal);
         }
     });
     connect(_autoButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             window->setNavigationBarDisplayMode(ElaNavigationType::Auto);
+            DataBase::getInstance()->setConf("ui", "navBar", ElaNavigationType::Auto);
         }
     });
 
@@ -160,26 +184,36 @@ T_Setting::T_Setting(QWidget* parent)
     windowModeLayout->addWidget(_altButton);
     windowModeLayout->addWidget(_noneButton);
     connect(_dwmblueButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             eApp->setWindowAttribute("dwm-blur");
         }
     });
     connect(_acrylicButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             eApp->setWindowAttribute("acrylic-material");
         }
     });
     connect(_micaButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             eApp->setWindowAttribute("mica");
         }
     });
     connect(_altButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             eApp->setWindowAttribute("mica-alt");
         }
     });
     connect(_noneButton, &ElaRadioButton::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         if (checked) {
             eApp->setWindowAttribute("none");
         }
@@ -197,7 +231,10 @@ T_Setting::T_Setting(QWidget* parent)
     transSwitchLayout->addStretch();
     transSwitchLayout->addWidget(_transSwitchButton);
     connect(_transSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         window->setIsCentralStackedWidgetTransparent(checked);
+        DataBase::getInstance()->setConf("ui", "trans", checked);
         //eTheme->setThemeMode(_themeComboBox->currentIndex() == 0 ? ElaThemeType::Light : ElaThemeType::Dark);
     });
 
@@ -213,7 +250,10 @@ T_Setting::T_Setting(QWidget* parent)
     userSwitchLayout->addStretch();
     userSwitchLayout->addWidget(_userSwitchButton);
     connect(_userSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        if (initing)
+            return;
         window->setUserInfoCardVisible(!checked);
+        DataBase::getInstance()->setConf("ui", "hideUserCard", checked);
     });
 
     QWidget* centralWidget = new QWidget(this);
@@ -235,9 +275,30 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 20, 20);
     addCentralWidget(centralWidget, true, true, 0);
+
+    initConf();
 }
 
 T_Setting::~T_Setting()
 {
 }
 
+void T_Setting::initConf()
+{
+    initing = true;
+
+    QMap<QString, QString> uiConf = eBase->getConfsByGroup("ui");
+
+    _themeComboBox->setCurrentIndex(uiConf["theme"].toInt());
+    _micaSwitchButton->setIsToggled(uiConf["mica"].toInt());
+    _logSwitchButton->setIsToggled(uiConf["log"].toInt());
+    _transSwitchButton->setIsToggled(uiConf["trans"].toInt());
+    _userSwitchButton->setIsToggled(uiConf["hideUserCard"].toInt());
+
+    ElaNavigationType::NavigationDisplayMode navType = static_cast<ElaNavigationType::NavigationDisplayMode>(uiConf["navBar"].toInt());
+    _minimumButton->setChecked(navType == ElaNavigationType::Minimal);
+    _compactButton->setChecked(navType == ElaNavigationType::Compact);
+    _maximumButton->setChecked(navType == ElaNavigationType::Maximal);
+    _autoButton->setChecked(navType == ElaNavigationType::Auto);
+    initing = false;
+}
