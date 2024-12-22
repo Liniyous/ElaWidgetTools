@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QScreen>
 #include <QVBoxLayout>
-
+#include <QTimer>
 #include "ElaApplication.h"
 #include "ElaTheme.h"
 #include "private/ElaWidgetPrivate.h"
@@ -15,9 +15,14 @@ ElaWidget::ElaWidget(QWidget* parent)
 {
     Q_D(ElaWidget);
     d->q_ptr = this;
+
+    d->_windowAgent = new QWK::WidgetWindowAgent(this);
+    d->_windowAgent->setup(this);
+
     resize(500, 500); // 默认宽高
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
+    setStyleSheet("#ElaWidget{background-color:transparent;}");
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
@@ -30,17 +35,12 @@ ElaWidget::ElaWidget(QWidget* parent)
 
     // 主题
     d->_themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
-        d->_themeMode = themeMode;
-        update();
-    });
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaWidgetPrivate::onThemeModeChanged);
 
-    d->_isEnableMica = eApp->getIsEnableMica();
-    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
-        d->_isEnableMica = eApp->getIsEnableMica();
-        update();
+    //延时渲染
+    QTimer::singleShot(1, this, [=] {
+        d->onThemeModeChanged(d->_themeMode);
     });
-    eApp->syncMica(this);
 }
 
 ElaWidget::~ElaWidget()
@@ -126,18 +126,3 @@ ElaAppBarType::ButtonFlags ElaWidget::getWindowButtonFlags() const
     return d_ptr->_appBar->getWindowButtonFlags();
 }
 
-void ElaWidget::paintEvent(QPaintEvent* event)
-{
-    Q_D(ElaWidget);
-    if (!d->_isEnableMica)
-    {
-        QPainter painter(this);
-        painter.save();
-        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
-        painter.drawRect(rect());
-        painter.restore();
-    }
-    QWidget::paintEvent(event);
-}

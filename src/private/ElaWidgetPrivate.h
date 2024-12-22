@@ -2,7 +2,7 @@
 #define ELAWIDGETPRIVATE_H
 
 #include <QObject>
-
+#include <QWKWidgets/widgetwindowagent.h>
 #include "Def.h"
 class ElaWidget;
 class ElaAppBar;
@@ -13,11 +13,16 @@ class ElaWidgetPrivate : public QObject
 public:
     explicit ElaWidgetPrivate(QObject* parent = nullptr);
     ~ElaWidgetPrivate();
+    Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
     ElaThemeType::ThemeMode _themeMode;
     bool _isEnableMica;
     ElaAppBar* _appBar{nullptr};
+
+    void _doWindowAttributeModeChange(QString mode);
+    QWK::WidgetWindowAgent *_windowAgent;
+    QString _oldWindowAttribute;
 };
 
 #endif // ELAWIDGETPRIVATE_H

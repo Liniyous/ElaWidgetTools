@@ -29,8 +29,6 @@ Q_SIGNALS:
     Q_SIGNAL void themeChangeButtonClicked();
     Q_SIGNAL void closeButtonClicked();
 
-protected:
-    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // ELAWIDGET_H
