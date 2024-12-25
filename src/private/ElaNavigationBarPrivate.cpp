@@ -19,6 +19,7 @@
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxPrivate.h"
 #include "ElaToolButton.h"
+#include "ElaTheme.h"
 
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
@@ -701,5 +702,26 @@ void ElaNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnim
         userButtonAnimation->setEndValue(QRect(13, 18, 64, 64));
         userButtonAnimation->setDuration(isAnimation ? 130 : 0);
         userButtonAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+}
+
+QString ElaNavigationBarPrivate::colorToRgbaString(const QColor &color)
+{
+    return QString("rgba(%1, %2, %3, %4)").arg(color.red()).arg(color.green()).arg(color.blue()).arg(color.alphaF(), 0, 'f', 2);
+}
+
+QString ElaNavigationBarPrivate::getStyleStr()
+{
+    if (!_pIsTransparent) {
+        return QString("ElaNavigationBar{background-color:%1;border-top: 1px solid %2;"
+                       "border-right: 1px solid %2;border-bottom: 1px solid %2;"
+                       "border-top-left-radius: %3px;border-top-right-radius: %4px;"
+                       "border-bottom-left-radius: %5px;border-bottom-right-radius: %6px;}")
+                .arg(colorToRgbaString(ElaThemeColor(_themeMode, PopupBase)))
+                .arg(colorToRgbaString(ElaThemeColor(_themeMode, PopupBorder)))
+                .arg(0).arg(8)
+                .arg(0).arg(8);
+    } else {
+        return QString("ElaNavigationBar{background-color: transparent; border: none;}");
     }
 }

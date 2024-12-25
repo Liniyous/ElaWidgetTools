@@ -142,8 +142,10 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 
     //主题设置
     d->_themeMode = eTheme->getThemeMode();
+    setStyleSheet(d->getStyleStr());
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
+        setStyleSheet(d->getStyleStr());
     });
 }
 
@@ -403,6 +405,7 @@ void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode d
     {
         return;
     }
+    setStyleSheet(d->getStyleStr());
     d->_doComponentAnimation(displayMode, isAnimation);
     d->_raiseNavigationBar();
 }
@@ -410,25 +413,10 @@ void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode d
 void ElaNavigationBar::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaNavigationBar);
-    if (!d->_pIsTransparent)
-    {
-        QPainter painter(this);
-        painter.setRenderHints(QPainter::Antialiasing);
-        painter.save();
-        painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
-        painter.setBrush(ElaThemeColor(d->_themeMode, PopupBase));
-        QRect baseRect = this->rect();
-        baseRect.adjust(-1, 2, -1, -1);
-        QPainterPath path;
-        path.moveTo(baseRect.topLeft());
-        path.lineTo(QPoint(baseRect.right() - 8, baseRect.y()));
-        path.arcTo(QRectF(baseRect.right() - 16, baseRect.y(), 16, 16), 90, -90);
-        path.lineTo(QPoint(baseRect.right(), baseRect.bottom() - 8));
-        path.arcTo(QRectF(baseRect.right() - 16, baseRect.bottom() - 16, 16, 16), 0, -90);
-        path.lineTo(baseRect.bottomLeft());
-        path.closeSubpath();
-        painter.drawPath(path);
-        painter.restore();
-    }
+    QStyleOption opt;
+    opt.initFrom(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+
     QWidget::paintEvent(event);
 }

@@ -58,7 +58,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     setStyleSheet("#ElaAppBar{background-color:transparent;}");
     d->_routeBackButton = new ElaToolButton(this);
     d->_routeBackButton->setElaIcon(ElaIconType::ArrowLeft);
-    d->_routeBackButton->setFixedSize(40, 30);
+    d->_routeBackButton->setFixedSize(30, 30);
     d->_routeBackButton->setEnabled(false);
     // 路由跳转
     connect(d->_routeBackButton, &ElaIconButton::clicked, this, &ElaAppBar::routeBackButtonClicked);
@@ -66,7 +66,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     // 导航栏展开按钮
     d->_navigationButton = new ElaToolButton(this);
     d->_navigationButton->setElaIcon(ElaIconType::Bars);
-    d->_navigationButton->setFixedSize(40, 30);
+    d->_navigationButton->setFixedSize(30, 30);
     d->_navigationButton->setObjectName("NavigationButton");
     d->_navigationButton->setVisible(false);
     // 展开导航栏
@@ -75,7 +75,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     // 设置置顶
     d->_stayTopButton = new ElaToolButton(this);
     d->_stayTopButton->setElaIcon(ElaIconType::ArrowUpToArc);
-    d->_stayTopButton->setFixedSize(40, 30);
+    d->_navigationButton->setFixedSize(30, 30);
     connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
 
@@ -89,7 +89,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     else
     {
         d->_iconLabel->setPixmap(parent->windowIcon().pixmap(18, 18));
-        d->_iconLabelLayout->setContentsMargins(5, 5, 0, 0);
+        d->_iconLabelLayout->setContentsMargins(0, 5, 0, 0);
     }
     connect(parent, &QWidget::windowIconChanged, this, [=](const QIcon& icon) {
         d->_iconLabel->setPixmap(icon.pixmap(18, 18));

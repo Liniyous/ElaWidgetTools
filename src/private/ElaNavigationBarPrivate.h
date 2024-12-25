@@ -88,6 +88,9 @@ private:
     void _doNavigationButtonAnimation(bool isCompact, bool isAnimation);
     void _doSearchButtonAnimation(bool isCompact, bool isAnimation);
     void _doUserButtonAnimation(bool isCompact, bool isAnimation);
+
+    QString colorToRgbaString(const QColor &color);
+    QString getStyleStr();
 };
 
 #endif // ELANAVIGATIONBARPRIVATE_H
