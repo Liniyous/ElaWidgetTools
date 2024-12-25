@@ -3,6 +3,7 @@
 
 #include "T_BasePage.h"
 
+class ElaPushButton;
 class ElaToggleSwitch;
 class ElaToggleButton;
 class ElaComboBox;
@@ -26,6 +27,7 @@ protected:
 private:
     ElaToggleSwitch* _toggleSwitch{nullptr};
     ElaToggleButton* _toggleButton{nullptr};
+    ElaPushButton * _pushButton{nullptr};
     ElaComboBox* _comboBox{nullptr};
     ElaMultiSelectComboBox* _multiSelectComboBox{nullptr};
     ElaMessageButton* _messageButton{nullptr};

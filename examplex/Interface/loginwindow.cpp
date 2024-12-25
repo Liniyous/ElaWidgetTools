@@ -20,6 +20,16 @@ LoginWindow::LoginWindow(QWidget *parent)
     setWindowTitle("登录");
 
     setWindowButtonFlags(ElaAppBarType::CloseButtonHint | ElaAppBarType::MaximizeButtonHint | ElaAppBarType::MinimizeButtonHint);
+
+    ui->btnLogin->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, PrimaryNormal));
+    ui->btnLogin->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, PrimaryNormal));
+    ui->btnLogin->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, PrimaryHover));
+    ui->btnLogin->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, PrimaryHover));
+    ui->btnLogin->setLightPressColor(ElaThemeColor(ElaThemeType::Light, PrimaryPress));
+    ui->btnLogin->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, PrimaryPress));
+    ui->btnLogin->setLightTextColor(Qt::white);
+    ui->btnLogin->setDarkTextColor(Qt::black);
+
     ui->label->setTextStyle(ElaTextType::Body);
     ui->label_4->setTextStyle(ElaTextType::Body);
     ui->label_5->setTextStyle(ElaTextType::Body);

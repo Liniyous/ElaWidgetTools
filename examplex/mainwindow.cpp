@@ -34,8 +34,8 @@ void MainWindow::initWindow()
     setNavigationBarDisplayMode(static_cast<ElaNavigationType::NavigationDisplayMode>(map["navBar"].toInt()));
     setWindowButtonFlags(ElaAppBarType::CloseButtonHint | ElaAppBarType::MaximizeButtonHint |
                          ElaAppBarType::MinimizeButtonHint | ElaAppBarType::ThemeChangeButtonHint |
-                         ElaAppBarType::RouteBackButtonHint | ElaAppBarType::NavigationButtonHint |
-                         ElaAppBarType::WindowIconHint | ElaAppBarType::WindowTitleHint);
+                         ElaAppBarType::RouteBackButtonHint | ElaAppBarType::WindowIconHint |
+                         ElaAppBarType::WindowTitleHint);
 
     setUserInfoCardPixmap(QPixmap(":/Resource/Image/eye.jpg"));
     setUserInfoCardTitle("Todd");

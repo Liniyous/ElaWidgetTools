@@ -63,30 +63,11 @@ T_Setting::T_Setting(QWidget* parent)
             _themeComboBox->setCurrentIndex(1);
         }
         _themeComboBox->blockSignals(false);
-        //DataBase::getInstance()->setConf("theme", int(themeMode));
     });
 
     ElaText* helperText = new ElaText("应用程序设置", this);
     helperText->setWordWrap(false);
     helperText->setTextPixelSize(18);
-
-    _micaSwitchButton = new ElaToggleSwitch(this);
-    ElaScrollPageArea* micaSwitchArea = new ElaScrollPageArea(this);
-    micaSwitchArea->setFixedHeight(75);
-    QHBoxLayout* micaSwitchLayout = new QHBoxLayout(micaSwitchArea);
-    micaSwitchLayout->setContentsMargins(15, 6, 10, 6);
-    ElaText* micaSwitchText = new ElaText("启用云母效果", this);
-    micaSwitchText->setWordWrap(false);
-    micaSwitchText->setTextPixelSize(15);
-    micaSwitchLayout->addWidget(micaSwitchText);
-    micaSwitchLayout->addStretch();
-    micaSwitchLayout->addWidget(_micaSwitchButton);
-    connect(_micaSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
-        if (initing)
-            return;
-        eApp->setIsEnableMica(checked);
-        DataBase::getInstance()->setConf("ui", "mica", checked);
-    });
 
     _logSwitchButton = new ElaToggleSwitch(this);
     ElaScrollPageArea* logSwitchArea = new ElaScrollPageArea(this);
@@ -267,7 +248,6 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addWidget(helperText);
     centerLayout->addSpacing(10);
     centerLayout->addWidget(logSwitchArea);
-    centerLayout->addWidget(micaSwitchArea);
     centerLayout->addWidget(displayModeArea);
     centerLayout->addWidget(windowModeArea);
     centerLayout->addWidget(transSwitchArea);
@@ -290,7 +270,6 @@ void T_Setting::initConf()
     QMap<QString, QString> uiConf = eBase->getConfsByGroup("ui");
 
     _themeComboBox->setCurrentIndex(uiConf["theme"].toInt());
-    _micaSwitchButton->setIsToggled(uiConf["mica"].toInt());
     _logSwitchButton->setIsToggled(uiConf["log"].toInt());
     _transSwitchButton->setIsToggled(uiConf["trans"].toInt());
     _userSwitchButton->setIsToggled(uiConf["hideUserCard"].toInt());

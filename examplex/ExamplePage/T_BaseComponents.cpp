@@ -3,6 +3,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include "ElaTheme.h"
+#include "ElaPushButton.h"
 #include "ElaCheckBox.h"
 #include "ElaComboBox.h"
 #include "ElaMessageButton.h"
@@ -65,6 +67,35 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     toggleButtonLayout->addWidget(toggleButtonDisableSwitch);
     toggleButtonLayout->addWidget(toggleButtonDisableText);
     toggleButtonLayout->addSpacing(10);
+
+    _pushButton = new ElaPushButton("pushButton", this);
+    _pushButton->setFixedWidth(120);
+    _pushButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, PrimaryNormal));
+    _pushButton->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, PrimaryNormal));
+    _pushButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, PrimaryHover));
+    _pushButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, PrimaryHover));
+    _pushButton->setLightPressColor(ElaThemeColor(ElaThemeType::Light, PrimaryPress));
+    _pushButton->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, PrimaryPress));
+    _pushButton->setLightTextColor(Qt::white);
+    _pushButton->setDarkTextColor(Qt::black);
+    ElaScrollPageArea* pushButtonArea = new ElaScrollPageArea(this);
+    pushButtonArea->setFixedHeight(75);
+    QHBoxLayout* pushButtonLayout = new QHBoxLayout(pushButtonArea);
+    pushButtonLayout->setContentsMargins(15, 6, 10, 6);
+    ElaText* pushButtonText = new ElaText("ElaPushButton", this);
+    pushButtonText->setTextPixelSize(15);
+    pushButtonLayout->addWidget(pushButtonText);
+    pushButtonLayout->addWidget(_pushButton);
+    pushButtonLayout->addStretch();
+    ElaToggleSwitch* pushButtonDisableSwitch = new ElaToggleSwitch(this);
+    ElaText* pushButtonDisableText = new ElaText("禁用", this);
+    pushButtonDisableText->setTextPixelSize(15);
+    connect(pushButtonDisableSwitch, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        _pushButton->setDisabled(checked);
+    });
+    pushButtonLayout->addWidget(pushButtonDisableSwitch);
+    pushButtonLayout->addWidget(pushButtonDisableText);
+    pushButtonLayout->addSpacing(10);
 
     _comboBox = new ElaComboBox(this);
     QStringList comboList{
@@ -239,6 +270,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centralWidget->setWindowTitle("ElaBaseComponents");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
     centerLayout->addWidget(toggleSwitchArea);
+    centerLayout->addWidget(pushButtonArea);
     centerLayout->addWidget(toggleButtonArea);
     centerLayout->addWidget(comboBoxArea);
     centerLayout->addWidget(multiSelectComboBoxArea);
