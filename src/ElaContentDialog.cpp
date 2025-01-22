@@ -145,10 +145,14 @@ void ElaContentDialog::setMiddleButtonText(QString text)
     d->_middleButton->setText(text);
 }
 
-void ElaContentDialog::setRightButtonText(QString text)
-{
+void ElaContentDialog::setRightButtonText(QString text) {
     Q_D(ElaContentDialog);
     d->_rightButton->setText(text);
+}
+
+void ElaContentDialog::setMiddleButtonVisible(bool visible){
+    Q_D(ElaContentDialog);
+    d->_middleButton->setVisible(visible);
 }
 
 void ElaContentDialog::close()

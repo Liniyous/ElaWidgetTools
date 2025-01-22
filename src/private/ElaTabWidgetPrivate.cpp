@@ -101,6 +101,7 @@ void ElaTabWidgetPrivate::onTabCloseRequested(int index)
     else
     {
         q->removeTab(index);
-        closeWidget->deleteLater();
+        // fuqaq : deleteLater due to project cant store widget status then discard it
+        // closeWidget->deleteLater();
     }
 }
