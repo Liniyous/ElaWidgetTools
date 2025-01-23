@@ -47,7 +47,7 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     )
 else ()
     qt5_add_big_resources(PROJECT_SOURCES
-        ../src/include/ElaWidgetTools.qrc
+        ../ElaWidgetTools/include/ElaWidgetTools.qrc
         ElaWidgetToolsExample.qrc
     )
     add_executable(${PROJECT_NAME}
