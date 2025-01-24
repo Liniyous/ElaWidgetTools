@@ -68,6 +68,15 @@
 #define GENIO_LIT_ENDIAN
 #endif
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+#if !defined(GENIO_UINT64)
+#define GENIO_UINT64 unsigned long long int
+#endif
+
+#if !defined(GENIO_INT64)
+#define GENIO_INT64 long long int
+#endif
+#else
 #if !defined(GENIO_UINT64)
 #define GENIO_UINT64 unsigned __int64
 #endif
@@ -75,7 +84,7 @@
 #if !defined(GENIO_INT64)
 #define GENIO_INT64 __int64
 #endif
-
+#endif
 #elif defined(__alpha) && defined(__unix__)
 #if !defined(GENIO_LIT_ENDIAN)
 #define GENIO_LIT_ENDIAN
@@ -195,8 +204,13 @@
 
 // MSVC's way of declaring large integer constants
 #if defined(_WIN32)
+#if defined(__MINGW32__) || defined(__MINGW64__)
+#define I64(x) x##LL
+#define UI64(x) x##ULL
+#else
 #define I64(x) x##i64
 #define UI64(x) x##ui64
+#endif
 // GCC's way of declaring large integer constants
 #else
 #define I64(x) x##LL

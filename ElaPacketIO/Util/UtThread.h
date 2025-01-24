@@ -5,6 +5,7 @@
 
 #include "ElaPacketIO_Export.h"
 
+#include <exception>
 #include <thread>
 #include <vector>
 
