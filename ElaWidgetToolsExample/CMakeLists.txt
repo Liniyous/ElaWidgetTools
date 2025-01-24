@@ -139,7 +139,6 @@ install(
     FILES ${QT_SDK_DIR}/bin/Qt6Core.dll
     FILES ${QT_SDK_DIR}/bin/Qt6Gui.dll
     FILES ${QT_SDK_DIR}/bin/Qt6Network.dll
-    FILES ${QT_SDK_DIR}/bin/Qt6Pdf.dll
     FILES ${QT_SDK_DIR}/bin/Qt6Svg.dll
     FILES ${QT_SDK_DIR}/bin/Qt6Xml.dll
     DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
