@@ -11,8 +11,6 @@
 #include "PakProcessor.h"
 #include "PakSerialize.h"
 
-static std::mutex sendKey;
-static std::mutex recvKey;
 PakUDP_IO::PakUDP_IO(GenUDP_Connection* aConnection, PakProcessor* aProcessorPtr, PakHeader* aHeaderType)
     : PakSocketIO(aHeaderType), mConnectionPtr(aConnection), mProcessorPtr(aProcessorPtr), mSerializeWriter(new PakO(&mBufO)), mSerializeReader(new PakI(&mBufI)), mHasReadHeader(false)
 {
@@ -34,7 +32,6 @@ PakUDP_IO::~PakUDP_IO()
 //! @return 'true' if successfully sent.
 bool PakUDP_IO::Send(const PakPacket& aPkt)
 {
-    std::lock_guard<std::mutex> guard(sendKey);
     mBufO.GetPutPos() += mHeaderSize;
     PakProcessor::PacketInfo* info = mProcessorPtr->GetPacketInfo(aPkt.ID());
     // should be constant operation...
@@ -56,7 +53,6 @@ bool PakUDP_IO::Send(const PakPacket& aPkt)
 //! @return 'true' if a PakPacket header was read
 bool PakUDP_IO::ReceiveHeader(int& aPacketId, int& aPacketLength, int aWaitTimeMicroSeconds)
 {
-    std::lock_guard<std::mutex> guard(recvKey);
     if (!mHasReadHeader)
     {
         mBufI.Reset();
@@ -86,7 +82,6 @@ bool PakUDP_IO::ReceiveHeader(int& aPacketId, int& aPacketLength, int aWaitTimeM
 //! @return 'true' if the PakPacket was successfully read.
 bool PakUDP_IO::Receive(PakPacket& aPkt)
 {
-    std::lock_guard<std::mutex> guard(recvKey);
     bool lReturn = false;
     if (mHasReadHeader)
     {
