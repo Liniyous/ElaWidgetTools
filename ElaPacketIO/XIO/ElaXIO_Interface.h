@@ -22,7 +22,7 @@ class ElaXIO_Connection;
 class ElaXIO_HeartbeatPkt;
 class ElaXIO_InitializePkt;
 class ElaXIO_Packet;
-class ElaXIO_UDP_Header;
+class ElaXIO_UdpHeader;
 
 #define PACKET_HANDLE_FUNC_DEFINE(INTERFACE, ...) INTERFACE->addCallback(INTERFACE->Connect(__VA_ARGS__))
 #define CONNECT_HANDLE_FUNC_DEFINE(INTERFACE, ...) INTERFACE->addCallback(INTERFACE->OnConnected.Connect(__VA_ARGS__))
@@ -120,7 +120,7 @@ private:
     UtCallbackHolder _userCallbacks;
     GenUniqueId _applicationId; //!< The application's unique ID
     std::string _applicationName;
-    ElaXIO_UDP_Header* mUDP_HeaderPtr; //!< Header used for UDP messages
+    ElaXIO_UdpHeader* mUDP_HeaderPtr; //!< Header used for UDP messages
     PakTCP_Connector* mConnectorPtr{nullptr};
     // The following variables are used for sending out the heartbeat pdu's
     UtWallClock mClock;

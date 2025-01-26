@@ -5,7 +5,7 @@
 
 #include "ElaXIO_Connection.h"
 #include "ElaXIO_PacketRegistry.h"
-#include "ElaXIO_UDP_Header.h"
+#include "ElaXIO_UdpHeader.h"
 #include "GenIP.h"
 #include "GenInternetSocketAddress.h"
 #include "GenNetInfo.h"
@@ -34,7 +34,7 @@ ElaXIO_Interface::ElaXIO_Interface()
       mTotalBytesReceived(0),
       mPreviousBytesSent(0),
       mPreviousBytesReceived(0),
-      mUDP_HeaderPtr(new ElaXIO_UDP_Header(ElaXIO_PacketRegistry::getPacketVersion()))
+      mUDP_HeaderPtr(new ElaXIO_UdpHeader(ElaXIO_PacketRegistry::getPacketVersion()))
 {
     ElaXIO_PacketRegistry::registerPackets(*this);
 

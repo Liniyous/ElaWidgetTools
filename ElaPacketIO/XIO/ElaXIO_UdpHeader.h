@@ -1,17 +1,17 @@
-#ifndef ELAXIO_UDP_HEADER_H
-#define ELAXIO_UDP_HEADER_H
+#ifndef ELAXIO_UDPHEADER_H
+#define ELAXIO_UDPHEADER_H
 
 #include "ElaPacketIO_Export.h"
 
 #include "PakHeader.h"
 #include "PakIntTypes.h"
 
-class ELA_PACKETIO_EXPORT ElaXIO_UDP_Header : public PakHeader
+class ELA_PACKETIO_EXPORT ElaXIO_UdpHeader : public PakHeader
 {
 public:
-    explicit ElaXIO_UDP_Header(int aVersionID);
-    ElaXIO_UDP_Header(const ElaXIO_UDP_Header& aSrc);
-    ~ElaXIO_UDP_Header() override = default;
+    explicit ElaXIO_UdpHeader(int aVersionID);
+    ElaXIO_UdpHeader(const ElaXIO_UdpHeader& aSrc);
+    ~ElaXIO_UdpHeader() override = default;
 
     PakHeader* Clone() const override;
 

@@ -1,34 +1,34 @@
-#include "xio/ElaXIO_UDP_Header.h"
+#include "xio/ElaXIO_UdpHeader.h"
 #include <iostream>
 
 #include "GenI.h"
 #include "GenO.h"
-ElaXIO_UDP_Header::ElaXIO_UDP_Header(int aVersionID)
+ElaXIO_UdpHeader::ElaXIO_UdpHeader(int aVersionID)
     : mXIO_Version(0xfeedbeef ^ aVersionID)
 {
     mReceivedInvalidPacket = false;
 }
 
-ElaXIO_UDP_Header::ElaXIO_UDP_Header(const ElaXIO_UDP_Header& aSrc)
+ElaXIO_UdpHeader::ElaXIO_UdpHeader(const ElaXIO_UdpHeader& aSrc)
     : PakHeader(aSrc),
       mXIO_Version(aSrc.mXIO_Version),
       mReceivedInvalidPacket(aSrc.mReceivedInvalidPacket)
 {
 }
 
-PakHeader* ElaXIO_UDP_Header::Clone() const
+PakHeader* ElaXIO_UdpHeader::Clone() const
 {
-    return new ElaXIO_UDP_Header(*this);
+    return new ElaXIO_UdpHeader(*this);
 }
 
-void ElaXIO_UDP_Header::WriteHeader(GenBuffer& aIO, int aPacketID, int aPacketLength)
+void ElaXIO_UdpHeader::WriteHeader(GenBuffer& aIO, int aPacketID, int aPacketLength)
 {
     aIO.putValue(mXIO_Version);
     aIO.putValue(static_cast<int32_t>(aPacketLength - sizeof(header)));
     aIO.putValue(static_cast<int32_t>(aPacketID));
 }
 
-bool ElaXIO_UDP_Header::ReadHeader(GenBuffer& aIO, int& aPacketID, int& aPacketLength)
+bool ElaXIO_UdpHeader::ReadHeader(GenBuffer& aIO, int& aPacketID, int& aPacketLength)
 {
     uint32_t version;
     int32_t length, id;
@@ -46,7 +46,7 @@ bool ElaXIO_UDP_Header::ReadHeader(GenBuffer& aIO, int& aPacketID, int& aPacketL
     return valid;
 }
 
-int ElaXIO_UDP_Header::GetHeaderSize()
+int ElaXIO_UdpHeader::GetHeaderSize()
 {
     return sizeof(header);
 }

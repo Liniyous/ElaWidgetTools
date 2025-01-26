@@ -94,7 +94,14 @@ void T_ElaPacketIO::handleGrabImage()
                 screenPkt._currentDataLen = dataTotalLen - i * 1024;
             }
             memcpy(screenPkt._data, imageData + screenPkt._dataOffset, 1024);
-            _connection->send(screenPkt);
+            if (_connection)
+            {
+                _connection->send(screenPkt);
+            }
+            else
+            {
+                break;
+            }
             //  和下面这句等效 但下方写法效率较低
             //  _interface->send(screenPkt, _interface->GetConnections()[0]);
         }

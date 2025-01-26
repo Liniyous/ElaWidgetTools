@@ -28,6 +28,7 @@ public:
     Q_SIGNAL void sendHandleResult(QPixmap map);
 
 private:
+    QMutex _mutex;
     int _lastImageIndex{0};
     QByteArray _imageArray;
     std::unique_ptr<ElaXIO_Interface> _interface;
