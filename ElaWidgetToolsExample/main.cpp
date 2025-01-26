@@ -3,7 +3,9 @@
 
 #include "ElaApplication.h"
 #include "mainwindow.h"
+#ifdef Q_OS_WIN
 #include <Windows.h>
+#endif
 int main(int argc, char* argv[])
 {
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
