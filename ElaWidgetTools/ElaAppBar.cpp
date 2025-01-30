@@ -76,7 +76,9 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_stayTopButton = new ElaToolButton(this);
     d->_stayTopButton->setElaIcon(ElaIconType::ArrowUpToArc);
     d->_stayTopButton->setFixedSize(40, 30);
-    connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() { this->setIsStayTop(!this->getIsStayTop()); });
+    connect(d->_stayTopButton, &ElaIconButton::clicked, this, [=]() {
+        this->setIsStayTop(!this->getIsStayTop());
+    });
     connect(this, &ElaAppBar::pIsStayTopChanged, d, &ElaAppBarPrivate::onStayTopButtonClicked);
 
     //图标
@@ -122,7 +124,9 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_themeChangeButton->setElaIcon(ElaIconType::MoonStars);
     d->_themeChangeButton->setFixedSize(40, 30);
     connect(d->_themeChangeButton, &ElaIconButton::clicked, this, &ElaAppBar::themeChangeButtonClicked);
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_onThemeModeChange(themeMode); });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_onThemeModeChange(themeMode);
+    });
 
     d->_minButton = new ElaToolButton(this);
     d->_minButton->setElaIcon(ElaIconType::Dash);
@@ -701,8 +705,12 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
                 window()->showNormal();
             }
             d->onCloseButtonClicked();
+            return true;
         }
-        return true;
+        else
+        {
+            break;
+        }
     }
 #ifndef Q_OS_WIN
     case QEvent::MouseButtonPress:
