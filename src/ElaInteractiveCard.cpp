@@ -18,6 +18,10 @@ Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, ElaCardPixType::PixMode, CardPixMode
 ElaInteractiveCard::ElaInteractiveCard(QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaInteractiveCardPrivate())
 {
+    _statusXOffset = 0;
+    _timeContent = "";
+    _statusContent = "";
+
     Q_D(ElaInteractiveCard);
     d->q_ptr = this;
     d->_pBorderRadius = 6;
@@ -83,11 +87,61 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
     font.setPixelSize(d->_pTitlePixelSize);
     painter.setFont(font);
     int textStartX = d->_pCardPixmapSize.width() + 26;
-    int textWidth = width() - textStartX;
+    int textWidth = static_cast<int>((width() - textStartX) * 0.75) - 20;
     painter.drawText(QRect(textStartX, rect().y(), textWidth, height() / 2 - d->_pTitleSpacing), Qt::TextWordWrap | Qt::AlignBottom | Qt::AlignLeft, d->_pTitle);
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
     painter.drawText(QRect(textStartX, height() / 2 + d->_pTitleSpacing, textWidth, height() / 2 - d->_pTitleSpacing), Qt::TextWordWrap | Qt::AlignTop | Qt::AlignLeft, d->_pSubTitle);
+
+    // fuqaq : draw time and status content
+    if (_timeContent != ""){
+        painter.setPen(_timeContentColor);
+        painter.setFont(_timeContentFont);
+        int exContentStartX = textStartX + textWidth;
+        int exContentWidth  = static_cast<int>((width() - textStartX) * 0.25) + 20;
+        painter.drawText(QRect(exContentStartX, rect().y(), exContentWidth, height() / 2 - d->_pTitleSpacing),
+                         Qt::TextWordWrap | Qt::AlignCenter | Qt::AlignLeft, _timeContent);
+
+        if (!_statusChecked) {
+            // 绘制状态内容（红色圆形 + 白色数字）
+            painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
+            int circleDiameter = height() / 4;
+            int circleX = exContentStartX + _statusXOffset;
+            int circleY = static_cast<int>(height() * 0.625);
+
+            // 绘制红色圆形
+            painter.setBrush(Qt::red);
+            painter.setPen(Qt::NoPen);
+            painter.drawEllipse(circleX, circleY, circleDiameter, circleDiameter);
+
+            painter.setPen(Qt::white);
+            painter.setFont(_statusContentFont);
+
+            QRect textRect(circleX, circleY, circleDiameter, circleDiameter);
+            painter.drawText(textRect, Qt::AlignCenter, _statusContent);
+        }
+    }
     painter.restore();
 }
+
+void ElaInteractiveCard::setTimeContent(const QString& content,const QColor& color,const QFont& font) {
+    _timeContent = content;
+    _timeContentColor = color;
+    _timeContentFont = font;
+    update();
+}
+
+void ElaInteractiveCard::setStatusContent(const QString& content,const QFont& font,int xOffset) {
+    _statusXOffset = xOffset;
+    _statusContent = content;
+    _statusContentFont = font;
+    _statusChecked = false;
+    update(static_cast<int>(width() * 0.75) + 35,static_cast<int>(height() * 0.5),static_cast<int>(width() * 0.25),static_cast<int>(height() * 0.5));
+}
+
+void ElaInteractiveCard::changeStatus(bool _curStatus) {
+    _statusChecked = _curStatus;
+    update(static_cast<int>(width() * 0.75) + 35,static_cast<int>(height() * 0.5),static_cast<int>(width() * 0.25),static_cast<int>(height() * 0.5));
+}
+

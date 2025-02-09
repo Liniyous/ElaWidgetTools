@@ -28,8 +28,27 @@ public:
     ~ElaInteractiveCard();
     void setCardPixmapSize(int width, int height);
 
+    // fuqaq : add time display area
+    void setTimeContent(const QString& content,const QColor& color,const QFont& font);
+
+    // fuqaq : add status display area
+    void setStatusContent(const QString& content,const QFont& font,int xOffset = 0);
+
+    void changeStatus(bool _curStatus);
+
 protected:
     void paintEvent(QPaintEvent* event) override;
+
+private:
+    QString _timeContent;
+    QString _statusContent;
+    QColor _timeContentColor;
+    QColor _statusContentColor;
+    QFont _timeContentFont;
+    QFont _statusContentFont;
+
+    int _statusXOffset;
+    bool _statusChecked = false;
 };
 
 #endif // ELAINTERACTIVECARD_H
