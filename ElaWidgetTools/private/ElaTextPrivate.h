@@ -12,7 +12,7 @@ class ElaTextPrivate : public QObject
     Q_D_CREATE(ElaText)
 public:
     explicit ElaTextPrivate(QObject* parent = nullptr);
-    ~ElaTextPrivate();
+    ~ElaTextPrivate() override;
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
@@ -20,6 +20,7 @@ private:
     bool _isWrapAnywhere{false};
     ElaTextType::TextStyle _textStyle{ElaTextType::NoStyle};
     qreal _textSpacing{0.5};
+    void _changeTheme();
 };
 
 #endif // ELATEXTPRIVATE_H

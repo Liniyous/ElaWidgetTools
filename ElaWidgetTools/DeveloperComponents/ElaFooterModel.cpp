@@ -57,7 +57,7 @@ int ElaFooterModel::getFooterNodeCount() const
 
 ElaNavigationNode* ElaFooterModel::getNavigationNode(QString footerKey)
 {
-    for (auto node : _footerNodeList)
+    for (auto node: _footerNodeList)
     {
         if (node->getNodeKey() == footerKey)
         {
@@ -65,4 +65,16 @@ ElaNavigationNode* ElaFooterModel::getNavigationNode(QString footerKey)
         }
     }
     return nullptr;
+}
+
+void ElaFooterModel::removeNavigationNode(QString footerKey)
+{
+    for (auto node: _footerNodeList)
+    {
+        if (node->getNodeKey() == footerKey)
+        {
+            _footerNodeList.removeOne(node);
+            break;
+        }
+    }
 }

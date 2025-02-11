@@ -8,6 +8,7 @@
 #include "ElaMenu.h"
 #include "ElaSpinBoxPrivate.h"
 #include "ElaTheme.h"
+#include <QTimer>
 ElaSpinBox::ElaSpinBox(QWidget* parent)
     : QSpinBox(parent), d_ptr(new ElaSpinBoxPrivate())
 {
@@ -18,10 +19,22 @@ ElaSpinBox::ElaSpinBox(QWidget* parent)
     lineEdit()->setAlignment(Qt::AlignCenter);
     lineEdit()->setStyleSheet("background-color:transparent");
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
-        QPalette palette;
-        palette.setColor(QPalette::Base, Qt::transparent);
-        palette.setColor(QPalette::Text, ElaThemeColor(themeMode, BasicText));
-        lineEdit()->setPalette(palette);
+        if (isVisible())
+        {
+            QPalette palette;
+            palette.setColor(QPalette::Base, Qt::transparent);
+            palette.setColor(QPalette::Text, ElaThemeColor(themeMode, BasicText));
+            lineEdit()->setPalette(palette);
+        }
+        else
+        {
+            QTimer::singleShot(1, this, [=] {
+                QPalette palette;
+                palette.setColor(QPalette::Base, Qt::transparent);
+                palette.setColor(QPalette::Text, ElaThemeColor(themeMode, BasicText));
+                lineEdit()->setPalette(palette);
+            });
+        }
     });
 }
 
@@ -47,8 +60,8 @@ void ElaSpinBox::contextMenuEvent(QContextMenuEvent* event)
 
     const QAbstractSpinBox* that = this;
     const QPoint pos = (event->reason() == QContextMenuEvent::Mouse)
-                           ? event->globalPos()
-                           : mapToGlobal(QPoint(event->pos().x(), 0)) + QPoint(width() / 2, height() / 2);
+        ? event->globalPos()
+        : mapToGlobal(QPoint(event->pos().x(), 0)) + QPoint(width() / 2, height() / 2);
     const QAction* action = menu->exec(pos);
     delete menu;
     if (that && action)

@@ -13,13 +13,14 @@ class ElaKeyBinderPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, BorderRadius)
 public:
     explicit ElaKeyBinderPrivate(QObject* parent = nullptr);
-    ~ElaKeyBinderPrivate();
+    ~ElaKeyBinderPrivate() override;
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
     ElaThemeType::ThemeMode _themeMode;
     ElaContentDialog* _binderDialog{nullptr};
     ElaKeyBinderContainer* _binderContainer{nullptr};
+    void _changeTheme();
 };
 
-#endif//ELAWIDGETTOOLS_SRC_PRIVATE_ELAKEYBINDERPRIVATE_H_
+#endif //ELAWIDGETTOOLS_SRC_PRIVATE_ELAKEYBINDERPRIVATE_H_

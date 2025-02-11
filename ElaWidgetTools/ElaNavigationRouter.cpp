@@ -50,10 +50,10 @@ ElaNavigationRouterType::NavigationRouteType ElaNavigationRouter::navigationRout
 void ElaNavigationRouter::navigationRouteBack()
 {
     Q_D(ElaNavigationRouter);
-    int routeQueneCount = d->_routeQueue.count();
-    if (routeQueneCount > 0)
+    int routeQueueCount = d->_routeQueue.count();
+    if (routeQueueCount > 0)
     {
-        if (routeQueneCount == 1)
+        if (routeQueueCount == 1)
         {
             Q_EMIT navigationRouterStateChanged(false);
         }

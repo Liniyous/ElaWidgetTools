@@ -16,6 +16,7 @@ public:
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, bool isHasFooterPage, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None);
     int getFooterNodeCount() const;
     ElaNavigationNode* getNavigationNode(QString footerKey);
+    void removeNavigationNode(QString footerKey);
 
 protected:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;

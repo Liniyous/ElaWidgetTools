@@ -50,9 +50,10 @@ FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.qrc
 )
 target_include_directories(${PROJECT_NAME} PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/private
-    ${CMAKE_CURRENT_SOURCE_DIR}/DeveloperComponents
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DeveloperComponents>
+    $<INSTALL_INTERFACE:${PROJECT_NAME}/include>
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -114,6 +115,12 @@ install(FILES ${EXPORT_HEADERS} DESTINATION ${PROJECT_NAME}/include)
 set(INCLUDE_DIRS include)
 set(LIBRARIES ${PROJECT_NAME})
 set(LIB_DIR lib)
+
+install(
+    EXPORT ${PROJECT_NAME}
+    FILE ${PROJECT_NAME}Targets.cmake
+    DESTINATION ${PROJECT_NAME}/lib/cmake
+)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(

@@ -35,6 +35,7 @@ public:
     bool getIsHasPageChild() const;
 
     void appendChildNode(ElaNavigationNode* childNode);
+    void removeChildNode(ElaNavigationNode* childNode);
 
     bool getIsChildHasKeyPoints() const;
 

@@ -17,7 +17,7 @@ class ELA_EXPORT ElaNavigationRouter : public QObject
     Q_PROPERTY_CREATE_Q_H(int, MaxRouteCount)
 private:
     explicit ElaNavigationRouter(QObject* parent = nullptr);
-    ~ElaNavigationRouter();
+    ~ElaNavigationRouter() override;
 
 Q_SIGNALS:
     Q_SIGNAL void navigationRouterStateChanged(bool state);

@@ -47,7 +47,7 @@ void ElaNavigationNode::setChildVisible(bool isVisible)
 {
     if (isVisible)
     {
-        for (auto node : _pChildrenNodes)
+        for (auto node: _pChildrenNodes)
         {
             node->setIsVisible(isVisible);
             if (node->getIsExpanderNode() && !node->getIsExpanded())
@@ -59,7 +59,7 @@ void ElaNavigationNode::setChildVisible(bool isVisible)
     }
     else
     {
-        for (auto node : _pChildrenNodes)
+        for (auto node: _pChildrenNodes)
         {
             node->setChildVisible(isVisible);
             node->setIsVisible(isVisible);
@@ -82,7 +82,7 @@ bool ElaNavigationNode::getIsHasPageChild() const
     {
         return false;
     }
-    for (auto childNode : _pChildrenNodes)
+    for (auto childNode: _pChildrenNodes)
     {
         if (!childNode->getIsExpanderNode())
         {
@@ -104,9 +104,17 @@ void ElaNavigationNode::appendChildNode(ElaNavigationNode* childNode)
     }
 }
 
+void ElaNavigationNode::removeChildNode(ElaNavigationNode* childNode)
+{
+    if (_pIsExpanderNode)
+    {
+        _pChildrenNodes.removeOne(childNode);
+    }
+}
+
 bool ElaNavigationNode::getIsChildHasKeyPoints() const
 {
-    for (auto childNnode : _pChildrenNodes)
+    for (auto childNnode: _pChildrenNodes)
     {
         if (childNnode->getKeyPoints())
         {
@@ -145,7 +153,7 @@ bool ElaNavigationNode::getIsChildNode(ElaNavigationNode* node)
         {
             return true;
         }
-        for (auto childNnode : _pChildrenNodes)
+        for (auto childNnode: _pChildrenNodes)
         {
             if (childNnode->getIsChildNode(node))
             {

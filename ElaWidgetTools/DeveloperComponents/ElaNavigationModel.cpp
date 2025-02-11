@@ -248,6 +248,36 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationModel::addPageNode(QString
     return ElaNavigationType::NodeOperateReturnType::Success;
 }
 
+QStringList ElaNavigationModel::removeNavigationNode(QString nodeKey)
+{
+    QList<QString> removeKeyList;
+    if (!_nodesMap.contains(nodeKey))
+    {
+        return removeKeyList;
+    }
+    ElaNavigationNode* node = _nodesMap.value(nodeKey);
+    ElaNavigationNode* parentNode = node->getParentNode();
+    if (node->getIsExpanderNode())
+    {
+        QList<ElaNavigationNode*> childNodeList = node->getChildrenNodes();
+        for (int i = 0; i < childNodeList.count(); i++)
+        {
+            ElaNavigationNode* childNode = childNodeList[i];
+            QList<QString> childRemoveKeyList = removeNavigationNode(childNode->getNodeKey());
+            removeKeyList.append(childRemoveKeyList);
+        }
+    }
+    else
+    {
+        removeKeyList.append(node->getNodeKey());
+    }
+    beginRemoveRows(parentNode->getModelIndex(), parentNode->getChildrenNodes().count(), parentNode->getChildrenNodes().count());
+    parentNode->removeChildNode(node);
+    _nodesMap.remove(node->getNodeKey());
+    endRemoveRows();
+    return removeKeyList;
+}
+
 ElaNavigationNode* ElaNavigationModel::getNavigationNode(QString nodeKey) const
 {
     if (_nodesMap.contains(nodeKey))
@@ -260,7 +290,7 @@ ElaNavigationNode* ElaNavigationModel::getNavigationNode(QString nodeKey) const
 QList<ElaNavigationNode*> ElaNavigationModel::getRootExpanderNodes() const
 {
     QList<ElaNavigationNode*> expandedNodeList;
-    for (auto node : _rootNode->getChildrenNodes())
+    for (auto node: _rootNode->getChildrenNodes())
     {
         if (node->getIsExpanderNode())
         {
@@ -273,7 +303,7 @@ QList<ElaNavigationNode*> ElaNavigationModel::getRootExpanderNodes() const
 QList<ElaNavigationNode*> ElaNavigationModel::getRootExpandedNodes() const
 {
     QList<ElaNavigationNode*> expandedNodeList;
-    for (auto node : _rootNode->getChildrenNodes())
+    for (auto node: _rootNode->getChildrenNodes())
     {
         if (node->getIsExpanderNode() && node->getIsExpanded())
         {

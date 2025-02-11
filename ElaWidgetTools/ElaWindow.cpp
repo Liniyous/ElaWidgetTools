@@ -60,6 +60,8 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_navigationBar, &ElaNavigationBar::navigationNodeClicked, d, &ElaWindowPrivate::onNavigationNodeClicked);
     //新增窗口
     connect(d->_navigationBar, &ElaNavigationBar::navigationNodeAdded, d, &ElaWindowPrivate::onNavigationNodeAdded);
+    //移除窗口
+    connect(d->_navigationBar, &ElaNavigationBar::navigationNodeRemoved, d, &ElaWindowPrivate::onNavigationNodeRemoved);
 
     // 中心堆栈窗口
     d->_centerStackedWidget = new ElaCentralStackedWidget(this);
@@ -291,6 +293,12 @@ ElaNavigationType::NodeOperateReturnType ElaWindow::addFooterNode(QString footer
 {
     Q_D(const ElaWindow);
     return d->_navigationBar->addFooterNode(footerTitle, page, footerKey, keyPoints, awesome);
+}
+
+void ElaWindow::removeNavigationNode(QString nodeKey) const
+{
+    Q_D(const ElaWindow);
+    d->_navigationBar->removeNavigationNode(nodeKey);
 }
 
 void ElaWindow::setNodeKeyPoints(QString nodeKey, int keyPoints)

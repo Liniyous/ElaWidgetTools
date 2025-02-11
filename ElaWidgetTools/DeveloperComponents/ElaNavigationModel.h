@@ -28,12 +28,14 @@ public:
     ElaNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QString& pageKey, int keyPoints, ElaIconType::IconName awesome);
     ElaNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QString& pageKey, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome);
 
+    QStringList removeNavigationNode(QString nodeKey);
+
     ElaNavigationNode* getNavigationNode(QString nodeKey) const;
     QList<ElaNavigationNode*> getRootExpanderNodes() const;
     QList<ElaNavigationNode*> getRootExpandedNodes() const;
 
 private:
-    mutable QMap<QString, ElaNavigationNode*> _nodesMap;
+    QMap<QString, ElaNavigationNode*> _nodesMap;
     ElaNavigationNode* _rootNode{nullptr};
 };
 

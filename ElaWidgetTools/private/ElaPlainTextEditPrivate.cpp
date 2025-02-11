@@ -1,7 +1,7 @@
 #include "ElaPlainTextEditPrivate.h"
-
 #include "ElaApplication.h"
 #include "ElaPlainTextEdit.h"
+#include <QTimer>
 ElaPlainTextEditPrivate::ElaPlainTextEditPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -38,7 +38,23 @@ void ElaPlainTextEditPrivate::onWMWindowClickedEvent(QVariantMap data)
 void ElaPlainTextEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaPlainTextEdit);
-    if (themeMode == ElaThemeType::Light)
+    _themeMode = themeMode;
+    if (q->isVisible())
+    {
+        _changeTheme();
+    }
+    else
+    {
+        QTimer::singleShot(1, this, [=] {
+            _changeTheme();
+        });
+    }
+}
+
+void ElaPlainTextEditPrivate::_changeTheme()
+{
+    Q_Q(ElaPlainTextEdit);
+    if (_themeMode == ElaThemeType::Light)
     {
         QPalette palette;
         palette.setColor(QPalette::Text, Qt::black);

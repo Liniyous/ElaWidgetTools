@@ -29,7 +29,7 @@ class ELA_EXPORT ElaAcrylicUrlCard : public QPushButton
 
 public:
     explicit ElaAcrylicUrlCard(QWidget* parent = nullptr);
-    ~ElaAcrylicUrlCard();
+    ~ElaAcrylicUrlCard() override;
     void setCardPixmapSize(int width, int height);
 
 protected:

@@ -13,7 +13,7 @@ class ElaNavigationRouterPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, MaxRouteCount)
 public:
     explicit ElaNavigationRouterPrivate(QObject* parent = nullptr);
-    ~ElaNavigationRouterPrivate();
+    ~ElaNavigationRouterPrivate() override;
 
 private:
     QQueue<QVariantMap> _routeQueue;

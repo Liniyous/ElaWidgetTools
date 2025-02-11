@@ -14,7 +14,7 @@ class ELA_EXPORT ElaNavigationBar : public QWidget
     Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
 public:
     explicit ElaNavigationBar(QWidget* parent = nullptr);
-    ~ElaNavigationBar();
+    ~ElaNavigationBar() override;
     void setUserInfoCardVisible(bool isVisible);
     void setUserInfoCardPixmap(QPixmap pix);
     void setUserInfoCardTitle(QString title);
@@ -29,6 +29,8 @@ public:
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None);
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None);
 
+    void removeNavigationNode(QString nodeKey);
+
     void setNodeKeyPoints(QString nodeKey, int keyPoints);
     int getNodeKeyPoints(QString nodeKey) const;
 
@@ -39,6 +41,7 @@ Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SIGNAL void navigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
+    Q_SIGNAL void navigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

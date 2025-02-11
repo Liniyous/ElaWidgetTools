@@ -92,16 +92,17 @@ void ElaSuggestBox::setPlaceholderText(const QString& placeholderText)
     d->_searchEdit->setPlaceholderText(placeholderText);
 }
 
-void ElaSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData)
+QString ElaSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData)
 {
     Q_D(ElaSuggestBox);
     ElaSuggestion* suggest = new ElaSuggestion(this);
     suggest->setSuggestText(suggestText);
     suggest->setSuggestData(suggestData);
     d->_suggestionVector.append(suggest);
+    return suggest->getSuggestKey();
 }
 
-void ElaSuggestBox::addSuggestion(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
+QString ElaSuggestBox::addSuggestion(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
 {
     Q_D(ElaSuggestBox);
     ElaSuggestion* suggest = new ElaSuggestion(this);
@@ -109,14 +110,15 @@ void ElaSuggestBox::addSuggestion(ElaIconType::IconName icon, const QString& sug
     suggest->setSuggestText(suggestText);
     suggest->setSuggestData(suggestData);
     d->_suggestionVector.append(suggest);
+    return suggest->getSuggestKey();
 }
 
-void ElaSuggestBox::removeSuggestion(const QString& suggestText)
+void ElaSuggestBox::removeSuggestion(const QString& suggestKey)
 {
     Q_D(ElaSuggestBox);
     foreach (auto suggest, d->_suggestionVector)
     {
-        if (suggest->getSuggestText() == suggestText)
+        if (suggest->getSuggestKey() == suggestKey)
         {
             d->_suggestionVector.removeOne(suggest);
             suggest->deleteLater();

@@ -94,46 +94,41 @@ if (QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${PROJECT_NAME})
 endif ()
 
-include(GNUInstallDirs)
-install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-)
-if (MSVC)
+if (WIN32)
+    include(GNUInstallDirs)
+    install(TARGETS ${PROJECT_NAME}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+    )
+    if (MSVC)
+        install(
+            FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL)
+    endif ()
+    # QT依赖安装 只做Release安装 Debug自行打包
+    install(FILES ${QT_SDK_DIR}/plugins/platforms/qwindows.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms)
+    install(FILES ${QT_SDK_DIR}/plugins/generic/qtuiotouchplugin.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/generic)
     install(
-        FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL)
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qgif.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qicns.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qico.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qjpeg.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qtga.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qtiff.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qwbmp.dll
+        FILES ${QT_SDK_DIR}/plugins/imageformats/qwebp.dll
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/imageformats
+    )
+    install(FILES ${QT_SDK_DIR}/plugins/styles/qwindowsvistastyle.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/styles)
+    FILE(GLOB TRANSLATIONS ${QT_SDK_DIR}/translations_install/*.qm)
+    install(FILES ${TRANSLATIONS} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/translations)
+    install(
+        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Widgets.dll
+        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Core.dll
+        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Gui.dll
+        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Network.dll
+        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Xml.dll
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+    )
 endif ()
-# QT依赖安装 只做Release安装 Debug自行打包
-install(FILES ${QT_SDK_DIR}/plugins/platforms/qwindows.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms)
-install(FILES ${QT_SDK_DIR}/plugins/generic/qtuiotouchplugin.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/generic)
-install(FILES ${QT_SDK_DIR}/plugins/iconengines/qsvgicon.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/iconengines)
-install(
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qgif.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qicns.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qico.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qjpeg.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qsvg.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qtga.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qtiff.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qwbmp.dll
-    FILES ${QT_SDK_DIR}/plugins/imageformats/qwebp.dll
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/imageformats
-)
-install(FILES ${QT_SDK_DIR}/plugins/platforminputcontexts/qtvirtualkeyboardplugin.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforminputcontexts)
-install(FILES ${QT_SDK_DIR}/plugins/styles/qwindowsvistastyle.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/styles)
-FILE(GLOB TRANSLATIONS ${QT_SDK_DIR}/translations_install/*.qm)
-install(FILES ${TRANSLATIONS} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/translations)
-install(
-    FILES ${QT_SDK_DIR}/bin/D3Dcompiler_47.dll
-    FILES ${QT_SDK_DIR}/bin/opengl32sw.dll
-    FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Widgets.dll
-    FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Core.dll
-    FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Gui.dll
-    FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Network.dll
-    FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Svg.dll
-    FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Xml.dll
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-)
-
 

@@ -1,19 +1,20 @@
 #include "ElaSuggestBoxPrivate.h"
 
-#include <QLayout>
-#include <QPropertyAnimation>
-
 #include "ElaBaseListView.h"
 #include "ElaLineEdit.h"
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestModel.h"
+#include <QLayout>
+#include <QPropertyAnimation>
+#include <QUuid>
 
 ElaSuggestion::ElaSuggestion(QObject* parent)
     : QObject(parent)
 {
     _pElaIcon = ElaIconType::None;
     _pSuggestText = "";
+    _pSuggestKey = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
     _pSuggestData = QVariantMap();
 }
 
@@ -47,7 +48,7 @@ void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
         return;
     }
     QVector<ElaSuggestion*> suggestionVector;
-    for (const auto& suggest : _suggestionVector)
+    for (const auto& suggest: _suggestionVector)
     {
         if (suggest->getSuggestText().contains(searchText, _pCaseSensitivity))
         {

@@ -9,10 +9,10 @@
 #include "ElaKeyBinder.h"
 #include "ElaMenu.h"
 #include "ElaPushButton.h"
+#include "ElaRoller.h"
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
 #include "ElaToolButton.h"
-
 T_Popup::T_Popup(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -98,6 +98,22 @@ T_Popup::T_Popup(QWidget* parent)
     keyBinderLayout->addWidget(_keyBinder);
     keyBinderLayout->addStretch();
 
+    _roller = new ElaRoller(this);
+    QStringList rollerItemList;
+    for (int i = 0; i < 100; i++)
+    {
+        rollerItemList.append(QString::number(i + 1));
+    }
+    _roller->setItemList(rollerItemList);
+    ElaScrollPageArea* rollerArea = new ElaScrollPageArea(this);
+    rollerArea->setFixedHeight(220);
+    QHBoxLayout* rollerLayout = new QHBoxLayout(rollerArea);
+    ElaText* rollerText = new ElaText("ElaRoller", this);
+    rollerText->setTextPixelSize(15);
+    rollerLayout->addWidget(rollerText);
+    rollerLayout->addWidget(_roller);
+    rollerLayout->addStretch();
+
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
     centerVLayout->addWidget(toolButtonArea);
@@ -105,6 +121,7 @@ T_Popup::T_Popup(QWidget* parent)
     centerVLayout->addWidget(calendarPickerArea);
     centerVLayout->addWidget(_calendar);
     centerVLayout->addWidget(keyBinderArea);
+    centerVLayout->addWidget(rollerArea);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }

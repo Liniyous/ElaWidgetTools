@@ -1,13 +1,5 @@
 #include "ElaNavigationBar.h"
 
-#include <QEvent>
-#include <QPainter>
-#include <QPainterPath>
-#include <QPropertyAnimation>
-#include <QResizeEvent>
-#include <QScroller>
-#include <QVBoxLayout>
-
 #include "ElaBaseListView.h"
 #include "ElaFooterDelegate.h"
 #include "ElaFooterModel.h"
@@ -16,12 +8,20 @@
 #include "ElaMenu.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
+
 #include "ElaNavigationView.h"
 #include "ElaSuggestBox.h"
 #include "ElaTheme.h"
 #include "ElaToolButton.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaSuggestBoxPrivate.h"
+#include <QEvent>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPropertyAnimation>
+#include <QResizeEvent>
+#include <QScroller>
+#include <QVBoxLayout>
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationBar, bool, IsTransparent)
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaNavigationBarPrivate())
@@ -107,7 +107,9 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     d->_navigationModel = new ElaNavigationModel(this);
     d->_navigationView = new ElaNavigationView(this);
     d->_navigationView->setModel(d->_navigationModel);
-    connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) { d->onTreeViewClicked(index); });
+    connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) {
+        d->onTreeViewClicked(index);
+    });
     connect(d->_navigationView, &ElaNavigationView::navigationOpenNewWindow, d, &ElaNavigationBarPrivate::onNavigationOpenNewWindow);
 
     // 页脚
@@ -130,7 +132,9 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
         d->_footerDelegate->setPressIndex(QModelIndex());
         d->_footerView->viewport()->update();
     });
-    connect(d->_footerView, &ElaBaseListView::clicked, this, [=](const QModelIndex& index) { d->onFooterViewClicked(index); });
+    connect(d->_footerView, &ElaBaseListView::clicked, this, [=](const QModelIndex& index) {
+        d->onFooterViewClicked(index);
+    });
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setAlignment(Qt::AlignLeft);
@@ -143,7 +147,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     mainLayout->addWidget(d->_navigationView);
     mainLayout->addWidget(d->_footerView);
 
-    //主题设置
+    // 主题设置
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         d->_themeMode = themeMode;
@@ -345,11 +349,49 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString
     return returnType;
 }
 
+void ElaNavigationBar::removeNavigationNode(QString nodeKey)
+{
+    Q_D(ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    if (!node)
+    {
+        return;
+    }
+    if (node->getIsFooterNode())
+    {
+        Q_EMIT navigationNodeRemoved(ElaNavigationType::FooterNode, nodeKey);
+        d->_footerModel->removeNavigationNode(nodeKey);
+        d->_footerView->setFixedHeight(40 * d->_footerModel->getFooterNodeCount());
+    }
+    else
+    {
+        QStringList removeKeyList = d->_navigationModel->removeNavigationNode(nodeKey);
+        d->_initNodeModelIndex(QModelIndex());
+        for (const auto& removeKey: removeKeyList)
+        {
+            Q_EMIT navigationNodeRemoved(ElaNavigationType::PageNode, removeKey);
+        }
+    }
+    d->_navigationSuggestBox->removeSuggestion(d->_suggestKeyMap.value(nodeKey));
+}
+
 void ElaNavigationBar::setNodeKeyPoints(QString nodeKey, int keyPoints)
 {
     Q_D(ElaNavigationBar);
     ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
-    if (!node || node->getIsExpanderNode() || keyPoints < 0)
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    else if (node->getIsExpanderNode() || keyPoints < 0)
+    {
+        return;
+    }
+    if (!node)
     {
         return;
     }
@@ -368,7 +410,15 @@ int ElaNavigationBar::getNodeKeyPoints(QString nodeKey) const
 {
     Q_D(const ElaNavigationBar);
     ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
-    if (!node || node->getIsExpanderNode())
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    else if (node->getIsExpanderNode())
+    {
+        return -1;
+    }
+    if (!node)
     {
         return -1;
     }

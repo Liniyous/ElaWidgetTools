@@ -1,12 +1,5 @@
 #include "ElaWindowPrivate.h"
 
-#include <QApplication>
-#include <QPropertyAnimation>
-#include <QTimer>
-#include <QVBoxLayout>
-#include <QtMath>
-
-#include "ElaAppBar.h"
 #include "ElaAppBarPrivate.h"
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
@@ -14,6 +7,11 @@
 #include "ElaTheme.h"
 #include "ElaThemeAnimationWidget.h"
 #include "ElaWindow.h"
+#include <QApplication>
+#include <QPropertyAnimation>
+#include <QTimer>
+#include <QVBoxLayout>
+#include <QtMath>
 ElaWindowPrivate::ElaWindowPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -170,12 +168,13 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 
 void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey)
 {
-    int nodeIndex = _routeMap.value(nodeKey);
-    if (nodeIndex == -1)
+    QWidget* page = _routeMap.value(nodeKey);
+    if (!page)
     {
         // 页脚没有绑定页面
         return;
     }
+    int nodeIndex = _centerStackedWidget->indexOf(page);
     if (_navigationTargetIndex == nodeIndex || _centerStackedWidget->count() <= nodeIndex)
     {
         return;
@@ -199,20 +198,33 @@ void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeTy
 {
     if (nodeType == ElaNavigationType::PageNode)
     {
-        _routeMap.insert(nodeKey, _centerStackedWidget->count());
+        _routeMap.insert(nodeKey, page);
         _centerStackedWidget->addWidget(page);
     }
     else
     {
+        _routeMap.insert(nodeKey, page);
         if (page)
         {
-            _routeMap.insert(nodeKey, _centerStackedWidget->count());
             _centerStackedWidget->addWidget(page);
         }
-        else
-        {
-            _routeMap.insert(nodeKey, -1);
-        }
+    }
+}
+
+void ElaWindowPrivate::onNavigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey)
+{
+    Q_Q(ElaWindow);
+    if (!_routeMap.contains(nodeKey))
+    {
+        return;
+    }
+    QWidget* page = _routeMap.value(nodeKey);
+    _routeMap.remove(nodeKey);
+    _centerStackedWidget->removeWidget(page);
+    QWidget* currentWidget = _centerStackedWidget->currentWidget();
+    if (currentWidget)
+    {
+        q->navigation(currentWidget->property("ElaPageKey").toString());
     }
 }
 

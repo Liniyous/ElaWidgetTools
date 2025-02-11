@@ -131,19 +131,19 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                 if (isLogRoute)
                 {
                     QVariantMap routeData = QVariantMap();
-                    QStringList pageKeyList;
+                    QString pageKey;
                     if (selectedNode)
                     {
-                        pageKeyList.append(selectedNode->getNodeKey());
+                        pageKey.append(selectedNode->getNodeKey());
                     }
                     else
                     {
                         if (_footerModel->getSelectedNode())
                         {
-                            pageKeyList.append(_footerModel->getSelectedNode()->getNodeKey());
+                            pageKey.append(_footerModel->getSelectedNode()->getNodeKey());
                         }
                     }
-                    routeData.insert("ElaPageKey", pageKeyList);
+                    routeData.insert("ElaPageKey", pageKey);
                     ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
                 }
                 Q_EMIT q->navigationNodeClicked(ElaNavigationType::PageNode, node->getNodeKey());
@@ -220,19 +220,19 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
         if (isLogRoute && node->getIsHasFooterPage())
         {
             QVariantMap routeData = QVariantMap();
-            QStringList pageKeyList;
+            QString pageKey;
             if (selectedNode)
             {
-                pageKeyList.append(selectedNode->getNodeKey());
+                pageKey.append(selectedNode->getNodeKey());
             }
             else
             {
                 if (_navigationModel->getSelectedNode())
                 {
-                    pageKeyList.append(_navigationModel->getSelectedNode()->getNodeKey());
+                    pageKey.append(_navigationModel->getSelectedNode()->getNodeKey());
                 }
             }
-            routeData.insert("ElaPageKey", pageKeyList);
+            routeData.insert("ElaPageKey", pageKey);
             ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
         }
         Q_EMIT q->navigationNodeClicked(ElaNavigationType::FooterNode, node->getNodeKey());
@@ -362,7 +362,8 @@ void ElaNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
     QVariantMap suggestData;
     suggestData.insert("ElaNodeType", "Stacked");
     suggestData.insert("ElaPageKey", pageKey);
-    _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
+    QString suggestKey = _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
+    _suggestKeyMap.insert(pageKey, suggestKey);
 }
 
 void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
@@ -378,7 +379,8 @@ void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
     QVariantMap suggestData;
     suggestData.insert("ElaNodeType", "Footer");
     suggestData.insert("ElaPageKey", footKey);
-    _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
+    QString suggestKey = _navigationSuggestBox->addSuggestion(node->getAwesome(), node->getNodeTitle(), suggestData);
+    _suggestKeyMap.insert(footKey, suggestKey);
 }
 
 void ElaNavigationBarPrivate::_raiseNavigationBar()
@@ -450,14 +452,14 @@ void ElaNavigationBarPrivate::_handleNavigationExpandState(bool isSave)
     {
         // 保存展开状态 收起根节点所有子树
         _lastExpandedNodesList = _navigationModel->getRootExpandedNodes();
-        for (auto node : _lastExpandedNodesList)
+        for (auto node: _lastExpandedNodesList)
         {
             onTreeViewClicked(node->getModelIndex(), false);
         }
     }
     else
     {
-        for (auto node : _lastExpandedNodesList)
+        for (auto node: _lastExpandedNodesList)
         {
             // 修正动画覆盖
             _navigationView->resize(295, _navigationView->height());

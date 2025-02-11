@@ -22,6 +22,7 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     ElaPlainTextEditStyle* _style{nullptr};
     ElaEvent* _focusEvent{nullptr};
+    void _changeTheme();
 };
 
 #endif // ELAPLAINTEXTEDITPRIVATE_H

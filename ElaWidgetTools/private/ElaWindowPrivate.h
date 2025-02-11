@@ -24,7 +24,7 @@ class ElaWindowPrivate : public QObject
 
 public:
     explicit ElaWindowPrivate(QObject* parent = nullptr);
-    ~ElaWindowPrivate();
+    ~ElaWindowPrivate() override;
     Q_SLOT void onNavigationButtonClicked();
     Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onThemeReadyChange();
@@ -32,6 +32,7 @@ public:
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
     Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
+    Q_SLOT void onNavigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
 
 private:
     ElaThemeType::ThemeMode _themeMode;
@@ -54,7 +55,7 @@ private:
 
     ElaNavigationType::NavigationDisplayMode _currentNavigationBarDisplayMode{ElaNavigationType::Maximal};
 
-    QMap<QString, int> _routeMap; // key__nodeKey title可以一致  value__stackIndex
+    QMap<QString, QWidget*> _routeMap; // key__nodeKey title可以一致  value__Page
     int _navigationTargetIndex{0};
     qreal _distance(QPoint point1, QPoint point2);
     void _resetWindowLayout(bool isAnimation);
