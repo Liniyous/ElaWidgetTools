@@ -8,4 +8,4 @@ check_required_components(${PROJECT_NAME})
 
 include(CMakeFindDependencyMacro)
 
-include(@PACKAGE_LIB_DIR@/cmake/@PACKAGE_NAME@Targets.cmake)
+include(@PACKAGE_LIB_DIR@/cmake/@PROJECT_NAME@Targets.cmake)
