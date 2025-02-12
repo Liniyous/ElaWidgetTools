@@ -16,7 +16,7 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
-    mutable QStyle::State _lastState{0};
+    mutable QStyle::State _lastState{QStyle::State_None};
     mutable qreal _circleRadius{0};
     void _startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget* widget) const;
 };

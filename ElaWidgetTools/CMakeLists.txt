@@ -28,6 +28,7 @@ set(PROJECT_SOURCES
     ${INCLUDE}
     ${PRIVATE}
     ${DEVELOPER}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/ElaWidgetTools.qrc
 )
 
 if (ELAWIDGETTOOLS_BUILD_STATIC_LIB)
@@ -46,29 +47,13 @@ else ()
     )
 endif ()
 
-FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.qrc
-)
+FILE(GLOB EXPORT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/private>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DeveloperComponents>
     $<INSTALL_INTERFACE:${PROJECT_NAME}/include>
 )
-
-if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    #遍历所有资源文件
-    file(GLOB_RECURSE RES_PATHS *.png *.jpg *.svg *.ico *.ttf *.webp *.js)
-    foreach (filepath ${RES_PATHS})
-        string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" filename ${filepath})
-        list(APPEND resource_files ${filename})
-    endforeach (filepath)
-    qt_add_resources(${PROJECT_NAME} "ElaWidgetTools"
-        RESOURCES PREFIX "/"
-        FILES
-        ${resource_files}
-    )
-endif ()
 
 if (MINGW)
     set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
@@ -104,7 +89,7 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/ElaWidgetToolsExample
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/ElaWidgetToolsExample
 )
-if (MSVC AND NOT ELAWIDGETTOOLS_BUILD_STATIC_LIB STREQUAL "STATIC")
+if (MSVC AND NOT LIB_TYPE STREQUAL "STATIC")
     install(
         FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
         DESTINATION ${CMAKE_INSTALL_PREFIX}/ElaWidgetToolsExample OPTIONAL)

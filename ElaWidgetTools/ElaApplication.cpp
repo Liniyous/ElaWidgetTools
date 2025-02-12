@@ -60,6 +60,7 @@ QString ElaApplication::getMicaImagePath() const
 
 void ElaApplication::init()
 {
+    Q_INIT_RESOURCE(ElaWidgetTools);
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
     //默认字体
