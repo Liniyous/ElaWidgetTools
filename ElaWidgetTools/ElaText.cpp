@@ -10,6 +10,8 @@ ElaText::ElaText(QWidget* parent)
 {
     Q_D(ElaText);
     d->q_ptr = this;
+    d->_pTextStyle = ElaTextType::NoStyle;
+    d->_pElaIcon = ElaIconType::None;
     setObjectName("ElaText");
     setStyleSheet("#ElaText{background-color:transparent;}");
     QFont textFont = font();
@@ -81,7 +83,7 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
 {
     Q_D(ElaText);
     QFont textFont = font();
-    d->_textStyle = textStyle;
+    d->_pTextStyle = textStyle;
     switch (textStyle)
     {
     case ElaTextType::NoStyle:
@@ -135,24 +137,52 @@ void ElaText::setTextStyle(ElaTextType::TextStyle textStyle)
 ElaTextType::TextStyle ElaText::getTextStyle() const
 {
     Q_D(const ElaText);
-    return d->_textStyle;
+    return d->_pTextStyle;
+}
+
+void ElaText::setElaIcon(ElaIconType::IconName elaIcon)
+{
+    Q_D(ElaText);
+    d->_pElaIcon = elaIcon;
+    update();
+    Q_EMIT pElaIconChanged();
+}
+
+ElaIconType::IconName ElaText::getElaIcon() const
+{
+    Q_D(const ElaText);
+    return d->_pElaIcon;
 }
 
 void ElaText::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaText);
-    if (wordWrap() && d->_isWrapAnywhere)
+    if (d->_pElaIcon != ElaIconType::None)
     {
-        Q_D(ElaText);
         QPainter painter(this);
         painter.save();
-        painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+        painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
+        QFont iconFont = QFont("ElaAwesome");
+        iconFont.setPixelSize(this->font().pixelSize());
+        painter.setFont(iconFont);
         painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
-        painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
+        painter.drawText(rect(), Qt::AlignCenter, QChar((unsigned short)d->_pElaIcon));
         painter.restore();
     }
     else
     {
-        QLabel::paintEvent(event);
+        if (wordWrap() && d->_isWrapAnywhere)
+        {
+            QPainter painter(this);
+            painter.save();
+            painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+            painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
+            painter.drawText(rect(), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere, text());
+            painter.restore();
+        }
+        else
+        {
+            QLabel::paintEvent(event);
+        }
     }
 }

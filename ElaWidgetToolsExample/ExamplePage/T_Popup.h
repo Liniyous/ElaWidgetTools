@@ -9,6 +9,7 @@ class ElaCalendar;
 class ElaCalendarPicker;
 class ElaKeyBinder;
 class ElaRoller;
+class ElaDrawerArea;
 class T_Popup : public T_BasePage
 {
     Q_OBJECT
@@ -23,6 +24,7 @@ private:
     ElaCalendarPicker* _calendarPicker{nullptr};
     ElaKeyBinder* _keyBinder{nullptr};
     ElaRoller* _roller{nullptr};
+    ElaDrawerArea* _drawer{nullptr};
 };
 
 #endif // T_POPUP_H

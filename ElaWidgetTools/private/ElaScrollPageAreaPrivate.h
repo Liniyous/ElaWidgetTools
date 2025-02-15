@@ -13,7 +13,7 @@ class ElaScrollPageAreaPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, BorderRadius)
 public:
     explicit ElaScrollPageAreaPrivate(QObject* parent = nullptr);
-    ~ElaScrollPageAreaPrivate();
+    ~ElaScrollPageAreaPrivate() override;
 
 private:
     ElaThemeType::ThemeMode _themeMode;

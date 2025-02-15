@@ -15,7 +15,7 @@ class ElaToggleButtonPrivate : public QObject
     Q_PROPERTY_CREATE(int, ToggleAlpha)
 public:
     explicit ElaToggleButtonPrivate(QObject* parent = nullptr);
-    ~ElaToggleButtonPrivate();
+    ~ElaToggleButtonPrivate() override;
 
 private:
     bool _isAlphaAnimationFinished{true};

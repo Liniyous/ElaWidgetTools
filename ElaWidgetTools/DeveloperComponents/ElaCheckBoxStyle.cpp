@@ -9,7 +9,9 @@ ElaCheckBoxStyle::ElaCheckBoxStyle(QStyle* style)
 {
     _pCheckIndicatorWidth = 21;
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaCheckBoxStyle::~ElaCheckBoxStyle()
@@ -90,7 +92,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             }
             //文字绘制
             painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
-            QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height());
+            QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height() - 5);
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             painter->restore();
         }

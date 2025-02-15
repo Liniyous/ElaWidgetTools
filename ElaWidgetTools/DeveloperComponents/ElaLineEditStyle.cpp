@@ -9,7 +9,9 @@
 ElaLineEditStyle::ElaLineEditStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaLineEditStyle::~ElaLineEditStyle()
@@ -53,7 +55,7 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             path.lineTo(lineEditRect.width() - 6, lineEditRect.height());
             path.arcTo(QRectF(lineEditRect.width() - 12, lineEditRect.height() - 12, 12, 12), -90, 45);
             path.lineTo(6 - 3 * std::sqrt(2), lineEditRect.height() - (6 - 3 * std::sqrt(2)));
-            path.arcTo(QRectF(0, lineEditRect.height() - 12, 12, 12), 270, 45);
+            path.arcTo(QRectF(0, lineEditRect.height() - 12, 12, 12), 225, 45);
             path.closeSubpath();
             painter->drawPath(path);
             painter->restore();

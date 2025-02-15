@@ -5,13 +5,16 @@
 
 #include "ElaCalendar.h"
 #include "ElaCalendarPicker.h"
+#include "ElaCheckBox.h"
 #include "ElaColorDialog.h"
+#include "ElaDrawerArea.h"
 #include "ElaKeyBinder.h"
 #include "ElaMenu.h"
 #include "ElaPushButton.h"
 #include "ElaRoller.h"
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
+#include "ElaToggleSwitch.h"
 #include "ElaToolButton.h"
 T_Popup::T_Popup(QWidget* parent)
     : T_BasePage(parent)
@@ -114,6 +117,64 @@ T_Popup::T_Popup(QWidget* parent)
     rollerLayout->addWidget(_roller);
     rollerLayout->addStretch();
 
+    _drawer = new ElaDrawerArea(this);
+    QWidget* drawerHeader = new QWidget(this);
+    QHBoxLayout* drawerHeaderLayout = new QHBoxLayout(drawerHeader);
+    ElaText* drawerIcon = new ElaText(this);
+    drawerIcon->setTextPixelSize(15);
+    drawerIcon->setElaIcon(ElaIconType::MessageArrowDown);
+    drawerIcon->setFixedSize(25, 25);
+    ElaText* drawerText = new ElaText("ElaDrawer", this);
+    drawerText->setTextPixelSize(15);
+
+    ElaToggleSwitch* drawerSwitch = new ElaToggleSwitch(this);
+    ElaText* drawerSwitchText = new ElaText("关", this);
+    drawerSwitchText->setTextPixelSize(15);
+    connect(drawerSwitch, &ElaToggleSwitch::toggled, this, [=](bool toggled) {
+        if (toggled)
+        {
+            drawerSwitchText->setText("开");
+            _drawer->expand();
+        }
+        else
+        {
+            drawerSwitchText->setText("关");
+            _drawer->collpase();
+        }
+    });
+    connect(_drawer, &ElaDrawerArea::expandStateChanged, this, [=](bool isExpand) {
+        drawerSwitch->setIsToggled(isExpand);
+    });
+
+    drawerHeaderLayout->addWidget(drawerIcon);
+    drawerHeaderLayout->addWidget(drawerText);
+    drawerHeaderLayout->addStretch();
+    drawerHeaderLayout->addWidget(drawerSwitchText);
+    drawerHeaderLayout->addWidget(drawerSwitch);
+
+    _drawer->setDrawerHeader(drawerHeader);
+    QWidget* drawerWidget1 = new QWidget(this);
+    QHBoxLayout* drawerWidget1Layout = new QHBoxLayout(drawerWidget1);
+    ElaCheckBox* drawerCheckBox1 = new ElaCheckBox("测试窗口1", this);
+    drawerWidget1Layout->addSpacing(60);
+    drawerWidget1Layout->addWidget(drawerCheckBox1);
+
+    QWidget* drawerWidget2 = new QWidget(this);
+    QHBoxLayout* drawerWidget2Layout = new QHBoxLayout(drawerWidget2);
+    ElaCheckBox* drawerCheckBox2 = new ElaCheckBox("测试窗口2", this);
+    drawerWidget2Layout->addSpacing(60);
+    drawerWidget2Layout->addWidget(drawerCheckBox2);
+
+    QWidget* drawerWidget3 = new QWidget(this);
+    QHBoxLayout* drawerWidget3Layout = new QHBoxLayout(drawerWidget3);
+    ElaCheckBox* drawerCheckBox3 = new ElaCheckBox("测试窗口3", this);
+    drawerWidget3Layout->addSpacing(60);
+    drawerWidget3Layout->addWidget(drawerCheckBox3);
+
+    _drawer->addDrawer(drawerWidget1);
+    _drawer->addDrawer(drawerWidget2);
+    _drawer->addDrawer(drawerWidget3);
+
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
     centerVLayout->addWidget(toolButtonArea);
@@ -121,6 +182,7 @@ T_Popup::T_Popup(QWidget* parent)
     centerVLayout->addWidget(calendarPickerArea);
     centerVLayout->addWidget(_calendar);
     centerVLayout->addWidget(keyBinderArea);
+    centerVLayout->addWidget(_drawer);
     centerVLayout->addWidget(rollerArea);
     centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);

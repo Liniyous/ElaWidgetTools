@@ -59,14 +59,12 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
             connect(navigationMoveAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
                 if (_isNavigationDisplayModeChanged)
                 {
-                    _navigationBar->setIsTransparent(true);
                     _isWMClickedAnimationFinished = true;
                     _resetWindowLayout(false);
                     navigationMoveAnimation->deleteLater();
                 }
             });
             connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
-                _navigationBar->setIsTransparent(true);
                 if (!_isNavigationDisplayModeChanged)
                 {
                     _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
@@ -246,6 +244,7 @@ void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
     {
         if (_centerLayout->count() == 0)
         {
+            _navigationBar->setIsTransparent(true);
             _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
             _centerLayout->addWidget(_navigationBar);
             _centerLayout->addWidget(_centerStackedWidget);

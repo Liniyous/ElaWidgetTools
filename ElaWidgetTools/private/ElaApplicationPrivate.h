@@ -15,7 +15,7 @@ class ElaApplicationPrivate : public QObject
     Q_PROPERTY_CREATE_D(QString, MicaImagePath)
 public:
     explicit ElaApplicationPrivate(QObject* parent = nullptr);
-    ~ElaApplicationPrivate();
+    ~ElaApplicationPrivate() override;
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 Q_SIGNALS:
     Q_SIGNAL void initMicaBase(QImage img);

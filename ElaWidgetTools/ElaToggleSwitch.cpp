@@ -12,6 +12,7 @@ ElaToggleSwitch::ElaToggleSwitch(QWidget* parent)
 {
     Q_D(ElaToggleSwitch);
     d->q_ptr = this;
+    setObjectName("ElaToggleSwitch");
     setMouseTracking(true);
     setFixedSize(44, 22);
     d->_circleCenterX = -1;
@@ -19,7 +20,9 @@ ElaToggleSwitch::ElaToggleSwitch(QWidget* parent)
     d->_themeMode = eTheme->getThemeMode();
     setProperty("circleCenterX", 0.01);
     setProperty("circleRadius", 0.01);
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 ElaToggleSwitch::~ElaToggleSwitch()
