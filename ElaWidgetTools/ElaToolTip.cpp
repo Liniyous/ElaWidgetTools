@@ -49,6 +49,7 @@ ElaToolTip::~ElaToolTip()
 void ElaToolTip::setToolTip(QString toolTip)
 {
     Q_D(ElaToolTip);
+    resize(fontMetrics().horizontalAdvance(toolTip), height());
     d->_toolTipText->setText(toolTip);
     Q_EMIT pToolTipChanged();
 }
@@ -81,6 +82,12 @@ QWidget* ElaToolTip::getCustomWidget() const
 {
     Q_D(const ElaToolTip);
     return d->_pCustomWidget;
+}
+
+void ElaToolTip::updatePos()
+{
+    Q_D(ElaToolTip);
+    d->_updatePos();
 }
 
 void ElaToolTip::paintEvent(QPaintEvent* event)

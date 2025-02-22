@@ -17,7 +17,9 @@ class ELA_EXPORT ElaToolTip : public QWidget
     Q_PROPERTY_CREATE_Q_H(QWidget*, CustomWidget)
 public:
     explicit ElaToolTip(QWidget* parent = nullptr);
-    ~ElaToolTip();
+    ~ElaToolTip() override;
+
+    void updatePos();
 
 protected:
     virtual void paintEvent(QPaintEvent* event);

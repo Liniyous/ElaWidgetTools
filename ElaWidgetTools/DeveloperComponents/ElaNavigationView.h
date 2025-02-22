@@ -6,6 +6,7 @@
 
 class ElaScrollBar;
 class ElaNavigationStyle;
+class ElaToolTip;
 class ElaNavigationView : public QTreeView
 {
     Q_OBJECT
@@ -20,11 +21,14 @@ Q_SIGNALS:
     Q_SIGNAL void navigationOpenNewWindow(QString nodeKey);
 
 protected:
+    virtual void mouseMoveEvent(QMouseEvent* event) override;
     virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
     ElaNavigationStyle* _navigationStyle{nullptr};
+    ElaToolTip* _compactToolTip{nullptr};
 };
 
 #endif // ELANAVIGATIONVIEW_H

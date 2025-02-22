@@ -13,7 +13,7 @@
 #include "ElaNavigationNode.h"
 #include "ElaNavigationStyle.h"
 #include "ElaScrollBar.h"
-
+#include "ElaToolTip.h"
 ElaNavigationView::ElaNavigationView(QWidget* parent)
     : QTreeView(parent)
 {
@@ -39,6 +39,7 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     ElaScrollBar* floatVScrollBar = new ElaScrollBar(vScrollBar, this);
     floatVScrollBar->setIsAnimation(true);
+    floatVScrollBar->installEventFilter(this);
 
     _navigationStyle = new ElaNavigationStyle(this->style());
     _navigationStyle->setNavigationView(this);
@@ -69,6 +70,8 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &ElaNavigationView::customContextMenuRequested, this, &ElaNavigationView::onCustomContextMenuRequested);
+
+    _compactToolTip = new ElaToolTip(this);
 }
 
 ElaNavigationView::~ElaNavigationView()
@@ -100,6 +103,28 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
     }
 }
 
+void ElaNavigationView::mouseMoveEvent(QMouseEvent* event)
+{
+    if (width() <= 60)
+    {
+        QModelIndex posIndex = indexAt(event->pos());
+        if (!posIndex.isValid())
+        {
+            _compactToolTip->hide();
+            return;
+        }
+        ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
+        _compactToolTip->setToolTip(posNode->getNodeTitle());
+        _compactToolTip->updatePos();
+        _compactToolTip->show();
+    }
+    else
+    {
+        _compactToolTip->hide();
+    }
+    QTreeView::mouseMoveEvent(event);
+}
+
 void ElaNavigationView::mouseDoubleClickEvent(QMouseEvent* event)
 {
     _navigationStyle->setPressIndex(indexAt(event->pos()));
@@ -119,4 +144,38 @@ void ElaNavigationView::mouseReleaseEvent(QMouseEvent* event)
         }
         _navigationStyle->setPressIndex(QModelIndex());
     }
+}
+
+bool ElaNavigationView::eventFilter(QObject* watched, QEvent* event)
+{
+    switch (event->type())
+    {
+    case QEvent::MouseMove:
+    case QEvent::HoverMove:
+    {
+        if (width() <= 60)
+        {
+            QModelIndex posIndex = indexAt(mapFromGlobal(QCursor::pos()));
+            if (!posIndex.isValid())
+            {
+                _compactToolTip->hide();
+                break;
+            }
+            ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
+            _compactToolTip->setToolTip(posNode->getNodeTitle());
+            _compactToolTip->updatePos();
+            _compactToolTip->show();
+        }
+        else
+        {
+            _compactToolTip->hide();
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QAbstractItemView::eventFilter(watched, event);
 }

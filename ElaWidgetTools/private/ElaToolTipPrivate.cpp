@@ -43,11 +43,7 @@ bool ElaToolTipPrivate::eventFilter(QObject* watched, QEvent* event)
     case QEvent::HoverMove:
     case QEvent::MouseMove:
     {
-        if (q->isVisible())
-        {
-            QPoint cursorPoint = QCursor::pos();
-            q->move(cursorPoint.x() + 10, cursorPoint.y());
-        }
+        _updatePos();
         break;
     }
     default:
@@ -70,4 +66,14 @@ void ElaToolTipPrivate::_doShowAnimation()
     showAnimation->setStartValue(0);
     showAnimation->setEndValue(1);
     showAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+void ElaToolTipPrivate::_updatePos()
+{
+    Q_Q(ElaToolTip);
+    if (q->isVisible())
+    {
+        QPoint cursorPoint = QCursor::pos();
+        q->move(cursorPoint.x() + 10, cursorPoint.y());
+    }
 }

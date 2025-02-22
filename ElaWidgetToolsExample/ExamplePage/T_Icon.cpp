@@ -80,8 +80,8 @@ void T_Icon::onSearchEditTextEdit(const QString& searchText)
             searchKeyList.append(key);
         }
     }
-    _iconModel->setSearchKeyList(searchKeyList);
     _iconModel->setIsSearchMode(true);
+    _iconModel->setSearchKeyList(searchKeyList);
     _iconView->clearSelection();
     _iconView->scrollTo(_iconModel->index(0, 0));
     _iconView->viewport()->update();

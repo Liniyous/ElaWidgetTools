@@ -271,7 +271,7 @@ QStringList ElaNavigationModel::removeNavigationNode(QString nodeKey)
     {
         removeKeyList.append(node->getNodeKey());
     }
-    beginRemoveRows(parentNode->getModelIndex(), parentNode->getChildrenNodes().count(), parentNode->getChildrenNodes().count());
+    beginRemoveRows(parentNode->getModelIndex(), parentNode->getChildrenNodes().count() - 1, parentNode->getChildrenNodes().count() - 1);
     parentNode->removeChildNode(node);
     _nodesMap.remove(node->getNodeKey());
     endRemoveRows();

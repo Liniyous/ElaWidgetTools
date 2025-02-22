@@ -30,7 +30,9 @@ ElaScrollBar::ElaScrollBar(QWidget* parent)
     d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
     d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
     d->_slideSmoothAnimation->setDuration(300);
-    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() { d->_scrollValue = value(); });
+    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
+        d->_scrollValue = value();
+    });
 
     d->_expandTimer = new QTimer(this);
     connect(d->_expandTimer, &QTimer::timeout, this, [=]() {

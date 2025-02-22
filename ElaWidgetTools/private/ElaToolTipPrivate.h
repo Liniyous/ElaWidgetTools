@@ -32,6 +32,7 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     int _shadowBorderWidth{6};
     void _doShowAnimation();
+    void _updatePos();
 };
 
 #endif // ELATOOLTIPPRIVATE_H
