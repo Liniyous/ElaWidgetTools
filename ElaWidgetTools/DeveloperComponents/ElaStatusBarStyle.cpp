@@ -1,14 +1,16 @@
 #include "ElaStatusBarStyle.h"
 
+#include "ElaTheme.h"
 #include <QDebug>
 #include <QPainter>
+#include <QStatusBar>
 #include <QStyleOption>
-
-#include "ElaTheme.h"
 ElaStatusBarStyle::ElaStatusBarStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaStatusBarStyle::~ElaStatusBarStyle()
@@ -34,13 +36,17 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
     case QStyle::PE_FrameStatusBarItem:
     {
         //间隔符绘制
-        QRect statusBarItemRect = option->rect;
-        painter->save();
-        painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-        painter->drawRoundedRect(QRectF(statusBarItemRect.right() - 3, statusBarItemRect.y() + statusBarItemRect.height() * 0.1, 3, statusBarItemRect.height() - statusBarItemRect.height() * 0.2), 2, 2);
-        painter->restore();
+        const QStatusBar* statusBar = dynamic_cast<const QStatusBar*>(widget->parentWidget());
+        if (statusBar && statusBar->isSizeGripEnabled())
+        {
+            QRect statusBarItemRect = option->rect;
+            painter->save();
+            painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+            painter->drawRoundedRect(QRectF(statusBarItemRect.right() - 3, statusBarItemRect.y() + statusBarItemRect.height() * 0.1, 3, statusBarItemRect.height() - statusBarItemRect.height() * 0.2), 2, 2);
+            painter->restore();
+        }
         return;
     }
     default:
