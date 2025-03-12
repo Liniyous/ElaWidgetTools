@@ -295,6 +295,24 @@ ElaNavigationType::NodeOperateReturnType ElaWindow::addFooterNode(QString footer
     return d->_navigationBar->addFooterNode(footerTitle, page, footerKey, keyPoints, awesome);
 }
 
+bool ElaWindow::getNavigationNodeIsExpanded(QString expanderKey) const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationBar->getNavigationNodeIsExpanded(expanderKey);
+}
+
+void ElaWindow::expandNavigationNode(QString expanderKey)
+{
+    Q_D(ElaWindow);
+    d->_navigationBar->expandNavigationNode(expanderKey);
+}
+
+void ElaWindow::collpaseNavigationNode(QString expanderKey)
+{
+    Q_D(ElaWindow);
+    d->_navigationBar->collpaseNavigationNode(expanderKey);
+}
+
 void ElaWindow::removeNavigationNode(QString nodeKey) const
 {
     Q_D(const ElaWindow);

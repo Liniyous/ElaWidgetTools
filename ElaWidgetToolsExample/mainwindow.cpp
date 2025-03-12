@@ -234,6 +234,7 @@ void MainWindow::initContent()
     addPageNode("ElaListView", _listViewPage, _viewKey, 9, ElaIconType::List);
     addPageNode("ElaTableView", _tableViewPage, _viewKey, ElaIconType::Table);
     addPageNode("ElaTreeView", _treeViewPage, _viewKey, ElaIconType::ListTree);
+    expandNavigationNode(_viewKey);
 
     addPageNode("ElaGraphics", _graphicsPage, 9, ElaIconType::Paintbrush);
     addPageNode("ElaCard", _cardPage, ElaIconType::Cards);

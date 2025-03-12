@@ -43,6 +43,9 @@ public:
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None) const;
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None) const;
 
+    bool getNavigationNodeIsExpanded(QString expanderKey) const;
+    void expandNavigationNode(QString expanderKey);
+    void collpaseNavigationNode(QString expanderKey);
     void removeNavigationNode(QString nodeKey) const;
 
     void setNodeKeyPoints(QString nodeKey, int keyPoints);

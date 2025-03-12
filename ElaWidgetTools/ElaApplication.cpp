@@ -63,6 +63,7 @@ void ElaApplication::init()
     Q_INIT_RESOURCE(ElaWidgetTools);
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
+    QFontDatabase::addApplicationFont(":/include/Font/segoe_slboot_EX.ttf");
     //默认字体
     QFont font = qApp->font();
     font.setPixelSize(13);

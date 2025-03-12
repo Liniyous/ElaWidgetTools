@@ -349,6 +349,41 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString
     return returnType;
 }
 
+bool ElaNavigationBar::getNavigationNodeIsExpanded(QString expanderKey) const
+{
+    Q_D(const ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(expanderKey);
+    if (!node || !node->getIsExpanderNode())
+    {
+        return false;
+    }
+    return d->_navigationView->isExpanded(node->getModelIndex());
+}
+
+void ElaNavigationBar::expandNavigationNode(QString expanderKey)
+{
+    Q_D(ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(expanderKey);
+    if (!node || !node->getIsExpanderNode())
+    {
+        return;
+    }
+    d->_expandOrCollpaseExpanderNode(node, true);
+    d->_resetNodeSelected();
+}
+
+void ElaNavigationBar::collpaseNavigationNode(QString expanderKey)
+{
+    Q_D(ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(expanderKey);
+    if (!node || !node->getIsExpanderNode())
+    {
+        return;
+    }
+    d->_expandOrCollpaseExpanderNode(node, false);
+    d->_resetNodeSelected();
+}
+
 void ElaNavigationBar::removeNavigationNode(QString nodeKey)
 {
     Q_D(ElaNavigationBar);

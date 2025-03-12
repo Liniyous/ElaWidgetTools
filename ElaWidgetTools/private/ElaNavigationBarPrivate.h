@@ -68,9 +68,10 @@ private:
     QList<ElaNavigationNode*> _lastExpandedNodesList;
 
     ElaNavigationType::NavigationDisplayMode _currentDisplayMode{ElaNavigationType::NavigationDisplayMode::Maximal};
+    void _initNodeModelIndex(const QModelIndex& parentIndex);
     void _resetNodeSelected();
     void _expandSelectedNodeParent();
-    void _initNodeModelIndex(const QModelIndex& parentIndex);
+    void _expandOrCollpaseExpanderNode(ElaNavigationNode* node, bool isExpand);
 
     void _addStackedPage(QWidget* page, QString pageKey);
     void _addFooterPage(QWidget* page, QString footKey);
