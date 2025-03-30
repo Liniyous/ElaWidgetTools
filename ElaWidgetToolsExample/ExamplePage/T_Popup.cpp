@@ -154,18 +154,21 @@ T_Popup::T_Popup(QWidget* parent)
 
     _drawer->setDrawerHeader(drawerHeader);
     QWidget* drawerWidget1 = new QWidget(this);
+    drawerWidget1->setFixedHeight(75);
     QHBoxLayout* drawerWidget1Layout = new QHBoxLayout(drawerWidget1);
     ElaCheckBox* drawerCheckBox1 = new ElaCheckBox("测试窗口1", this);
     drawerWidget1Layout->addSpacing(60);
     drawerWidget1Layout->addWidget(drawerCheckBox1);
 
     QWidget* drawerWidget2 = new QWidget(this);
+    drawerWidget2->setFixedHeight(75);
     QHBoxLayout* drawerWidget2Layout = new QHBoxLayout(drawerWidget2);
     ElaCheckBox* drawerCheckBox2 = new ElaCheckBox("测试窗口2", this);
     drawerWidget2Layout->addSpacing(60);
     drawerWidget2Layout->addWidget(drawerCheckBox2);
 
     QWidget* drawerWidget3 = new QWidget(this);
+    drawerWidget3->setFixedHeight(75);
     QHBoxLayout* drawerWidget3Layout = new QHBoxLayout(drawerWidget3);
     ElaCheckBox* drawerCheckBox3 = new ElaCheckBox("测试窗口3", this);
     drawerWidget3Layout->addSpacing(60);

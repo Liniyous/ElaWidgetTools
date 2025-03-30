@@ -30,6 +30,7 @@ private:
     QVBoxLayout* _containerLayout{nullptr};
     QWidget* _containerWidget{nullptr};
     QList<QWidget*> _drawerWidgetList;
+    int _calculateContainertMinimumHeight() const;
 };
 
 #endif //ELAFRAMEWORK_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELADRAWERCONTAINER_H_

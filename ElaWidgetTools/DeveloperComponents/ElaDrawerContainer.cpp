@@ -72,7 +72,8 @@ void ElaDrawerContainer::doDrawerAnimation(bool isExpand)
     heightAnimation->setEasingCurve(QEasingCurve::OutCubic);
     heightAnimation->setDuration(isExpand ? 300 : 450);
     heightAnimation->setStartValue(maximumHeight());
-    heightAnimation->setEndValue(isExpand ? 200 : 0);
+
+    heightAnimation->setEndValue(isExpand ? _calculateContainertMinimumHeight() : 0);
     heightAnimation->start(QPropertyAnimation::DeleteWhenStopped);
 
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(_opacityEffect, "opacity");
@@ -102,4 +103,15 @@ void ElaDrawerContainer::paintEvent(QPaintEvent* event)
         painter.drawLine(0, drawerHeight, width(), drawerHeight);
     }
     painter.restore();
+}
+
+int ElaDrawerContainer::_calculateContainertMinimumHeight() const
+{
+    int minimumHeight = 0;
+    for (auto widget: _drawerWidgetList)
+    {
+        minimumHeight += widget->minimumHeight();
+    }
+    minimumHeight = std::max(100, minimumHeight);
+    return minimumHeight;
 }
