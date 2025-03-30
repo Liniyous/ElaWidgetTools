@@ -79,6 +79,14 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
     comboBoxLayout->addWidget(startButton);
     comboBoxLayout->addStretch();
 
+    QWidget* centralWidget = new QWidget(this);
+    centralWidget->setWindowTitle("ElaScreen");
+    QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
+    centerLayout->setContentsMargins(0, 0, 0, 0);
+    centerLayout->addLayout(comboBoxLayout);
+    centerLayout->addWidget(dxgiScreenArea);
+
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
     QHBoxLayout* packetLayout = new QHBoxLayout();
     ElaText* packetIOText = new ElaText("网络视图 (需要先进行屏幕捕获 若接口IP不正确或不可用 程序可能会崩溃)", this);
     packetIOText->setTextPixelSize(17);
@@ -123,30 +131,24 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
     recvScreenArea->setFixedHeight(700);
     QHBoxLayout* recvScreenLayout = new QHBoxLayout(recvScreenArea);
     recvScreenLayout->addWidget(_recvScreen);
-
-    QWidget* centralWidget = new QWidget(this);
-    centralWidget->setWindowTitle("ElaScreen");
-    QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
-    centerLayout->setContentsMargins(0, 0, 0, 0);
-    centerLayout->addLayout(comboBoxLayout);
-    centerLayout->addWidget(dxgiScreenArea);
     centerLayout->addSpacing(30);
     centerLayout->addWidget(packetIOText);
     centerLayout->addLayout(packetLayout);
     centerLayout->addWidget(recvScreenArea);
+#endif
+
     addCentralWidget(centralWidget, false, true);
 }
 
 T_ElaScreen::~T_ElaScreen()
 {
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
     _unInitThread(true);
     _unInitThread(false);
+#endif
 }
 
-void T_ElaScreen::initGrabImageHandleThread()
-{
-}
-
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
 void T_ElaScreen::_initSendThread(QString interfaceIP)
 {
     _packetIOSendThread = new QThread(this);
@@ -202,5 +204,5 @@ void T_ElaScreen::_unInitThread(bool isSend)
         _packetIORecvThread = nullptr;
     }
 }
-
+#endif
 #endif

@@ -57,16 +57,25 @@ endif ()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+
 if (WIN32)
     target_include_directories(${PROJECT_NAME} PUBLIC
         ExamplePage
         ModelView
     )
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-        Qt${QT_VERSION_MAJOR}::Widgets
-        ElaWidgetTools
-        ElaPacketIO
-    )
+    if (BUILD_ELAPACKETIO)
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+            Qt${QT_VERSION_MAJOR}::Widgets
+            ElaWidgetTools
+            ElaPacketIO
+        )
+    else ()
+        target_link_libraries(${PROJECT_NAME} PRIVATE
+            Qt${QT_VERSION_MAJOR}::Widgets
+            ElaWidgetTools
+        )
+    endif ()
+
 else ()
     target_include_directories(${PROJECT_NAME} PUBLIC
         ExamplePage

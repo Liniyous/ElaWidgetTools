@@ -1,6 +1,6 @@
 #include "T_ElaPacketIO.h"
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
 #include "ElaDxgiManager.h"
 #include "ElaXIO_Connection.h"
 #include "ElaXIO_Interface.h"
@@ -94,14 +94,7 @@ void T_ElaPacketIO::handleGrabImage()
                 screenPkt._currentDataLen = dataTotalLen - i * 1024;
             }
             memcpy(screenPkt._data, imageData + screenPkt._dataOffset, 1024);
-            if (_connection)
-            {
-                _connection->send(screenPkt);
-            }
-            else
-            {
-                break;
-            }
+            _sendToXIO(screenPkt);
             //  和下面这句等效 但下方写法效率较低
             //  _interface->send(screenPkt, _interface->GetConnections()[0]);
         }
@@ -181,5 +174,32 @@ void T_ElaPacketIO::_handleScreenPkt(ElaXIO_ScreenPkt& screenPkt)
         }
     }
     _lastImageIndex = screenPkt._dataID;
+}
+
+void T_ElaPacketIO::_sendToXIO(ElaXIO_Packet& packet, bool isMulticast)
+{
+    if (isMulticast)
+    {
+        if (!_multicastConnection)
+        {
+            const std::vector<ElaXIO_Interface::UDP_Target>& udpTargetVector = _interface->getUDP_Targets();
+            if (udpTargetVector.empty())
+            {
+                return;
+            }
+            _multicastConnection = _interface->FindConnection(udpTargetVector[0]._connectionId);
+        }
+        if (_multicastConnection && _multicastConnection->isInitialized())
+        {
+            _multicastConnection->send(packet);
+        }
+    }
+    else
+    {
+        if (_connection)
+        {
+            _connection->send(packet);
+        }
+    }
 }
 #endif

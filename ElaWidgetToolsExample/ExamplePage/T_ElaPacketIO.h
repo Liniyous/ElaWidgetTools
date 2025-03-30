@@ -2,7 +2,7 @@
 #define ELAFRAMEWORK_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_ELAPACKETIO_H_
 
 #include <QObject>
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
 #include "ElaXIO_PacketRegistry.h"
 #include "UtCallbackHolder.h"
 #include "stdafx.h"
@@ -35,6 +35,8 @@ private:
     UtCallbackHolder _callback;
     void _handleScreenPkt(ElaXIO_ScreenPkt& screenPkt);
     ElaXIO_Connection* _connection{nullptr};
+    ElaXIO_Connection* _multicastConnection{nullptr};
+    void _sendToXIO(ElaXIO_Packet& packet, bool isMulticast = false);
 };
 #endif
 #endif //ELAFRAMEWORK_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_ELAPACKETIO_H_
