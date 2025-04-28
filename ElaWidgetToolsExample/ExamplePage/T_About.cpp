@@ -36,7 +36,7 @@ T_About::T_About(QWidget* parent)
     ElaText* supportText = new ElaText("Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", this);
     supportText->setWordWrap(false);
     supportText->setTextPixelSize(14);
-    ElaText* contactText = new ElaText("作者: 8009963@qq.com\n交流群: 850243692(QQ)", this);
+    ElaText* contactText = new ElaText("作者: 3056769574@qq.com\n交流群: 850243692(QQ)", this);
     contactText->setWordWrap(false);
     contactText->setTextInteractionFlags(Qt::TextSelectableByMouse);
     contactText->setTextPixelSize(14);
