@@ -103,7 +103,7 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing);
             painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-            painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+            painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
             painter->drawRoundedRect(frameRect, 3, 3);
             painter->restore();
         }

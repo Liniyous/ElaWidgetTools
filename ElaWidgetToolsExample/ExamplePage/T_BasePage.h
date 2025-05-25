@@ -9,7 +9,7 @@ class T_BasePage : public ElaScrollPage
     Q_OBJECT
 public:
     explicit T_BasePage(QWidget* parent = nullptr);
-    ~T_BasePage();
+    ~T_BasePage() override;
 
 protected:
     void createCustomWidget(QString desText);

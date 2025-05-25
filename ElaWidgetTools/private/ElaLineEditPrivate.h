@@ -16,7 +16,7 @@ class ElaLineEditPrivate : public QObject
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit ElaLineEditPrivate(QObject* parent = nullptr);
-    ~ElaLineEditPrivate();
+    ~ElaLineEditPrivate() override;
     Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 

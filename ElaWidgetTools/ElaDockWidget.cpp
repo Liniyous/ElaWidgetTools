@@ -19,7 +19,6 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
     Q_D(ElaDockWidget);
     d->q_ptr = this;
     setObjectName("ElaDockWidget");
-
     d->_titleBar = new ElaDockWidgetTitleBar(this);
     setTitleBarWidget(d->_titleBar);
 
@@ -27,13 +26,16 @@ ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaDockWidgetPrivate::onThemeModeChanged);
 
-    d->_isEnableMica = eApp->getIsEnableMica();
-    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
-        d->_isEnableMica = eApp->getIsEnableMica();
+    d->_windowDisplayMode = eApp->getWindowDisplayMode();
+    connect(eApp, &ElaApplication::pWindowDisplayModeChanged, this, [=]() {
+        d->_windowDisplayMode = eApp->getWindowDisplayMode();
         update();
     });
     connect(this, &ElaDockWidget::topLevelChanged, this, [=](bool topLevel) {
-        eApp->syncMica(this, topLevel);
+        if (eApp->getWindowDisplayMode() == ElaApplicationType::WindowDisplayMode::ElaMica)
+        {
+            eApp->syncWindowDisplayMode(this, topLevel);
+        }
     });
 }
 
@@ -57,7 +59,7 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
         painter.setRenderHints(QPainter::Antialiasing);
 #ifdef Q_OS_WIN
         // 背景
-        if (!d->_isEnableMica)
+        if (d->_windowDisplayMode != ElaApplicationType::WindowDisplayMode::ElaMica)
         {
             painter.setPen(Qt::NoPen);
             painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
@@ -87,7 +89,7 @@ bool ElaDockWidget::event(QEvent* event)
         HWND hwnd = (HWND)d->_currentWinID;
         DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
         ::SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_MAXIMIZEBOX | WS_THICKFRAME);
-        setShadow(hwnd);
+        ElaWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
         if (!hasCaption)
@@ -141,8 +143,12 @@ bool ElaDockWidget::nativeEvent(const QByteArray& eventType, void* message, long
     }
     case WM_NCACTIVATE:
     {
-        *result = TRUE;
-        return true;
+        if (ElaWinShadowHelper::getInstance()->isCompositionEnabled())
+        {
+            return true;
+        }
+        *result = true;
+        return false;
     }
     case WM_NCHITTEST:
     {

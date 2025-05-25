@@ -41,7 +41,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_leftButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
         onLeftButtonClicked();
-        d->_maskWidget->doMaskAnimation(0);
         d->_doCloseAnimation();
     });
     d->_leftButton->setMinimumSize(0, 0);
@@ -167,7 +166,7 @@ void ElaContentDialog::showEvent(QShowEvent* event)
 #ifdef Q_OS_WIN
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     HWND hwnd = (HWND)d->_currentWinID;
-    setShadow(hwnd);
+    ElaWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
     DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
     bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
     if (!hasCaption)

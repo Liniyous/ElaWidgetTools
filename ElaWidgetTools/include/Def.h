@@ -30,6 +30,21 @@ private:                         \
 #define Q_ENUM_CREATE(CLASS) Q_ENUM(CLASS)
 #endif
 
+Q_BEGIN_ENUM_CREATE(ElaApplicationType)
+enum WindowDisplayMode
+{
+    Normal = 0x0000,
+    ElaMica = 0x0001,
+#if defined(Q_OS_WIN)
+    Mica = 0x0002,
+    MicaAlt = 0x0003,
+    Acrylic = 0x0004,
+    DWMBlur = 0x0005,
+#endif
+};
+Q_ENUM_CREATE(WindowDisplayMode)
+Q_END_ENUM_CREATE(ElaApplicationType)
+
 Q_BEGIN_ENUM_CREATE(ElaThemeType)
 enum ThemeMode
 {
@@ -228,6 +243,15 @@ enum MessageMode
 };
 Q_ENUM_CREATE(MessageMode)
 Q_END_ENUM_CREATE(ElaMessageBarType)
+
+Q_BEGIN_ENUM_CREATE(ElaProgressRingType)
+enum ValueDisplayMode
+{
+    Actual = 0x0000,
+    Percent = 0x0001,
+};
+Q_ENUM_CREATE(ValueDisplayMode)
+Q_END_ENUM_CREATE(ElaProgressRingType)
 
 Q_BEGIN_ENUM_CREATE(ElaIconType)
 enum IconName

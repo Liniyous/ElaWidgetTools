@@ -11,7 +11,7 @@ class ElaComboBoxStyle : public QProxyStyle
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit ElaComboBoxStyle(QStyle* style = nullptr);
-    ~ElaComboBoxStyle();
+    ~ElaComboBoxStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex* option, QPainter* painter, const QWidget* widget = nullptr) const override;

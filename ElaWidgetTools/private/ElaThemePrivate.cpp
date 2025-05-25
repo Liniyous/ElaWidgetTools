@@ -31,7 +31,7 @@ void ElaThemePrivate::_initThemeColor()
     // 普通窗体
     _lightThemeColorList[ElaThemeType::WindowBase] = QColor(0xF3, 0xF3, 0xF3);
     _darkThemeColorList[ElaThemeType::WindowBase] = QColor(0x20, 0x20, 0x20);
-    _lightThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0xFF, 0xFF, 0xFF, 120);
+    _lightThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0xFF, 0xFF, 0xFF, 80);
     _darkThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0x3E, 0x3E, 0x3E, 60);
 
     // 浮动窗体

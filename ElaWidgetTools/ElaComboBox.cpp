@@ -1,16 +1,16 @@
 #include "ElaComboBox.h"
 
-#include <QAbstractItemView>
-#include <QApplication>
-#include <QLayout>
-#include <QListView>
-#include <QMouseEvent>
-#include <QPropertyAnimation>
-
 #include "ElaComboBoxStyle.h"
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
 #include "private/ElaComboBoxPrivate.h"
+#include <QAbstractItemView>
+#include <QApplication>
+#include <QLayout>
+#include <QLineEdit>
+#include <QListView>
+#include <QMouseEvent>
+#include <QPropertyAnimation>
 Q_PROPERTY_CREATE_Q_CPP(ElaComboBox, int, BorderRadius)
 ElaComboBox::ElaComboBox(QWidget* parent)
     : QComboBox(parent), d_ptr(new ElaComboBoxPrivate())
@@ -56,11 +56,22 @@ ElaComboBox::ElaComboBox(QWidget* parent)
 #endif
     }
     QComboBox::setMaxVisibleItems(5);
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaComboBoxPrivate::onThemeChanged);
 }
 
 ElaComboBox::~ElaComboBox()
 {
+}
+
+void ElaComboBox::setEditable(bool editable)
+{
+    Q_D(ElaComboBox);
+    QComboBox::setEditable(editable);
+    if (editable)
+    {
+        lineEdit()->setStyle(d->_comboBoxStyle);
+        d->onThemeChanged(d->_themeMode);
+    }
 }
 
 void ElaComboBox::showPopup()
@@ -155,7 +166,9 @@ void ElaComboBox::hidePopup()
                 container->setFixedHeight(containerHeight);
             });
             QPoint viewPos = view()->pos();
-            connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() { view()->move(viewPos); });
+            connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
+                view()->move(viewPos);
+            });
             viewPosAnimation->setStartValue(viewPos);
             viewPosAnimation->setEndValue(QPoint(viewPos.x(), viewPos.y() - view()->height()));
             viewPosAnimation->setEasingCurve(QEasingCurve::InCubic);

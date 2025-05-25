@@ -13,7 +13,9 @@ class ELA_EXPORT ElaComboBox : public QComboBox
     Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
 public:
     explicit ElaComboBox(QWidget* parent = nullptr);
-    ~ElaComboBox();
+    ~ElaComboBox() override;
+
+    void setEditable(bool editable);
 
 protected:
     virtual void showPopup() override;

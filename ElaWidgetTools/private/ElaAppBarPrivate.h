@@ -25,7 +25,7 @@ class ElaAppBarPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, CustomWidgetMaximumWidth)
 public:
     explicit ElaAppBarPrivate(QObject* parent = nullptr);
-    ~ElaAppBarPrivate();
+    ~ElaAppBarPrivate() override;
     Q_SLOT void onMinButtonClicked();
     Q_SLOT void onMaxButtonClicked();
     Q_SLOT void onCloseButtonClicked();

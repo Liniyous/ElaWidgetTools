@@ -8,6 +8,7 @@ ElaCentralStackedWidget::ElaCentralStackedWidget(QWidget* parent)
     : QStackedWidget(parent)
 {
     setObjectName("ElaCentralStackedWidget");
+    setStyleSheet("#ElaCentralStackedWidget{background-color:transparent;}");
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, &ElaCentralStackedWidget::onThemeModeChanged);
 }
@@ -59,5 +60,4 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
         }
         painter.restore();
     }
-    QStackedWidget::paintEvent(event);
 }

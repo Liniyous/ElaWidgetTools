@@ -14,7 +14,14 @@ public:
 
 private:
     ElaComboBox* _themeComboBox{nullptr};
-    ElaToggleSwitch* _micaSwitchButton{nullptr};
+    ElaRadioButton* _normalButton{nullptr};
+    ElaRadioButton* _elaMicaButton{nullptr};
+#ifdef Q_OS_WIN
+    ElaRadioButton* _micaButton{nullptr};
+    ElaRadioButton* _micaAltButton{nullptr};
+    ElaRadioButton* _acrylicButton{nullptr};
+    ElaRadioButton* _dwmBlurnormalButton{nullptr};
+#endif
     ElaToggleSwitch* _logSwitchButton{nullptr};
     ElaRadioButton* _minimumButton{nullptr};
     ElaRadioButton* _compactButton{nullptr};

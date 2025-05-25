@@ -36,7 +36,7 @@ void ElaLCDNumberStyle::drawControl(QStyle::ControlElement element, const QStyle
                 painter->setBrush(ElaThemeColor(_themeMode, BasicBorder));
                 painter->drawRoundedRect(numberRect, 6, 6);
 
-                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
                 painter->drawRoundedRect(QRectF(numberRect.x() + 1.5, numberRect.y() + 1.5, numberRect.width() - 3, numberRect.height() - 3), 6, 6);
                 painter->restore();
             }

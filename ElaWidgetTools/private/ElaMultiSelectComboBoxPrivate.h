@@ -17,7 +17,7 @@ class ElaMultiSelectComboBoxPrivate : public QObject
     Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
 public:
     explicit ElaMultiSelectComboBoxPrivate(QObject* parent = nullptr);
-    ~ElaMultiSelectComboBoxPrivate();
+    ~ElaMultiSelectComboBoxPrivate() override;
     Q_SLOT void onItemPressed(const QModelIndex& index);
 
 private:

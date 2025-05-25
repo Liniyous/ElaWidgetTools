@@ -44,9 +44,9 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_pIsOnlyAllowMinAndClose = false;
     d->_pCustomWidget = nullptr;
     d->_pCustomWidgetMaximumWidth = 550;
-
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
+    ElaWinShadowHelper::getInstance()->initDWMAPI();
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
     window()->setWindowFlags((window()->windowFlags()) | Qt::WindowMinimizeButtonHint | Qt::FramelessWindowHint);
 #endif
@@ -396,7 +396,11 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
     }
     case WM_NCACTIVATE:
     {
-        *result = TRUE;
+        if (ElaWinShadowHelper::getInstance()->isCompositionEnabled())
+        {
+            return 0;
+        }
+        *result = true;
         return 1;
     }
     case WM_SIZE:
@@ -683,7 +687,7 @@ bool ElaAppBar::eventFilter(QObject* obj, QEvent* event)
         }
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
         HWND hwnd = (HWND)d->_currentWinID;
-        setShadow(hwnd);
+        ElaWinShadowHelper::getInstance()->setWindowShadow(d->_currentWinID);
         DWORD style = ::GetWindowLongPtr(hwnd, GWL_STYLE);
         bool hasCaption = (style & WS_CAPTION) == WS_CAPTION;
         if (!hasCaption)

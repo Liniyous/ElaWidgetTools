@@ -11,7 +11,9 @@ ElaTreeViewStyle::ElaTreeViewStyle(QStyle* style)
     _pItemHeight = 35;
     _pHeaderMargin = 5;
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaTreeViewStyle::~ElaTreeViewStyle()
@@ -110,7 +112,7 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;

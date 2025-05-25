@@ -11,6 +11,7 @@
 
 #include "ElaApplication.h"
 #include "ElaMicaBaseInitObject.h"
+#include "ElaWinShadowHelper.h"
 ElaApplicationPrivate::ElaApplicationPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -23,7 +24,28 @@ ElaApplicationPrivate::~ElaApplicationPrivate()
 void ElaApplicationPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     _themeMode = themeMode;
-    _updateAllMicaWidget();
+    switch (_pWindowDisplayMode)
+    {
+    case ElaApplicationType::Normal:
+    {
+        break;
+    }
+    case ElaApplicationType::ElaMica:
+    {
+        _updateAllMicaWidget();
+        break;
+    }
+    default:
+    {
+#ifdef Q_OS_WIN
+        for (auto widget: _micaWidgetList)
+        {
+            ElaWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), _themeMode == ElaThemeType::Light);
+        }
+#endif
+        break;
+    }
+    }
 }
 
 bool ElaApplicationPrivate::eventFilter(QObject* watched, QEvent* event)
@@ -31,10 +53,31 @@ bool ElaApplicationPrivate::eventFilter(QObject* watched, QEvent* event)
     switch (event->type())
     {
     case QEvent::Show:
+    {
+        if (_pWindowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica)
+        {
+            QWidget* widget = qobject_cast<QWidget*>(watched);
+            if (widget)
+            {
+                _updateMica(widget);
+            }
+        }
+        else if (_pWindowDisplayMode != ElaApplicationType::WindowDisplayMode::Normal)
+        {
+#ifdef Q_OS_WIN
+            QWidget* widget = qobject_cast<QWidget*>(watched);
+            if (widget)
+            {
+                ElaWinShadowHelper::getInstance()->setWindowDisplayMode(widget, _pWindowDisplayMode, _pWindowDisplayMode);
+            }
+#endif
+        }
+        break;
+    }
     case QEvent::Move:
     case QEvent::Resize:
     {
-        if (_pIsEnableMica)
+        if (_pWindowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica)
         {
             QWidget* widget = qobject_cast<QWidget*>(watched);
             if (widget)
@@ -72,7 +115,7 @@ void ElaApplicationPrivate::_initMicaBaseImage(QImage img)
     ElaMicaBaseInitObject* initObject = new ElaMicaBaseInitObject(this);
     connect(initThread, &QThread::finished, initObject, &ElaMicaBaseInitObject::deleteLater);
     connect(initObject, &ElaMicaBaseInitObject::initFinished, initThread, [=]() {
-        Q_EMIT q->pIsEnableMicaChanged();
+        Q_EMIT q->pWindowDisplayModeChanged();
         _updateAllMicaWidget();
         initThread->quit();
         initThread->wait();
@@ -131,9 +174,9 @@ void ElaApplicationPrivate::_updateMica(QWidget* widget, bool isProcessEvent)
 
 void ElaApplicationPrivate::_updateAllMicaWidget()
 {
-    if (_pIsEnableMica)
+    if (_pWindowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica)
     {
-        for (auto widget : _micaWidgetList)
+        for (auto widget: _micaWidgetList)
         {
             _updateMica(widget, false);
         }

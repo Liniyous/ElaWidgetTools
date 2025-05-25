@@ -15,7 +15,7 @@ public:                                                     \
     Q_SIGNAL void p##M##Changed();                          \
     void set##M(TYPE M)                                     \
     {                                                       \
-        _p##M = M;                                          \
+        _p##M = std::move(M);                               \
         Q_EMIT p##M##Changed();                             \
     }                                                       \
     TYPE get##M() const                                     \
@@ -44,7 +44,7 @@ public:                               \
     void CLASS::set##M(TYPE M)                  \
     {                                           \
         Q_D(CLASS);                             \
-        d->_p##M = M;                           \
+        d->_p##M = std::move(M);                \
         Q_EMIT p##M##Changed();                 \
     }                                           \
     TYPE CLASS::get##M() const                  \
@@ -56,7 +56,7 @@ public:                               \
     void CLASS::set##M(TYPE M)                 \
     {                                          \
         Q_D(CLASS);                            \
-        d->_p##M = M;                          \
+        d->_p##M = std::move(M);               \
     }                                          \
     TYPE CLASS::get##M() const                 \
     {                                          \
@@ -75,7 +75,7 @@ private:                            \
 public:                           \
     void set##M(TYPE M)           \
     {                             \
-        _p##M = M;                \
+        _p##M = std::move(M);     \
     }                             \
     TYPE get##M() const           \
     {                             \

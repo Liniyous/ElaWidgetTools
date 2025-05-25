@@ -9,6 +9,7 @@
 #include "ElaMultiSelectComboBox.h"
 #include "ElaPlainTextEdit.h"
 #include "ElaProgressBar.h"
+#include "ElaProgressRing.h"
 #include "ElaRadioButton.h"
 #include "ElaScrollPageArea.h"
 #include "ElaSlider.h"
@@ -211,6 +212,31 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     progressBarLayout->addWidget(_progressBar);
     progressBarLayout->addStretch();
 
+    _progressRing = new ElaProgressRing(this);
+    _progressRing->setValue(30);
+    _progressPercentRing = new ElaProgressRing(this);
+    _progressPercentRing->setValue(50);
+    _progressPercentRing->setValueDisplayMode(ElaProgressRingType::ValueDisplayMode::Percent);
+    _progressBusyRing = new ElaProgressRing(this);
+    _progressBusyRing->setIsBusying(true);
+    _progressBusyTransparentRing = new ElaProgressRing(this);
+    _progressBusyTransparentRing->setIsBusying(true);
+    _progressBusyTransparentRing->setIsTransparent(true);
+    ElaScrollPageArea* progressRingArea = new ElaScrollPageArea(this);
+    progressRingArea->setFixedHeight(90);
+    QHBoxLayout* progressRingLayout = new QHBoxLayout(progressRingArea);
+    ElaText* progressRingText = new ElaText("ElaProgressRing", this);
+    progressRingText->setTextPixelSize(15);
+    progressRingLayout->addWidget(progressRingText);
+    progressRingLayout->addWidget(_progressRing);
+    progressRingLayout->addSpacing(10);
+    progressRingLayout->addWidget(_progressPercentRing);
+    progressRingLayout->addSpacing(10);
+    progressRingLayout->addWidget(_progressBusyRing);
+    progressRingLayout->addSpacing(10);
+    progressRingLayout->addWidget(_progressBusyTransparentRing);
+    progressRingLayout->addStretch();
+
     ElaPlainTextEdit* edit = new ElaPlainTextEdit(this);
     edit->setPlainText("这是一个ElaPlainTextEdit  暂时放在这里");
 
@@ -227,6 +253,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     centerLayout->addWidget(sliderArea);
     centerLayout->addWidget(radioButtonArea);
     centerLayout->addWidget(progressBarArea);
+    centerLayout->addWidget(progressRingArea);
     centerLayout->addWidget(edit);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);

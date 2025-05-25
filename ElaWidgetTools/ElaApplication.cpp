@@ -1,20 +1,21 @@
 ﻿#include "ElaApplication.h"
 
+#include "ElaTheme.h"
+#include "ElaWinShadowHelper.h"
+#include "private/ElaApplicationPrivate.h"
 #include <QApplication>
 #include <QCursor>
 #include <QFontDatabase>
 #include <QWidget>
-
-#include "ElaTheme.h"
-#include "private/ElaApplicationPrivate.h"
+#include <utility>
 Q_SINGLETON_CREATE_CPP(ElaApplication)
 ElaApplication::ElaApplication(QObject* parent)
     : QObject{parent}, d_ptr(new ElaApplicationPrivate())
 {
     Q_D(ElaApplication);
     d->q_ptr = this;
-    d->_pIsEnableMica = false;
-    d->_pMicaImagePath = ":/include/Image/MicaBase.png";
+    d->_pElaMicaImagePath = ":/include/Image/MicaBase.png";
+    d->_pWindowDisplayMode = ElaApplicationType::Normal;
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaApplicationPrivate::onThemeModeChanged);
 }
@@ -23,39 +24,63 @@ ElaApplication::~ElaApplication()
 {
 }
 
-void ElaApplication::setIsEnableMica(bool isEnable)
+void ElaApplication::setWindowDisplayMode(ElaApplicationType::WindowDisplayMode windowDisplayType)
 {
     Q_D(ElaApplication);
-    d->_pIsEnableMica = isEnable;
-    if (isEnable)
+    auto lastDisplayMode = d->_pWindowDisplayMode;
+    if (lastDisplayMode == windowDisplayType)
     {
-        d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
+        return;
     }
-    else
+    switch (windowDisplayType)
     {
-        d->onThemeModeChanged(d->_themeMode);
-        Q_EMIT pIsEnableMicaChanged();
+    case ElaApplicationType::Normal:
+    {
+        break;
+    }
+    case ElaApplicationType::ElaMica:
+    {
+        d->_pWindowDisplayMode = windowDisplayType;
+        d->_initMicaBaseImage(QImage(d->_pElaMicaImagePath));
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+#ifdef Q_OS_WIN
+    for (auto widget: d->_micaWidgetList)
+    {
+        ElaWinShadowHelper::getInstance()->setWindowDisplayMode(widget, windowDisplayType, lastDisplayMode);
+        ElaWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), d->_themeMode == ElaThemeType::Light);
+    }
+#endif
+    if (windowDisplayType != ElaApplicationType::ElaMica)
+    {
+        d->_pWindowDisplayMode = windowDisplayType;
+        Q_EMIT pWindowDisplayModeChanged();
     }
 }
 
-bool ElaApplication::getIsEnableMica() const
+ElaApplicationType::WindowDisplayMode ElaApplication::getWindowDisplayMode() const
 {
     Q_D(const ElaApplication);
-    return d->_pIsEnableMica;
+    return d->_pWindowDisplayMode;
 }
 
-void ElaApplication::setMicaImagePath(QString micaImagePath)
+void ElaApplication::setElaMicaImagePath(QString micaImagePath)
 {
     Q_D(ElaApplication);
-    d->_pMicaImagePath = micaImagePath;
-    d->_initMicaBaseImage(QImage(d->_pMicaImagePath));
-    Q_EMIT pMicaImagePathChanged();
+    d->_pElaMicaImagePath = std::move(micaImagePath);
+    d->_initMicaBaseImage(QImage(d->_pElaMicaImagePath));
+    Q_EMIT pElaMicaImagePathChanged();
 }
 
-QString ElaApplication::getMicaImagePath() const
+QString ElaApplication::getElaMicaImagePath() const
 {
     Q_D(const ElaApplication);
-    return d->_pMicaImagePath;
+    return d->_pElaMicaImagePath;
 }
 
 void ElaApplication::init()
@@ -63,7 +88,7 @@ void ElaApplication::init()
     Q_INIT_RESOURCE(ElaWidgetTools);
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
     QFontDatabase::addApplicationFont(":/include/Font/ElaAwesome.ttf");
-    QFontDatabase::addApplicationFont(":/include/Font/segoe_slboot_EX.ttf");
+    QFontDatabase::addApplicationFont(":/include/Font/segoe_slboot.ttf");
     //默认字体
     QFont font = qApp->font();
     font.setPixelSize(13);
@@ -72,7 +97,7 @@ void ElaApplication::init()
     qApp->setFont(font);
 }
 
-void ElaApplication::syncMica(QWidget* widget, bool isSync)
+void ElaApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
 {
     Q_D(ElaApplication);
     if (!widget)
@@ -81,17 +106,47 @@ void ElaApplication::syncMica(QWidget* widget, bool isSync)
     }
     if (isSync)
     {
-        widget->installEventFilter(d);
         d->_micaWidgetList.append(widget);
-        if (d->_pIsEnableMica)
-        {
-            d->_updateMica(widget, false);
-        }
+        widget->installEventFilter(d);
     }
     else
     {
-        widget->removeEventFilter(d);
         d->_micaWidgetList.removeOne(widget);
+        widget->removeEventFilter(d);
+    }
+    switch (d->_pWindowDisplayMode)
+    {
+    case ElaApplicationType::Normal:
+    case ElaApplicationType::ElaMica:
+    {
+        if (isSync)
+        {
+            if (d->_pWindowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica)
+            {
+                d->_updateMica(widget, false);
+            }
+        }
+        else
+        {
+        }
+        break;
+    }
+    default:
+    {
+#ifdef Q_OS_WIN
+        if (isSync)
+        {
+            ElaWinShadowHelper::getInstance()->setWindowDisplayMode(widget, d->_pWindowDisplayMode, ElaApplicationType::Normal);
+            ElaWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), d->_themeMode == ElaThemeType::Light);
+        }
+        else
+        {
+            ElaWinShadowHelper::getInstance()->setWindowDisplayMode(widget, ElaApplicationType::Normal, d->_pWindowDisplayMode);
+            ElaWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), true);
+        }
+#endif
+        break;
+    }
     }
 }
 

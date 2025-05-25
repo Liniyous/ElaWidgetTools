@@ -13,12 +13,13 @@ class ElaSpinBox;
 class ElaSlider;
 class ElaRadioButton;
 class ElaProgressBar;
+class ElaProgressRing;
 class T_BaseComponents : public T_BasePage
 {
     Q_OBJECT
 public:
     Q_INVOKABLE explicit T_BaseComponents(QWidget* parent = nullptr);
-    ~T_BaseComponents();
+    ~T_BaseComponents() override;
 
 protected:
     virtual void mouseReleaseEvent(QMouseEvent* event);
@@ -37,6 +38,10 @@ private:
     ElaSlider* _slider{nullptr};
     ElaRadioButton* _radioButton{nullptr};
     ElaProgressBar* _progressBar{nullptr};
+    ElaProgressRing* _progressRing{nullptr};
+    ElaProgressRing* _progressPercentRing{nullptr};
+    ElaProgressRing* _progressBusyRing{nullptr};
+    ElaProgressRing* _progressBusyTransparentRing{nullptr};
 };
 
 #endif // T_BASECOMPONENTS_H

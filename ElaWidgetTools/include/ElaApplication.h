@@ -4,8 +4,8 @@
 #include <QIcon>
 #include <QObject>
 
+#include "Def.h"
 #include "singleton.h"
-#include "stdafx.h"
 #define eApp ElaApplication::getInstance()
 class ElaApplicationPrivate;
 class ELA_EXPORT ElaApplication : public QObject
@@ -13,15 +13,15 @@ class ELA_EXPORT ElaApplication : public QObject
     Q_OBJECT
     Q_Q_CREATE(ElaApplication)
     Q_SINGLETON_CREATE_H(ElaApplication)
-    Q_PROPERTY_CREATE_Q_H(bool, IsEnableMica)
-    Q_PROPERTY_CREATE_Q_H(QString, MicaImagePath)
+    Q_PROPERTY_CREATE_Q_H(ElaApplicationType::WindowDisplayMode, WindowDisplayMode)
+    Q_PROPERTY_CREATE_Q_H(QString, ElaMicaImagePath)
 private:
     explicit ElaApplication(QObject* parent = nullptr);
-    ~ElaApplication();
+    ~ElaApplication() override;
 
 public:
     void init();
-    void syncMica(QWidget* widget, bool isSync = true);
+    void syncWindowDisplayMode(QWidget* widget, bool isSync = true);
     static bool containsCursorToItem(QWidget* item);
 };
 

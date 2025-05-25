@@ -1,14 +1,14 @@
 #include "ElaWidget.h"
 
+#include "ElaApplication.h"
+#include "ElaTheme.h"
+#include "private/ElaWidgetPrivate.h"
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QScreen>
+#include <QTimer>
 #include <QVBoxLayout>
-
-#include "ElaApplication.h"
-#include "ElaTheme.h"
-#include "private/ElaWidgetPrivate.h"
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaWidget, d_func()->_appBar);
 ElaWidget::ElaWidget(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaWidgetPrivate())
@@ -18,7 +18,9 @@ ElaWidget::ElaWidget(QWidget* parent)
     resize(500, 500); // 默认宽高
     setWindowTitle("ElaWidget");
     setObjectName("ElaWidget");
-
+#if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
+    setStyleSheet("#ElaWidget{background-color:transparent;}");
+#endif
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
     d->_appBar->setIsStayTop(true);
@@ -35,16 +37,17 @@ ElaWidget::ElaWidget(QWidget* parent)
         update();
     });
 
-    d->_isEnableMica = eApp->getIsEnableMica();
-    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
-        d->_isEnableMica = eApp->getIsEnableMica();
+    d->_windowDisplayMode = eApp->getWindowDisplayMode();
+    connect(eApp, &ElaApplication::pWindowDisplayModeChanged, this, [=]() {
+        d->_windowDisplayMode = eApp->getWindowDisplayMode();
         update();
     });
-    eApp->syncMica(this);
+    eApp->syncWindowDisplayMode(this);
 }
 
 ElaWidget::~ElaWidget()
 {
+    eApp->syncWindowDisplayMode(this, false);
 }
 
 void ElaWidget::setIsStayTop(bool isStayTop)
@@ -129,7 +132,11 @@ ElaAppBarType::ButtonFlags ElaWidget::getWindowButtonFlags() const
 void ElaWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaWidget);
-    if (!d->_isEnableMica)
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))
+    if (d->_windowDisplayMode != ElaApplicationType::WindowDisplayMode::ElaMica)
+#else
+    if (d->_windowDisplayMode == ElaApplicationType::WindowDisplayMode::Normal)
+#endif
     {
         QPainter painter(this);
         painter.save();

@@ -11,7 +11,9 @@ ElaComboBoxStyle::ElaComboBoxStyle(QStyle* style)
     _pExpandIconRotate = 0;
     _pExpandMarkWidth = 0;
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaComboBoxStyle::~ElaComboBoxStyle()
@@ -23,6 +25,7 @@ void ElaComboBoxStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
     switch (element)
     {
     case QStyle::PE_Widget:
+    case QStyle::PE_PanelLineEdit:
     {
         return;
     }
@@ -142,7 +145,12 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
             //背景绘制
             bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
             painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
-            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, BasicHover) : ElaThemeColor(_themeMode, BasicBase) : ElaThemeColor(_themeMode, BasicDisable));
+            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_HasFocus)
+                                      ? ElaThemeColor(_themeMode, DialogBase)
+                                      : copt->state.testFlag(QStyle::State_MouseOver)
+                                      ? ElaThemeColor(_themeMode, BasicHover)
+                                      : ElaThemeColor(_themeMode, BasicBase)
+                                        : ElaThemeColor(_themeMode, BasicDisable));
             QRect comboBoxRect = copt->rect;
             comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
             painter->drawRoundedRect(comboBoxRect, 3, 3);
@@ -151,9 +159,12 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
             painter->drawLine(comboBoxRect.x() + 3, comboBoxRect.y() + comboBoxRect.height(), comboBoxRect.x() + comboBoxRect.width() - 3, comboBoxRect.y() + comboBoxRect.height());
 
             //文字绘制
-            QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
-            painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
-            painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
+            if (!copt->editable)
+            {
+                QRect textRect = subControlRect(QStyle::CC_ComboBox, copt, QStyle::SC_ScrollBarSubLine, widget);
+                painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
+                painter->drawText(textRect, Qt::AlignVCenter | Qt::AlignLeft, copt->currentText);
+            }
             //展开指示器绘制
             painter->setPen(Qt::NoPen);
             painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));

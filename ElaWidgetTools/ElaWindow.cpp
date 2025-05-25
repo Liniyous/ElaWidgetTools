@@ -1,17 +1,5 @@
 #include "ElaWindow.h"
 
-#include <QApplication>
-#include <QDockWidget>
-#include <QHBoxLayout>
-#include <QPropertyAnimation>
-#include <QResizeEvent>
-#include <QScreen>
-#include <QStackedWidget>
-#include <QStyleOption>
-#include <QTimer>
-#include <QToolBar>
-#include <QVBoxLayout>
-
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
 #include "ElaEventBus.h"
@@ -23,6 +11,17 @@
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaWindowPrivate.h"
+#include <QApplication>
+#include <QDockWidget>
+#include <QHBoxLayout>
+#include <QPropertyAnimation>
+#include <QResizeEvent>
+#include <QScreen>
+#include <QStackedWidget>
+#include <QStyleOption>
+#include <QTimer>
+#include <QToolBar>
+#include <QVBoxLayout>
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaWindow, d_func()->_appBar);
@@ -67,6 +66,8 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_centerStackedWidget = new ElaCentralStackedWidget(this);
     d->_centerStackedWidget->setContentsMargins(0, 0, 0, 0);
     QWidget* centralWidget = new QWidget(this);
+    centralWidget->setObjectName("ElaWindowCentralWidget");
+    centralWidget->setStyleSheet("#ElaWindowCentralWidget{background-color:transparent;}");
     d->_centerLayout = new QHBoxLayout(centralWidget);
     d->_centerLayout->setSpacing(0);
     d->_centerLayout->addWidget(d->_navigationBar);
@@ -87,7 +88,6 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_isInitFinished = true;
     setCentralWidget(centralWidget);
     centralWidget->installEventFilter(this);
-
     setObjectName("ElaWindow");
     setStyleSheet("#ElaWindow{background-color:transparent;}");
     setStyle(new ElaWindowStyle(style()));
@@ -98,14 +98,15 @@ ElaWindow::ElaWindow(QWidget* parent)
         palette.setBrush(QPalette::Window, ElaThemeColor(d->_themeMode, WindowBase));
         this->setPalette(palette);
     });
-    eApp->syncMica(this);
-    connect(eApp, &ElaApplication::pIsEnableMicaChanged, this, [=]() {
+    eApp->syncWindowDisplayMode(this);
+    connect(eApp, &ElaApplication::pWindowDisplayModeChanged, this, [=]() {
         d->onThemeModeChanged(d->_themeMode);
     });
 }
 
 ElaWindow::~ElaWindow()
 {
+    eApp->syncWindowDisplayMode(this, false);
 }
 
 void ElaWindow::setIsStayTop(bool isStayTop)

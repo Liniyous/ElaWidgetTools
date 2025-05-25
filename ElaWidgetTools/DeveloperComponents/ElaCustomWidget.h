@@ -25,7 +25,7 @@ protected:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
-    bool _isEnableMica;
+    ElaApplicationType::WindowDisplayMode _windowDisplayMode;
 };
 
 #endif // ELACUSTOMWIDGET_H
