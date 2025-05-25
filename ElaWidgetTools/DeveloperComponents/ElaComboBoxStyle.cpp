@@ -145,7 +145,7 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
             //背景绘制
             bool isEnabled = copt->state.testFlag(QStyle::State_Enabled);
             painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
-            painter->setBrush(isEnabled ? copt->state.testFlag(QStyle::State_HasFocus)
+            painter->setBrush(isEnabled ? (copt->state.testFlag(QStyle::State_HasFocus) && copt->editable)
                                       ? ElaThemeColor(_themeMode, DialogBase)
                                       : copt->state.testFlag(QStyle::State_MouseOver)
                                       ? ElaThemeColor(_themeMode, BasicHover)

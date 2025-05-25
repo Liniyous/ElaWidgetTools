@@ -29,10 +29,11 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             QRect lineEditRect = fopt->rect;
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing);
-            painter->setPen(Qt::NoPen);
             // 边框绘制
-            painter->setBrush(ElaThemeColor(_themeMode, BasicBorder));
-            painter->drawRoundedRect(lineEditRect, 6, 6);
+            painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRoundedRect(lineEditRect.adjusted(1, 1, -1, -1), 6, 6);
+            painter->setPen(Qt::NoPen);
             //  背景绘制
             if (fopt->state & QStyle::State_HasFocus)
             {
@@ -40,11 +41,11 @@ void ElaLineEditStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             }
             else if (fopt->state & QStyle::State_MouseOver)
             {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
             }
             else
             {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
             }
             painter->drawRoundedRect(QRectF(lineEditRect.x() + 1.5, lineEditRect.y() + 1.5, lineEditRect.width() - 3, lineEditRect.height() - 3), 6, 6);
 

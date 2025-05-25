@@ -12,6 +12,7 @@ class ELA_EXPORT ElaNavigationBar : public QWidget
     Q_OBJECT
     Q_Q_CREATE(ElaNavigationBar)
     Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
+    Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
 public:
     explicit ElaNavigationBar(QWidget* parent = nullptr);
     ~ElaNavigationBar() override;
@@ -40,7 +41,10 @@ public:
     void navigation(QString pageKey, bool isLogClicked = true);
     void setDisplayMode(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
 
+    int getPageOpenInNewWindowCount(QString nodeKey) const;
+
 Q_SIGNALS:
+    Q_SIGNAL void pageOpenInNewWindow(QString nodeKey);
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SIGNAL void navigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);

@@ -141,7 +141,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
+        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeepAlpha));
         painter->drawRect(option->rect);
         if (option->state.testFlag(QStyle::State_Sunken))
         {

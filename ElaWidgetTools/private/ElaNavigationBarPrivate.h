@@ -30,6 +30,7 @@ class ElaNavigationBarPrivate : public QObject
     Q_OBJECT
     Q_D_CREATE(ElaNavigationBar)
     Q_PROPERTY_CREATE_D(bool, IsTransparent)
+    Q_PROPERTY_CREATE_D(bool, IsAllowPageOpenInNewWindow)
     Q_PROPERTY_CREATE(int, NavigationViewWidth);
 
 public:
@@ -45,9 +46,11 @@ public:
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true);
 
 private:
+    friend class ElaNavigationView;
     ElaThemeType::ThemeMode _themeMode;
     QMap<QString, QString> _suggestKeyMap;
     QMap<QString, const QMetaObject*> _pageMetaMap;
+    QMap<QString, int> _pageNewWindowCountMap;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
     QVBoxLayout* _navigationButtonLayout{nullptr};
     QHBoxLayout* _navigationSuggestLayout{nullptr};

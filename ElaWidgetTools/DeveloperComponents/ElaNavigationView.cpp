@@ -85,6 +85,10 @@ void ElaNavigationView::navigationNodeStateChange(QVariantMap data)
 
 void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
 {
+    if (!_pNavigationBarPrivate->_pIsAllowPageOpenInNewWindow)
+    {
+        return;
+    }
     QModelIndex posIndex = indexAt(pos);
     if (!posIndex.isValid())
     {

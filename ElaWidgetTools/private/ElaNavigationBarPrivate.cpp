@@ -53,11 +53,16 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     QWidget* widget = static_cast<QWidget*>(meta->newInstance());
     if (widget)
     {
+        _pageNewWindowCountMap[nodeKey] += 1;
         ElaCustomWidget* floatWidget = new ElaCustomWidget(q);
+        connect(floatWidget, &ElaCustomWidget::customWidgetClosed, this, [=]() {
+            _pageNewWindowCountMap[nodeKey] -= 1;
+        });
         floatWidget->setWindowIcon(widget->windowIcon());
         floatWidget->setWindowTitle(widget->windowTitle());
         floatWidget->setCentralWidget(widget);
         floatWidget->show();
+        Q_EMIT q->pageOpenInNewWindow(nodeKey);
     }
 }
 

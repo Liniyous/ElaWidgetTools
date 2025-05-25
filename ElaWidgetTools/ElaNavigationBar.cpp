@@ -23,11 +23,13 @@
 #include <QScroller>
 #include <QVBoxLayout>
 Q_PROPERTY_CREATE_Q_CPP(ElaNavigationBar, bool, IsTransparent)
+Q_PROPERTY_CREATE_Q_CPP(ElaNavigationBar, bool, IsAllowPageOpenInNewWindow)
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaNavigationBarPrivate())
 {
     Q_D(ElaNavigationBar);
     d->q_ptr = this;
+    d->_pIsAllowPageOpenInNewWindow = true;
     setFixedWidth(300);
     d->_pIsTransparent = true;
 
@@ -106,6 +108,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     // 导航模型
     d->_navigationModel = new ElaNavigationModel(this);
     d->_navigationView = new ElaNavigationView(this);
+    d->_navigationView->setNavigationBarPrivate(d);
     d->_navigationView->setModel(d->_navigationModel);
     connect(d->_navigationView, &ElaNavigationView::navigationClicked, this, [=](const QModelIndex& index) {
         d->onTreeViewClicked(index);
@@ -224,6 +227,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     if (returnType == ElaNavigationType::Success)
     {
         d->_pageMetaMap.insert(pageKey, page->metaObject());
+        d->_pageNewWindowCountMap.insert(pageKey, 0);
         d->_addStackedPage(page, pageKey);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
@@ -247,6 +251,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     if (returnType == ElaNavigationType::NodeOperateReturnType::Success)
     {
         d->_pageMetaMap.insert(pageKey, page->metaObject());
+        d->_pageNewWindowCountMap.insert(pageKey, 0);
         ElaNavigationNode* node = d->_navigationModel->getNavigationNode(pageKey);
         ElaNavigationNode* originalNode = node->getOriginalNode();
         if (d->_compactMenuMap.contains(originalNode))
@@ -285,6 +290,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     if (returnType == ElaNavigationType::Success)
     {
         d->_pageMetaMap.insert(pageKey, page->metaObject());
+        d->_pageNewWindowCountMap.insert(pageKey, 0);
         d->_addStackedPage(page, pageKey);
         d->_initNodeModelIndex(QModelIndex());
         d->_resetNodeSelected();
@@ -308,6 +314,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addPageNode(QString p
     if (returnType == ElaNavigationType::Success)
     {
         d->_pageMetaMap.insert(pageKey, page->metaObject());
+        d->_pageNewWindowCountMap.insert(pageKey, 0);
         ElaNavigationNode* node = d_ptr->_navigationModel->getNavigationNode(pageKey);
         ElaNavigationNode* originalNode = node->getOriginalNode();
         if (d_ptr->_compactMenuMap.contains(originalNode))
@@ -408,6 +415,8 @@ void ElaNavigationBar::removeNavigationNode(QString nodeKey)
         d->_initNodeModelIndex(QModelIndex());
         for (const auto& removeKey: removeKeyList)
         {
+            d->_pageMetaMap.remove(removeKey);
+            d->_pageNewWindowCountMap.remove(removeKey);
             Q_EMIT navigationNodeRemoved(ElaNavigationType::PageNode, removeKey);
         }
     }
@@ -493,6 +502,16 @@ void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode d
     }
     d->_doComponentAnimation(displayMode, isAnimation);
     d->_raiseNavigationBar();
+}
+
+int ElaNavigationBar::getPageOpenInNewWindowCount(QString nodeKey) const
+{
+    Q_D(const ElaNavigationBar);
+    if (!d->_pageNewWindowCountMap.contains(nodeKey))
+    {
+        return 0;
+    }
+    return d->_pageNewWindowCountMap[nodeKey];
 }
 
 void ElaNavigationBar::paintEvent(QPaintEvent* event)

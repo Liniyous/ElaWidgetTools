@@ -18,6 +18,7 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
+    Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
@@ -47,6 +48,7 @@ public:
     void expandNavigationNode(QString expanderKey);
     void collpaseNavigationNode(QString expanderKey);
     void removeNavigationNode(QString nodeKey) const;
+    int getPageOpenInNewWindowCount(QString nodeKey) const;
 
     void setNodeKeyPoints(QString nodeKey, int keyPoints);
     int getNodeKeyPoints(QString nodeKey) const;
@@ -62,6 +64,7 @@ Q_SIGNALS:
     Q_SIGNAL void closeButtonClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SIGNAL void customWidgetChanged();
+    Q_SIGNAL void pageOpenInNewWindow(QString nodeKey);
 
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;

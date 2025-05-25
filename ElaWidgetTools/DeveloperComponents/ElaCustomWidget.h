@@ -13,9 +13,12 @@ class ElaCustomWidget : public QDialog
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaCustomWidget(QWidget* parent = nullptr);
-    ~ElaCustomWidget();
+    ~ElaCustomWidget() override;
 
     void setCentralWidget(QWidget* widget);
+
+Q_SIGNALS:
+    Q_SIGNAL void customWidgetClosed();
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

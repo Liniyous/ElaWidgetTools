@@ -38,6 +38,7 @@ ElaCustomWidget::ElaCustomWidget(QWidget* parent)
 ElaCustomWidget::~ElaCustomWidget()
 {
     eApp->syncWindowDisplayMode(this, false);
+    Q_EMIT customWidgetClosed();
 }
 
 void ElaCustomWidget::setCentralWidget(QWidget* widget)
