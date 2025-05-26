@@ -123,8 +123,12 @@ T_TreeView::T_TreeView(QWidget* parent)
     _treeView->header()->setFont(headerFont);
     _treeView->setFixedHeight(450);
     _treeView->setModel(treeModel);
+    QVBoxLayout* treeViewLayout = new QVBoxLayout();
+    treeViewLayout->setContentsMargins(0, 0, 0, 0);
+    treeViewLayout->addWidget(_treeView);
+    treeViewLayout->addStretch();
     treeLayout->addWidget(treeSettingWidget);
-    treeLayout->addWidget(_treeView);
+    treeLayout->addLayout(treeViewLayout);
 
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaView");

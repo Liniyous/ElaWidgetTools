@@ -52,6 +52,7 @@ T_TableView::T_TableView(QWidget* parent)
     centerVLayout->addWidget(tableText);
     centerVLayout->addSpacing(10);
     centerVLayout->addLayout(tableViewLayout);
+    centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }
 
