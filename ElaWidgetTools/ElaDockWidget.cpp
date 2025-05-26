@@ -143,12 +143,8 @@ bool ElaDockWidget::nativeEvent(const QByteArray& eventType, void* message, long
     }
     case WM_NCACTIVATE:
     {
-        if (ElaWinShadowHelper::getInstance()->isCompositionEnabled())
-        {
-            return true;
-        }
-        *result = true;
-        return false;
+        *result = TRUE;
+        return true;
     }
     case WM_NCHITTEST:
     {

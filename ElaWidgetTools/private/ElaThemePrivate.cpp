@@ -85,7 +85,7 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::BasicHemline] = QColor(0x9A, 0x9A, 0x9A);
     _lightThemeColorList[ElaThemeType::BasicIndicator] = QColor(0x75, 0x7C, 0x87);
     _darkThemeColorList[ElaThemeType::BasicIndicator] = QColor(0x75, 0x7C, 0x87);
-    _lightThemeColorList[ElaThemeType::BasicChute] = QColor(0xD6, 0xD6, 0xD6);
+    _lightThemeColorList[ElaThemeType::BasicChute] = QColor(0xB3, 0xB3, 0xB3);
     _darkThemeColorList[ElaThemeType::BasicChute] = QColor(0x63, 0x63, 0x63);
 
     // 基础透明

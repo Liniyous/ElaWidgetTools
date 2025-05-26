@@ -12,7 +12,7 @@ class ELA_EXPORT ElaProgressBar : public QProgressBar
     Q_Q_CREATE(ElaProgressBar)
 public:
     explicit ElaProgressBar(QWidget* parent = nullptr);
-    ~ElaProgressBar();
+    ~ElaProgressBar() override;
     void setMinimum(int minimum);
     void setMaximum(int maximum);
 
