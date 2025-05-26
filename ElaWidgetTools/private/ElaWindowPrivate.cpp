@@ -299,6 +299,7 @@ void ElaWindowPrivate::_doNavigationDisplayModeChange()
     if (_pNavigationBarDisplayMode == ElaNavigationType::Auto)
     {
         _isNavigationDisplayModeChanged = true;
+        _isWMClickedAnimationFinished = true;
         _resetWindowLayout(false);
         int width = q->centralWidget()->width();
         if (width >= 850 && _currentNavigationBarDisplayMode != ElaNavigationType::Maximal)
