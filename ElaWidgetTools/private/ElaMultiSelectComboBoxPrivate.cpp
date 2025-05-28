@@ -70,6 +70,7 @@ void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         _selectedTextList = _currentText.split(",", Qt::SkipEmptyParts);
 #else
+        _selectedTextList = _currentText.split(",");
         if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty())
         {
             _selectedTextList.clear();
