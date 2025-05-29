@@ -1,8 +1,8 @@
 #ifndef ELANAVIGATIONVIEW_H
 #define ELANAVIGATIONVIEW_H
 
+#include "Def.h"
 #include "ElaNavigationBarPrivate.h"
-#include "stdafx.h"
 #include <QObject>
 #include <QTreeView>
 class ElaScrollBar;

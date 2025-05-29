@@ -109,7 +109,7 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
 
 void ElaNavigationView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (width() <= 60)
+    if (_pNavigationBarPrivate->_currentDisplayMode == ElaNavigationType::NavigationDisplayMode::Compact)
     {
         QModelIndex posIndex = indexAt(event->pos());
         if (!posIndex.isValid())
@@ -157,7 +157,7 @@ bool ElaNavigationView::eventFilter(QObject* watched, QEvent* event)
     case QEvent::MouseMove:
     case QEvent::HoverMove:
     {
-        if (width() <= 60)
+        if (_pNavigationBarPrivate->_currentDisplayMode == ElaNavigationType::NavigationDisplayMode::Compact)
         {
             QModelIndex posIndex = indexAt(mapFromGlobal(QCursor::pos()));
             if (!posIndex.isValid())

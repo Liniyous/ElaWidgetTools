@@ -92,14 +92,14 @@ void ElaThemePrivate::_initThemeColor()
     _lightThemeColorList[ElaThemeType::BasicAlternating] = QColor(0xEF, 0xEF, 0xEF, 160);
     _darkThemeColorList[ElaThemeType::BasicAlternating] = QColor(0x45, 0x45, 0x45, 125);
     _lightThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0xFF, 0xFF, 0xFF, 160);
-    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0x45, 0x45, 0x45, 95);
+    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0x2D, 0x2D, 0x2D, 95);
     _lightThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0xCC, 0xCC, 0xCC, 160);
     _darkThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0x72, 0x72, 0x72, 95);
-    _lightThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0xCC, 0xCC, 0xCC, 60);
+    _lightThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0xCC, 0xCC, 0xCC, 70);
     _darkThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0x4B, 0x4B, 0x4B, 75);
     _lightThemeColorList[ElaThemeType::BasicPressAlpha] = QColor(0xCC, 0xCC, 0xCC, 40);
     _darkThemeColorList[ElaThemeType::BasicPressAlpha] = QColor(0x4B, 0x4B, 0x4B, 55);
-    _lightThemeColorList[ElaThemeType::BasicSelectedAlpha] = QColor(0xCC, 0xCC, 0xCC, 60);
+    _lightThemeColorList[ElaThemeType::BasicSelectedAlpha] = QColor(0xCC, 0xCC, 0xCC, 70);
     _darkThemeColorList[ElaThemeType::BasicSelectedAlpha] = QColor(0x4B, 0x4B, 0x4B, 75);
     _lightThemeColorList[ElaThemeType::BasicSelectedHoverAlpha] = QColor(0xCC, 0xCC, 0xCC, 40);
     _darkThemeColorList[ElaThemeType::BasicSelectedHoverAlpha] = QColor(0x4B, 0x4B, 0x4B, 55);
