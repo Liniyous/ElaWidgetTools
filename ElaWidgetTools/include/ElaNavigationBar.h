@@ -38,7 +38,7 @@ public:
     void setNodeKeyPoints(QString nodeKey, int keyPoints);
     int getNodeKeyPoints(QString nodeKey) const;
 
-    void navigation(QString pageKey, bool isLogClicked = true);
+    void navigation(QString pageKey, bool isLogClicked = true, bool isRouteBack = false);
     void setDisplayMode(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
 
     int getPageOpenInNewWindowCount(QString nodeKey) const;
@@ -46,7 +46,7 @@ public:
 Q_SIGNALS:
     Q_SIGNAL void pageOpenInNewWindow(QString nodeKey);
     Q_SIGNAL void userInfoCardClicked();
-    Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
+    Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack);
     Q_SIGNAL void navigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
     Q_SIGNAL void navigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
 

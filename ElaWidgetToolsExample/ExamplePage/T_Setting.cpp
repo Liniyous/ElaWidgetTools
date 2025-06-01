@@ -161,6 +161,43 @@ T_Setting::T_Setting(QWidget* parent)
         }
     });
 
+    _noneButton = new ElaRadioButton("None", this);
+    _popupButton = new ElaRadioButton("Popup", this);
+    _popupButton->setChecked(true);
+    _scaleButton = new ElaRadioButton("Scale", this);
+    _flipButton = new ElaRadioButton("Flip", this);
+    ElaScrollPageArea* stackSwitchModeArea = new ElaScrollPageArea(this);
+    QHBoxLayout* stackSwitchModeLayout = new QHBoxLayout(stackSwitchModeArea);
+    ElaText* stackSwitchModeText = new ElaText("堆栈切换模式选择", this);
+    stackSwitchModeText->setWordWrap(false);
+    stackSwitchModeText->setTextPixelSize(15);
+    stackSwitchModeLayout->addWidget(stackSwitchModeText);
+    stackSwitchModeLayout->addStretch();
+    stackSwitchModeLayout->addWidget(_noneButton);
+    stackSwitchModeLayout->addWidget(_popupButton);
+    stackSwitchModeLayout->addWidget(_scaleButton);
+    stackSwitchModeLayout->addWidget(_flipButton);
+
+    QButtonGroup* stackSwitchGroup = new QButtonGroup(this);
+    stackSwitchGroup->addButton(_noneButton, 0);
+    stackSwitchGroup->addButton(_popupButton, 1);
+    stackSwitchGroup->addButton(_scaleButton, 2);
+    stackSwitchGroup->addButton(_flipButton, 3);
+    connect(stackSwitchGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
+        {
+            window->setStackSwitchMode((ElaWindowType::StackSwitchMode)stackSwitchGroup->id(button));
+        }
+    });
+    connect(window, &ElaWindow::pStackSwitchModeChanged, this, [=]() {
+        auto button = stackSwitchGroup->button(window->getStackSwitchMode());
+        ElaRadioButton* elaRadioButton = dynamic_cast<ElaRadioButton*>(button);
+        if (elaRadioButton)
+        {
+            elaRadioButton->setChecked(true);
+        }
+    });
+
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("Setting");
     QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
@@ -174,6 +211,7 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addWidget(logSwitchArea);
     centerLayout->addWidget(micaSwitchArea);
     centerLayout->addWidget(displayModeArea);
+    centerLayout->addWidget(stackSwitchModeArea);
     centerLayout->addStretch();
     centerLayout->setContentsMargins(0, 0, 0, 0);
     addCentralWidget(centralWidget, true, true, 0);

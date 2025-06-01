@@ -197,7 +197,7 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
     q->update();
 }
 
-void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey)
+void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack)
 {
     QWidget* page = _routeMap.value(nodeKey);
     if (!page)
@@ -211,18 +211,7 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
         return;
     }
     _navigationTargetIndex = nodeIndex;
-    QTimer::singleShot(180, this, [=]() {
-        QWidget* currentWidget = _centerStackedWidget->widget(nodeIndex);
-        _centerStackedWidget->setCurrentIndex(nodeIndex);
-        QPropertyAnimation* currentWidgetAnimation = new QPropertyAnimation(currentWidget, "pos");
-        currentWidgetAnimation->setEasingCurve(QEasingCurve::OutCubic);
-        currentWidgetAnimation->setDuration(300);
-        QPoint currentWidgetPos = currentWidget->pos();
-        currentWidgetAnimation->setEndValue(currentWidgetPos);
-        currentWidgetPos.setY(currentWidgetPos.y() + 80);
-        currentWidgetAnimation->setStartValue(currentWidgetPos);
-        currentWidgetAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    });
+    _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, nodeIndex, isRouteBack);
 }
 
 void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page)

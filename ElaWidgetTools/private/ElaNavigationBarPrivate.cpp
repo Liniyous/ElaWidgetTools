@@ -70,10 +70,10 @@ void ElaNavigationBarPrivate::onNavigationRouteBack(QVariantMap routeData)
 {
     Q_Q(ElaNavigationBar);
     QString pageKey = routeData.value("ElaPageKey").toString();
-    q->navigation(pageKey, false);
+    q->navigation(pageKey, false, true);
 }
 
-void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute)
+void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
 {
     Q_Q(ElaNavigationBar);
     if (index.isValid())
@@ -116,7 +116,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                     routeData.insert("ElaPageKey", pageKey);
                     ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
                 }
-                Q_EMIT q->navigationNodeClicked(ElaNavigationType::PageNode, node->getNodeKey());
+                Q_EMIT q->navigationNodeClicked(ElaNavigationType::PageNode, node->getNodeKey(), isRouteBack);
 
                 if (_footerModel->getSelectedNode())
                 {
@@ -173,7 +173,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
     }
 }
 
-void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool isLogRoute)
+void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
 {
     Q_Q(ElaNavigationBar);
     ElaNavigationNode* node = index.data(Qt::UserRole).value<ElaNavigationNode*>();
@@ -205,7 +205,7 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
             routeData.insert("ElaPageKey", pageKey);
             ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRouteBack", routeData);
         }
-        Q_EMIT q->navigationNodeClicked(ElaNavigationType::FooterNode, node->getNodeKey());
+        Q_EMIT q->navigationNodeClicked(ElaNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
 
         if (node->getIsHasFooterPage())
         {

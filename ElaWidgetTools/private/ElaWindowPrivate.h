@@ -21,7 +21,7 @@ class ElaWindowPrivate : public QObject
     Q_D_CREATE(ElaWindow)
     Q_PROPERTY_CREATE_D(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_D(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
-
+    Q_PROPERTY_CREATE_D(ElaWindowType::StackSwitchMode, StackSwitchMode)
 public:
     explicit ElaWindowPrivate(QObject* parent = nullptr);
     ~ElaWindowPrivate() override;
@@ -30,7 +30,7 @@ public:
     Q_SLOT void onThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
-    Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
+    Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack);
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
     Q_SLOT void onNavigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
 

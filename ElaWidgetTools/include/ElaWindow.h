@@ -5,7 +5,7 @@
 
 #include "Def.h"
 #include "ElaAppBar.h"
-#include "stdafx.h"
+
 class ElaWindowPrivate;
 class ELA_EXPORT ElaWindow : public QMainWindow
 {
@@ -20,6 +20,7 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
     Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
+    Q_PROPERTY_CREATE_Q_H(ElaWindowType::StackSwitchMode, StackSwitchMode)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaWindow(QWidget* parent = nullptr);

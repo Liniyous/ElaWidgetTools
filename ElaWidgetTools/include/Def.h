@@ -253,6 +253,17 @@ enum ValueDisplayMode
 Q_ENUM_CREATE(ValueDisplayMode)
 Q_END_ENUM_CREATE(ElaProgressRingType)
 
+Q_BEGIN_ENUM_CREATE(ElaWindowType)
+enum StackSwitchMode
+{
+    None = 0x0000,
+    Popup = 0x0001,
+    Scale = 0x0002,
+    Flip = 0x0003,
+};
+Q_ENUM_CREATE(StackSwitchMode)
+Q_END_ENUM_CREATE(ElaWindowType)
+
 Q_BEGIN_ENUM_CREATE(ElaIconType)
 enum IconName
 {

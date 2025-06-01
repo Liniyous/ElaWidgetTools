@@ -469,7 +469,7 @@ int ElaNavigationBar::getNodeKeyPoints(QString nodeKey) const
     return node->getKeyPoints();
 }
 
-void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked)
+void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked, bool isRouteBack)
 {
     Q_D(ElaNavigationBar);
     ElaNavigationNode* node = d->_navigationModel->getNavigationNode(pageKey);
@@ -481,13 +481,13 @@ void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked)
     {
         if (node->getIsFooterNode())
         {
-            d->onFooterViewClicked(node->getModelIndex(), isLogClicked);
+            d->onFooterViewClicked(node->getModelIndex(), isLogClicked, isRouteBack);
         }
         else
         {
             if (!node->getIsExpanderNode())
             {
-                d->onTreeViewClicked(node->getModelIndex(), isLogClicked);
+                d->onTreeViewClicked(node->getModelIndex(), isLogClicked, isRouteBack);
             }
         }
     }

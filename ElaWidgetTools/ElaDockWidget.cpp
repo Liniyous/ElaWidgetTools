@@ -68,7 +68,7 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
 #else
         // 背景
         painter.setPen(Qt::NoPen);
-        painter.setBrush(d->_isEnableMica ? Qt::transparent : ElaThemeColor(d->_themeMode, DialogBase));
+        painter.setBrush(d->_windowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica ? Qt::transparent : ElaThemeColor(d->_themeMode, DialogBase));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRect(rect());
 #endif

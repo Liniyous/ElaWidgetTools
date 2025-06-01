@@ -42,8 +42,8 @@ public:
     Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
 
     //核心跳转逻辑
-    void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true);
-    void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true);
+    void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
+    void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
 
 private:
     friend class ElaNavigationView;

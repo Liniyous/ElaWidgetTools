@@ -77,7 +77,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::initWindow()
 {
-    // setIsEnableMica(true);
     // setIsCentralStackedWidgetTransparent(true);
     setWindowIcon(QIcon(":/include/Image/Cirno.jpg"));
     resize(1200, 740);
