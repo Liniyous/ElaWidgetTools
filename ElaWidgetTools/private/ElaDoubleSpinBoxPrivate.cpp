@@ -1,11 +1,13 @@
 #include "ElaDoubleSpinBoxPrivate.h"
 
+#include "ElaDoubleSpinBox.h"
+#include "ElaMenu.h"
+#include "ElaTheme.h"
+
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QLineEdit>
-
-#include "ElaDoubleSpinBox.h"
-#include "ElaMenu.h"
+#include <QTimer>
 ElaDoubleSpinBoxPrivate::ElaDoubleSpinBoxPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -13,6 +15,22 @@ ElaDoubleSpinBoxPrivate::ElaDoubleSpinBoxPrivate(QObject* parent)
 
 ElaDoubleSpinBoxPrivate::~ElaDoubleSpinBoxPrivate()
 {
+}
+
+void ElaDoubleSpinBoxPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
+{
+    Q_Q(ElaDoubleSpinBox);
+    _themeMode = themeMode;
+    if (q->isVisible())
+    {
+        _changeTheme();
+    }
+    else
+    {
+        QTimer::singleShot(1, this, [=] {
+            _changeTheme();
+        });
+    }
 }
 
 ElaMenu* ElaDoubleSpinBoxPrivate::_createStandardContextMenu()
@@ -75,4 +93,13 @@ ElaMenu* ElaDoubleSpinBoxPrivate::_createStandardContextMenu()
     action->setEnabled(!lineEdit->text().isEmpty() && !(lineEdit->selectedText() == lineEdit->text()));
     connect(action, &QAction::triggered, q, &ElaDoubleSpinBox::selectAll);
     return menu;
+}
+
+void ElaDoubleSpinBoxPrivate::_changeTheme()
+{
+    Q_Q(ElaDoubleSpinBox);
+    QPalette palette;
+    palette.setColor(QPalette::Base, Qt::transparent);
+    palette.setColor(QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    q->lineEdit()->setPalette(palette);
 }

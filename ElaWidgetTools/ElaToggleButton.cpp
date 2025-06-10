@@ -45,6 +45,7 @@ void ElaToggleButton::setIsToggled(bool isToggled)
     Q_D(ElaToggleButton);
     d->_isToggled = isToggled;
     d->_pToggleAlpha = isToggled ? 255 : 0;
+    d->_isAlphaAnimationFinished = true;
     update();
     Q_EMIT toggled(isToggled);
 }

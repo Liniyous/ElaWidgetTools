@@ -1,8 +1,5 @@
 ﻿#include "T_BaseComponents.h"
 
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-
 #include "ElaCheckBox.h"
 #include "ElaComboBox.h"
 #include "ElaMessageButton.h"
@@ -17,6 +14,11 @@
 #include "ElaText.h"
 #include "ElaToggleButton.h"
 #include "ElaToggleSwitch.h"
+
+#include <QButtonGroup>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
 T_BaseComponents::T_BaseComponents(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -182,6 +184,35 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     spinBoxLayout->addWidget(spinBoxText);
     spinBoxLayout->addWidget(_spinBox);
     spinBoxLayout->addStretch();
+
+    ElaRadioButton* inlineButton = new ElaRadioButton("Inline", this);
+    ElaRadioButton* compactButton = new ElaRadioButton("Compact", this);
+    ElaRadioButton* sideButton = new ElaRadioButton("Side", this);
+    ElaRadioButton* pmSideButton = new ElaRadioButton("PMSide", this);
+    inlineButton->setChecked(true);
+    QHBoxLayout* buttonModeLayout = new QHBoxLayout();
+    ElaText* buttonModeText = new ElaText("按钮模式切换", this);
+    buttonModeText->setWordWrap(false);
+    buttonModeText->setTextPixelSize(15);
+    buttonModeLayout->addWidget(buttonModeText);
+    buttonModeLayout->addWidget(inlineButton);
+    buttonModeLayout->addWidget(compactButton);
+    buttonModeLayout->addWidget(sideButton);
+    buttonModeLayout->addWidget(pmSideButton);
+
+    spinBoxLayout->addLayout(buttonModeLayout);
+
+    QButtonGroup* spinButtonGroup = new QButtonGroup(this);
+    spinButtonGroup->addButton(inlineButton, 0);
+    spinButtonGroup->addButton(compactButton, 1);
+    spinButtonGroup->addButton(sideButton, 2);
+    spinButtonGroup->addButton(pmSideButton, 3);
+    connect(spinButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
+        {
+            _spinBox->setButtonMode((ElaSpinBoxType::ButtonMode)spinButtonGroup->id(button));
+        }
+    });
 
     _slider = new ElaSlider(this);
     ElaScrollPageArea* sliderArea = new ElaScrollPageArea(this);
