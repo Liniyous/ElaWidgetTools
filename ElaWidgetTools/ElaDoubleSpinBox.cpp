@@ -102,7 +102,7 @@ void ElaDoubleSpinBox::focusOutEvent(QFocusEvent* event)
 void ElaDoubleSpinBox::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaDoubleSpinBox);
-    ElaDoubleSpinBox::paintEvent(event);
+    QDoubleSpinBox::paintEvent(event);
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
