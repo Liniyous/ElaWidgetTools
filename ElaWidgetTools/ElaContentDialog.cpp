@@ -128,6 +128,7 @@ void ElaContentDialog::setCentralWidget(QWidget* centralWidget)
     d->_mainLayout->takeAt(0);
     d->_mainLayout->takeAt(0);
     delete d->_centralWidget;
+    d->_centralWidget = centralWidget;
     d->_mainLayout->addWidget(centralWidget);
     d->_mainLayout->addWidget(d->_buttonWidget);
 }
