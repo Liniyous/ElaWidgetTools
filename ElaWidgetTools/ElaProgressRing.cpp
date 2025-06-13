@@ -22,7 +22,7 @@ ElaProgressRing::ElaProgressRing(QWidget* parent)
     d->_pMaximum = 100;
     d->_pValue = 0;
     d->_pBusyIndex = 0xe100;
-    d->_pBusyingDurationTime = 2000;
+    d->_pBusyingDurationTime = 1000;
     d->_pBusyingWidth = 6;
     d->_pBusyStartDeg = 0;
     d->_pBusyContentDeg = 0;
@@ -89,6 +89,7 @@ void ElaProgressRing::setBusyingWidth(int width)
 {
     Q_D(ElaProgressRing);
     d->_pBusyingWidth = width;
+    update();
     Q_EMIT pBusyingWidthChanged();
 }
 
@@ -102,7 +103,7 @@ void ElaProgressRing::setBusyingDurationTime(int busyingDurationTime)
 {
     Q_D(ElaProgressRing);
     d->_pBusyingDurationTime = busyingDurationTime;
-    //    d->_busyAnimation->setDuration(d->_pBusyingDurationTime);
+    d->_busyStartDegAnimation->setDuration(d->_pBusyingDurationTime);
     Q_EMIT pBusyingDurationTimeChanged();
 }
 
@@ -116,6 +117,7 @@ void ElaProgressRing::setMinimum(int minimum)
 {
     Q_D(ElaProgressRing);
     d->_pMinimum = minimum;
+    update();
     Q_EMIT pMinimumChanged();
     Q_EMIT rangeChanged(d->_pMinimum, d->_pMaximum);
 }
@@ -130,6 +132,7 @@ void ElaProgressRing::setMaximum(int maximum)
 {
     Q_D(ElaProgressRing);
     d->_pMaximum = maximum;
+    update();
     Q_EMIT pMaximumChanged();
     Q_EMIT rangeChanged(d->_pMinimum, d->_pMaximum);
 }
@@ -148,6 +151,7 @@ void ElaProgressRing::setValue(int value)
         return;
     }
     d->_pValue = value;
+    update();
     Q_EMIT pValueChanged();
 }
 
@@ -166,6 +170,7 @@ void ElaProgressRing::setRange(int min, int max)
     }
     d->_pMinimum = min;
     d->_pMaximum = max;
+    update();
     Q_EMIT pMinimumChanged();
     Q_EMIT pMaximumChanged();
     Q_EMIT rangeChanged(min, max);
