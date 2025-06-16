@@ -32,6 +32,7 @@ private:
     ElaRadioButton* _popupButton{nullptr};
     ElaRadioButton* _scaleButton{nullptr};
     ElaRadioButton* _flipButton{nullptr};
+    ElaRadioButton* _blurButton{nullptr};
 };
 
 #endif // T_SETTING_H

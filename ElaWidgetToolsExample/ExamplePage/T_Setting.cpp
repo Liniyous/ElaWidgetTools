@@ -166,6 +166,7 @@ T_Setting::T_Setting(QWidget* parent)
     _popupButton->setChecked(true);
     _scaleButton = new ElaRadioButton("Scale", this);
     _flipButton = new ElaRadioButton("Flip", this);
+    _blurButton = new ElaRadioButton("Blur", this);
     ElaScrollPageArea* stackSwitchModeArea = new ElaScrollPageArea(this);
     QHBoxLayout* stackSwitchModeLayout = new QHBoxLayout(stackSwitchModeArea);
     ElaText* stackSwitchModeText = new ElaText("堆栈切换模式选择", this);
@@ -177,12 +178,14 @@ T_Setting::T_Setting(QWidget* parent)
     stackSwitchModeLayout->addWidget(_popupButton);
     stackSwitchModeLayout->addWidget(_scaleButton);
     stackSwitchModeLayout->addWidget(_flipButton);
+    stackSwitchModeLayout->addWidget(_blurButton);
 
     QButtonGroup* stackSwitchGroup = new QButtonGroup(this);
     stackSwitchGroup->addButton(_noneButton, 0);
     stackSwitchGroup->addButton(_popupButton, 1);
     stackSwitchGroup->addButton(_scaleButton, 2);
     stackSwitchGroup->addButton(_flipButton, 3);
+    stackSwitchGroup->addButton(_blurButton, 4);
     connect(stackSwitchGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
         if (isToggled)
         {

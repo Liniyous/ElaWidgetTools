@@ -1,6 +1,8 @@
 #include "ElaCentralStackedWidget.h"
 
 #include "ElaTheme.h"
+#include <QApplication>
+#include <QGraphicsBlurEffect>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
@@ -13,6 +15,14 @@ ElaCentralStackedWidget::ElaCentralStackedWidget(QWidget* parent)
     _pScaleAnimationRatio = 1;
     _pScaleAnimationPixOpacity = 1;
     _pFlipAnimationRatio = 1;
+    _pBlurAnimationRadius = 0;
+
+    _blurEffect = new QGraphicsBlurEffect(this);
+    _blurEffect->setBlurHints(QGraphicsBlurEffect::BlurHint::QualityHint);
+    _blurEffect->setBlurRadius(0);
+    _blurEffect->setEnabled(false);
+    setGraphicsEffect(_blurEffect);
+
     setObjectName("ElaCentralStackedWidget");
     setStyleSheet("#ElaCentralStackedWidget{background-color:transparent;}");
     _themeMode = eTheme->getThemeMode();
@@ -170,6 +180,26 @@ void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode
         flipAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         break;
     }
+    case ElaWindowType::Blur:
+    {
+        _targetStackPix = QPixmap();
+        _blurEffect->setEnabled(true);
+        QPropertyAnimation* blurAnimation = new QPropertyAnimation(this, "pBlurAnimationRadius");
+        connect(blurAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+            _blurEffect->setBlurRadius(_pBlurAnimationRadius);
+        });
+        connect(blurAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _blurEffect->setEnabled(false);
+        });
+        blurAnimation->setEasingCurve(QEasingCurve::InOutSine);
+        blurAnimation->setDuration(350);
+        blurAnimation->setStartValue(40);
+        blurAnimation->setEndValue(2);
+        blurAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        QApplication::processEvents();
+        this->setCurrentIndex(nodeIndex);
+        break;
+    }
     }
 }
 
@@ -243,6 +273,10 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
             {
                 painter.drawPixmap(rect(), _currentStackPix);
             }
+            break;
+        }
+        case ElaWindowType::Blur:
+        {
             break;
         }
         }

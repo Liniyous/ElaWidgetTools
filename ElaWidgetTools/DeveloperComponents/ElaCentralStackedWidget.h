@@ -4,6 +4,8 @@
 #include <QStackedWidget>
 
 #include "Def.h"
+
+class QGraphicsBlurEffect;
 class ElaCentralStackedWidget : public QStackedWidget
 {
     Q_OBJECT
@@ -11,6 +13,7 @@ class ElaCentralStackedWidget : public QStackedWidget
     Q_PROPERTY_CREATE(qreal, ScaleAnimationRatio)
     Q_PROPERTY_CREATE(qreal, ScaleAnimationPixOpacity)
     Q_PROPERTY_CREATE(qreal, FlipAnimationRatio)
+    Q_PROPERTY_CREATE(int, BlurAnimationRadius)
 public:
     explicit ElaCentralStackedWidget(QWidget* parent = nullptr);
     ~ElaCentralStackedWidget() override;
@@ -31,6 +34,7 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     QPixmap _targetStackPix;
     QPixmap _currentStackPix;
+    QGraphicsBlurEffect* _blurEffect{nullptr};
     bool _isTransparent{false};
     bool _isHasRadius{true};
     bool _isDrawNewPix{false};

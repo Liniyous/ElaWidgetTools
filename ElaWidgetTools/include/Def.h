@@ -260,6 +260,7 @@ enum StackSwitchMode
     Popup = 0x0001,
     Scale = 0x0002,
     Flip = 0x0003,
+    Blur = 0x0004,
 };
 Q_ENUM_CREATE(StackSwitchMode)
 Q_END_ENUM_CREATE(ElaWindowType)
