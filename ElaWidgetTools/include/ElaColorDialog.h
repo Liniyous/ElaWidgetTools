@@ -14,7 +14,7 @@ class ELA_EXPORT ElaColorDialog : public QDialog
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaColorDialog(QWidget* parent = nullptr);
-    ~ElaColorDialog();
+    ~ElaColorDialog() override;
 
     QList<QColor> getCustomColorList() const;
     QColor getCustomColor(int index) const;

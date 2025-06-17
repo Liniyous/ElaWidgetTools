@@ -17,7 +17,7 @@ class ElaPopularCardPrivate : public QObject
     Q_PROPERTY_CREATE_D(QString, SubTitle)
     Q_PROPERTY_CREATE_D(QString, InteractiveTips)
     Q_PROPERTY_CREATE_D(QString, DetailedText)
-    Q_PROPERTY_CREATE_D(QString, CardButtontext)
+    Q_PROPERTY_CREATE_D(QString, CardButtonText)
     Q_PROPERTY_CREATE_D(QWidget*, CardFloatArea)
     Q_PROPERTY_CREATE_D(QPixmap, CardFloatPixmap)
     Q_PROPERTY_CREATE(qreal, HoverYOffset);

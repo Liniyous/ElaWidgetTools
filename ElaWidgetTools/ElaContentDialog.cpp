@@ -41,7 +41,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_leftButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT leftButtonClicked();
         onLeftButtonClicked();
-        d->_doCloseAnimation();
+        d->_doCloseAnimation(false);
     });
     d->_leftButton->setMinimumSize(0, 0);
     d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
@@ -60,7 +60,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     connect(d->_rightButton, &ElaPushButton::clicked, this, [=]() {
         Q_EMIT rightButtonClicked();
         onRightButtonClicked();
-        d->_doCloseAnimation();
+        d->_doCloseAnimation(true);
     });
     d->_rightButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, PrimaryNormal));
     d->_rightButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, PrimaryHover));
@@ -154,7 +154,7 @@ void ElaContentDialog::setRightButtonText(QString text)
 void ElaContentDialog::close()
 {
     Q_D(ElaContentDialog);
-    d->_doCloseAnimation();
+    d->_doCloseAnimation(false);
 }
 
 void ElaContentDialog::showEvent(QShowEvent* event)

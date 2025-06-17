@@ -40,7 +40,7 @@ void ElaTheme::drawEffectShadow(QPainter* painter, QRect widgetRect, int shadowB
     QColor color = d->_themeMode == ElaThemeType::Light ? QColor(0x70, 0x70, 0x70) : QColor(0x9C, 0x9B, 0x9E);
     for (int i = 0; i < shadowBorderWidth; i++)
     {
-        path.addRoundedRect(shadowBorderWidth - i, shadowBorderWidth - i, widgetRect.width() - (shadowBorderWidth - i) * 2, widgetRect.height() - (shadowBorderWidth - i) * 2, borderRadius + i, borderRadius + i);
+        path.addRoundedRect(widgetRect.x() + shadowBorderWidth - i, widgetRect.y() + shadowBorderWidth - i, widgetRect.width() - (shadowBorderWidth - i) * 2, widgetRect.height() - (shadowBorderWidth - i) * 2, borderRadius + i, borderRadius + i);
         int alpha = 1 * (shadowBorderWidth - i + 1);
         color.setAlpha(alpha > 255 ? 255 : alpha);
         painter->setPen(color);

@@ -15,7 +15,7 @@ class ElaContentDialogPrivate : public QObject
     Q_D_CREATE(ElaContentDialog)
 public:
     explicit ElaContentDialogPrivate(QObject* parent = nullptr);
-    ~ElaContentDialogPrivate();
+    ~ElaContentDialogPrivate() override;
 
 private:
     qint64 _currentWinID{0};
@@ -30,7 +30,7 @@ private:
     ElaPushButton* _leftButton{nullptr};
     ElaPushButton* _middleButton{nullptr};
     ElaPushButton* _rightButton{nullptr};
-    void _doCloseAnimation();
+    void _doCloseAnimation(bool isAccept);
 };
 
 #endif // ELACONTENTDIALOGPRIVATE_H

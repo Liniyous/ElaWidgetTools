@@ -36,29 +36,31 @@ ElaPopularCard::ElaPopularCard(QWidget* parent)
     connect(d->_floatTimer, &QTimer::timeout, d, &ElaPopularCardPrivate::_showFloater);
 
     d->_themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { d->_themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        d->_themeMode = themeMode;
+    });
 }
 
 ElaPopularCard::~ElaPopularCard()
 {
 }
 
-void ElaPopularCard::setCardButtontext(QString cardButtonText)
+void ElaPopularCard::setCardButtonText(QString cardButtonText)
 {
     Q_D(ElaPopularCard);
     if (cardButtonText.isEmpty())
     {
         return;
     }
-    d->_pCardButtontext = cardButtonText;
-    d->_floater->_overButton->setText(d->_pCardButtontext);
-    Q_EMIT pCardButtontextChanged();
+    d->_pCardButtonText = cardButtonText;
+    d->_floater->_overButton->setText(d->_pCardButtonText);
+    Q_EMIT pCardButtonTextChanged();
 }
 
-QString ElaPopularCard::getCardButtontext() const
+QString ElaPopularCard::getCardButtonText() const
 {
     Q_D(const ElaPopularCard);
-    return d->_pCardButtontext;
+    return d->_pCardButtonText;
 }
 
 void ElaPopularCard::setCardFloatArea(QWidget* floatArea)
@@ -88,7 +90,9 @@ bool ElaPopularCard::event(QEvent* event)
     {
         d->_floatTimer->start(450);
         QPropertyAnimation* hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+            update();
+        });
         hoverAnimation->setDuration(130);
         hoverAnimation->setStartValue(d->_pHoverYOffset);
         hoverAnimation->setEndValue(6);
@@ -104,7 +108,9 @@ bool ElaPopularCard::event(QEvent* event)
     {
         d->_floatTimer->stop();
         QPropertyAnimation* hoverAnimation = new QPropertyAnimation(d, "pHoverYOffset");
-        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() { update(); });
+        connect(hoverAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
+            update();
+        });
         hoverAnimation->setDuration(130);
         hoverAnimation->setStartValue(d->_pHoverYOffset);
         hoverAnimation->setEndValue(0);
@@ -143,8 +149,7 @@ void ElaPopularCard::paintEvent(QPaintEvent* event)
     {
         // 阴影绘制
         painter.setOpacity(d->_pHoverOpacity);
-        QRect shadowRect = rect();
-        shadowRect.adjust(0, 0, 0, -d->_pHoverYOffset);
+        QRect shadowRect = rect().adjusted(0, -d->_pHoverYOffset, 0, -d->_pHoverYOffset);
         eTheme->drawEffectShadow(&painter, shadowRect, d->_shadowBorderWidth, d->_pBorderRadius);
     }
     QRectF foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth - d->_pHoverYOffset + 1, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
