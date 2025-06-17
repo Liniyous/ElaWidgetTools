@@ -21,7 +21,7 @@ class ElaNavigationStyle : public QProxyStyle
     Q_PRIVATE_CREATE(QModelIndex, PressIndex)
 public:
     explicit ElaNavigationStyle(QStyle* style = nullptr);
-    ~ElaNavigationStyle();
+    ~ElaNavigationStyle() override;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     QSize sizeFromContents(ContentsType type, const QStyleOption* option, const QSize& size, const QWidget* widget) const override;

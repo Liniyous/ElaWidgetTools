@@ -91,6 +91,7 @@ void MainWindow::initWindow()
     setWindowTitle("ElaWidgetTool");
     // setIsStayTop(true);
     // setUserInfoCardVisible(false);
+    // setNavigationBarWidth(260);
 }
 
 void MainWindow::initEdgeLayout()

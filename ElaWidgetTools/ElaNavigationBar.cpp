@@ -30,11 +30,13 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     Q_D(ElaNavigationBar);
     d->q_ptr = this;
     d->_pIsAllowPageOpenInNewWindow = true;
+    d->_pNavigationBarWidth = 300;
     setFixedWidth(300);
     d->_pIsTransparent = true;
 
     //用户卡片
     d->_userCard = new ElaInteractiveCard(this);
+    d->_userCard->setMinimumWidth(0);
     d->_userCard->setCardPixmap(QPixmap(":/include/Image/Cirno.jpg"));
     d->_userCard->setTitle("Ela Tool");
     d->_userCard->setSubTitle("Liniyous@gmail.com");
@@ -159,6 +161,27 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 
 ElaNavigationBar::~ElaNavigationBar()
 {
+}
+
+void ElaNavigationBar::setNavigationBarWidth(int navigationBarWidth)
+{
+    Q_D(ElaNavigationBar);
+    if (navigationBarWidth < 180)
+    {
+        navigationBarWidth = 180;
+    }
+    if (d->_currentDisplayMode == ElaNavigationType::NavigationDisplayMode::Maximal)
+    {
+        setFixedWidth(navigationBarWidth);
+    }
+    d->_pNavigationBarWidth = navigationBarWidth;
+    Q_EMIT pNavigationBarWidthChanged();
+}
+
+int ElaNavigationBar::getNavigationBarWidth() const
+{
+    Q_D(const ElaNavigationBar);
+    return d->_pNavigationBarWidth;
 }
 
 void ElaNavigationBar::setUserInfoCardVisible(bool isVisible)

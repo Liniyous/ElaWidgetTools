@@ -205,6 +205,19 @@ bool ElaWindow::getIsAllowPageOpenInNewWindow() const
     return d->_navigationBar->getIsAllowPageOpenInNewWindow();
 }
 
+void ElaWindow::setNavigationBarWidth(int navigationBarWidth)
+{
+    Q_D(ElaWindow);
+    d->_navigationBar->setNavigationBarWidth(navigationBarWidth);
+    Q_EMIT pNavigationBarWidthChanged();
+}
+
+int ElaWindow::getNavigationBarWidth() const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationBar->getNavigationBarWidth();
+}
+
 void ElaWindow::moveToCenter()
 {
     if (isMaximized() || isFullScreen())
