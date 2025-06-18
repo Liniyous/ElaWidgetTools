@@ -1,11 +1,11 @@
 #include "ElaSpinBoxStyle.h"
 
+#include "ElaTheme.h"
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOptionSpinBox>
-
-#include "ElaTheme.h"
+#include <cmath>
 ElaSpinBoxStyle::ElaSpinBoxStyle(QStyle* style)
 {
     _pButtonMode = ElaSpinBoxType::Inline;

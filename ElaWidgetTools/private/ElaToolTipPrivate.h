@@ -21,7 +21,7 @@ class ElaToolTipPrivate : public QObject
 
 public:
     explicit ElaToolTipPrivate(QObject* parent = nullptr);
-    ~ElaToolTipPrivate();
+    ~ElaToolTipPrivate() override;
 
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event);
