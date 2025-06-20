@@ -179,11 +179,14 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
     switch (eApp->getWindowDisplayMode())
     {
     case ElaApplicationType::Normal:
-    case ElaApplicationType::ElaMica:
     {
         QPalette palette = q->palette();
         palette.setBrush(QPalette::Window, ElaThemeColor(_themeMode, WindowBase));
         q->setPalette(palette);
+        break;
+    }
+    case ElaApplicationType::ElaMica:
+    {
         break;
     }
     default:
