@@ -21,6 +21,7 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
     Q_PROPERTY_CREATE_Q_H(bool, IsNavigationBarEnable)
     Q_PROPERTY_CREATE_Q_H(int, NavigationBarWidth)
+    Q_PROPERTY_CREATE_Q_H(int, CurrentStackIndex)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
     Q_PROPERTY_CREATE_Q_H(ElaWindowType::StackSwitchMode, StackSwitchMode)
     Q_TAKEOVER_NATIVEEVENT_H
@@ -44,6 +45,9 @@ public:
     ElaNavigationType::NodeOperateReturnType addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None) const;
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None) const;
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None) const;
+
+    void addCentralWidget(QWidget* centralWidget);
+    QWidget* getCentralWidget(int index) const;
 
     bool getNavigationNodeIsExpanded(QString expanderKey) const;
     void expandNavigationNode(QString expanderKey);

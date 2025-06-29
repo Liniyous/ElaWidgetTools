@@ -24,6 +24,7 @@
 #include "T_Setting.h"
 #include "T_TableView.h"
 #include "T_TreeView.h"
+#include <QMouseEvent>
 #ifdef Q_OS_WIN
 #include "ElaApplication.h"
 #include "ExamplePage/T_ElaScreen.h"
@@ -92,6 +93,12 @@ void MainWindow::initWindow()
     // setIsStayTop(true);
     // setUserInfoCardVisible(false);
     // setNavigationBarWidth(260);
+    ElaText* centralStack = new ElaText("这是一个主窗口堆栈页面", this);
+    QFont font = centralStack->font();
+    font.setPixelSize(32);
+    centralStack->setFont(font);
+    centralStack->setAlignment(Qt::AlignCenter);
+    addCentralWidget(centralStack);
 }
 
 void MainWindow::initEdgeLayout()
@@ -299,4 +306,26 @@ void MainWindow::initContent()
         this->navigation(_cardPage->property("ElaPageKey").toString());
     });
     qDebug() << "已注册的事件列表" << ElaEventBus::getInstance()->getRegisteredEventsName();
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent* event)
+{
+    switch (event->button())
+    {
+    case Qt::BackButton:
+    {
+        this->setCurrentStackIndex(0);
+        break;
+    }
+    case Qt::ForwardButton:
+    {
+        this->setCurrentStackIndex(1);
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    ElaWindow::mouseReleaseEvent(event);
 }

@@ -20,6 +20,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     Q_D(ElaLineEdit);
     d->q_ptr = this;
     setObjectName("ElaLineEdit");
+    setFixedHeight(35);
     d->_themeMode = eTheme->getThemeMode();
     d->_pBorderRadius = 6;
     d->_pExpandMarkWidth = 0;

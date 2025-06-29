@@ -30,7 +30,7 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         _navigationBar->setIsTransparent(false);
         _navigationBar->setDisplayMode(ElaNavigationType::Maximal, false);
         _navigationBar->move(-_navigationBar->width(), _navigationBar->pos().y());
-        _navigationBar->resize(_navigationBar->width(), _centerStackedWidget->height() + 1);
+        _navigationBar->resize(_navigationBar->width(), _navigationCenterStackedWidget->height() + 1);
         QPropertyAnimation* navigationMoveAnimation = new QPropertyAnimation(_navigationBar, "pos");
         connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
             _isNavigationBarExpanded = true;
@@ -208,13 +208,13 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
         // 页脚没有绑定页面
         return;
     }
-    int nodeIndex = _centerStackedWidget->indexOf(page);
-    if (_navigationTargetIndex == nodeIndex || _centerStackedWidget->count() <= nodeIndex)
+    int nodeIndex = _navigationCenterStackedWidget->indexOf(page);
+    if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->count() <= nodeIndex)
     {
         return;
     }
     _navigationTargetIndex = nodeIndex;
-    _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, nodeIndex, isRouteBack);
+    _navigationCenterStackedWidget->doWindowStackSwitch(_pStackSwitchMode, nodeIndex, isRouteBack);
 }
 
 void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page)
@@ -222,14 +222,14 @@ void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeTy
     if (nodeType == ElaNavigationType::PageNode)
     {
         _routeMap.insert(nodeKey, page);
-        _centerStackedWidget->addWidget(page);
+        _navigationCenterStackedWidget->addWidget(page);
     }
     else
     {
         _routeMap.insert(nodeKey, page);
         if (page)
         {
-            _centerStackedWidget->addWidget(page);
+            _navigationCenterStackedWidget->addWidget(page);
         }
     }
 }
@@ -243,12 +243,18 @@ void ElaWindowPrivate::onNavigationNodeRemoved(ElaNavigationType::NavigationNode
     }
     QWidget* page = _routeMap.value(nodeKey);
     _routeMap.remove(nodeKey);
-    _centerStackedWidget->removeWidget(page);
-    QWidget* currentWidget = _centerStackedWidget->currentWidget();
+    _navigationCenterStackedWidget->removeWidget(page);
+    QWidget* currentWidget = _navigationCenterStackedWidget->currentWidget();
     if (currentWidget)
     {
         q->navigation(currentWidget->property("ElaPageKey").toString());
     }
+}
+
+void ElaWindowPrivate::onNavigationRouteBack(QVariantMap routeData)
+{
+    int routeIndex = routeData.value("ElaCentralStackIndex").toUInt();
+    _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, true);
 }
 
 qreal ElaWindowPrivate::_distance(QPoint point1, QPoint point2)
@@ -272,7 +278,7 @@ void ElaWindowPrivate::_resetWindowLayout(bool isAnimation)
             _navigationBar->setIsTransparent(true);
             _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
             _centerLayout->addWidget(_navigationBar);
-            _centerLayout->addWidget(_centerStackedWidget);
+            _centerLayout->addWidget(_navigationCenterStackedWidget);
         }
     }
 }
