@@ -226,10 +226,11 @@ int ElaWindow::getNavigationBarWidth() const
 void ElaWindow::setCurrentStackIndex(int currentStackIndex)
 {
     Q_D(ElaWindow);
-    if (currentStackIndex >= d->_centerStackedWidget->count() || currentStackIndex < 0)
+    if (currentStackIndex >= d->_centerStackedWidget->count() || currentStackIndex < 0 || currentStackIndex == d->_centralStackTargetIndex)
     {
         return;
     }
+    d->_centralStackTargetIndex = currentStackIndex;
     QVariantMap routeData;
     routeData.insert("ElaCentralStackIndex", d->_centerStackedWidget->currentIndex());
     ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
