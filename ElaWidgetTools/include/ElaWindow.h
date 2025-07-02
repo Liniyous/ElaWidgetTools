@@ -59,6 +59,8 @@ public:
     int getNodeKeyPoints(QString nodeKey) const;
 
     void navigation(QString pageKey);
+    int getCurrentNavigationIndex() const;
+    QString getCurrentNavigationPageKey() const;
     void setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;

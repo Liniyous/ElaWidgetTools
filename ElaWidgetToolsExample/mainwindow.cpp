@@ -310,22 +310,25 @@ void MainWindow::initContent()
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event)
 {
-    switch (event->button())
+    if (getCurrentNavigationIndex() != 2)
     {
-    case Qt::BackButton:
-    {
-        this->setCurrentStackIndex(0);
-        break;
-    }
-    case Qt::ForwardButton:
-    {
-        this->setCurrentStackIndex(1);
-        break;
-    }
-    default:
-    {
-        break;
-    }
+        switch (event->button())
+        {
+        case Qt::BackButton:
+        {
+            this->setCurrentStackIndex(0);
+            break;
+        }
+        case Qt::ForwardButton:
+        {
+            this->setCurrentStackIndex(1);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
     }
     ElaWindow::mouseReleaseEvent(event);
 }

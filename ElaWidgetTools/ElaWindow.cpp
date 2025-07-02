@@ -419,6 +419,18 @@ void ElaWindow::navigation(QString pageKey)
     d->_navigationBar->navigation(pageKey);
 }
 
+int ElaWindow::getCurrentNavigationIndex() const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationCenterStackedWidget->currentIndex();
+}
+
+QString ElaWindow::getCurrentNavigationPageKey() const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationCenterStackedWidget->currentWidget()->property("ElaPageKey").toString();
+}
+
 void ElaWindow::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)
 {
     Q_D(ElaWindow);
