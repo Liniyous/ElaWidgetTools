@@ -54,6 +54,7 @@ void ElaSpinBox::setButtonMode(ElaSpinBoxType::ButtonMode buttonMode)
     }
     }
     setFrame(hasFrame());
+    d->onThemeChanged(eTheme->getThemeMode());
     Q_EMIT pButtonModeChanged();
 }
 
