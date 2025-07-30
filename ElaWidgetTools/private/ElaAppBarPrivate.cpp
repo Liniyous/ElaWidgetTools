@@ -189,6 +189,10 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
             return false;
         }
     }
+    else if (item == _maxButton)
+    {
+        rect.adjust(0, 8, 0, 0);
+    }
     if (rect.contains(point))
     {
         return true;
@@ -248,7 +252,7 @@ int ElaAppBarPrivate::_calculateMinimumWidth()
         }
     }
     QList<QAbstractButton*> buttonList = q->findChildren<QAbstractButton*>();
-    for (auto button : buttonList)
+    for (auto button: buttonList)
     {
         if (button->isVisible() && button->objectName() != "NavigationButton")
         {
