@@ -379,8 +379,10 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
     }
     if (d->_currentWinID == 0)
     {
-        ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
-        ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+        QTimer::singleShot(1, this, [=]() {
+            ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
+            ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
+        });
     }
     d->_currentWinID = (qint64)hwnd;
     const UINT uMsg = msg->message;
