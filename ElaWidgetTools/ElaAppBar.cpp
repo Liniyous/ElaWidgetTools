@@ -377,13 +377,6 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
     {
         return 0;
     }
-    if (d->_currentWinID == 0)
-    {
-        QTimer::singleShot(1, this, [=]() {
-            ::SetWindowPos(hwnd, nullptr, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
-            ::RedrawWindow(hwnd, nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW);
-        });
-    }
     d->_currentWinID = (qint64)hwnd;
     const UINT uMsg = msg->message;
     const WPARAM wParam = msg->wParam;
@@ -447,19 +440,16 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
             return 0;
         }
         RECT* clientRect = &((NCCALCSIZE_PARAMS*)(lParam))->rgrc[0];
-        if (!::IsZoomed(hwnd))
+        const LONG originTop = clientRect->top;
+        const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
+        if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
         {
-            clientRect->top -= 1;
-            clientRect->bottom -= 1;
+            *result = static_cast<long>(hitTestResult);
+            return 1;
         }
-        else
+        clientRect->top = originTop;
+        if (::IsZoomed(hwnd))
         {
-            const LRESULT hitTestResult = ::DefWindowProcW(hwnd, WM_NCCALCSIZE, wParam, lParam);
-            if ((hitTestResult != HTERROR) && (hitTestResult != HTNOWHERE))
-            {
-                *result = static_cast<long>(hitTestResult);
-                return 1;
-            }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
             auto geometry = window()->screen()->geometry();
 #else
