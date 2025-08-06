@@ -40,6 +40,8 @@ ElaPlainTextEdit::ElaPlainTextEdit(const QString& text, QWidget* parent)
 
 ElaPlainTextEdit::~ElaPlainTextEdit()
 {
+    Q_D(ElaPlainTextEdit);
+    delete d->_style;
 }
 
 void ElaPlainTextEdit::focusInEvent(QFocusEvent* event)

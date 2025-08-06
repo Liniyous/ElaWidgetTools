@@ -48,6 +48,7 @@ ElaToolBar::ElaToolBar(const QString& title, QWidget* parent)
 
 ElaToolBar::~ElaToolBar()
 {
+    delete this->style();
 }
 
 void ElaToolBar::setToolBarSpacing(int spacing)

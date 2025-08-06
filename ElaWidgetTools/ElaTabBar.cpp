@@ -22,6 +22,7 @@ ElaTabBar::ElaTabBar(QWidget* parent)
 
 ElaTabBar::~ElaTabBar()
 {
+    delete this->style();
 }
 
 void ElaTabBar::mousePressEvent(QMouseEvent* event)

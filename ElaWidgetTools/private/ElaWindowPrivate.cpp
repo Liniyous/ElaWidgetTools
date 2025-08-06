@@ -110,7 +110,6 @@ void ElaWindowPrivate::onThemeReadyChange()
             {
                 eTheme->setThemeMode(ElaThemeType::Light);
             }
-            _animationWidget->setNewWindowBackground(q->grab(q->rect()).toImage());
             _animationWidget->setCenter(centerPos);
             qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
             qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));

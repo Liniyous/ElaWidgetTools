@@ -26,6 +26,8 @@ ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
 
 ElaDoubleSpinBox::~ElaDoubleSpinBox()
 {
+    Q_D(ElaDoubleSpinBox);
+    delete d->_style;
 }
 
 void ElaDoubleSpinBox::setButtonMode(ElaSpinBoxType::ButtonMode buttonMode)

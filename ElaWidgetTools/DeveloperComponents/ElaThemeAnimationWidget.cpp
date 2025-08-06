@@ -22,7 +22,9 @@ void ElaThemeAnimationWidget::startAnimation(int msec)
         Q_EMIT animationFinished();
         this->deleteLater();
     });
-    connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { update(); });
+    connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        update();
+    });
     themeChangeAnimation->setStartValue(0);
     themeChangeAnimation->setEndValue(_pEndRadius);
     themeChangeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -32,13 +34,24 @@ void ElaThemeAnimationWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
     painter.save();
-    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     painter.setPen(Qt::NoPen);
-    painter.drawImage(rect(), _pOldWindowBackground);
-    QPainterPath path;
-    path.moveTo(_pCenter.x(), _pCenter.y());
-    path.addEllipse(QPointF(_pCenter.x(), _pCenter.y()), _pRadius, _pRadius);
-    painter.setClipPath(path);
-    painter.drawImage(rect(), _pNewWindowBackground);
+
+    // 合成图片
+    QImage animationImage(_pOldWindowBackground.size(), QImage::Format_ARGB32);
+    animationImage.fill(Qt::transparent);
+    QPainter animationImagePainter(&animationImage);
+    animationImagePainter.setRenderHints(QPainter::Antialiasing);
+    animationImagePainter.drawImage(_pOldWindowBackground.rect(), _pOldWindowBackground);
+    animationImagePainter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOut);
+    qreal devicePixelRatioF = _pOldWindowBackground.devicePixelRatioF();
+    QPainterPath clipPath;
+    clipPath.moveTo(_pCenter.x() * devicePixelRatioF, _pCenter.y() * devicePixelRatioF);
+    clipPath.addEllipse(QPointF(_pCenter.x() * devicePixelRatioF, _pCenter.y() * devicePixelRatioF), _pRadius * devicePixelRatioF, _pRadius * devicePixelRatioF);
+    animationImagePainter.setClipPath(clipPath);
+    animationImagePainter.drawImage(animationImage.rect(), animationImage);
+    animationImagePainter.end();
+
+    painter.drawImage(rect(), animationImage);
     painter.restore();
 }

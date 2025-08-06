@@ -25,6 +25,8 @@ ElaListView::ElaListView(QWidget* parent)
 
 ElaListView::~ElaListView()
 {
+    Q_D(ElaListView);
+    delete d->_listViewStyle;
 }
 
 void ElaListView::setItemHeight(int itemHeight)

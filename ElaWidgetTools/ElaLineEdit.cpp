@@ -42,6 +42,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
 
 ElaLineEdit::~ElaLineEdit()
 {
+    delete this->style();
 }
 
 void ElaLineEdit::setIsClearButtonEnable(bool isClearButtonEnable)

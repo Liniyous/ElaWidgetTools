@@ -38,6 +38,8 @@ ElaTreeView::ElaTreeView(QWidget* parent)
 
 ElaTreeView::~ElaTreeView()
 {
+    Q_D(ElaTreeView);
+    delete d->_treeViewStyle;
 }
 
 void ElaTreeView::setItemHeight(int itemHeight)

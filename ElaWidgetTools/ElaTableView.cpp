@@ -29,6 +29,8 @@ ElaTableView::ElaTableView(QWidget* parent)
 
 ElaTableView::~ElaTableView()
 {
+    Q_D(ElaTableView);
+    delete d->_tableViewStyle;
 }
 
 void ElaTableView::setHeaderMargin(int headerMargin)

@@ -30,6 +30,7 @@ ElaMenuBar::ElaMenuBar(QWidget* parent)
 
 ElaMenuBar::~ElaMenuBar()
 {
+    delete this->style();
 }
 
 QAction* ElaMenuBar::addMenu(QMenu* menu)

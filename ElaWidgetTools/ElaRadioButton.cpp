@@ -25,4 +25,5 @@ ElaRadioButton::ElaRadioButton(const QString& text, QWidget* parent)
 
 ElaRadioButton::~ElaRadioButton()
 {
+    delete this->style();
 }

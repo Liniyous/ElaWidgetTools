@@ -115,6 +115,7 @@ ElaWindow::ElaWindow(QWidget* parent)
 ElaWindow::~ElaWindow()
 {
     eApp->syncWindowDisplayMode(this, false);
+    delete this->style();
 }
 
 void ElaWindow::setIsStayTop(bool isStayTop)

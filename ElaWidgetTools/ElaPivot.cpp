@@ -76,6 +76,8 @@ ElaPivot::ElaPivot(QWidget* parent)
 
 ElaPivot::~ElaPivot()
 {
+    Q_D(ElaPivot);
+    delete d->_listStyle;
 }
 
 void ElaPivot::appendPivot(QString pivotTitle)

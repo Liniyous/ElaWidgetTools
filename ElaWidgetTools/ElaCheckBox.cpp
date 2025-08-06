@@ -21,4 +21,5 @@ ElaCheckBox::ElaCheckBox(const QString& text, QWidget* parent)
 
 ElaCheckBox::~ElaCheckBox()
 {
+    delete this->style();
 }

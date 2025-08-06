@@ -25,6 +25,8 @@ ElaProgressBar::ElaProgressBar(QWidget* parent)
 
 ElaProgressBar::~ElaProgressBar()
 {
+    Q_D(ElaProgressBar);
+    delete d->_style;
 }
 
 void ElaProgressBar::setMinimum(int minimum)

@@ -35,6 +35,8 @@ ElaLCDNumber::ElaLCDNumber(uint numDigits, QWidget* parent)
 
 ElaLCDNumber::~ElaLCDNumber()
 {
+    Q_D(ElaLCDNumber);
+    delete d->_lcdNumberStyle;
 }
 
 void ElaLCDNumber::setIsUseAutoClock(bool isUseAutoClock)

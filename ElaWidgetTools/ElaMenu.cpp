@@ -31,6 +31,8 @@ ElaMenu::ElaMenu(const QString& title, QWidget* parent)
 
 ElaMenu::~ElaMenu()
 {
+    Q_D(ElaMenu);
+    delete d->_menuStyle;
 }
 
 void ElaMenu::setMenuItemHeight(int menuItemHeight)
@@ -93,7 +95,7 @@ QAction* ElaMenu::addElaIconAction(ElaIconType::IconName icon, const QString& te
 bool ElaMenu::isHasChildMenu() const
 {
     QList<QAction*> actionList = this->actions();
-    for (auto action : actionList)
+    for (auto action: actionList)
     {
         if (action->isSeparator())
         {
@@ -110,7 +112,7 @@ bool ElaMenu::isHasChildMenu() const
 bool ElaMenu::isHasIcon() const
 {
     QList<QAction*> actionList = this->actions();
-    for (auto action : actionList)
+    for (auto action: actionList)
     {
         if (action->isSeparator())
         {

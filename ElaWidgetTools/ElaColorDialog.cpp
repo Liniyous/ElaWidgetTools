@@ -283,6 +283,8 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
 
 ElaColorDialog::~ElaColorDialog()
 {
+    Q_D(ElaColorDialog);
+    delete d->_colorValueSlider->style();
 }
 
 void ElaColorDialog::setCurrentColor(QColor currentColor)
