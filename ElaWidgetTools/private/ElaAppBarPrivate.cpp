@@ -4,17 +4,19 @@
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #endif
+#include "ElaAppBar.h"
+#include "ElaIconButton.h"
+#include "ElaNavigationBar.h"
+#include "ElaText.h"
+
 #include <QGuiApplication>
 #include <QLabel>
+#include <QMenu>
 #include <QPropertyAnimation>
 #include <QScreen>
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "ElaAppBar.h"
-#include "ElaIconButton.h"
-#include "ElaNavigationBar.h"
-#include "ElaText.h"
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -86,50 +88,57 @@ void ElaAppBarPrivate::_changeMaxButtonAwesome(bool isMaximized)
     }
 }
 
-void ElaAppBarPrivate::_showSystemMenu(QPoint point)
+void ElaAppBarPrivate::_showAppBarMenu(QPoint point)
 {
     Q_Q(const ElaAppBar);
+    if (_pCustomMenu)
+    {
+        _pCustomMenu->exec(point);
+    }
+    else
+    {
 #ifdef Q_OS_WIN
-    QScreen* screen = qApp->screenAt(QCursor::pos());
-    if (!screen)
-    {
-        screen = QGuiApplication::primaryScreen();
-    }
-    if (!screen)
-    {
-        return;
-    }
-    const QPoint origin = screen->geometry().topLeft();
-    auto nativePos = QPointF(QPointF(point - origin) * screen->devicePixelRatio()).toPoint() + origin;
-    HWND hwnd = reinterpret_cast<HWND>(q->window()->winId());
-    const HMENU hMenu = ::GetSystemMenu(hwnd, FALSE);
-    if (q->window()->isMaximized() || q->window()->isFullScreen())
-    {
-        ::EnableMenuItem(hMenu, SC_MOVE, MFS_DISABLED);
-        ::EnableMenuItem(hMenu, SC_RESTORE, MFS_ENABLED);
-    }
-    else
-    {
-        ::EnableMenuItem(hMenu, SC_MOVE, MFS_ENABLED);
-        ::EnableMenuItem(hMenu, SC_RESTORE, MFS_DISABLED);
-    }
-    if (!_pIsFixedSize && !q->window()->isMaximized() && !q->window()->isFullScreen())
-    {
-        ::EnableMenuItem(hMenu, SC_SIZE, MFS_ENABLED);
-        ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_ENABLED);
-    }
-    else
-    {
-        ::EnableMenuItem(hMenu, SC_SIZE, MFS_DISABLED);
-        ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_DISABLED);
-    }
-    const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), nativePos.x(),
-                                        nativePos.y(), 0, hwnd, nullptr);
-    if (result != FALSE)
-    {
-        ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
-    }
+        QScreen* screen = qApp->screenAt(QCursor::pos());
+        if (!screen)
+        {
+            screen = QGuiApplication::primaryScreen();
+        }
+        if (!screen)
+        {
+            return;
+        }
+        const QPoint origin = screen->geometry().topLeft();
+        auto nativePos = QPointF(QPointF(point - origin) * screen->devicePixelRatio()).toPoint() + origin;
+        HWND hwnd = reinterpret_cast<HWND>(q->window()->winId());
+        const HMENU hMenu = ::GetSystemMenu(hwnd, FALSE);
+        if (q->window()->isMaximized() || q->window()->isFullScreen())
+        {
+            ::EnableMenuItem(hMenu, SC_MOVE, MFS_DISABLED);
+            ::EnableMenuItem(hMenu, SC_RESTORE, MFS_ENABLED);
+        }
+        else
+        {
+            ::EnableMenuItem(hMenu, SC_MOVE, MFS_ENABLED);
+            ::EnableMenuItem(hMenu, SC_RESTORE, MFS_DISABLED);
+        }
+        if (!_pIsFixedSize && !q->window()->isMaximized() && !q->window()->isFullScreen())
+        {
+            ::EnableMenuItem(hMenu, SC_SIZE, MFS_ENABLED);
+            ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_ENABLED);
+        }
+        else
+        {
+            ::EnableMenuItem(hMenu, SC_SIZE, MFS_DISABLED);
+            ::EnableMenuItem(hMenu, SC_MAXIMIZE, MFS_DISABLED);
+        }
+        const int result = ::TrackPopupMenu(hMenu, (TPM_RETURNCMD | (QGuiApplication::isRightToLeft() ? TPM_RIGHTALIGN : TPM_LEFTALIGN)), nativePos.x(),
+                                            nativePos.y(), 0, hwnd, nullptr);
+        if (result != FALSE)
+        {
+            ::PostMessageW(hwnd, WM_SYSCOMMAND, result, 0);
+        }
 #endif
+    }
 }
 
 void ElaAppBarPrivate::_updateCursor(int edges)

@@ -167,10 +167,30 @@ int ElaWindow::getAppBarHeight() const
     return d->_appBar->getAppBarHeight();
 }
 
+void ElaWindow::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setCustomWidget(customArea, widget);
+    Q_EMIT customWidgetChanged();
+}
+
 QWidget* ElaWindow::getCustomWidget() const
 {
     Q_D(const ElaWindow);
     return d->_appBar->getCustomWidget();
+}
+
+void ElaWindow::setCustomMenu(QMenu* customMenu)
+{
+    Q_D(ElaWindow);
+    d->_appBar->setCustomMenu(customMenu);
+    Q_EMIT customMenuChanged();
+}
+
+QMenu* ElaWindow::getCustomMenu() const
+{
+    Q_D(const ElaWindow);
+    return d->_appBar->getCustomMenu();
 }
 
 void ElaWindow::setCustomWidgetMaximumWidth(int width)
@@ -257,13 +277,6 @@ void ElaWindow::moveToCenter()
     auto geometry = qApp->screenAt(this->geometry().center())->geometry();
 #endif
     setGeometry((geometry.left() + geometry.right() - width()) / 2, (geometry.top() + geometry.bottom() - height()) / 2, width(), height());
-}
-
-void ElaWindow::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setCustomWidget(customArea, widget);
-    Q_EMIT customWidgetChanged();
 }
 
 void ElaWindow::setIsNavigationBarEnable(bool isVisible)

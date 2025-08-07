@@ -33,6 +33,10 @@ public:
 
     void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget);
     QWidget* getCustomWidget() const;
+
+    void setCustomMenu(QMenu* customMenu);
+    QMenu* getCustomMenu() const;
+
     void setUserInfoCardVisible(bool isVisible);
     void setUserInfoCardPixmap(QPixmap pix);
     void setUserInfoCardTitle(QString title);
@@ -71,6 +75,7 @@ Q_SIGNALS:
     Q_SIGNAL void closeButtonClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
     Q_SIGNAL void customWidgetChanged();
+    Q_SIGNAL void customMenuChanged();
     Q_SIGNAL void pageOpenInNewWindow(QString nodeKey);
 
 protected:

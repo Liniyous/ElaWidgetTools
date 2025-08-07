@@ -63,7 +63,7 @@ T_Home::T_Home(QWidget* parent)
     urlCard2->setUrl("https://space.bilibili.com/21256707");
     urlCard2->setCardPixmap(QPixmap(":/Resource/Image/Moon.jpg"));
     urlCard2->setTitle("ElaWidgetTool");
-    urlCard2->setSubTitle("3056769574@qq.com");
+    urlCard2->setSubTitle("80985@qq.com");
 
     ElaScrollArea* cardScrollArea = new ElaScrollArea(this);
     cardScrollArea->setWidgetResizable(true);

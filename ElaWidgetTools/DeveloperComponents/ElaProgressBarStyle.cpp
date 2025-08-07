@@ -10,7 +10,9 @@ ElaProgressBarStyle::ElaProgressBarStyle(QStyle* style)
     setProperty("busyStartValue", 0);
     setProperty("busyEndValue", 0);
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaProgressBarStyle::~ElaProgressBarStyle()
@@ -21,6 +23,18 @@ void ElaProgressBarStyle::drawControl(ControlElement element, const QStyleOption
 {
     switch (element)
     {
+    case QStyle::CE_ProgressBarLabel:
+    {
+        if (const QStyleOptionProgressBar* popt = qstyleoption_cast<const QStyleOptionProgressBar*>(option))
+        {
+            painter->save();
+            painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+            painter->setPen(ElaThemeColor(_themeMode, BasicText));
+            painter->drawText(popt->rect, Qt::AlignCenter, popt->text);
+            painter->restore();
+        }
+        return;
+    }
     case QStyle::CE_ProgressBarGroove:
     {
         //背景轨道

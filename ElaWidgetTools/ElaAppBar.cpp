@@ -42,6 +42,7 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_pIsFixedSize = false;
     d->_pIsDefaultClosed = true;
     d->_pIsOnlyAllowMinAndClose = false;
+    d->_pCustomMenu = nullptr;
     d->_pCustomWidget = nullptr;
     d->_pCustomWidgetMaximumWidth = 550;
     window()->installEventFilter(this);
@@ -240,6 +241,19 @@ QWidget* ElaAppBar::getCustomWidget() const
 {
     Q_D(const ElaAppBar);
     return d->_pCustomWidget;
+}
+
+void ElaAppBar::setCustomMenu(QMenu* customMenu)
+{
+    Q_D(ElaAppBar);
+    d->_pCustomMenu = customMenu;
+    Q_EMIT customMenuChanged();
+}
+
+QMenu* ElaAppBar::getCustomMenu() const
+{
+    Q_D(const ElaAppBar);
+    return d->_pCustomMenu;
 }
 
 void ElaAppBar::setCustomWidgetMaximumWidth(int width)
@@ -632,7 +646,7 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
     {
         if (wParam == HTCAPTION && !d->_pIsOnlyAllowMinAndClose)
         {
-            d->_showSystemMenu(QCursor::pos());
+            d->_showAppBarMenu(QCursor::pos());
         }
         break;
     }
@@ -642,7 +656,7 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
         if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SPACE) & 0x8000) && !d->_pIsOnlyAllowMinAndClose)
         {
             auto pos = window()->geometry().topLeft();
-            d->_showSystemMenu(QPoint(pos.x(), pos.y() + this->height()));
+            d->_showAppBarMenu(QPoint(pos.x(), pos.y() + this->height()));
         }
         break;
     }
