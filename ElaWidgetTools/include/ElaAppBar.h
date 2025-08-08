@@ -47,6 +47,7 @@
 #define Q_TAKEOVER_NATIVEEVENT_CPP(CLASS, ElaAppBar)
 #endif
 
+class QMenu;
 class ElaAppBarPrivate;
 class ELA_EXPORT ElaAppBar : public QWidget
 {
