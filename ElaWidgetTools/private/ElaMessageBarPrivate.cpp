@@ -196,7 +196,9 @@ void ElaMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
     _isMessageBarEventAnimationStart = true;
     qreal targetPosY = eventData.value("TargetPosY").toReal();
     QPropertyAnimation* closePosAnimation = new QPropertyAnimation(this, "MessageBarClosedY");
-    connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) { q->move(q->pos().x(), value.toUInt()); });
+    connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+        q->move(q->pos().x(), value.toUInt());
+    });
     connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isMessageBarEventAnimationStart = false;
         if (ElaMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
@@ -249,7 +251,9 @@ void ElaMessageBarPrivate::onCloseButtonClicked()
         _closeButton->setOpacity(_pOpacity);
         q->update();
     });
-    connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() { q->deleteLater(); });
+    connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() {
+        q->deleteLater();
+    });
     opacityAnimation->setStartValue(_pOpacity);
     opacityAnimation->setEndValue(0);
     opacityAnimation->setDuration(220);
@@ -283,14 +287,15 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]() {
         _isNormalDisplay = true;
         _isMessageBarCreateAnimationFinished = true;
-        if(ElaMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
+        if (ElaMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
         {
             ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
         }
         QTimer::singleShot(displayMsec, q, [=]() {
             _isReadyToEnd = true;
             ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
-        }); });
+        });
+    });
     switch (_policy)
     {
     case ElaMessageBarType::Top:
@@ -387,8 +392,8 @@ void ElaMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& e
     }
     if (endY < _messageBarVerticalTopMargin || endY > q->parentWidget()->height() - _messageBarVerticalBottomMargin - q->minimumHeight())
     {
-        ElaMessageBarManager::getInstance()->updateActiveMap(q, false);
-        q->deleteLater();
+        (*_messageBarActiveMap[_policy])[0]->d_ptr->onCloseButtonClicked();
+        _calculateInitialPos(startX, startY, endX, endY);
     }
 }
 
@@ -399,7 +404,7 @@ QList<int> ElaMessageBarPrivate::_getOtherMessageBarTotalData(bool isJudgeCreate
     int minimumHeightTotal = 0;
     int indexLessCount = 0;
     QList<ElaMessageBar*>* messageBarList = _messageBarActiveMap[_policy];
-    for (auto messageBar : *messageBarList)
+    for (auto messageBar: *messageBarList)
     {
         if (messageBar == q)
         {
