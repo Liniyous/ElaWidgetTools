@@ -56,6 +56,14 @@ T_Navigation::T_Navigation(QWidget* parent)
     _pivot->appendPivot("下载歌曲");
     _pivot->appendPivot("下载视频");
     _pivot->appendPivot("正在下载");
+    _pivot->appendPivot("本地歌曲");
+    _pivot->appendPivot("下载歌曲");
+    _pivot->appendPivot("下载视频");
+    _pivot->appendPivot("正在下载");
+    _pivot->appendPivot("本地歌曲");
+    _pivot->appendPivot("下载歌曲");
+    _pivot->appendPivot("下载视频");
+    _pivot->appendPivot("正在下载");
     _pivot->setCurrentIndex(0);
 
     ElaScrollPageArea* pivotArea = new ElaScrollPageArea(this);

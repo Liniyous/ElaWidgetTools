@@ -1,9 +1,9 @@
 #ifndef ELAPIVOTVIEW_H
 #define ELAPIVOTVIEW_H
 
-#include <QListView>
-
 #include "stdafx.h"
+#include <QListView>
+#include <QModelIndex>
 class ElaPivotStyle;
 class ElaPivotView : public QListView
 {
@@ -12,6 +12,9 @@ class ElaPivotView : public QListView
     Q_PRIVATE_CREATE(int, MarkWidth)
     Q_PROPERTY_CREATE(int, MarkAnimationWidth)
     Q_PRIVATE_CREATE(ElaPivotStyle*, PivotStyle)
+    Q_PRIVATE_CREATE(QModelIndex, CurrentIndex)
+    Q_PRIVATE_CREATE(QRect, CurrentIndexRect)
+    Q_PRIVATE_CREATE(bool, IsAnimationFinished)
 public:
     explicit ElaPivotView(QWidget* parent = nullptr);
     ~ElaPivotView();
