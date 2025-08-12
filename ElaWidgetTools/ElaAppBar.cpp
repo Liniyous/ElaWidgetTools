@@ -429,6 +429,23 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
         }
         return 0;
     }
+#if QT_VERSION <= QT_VERSION_CHECK(6, 0, 0)
+    case WM_SHOWWINDOW:
+    {
+        if (wParam == FALSE)
+        {
+            return 0;
+        }
+        RECT windowRect{};
+        ::GetWindowRect(hwnd, &windowRect);
+        int windowWidth = windowRect.right - windowRect.left;
+        int windowHeight = windowRect.bottom - windowRect.top;
+        static UINT swpFlags = SWP_NOMOVE | SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_NOACTIVATE;
+        ::SetWindowPos(hwnd, nullptr, 0, 0, windowWidth + 1, windowHeight, swpFlags);
+        ::SetWindowPos(hwnd, nullptr, 0, 0, windowWidth, windowHeight, swpFlags);
+        return -1;
+    }
+#endif
     case WM_NCCALCSIZE:
     {
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 5, 3) && QT_VERSION <= QT_VERSION_CHECK(6, 6, 1))

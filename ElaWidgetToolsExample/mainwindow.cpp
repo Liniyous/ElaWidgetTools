@@ -62,12 +62,16 @@ MainWindow::MainWindow(QWidget* parent)
     });
 
     //移动到中心
-    moveToCenter();
+    //moveToCenter();
 
     //  如果你的windows版本低于Win11 调用原生Mica、Mica-Alt、Acrylic 会导致窗口绘制失效  Dwm_Blur仍可使用
     //    eTheme->setThemeMode(ElaThemeType::Dark);
     //    QTimer::singleShot(1, this, [=]() {
     //        eApp->setWindowDisplayMode(ElaApplicationType::Mica);
+    //    });
+
+    //    QTimer::singleShot(1, this, [=]() {
+    //        showFullScreen();
     //    });
 }
 
