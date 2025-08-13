@@ -543,11 +543,11 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
         ::GetClientRect(hwnd, &clientRect);
         auto clientWidth = clientRect.right - clientRect.left;
         auto clientHeight = clientRect.bottom - clientRect.top;
-        bool left = nativeLocalPos.x < d->_margins;
-        bool right = nativeLocalPos.x > clientWidth - d->_margins;
+        bool left = nativeLocalPos.x < 0;
+        bool right = nativeLocalPos.x > clientWidth;
         bool top = nativeLocalPos.y < d->_margins;
-        bool bottom = nativeLocalPos.y > clientHeight - d->_margins;
-        *result = 0;
+        bool bottom = nativeLocalPos.y > clientHeight;
+        *result = HTNOWHERE;
         if (!d->_pIsOnlyAllowMinAndClose && !d->_pIsFixedSize && !window()->isFullScreen() && !window()->isMaximized())
         {
             if (left && top)
@@ -587,7 +587,7 @@ int ElaAppBar::takeOverNativeEvent(const QByteArray& eventType, void* message, l
         {
             return 1;
         }
-        if (d->_containsCursorToItem(this))
+        if (d->_containsCursorToItem(this) && !window()->isFullScreen())
         {
             *result = HTCAPTION;
             return 1;
