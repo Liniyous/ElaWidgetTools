@@ -1,7 +1,7 @@
 #ifndef ELAFRAMEWORK_ELAWIDGETTOOLS_PRIVATE_ELADRAWERAREAPRIVATE_H_
 #define ELAFRAMEWORK_ELAWIDGETTOOLS_PRIVATE_ELADRAWERAREAPRIVATE_H_
 
-#include "Def.h"
+#include "ElaDef.h"
 #include "ElaDrawerContainer.h"
 #include "ElaDrawerHeader.h"
 #include <QObject>

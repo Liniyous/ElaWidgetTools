@@ -2,7 +2,7 @@
 #define ELARADIOBUTTONPRIVATE_H
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaRadioButton;
 class ElaRadioButtonPrivate : public QObject
 {

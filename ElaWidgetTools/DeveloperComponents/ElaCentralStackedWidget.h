@@ -3,7 +3,7 @@
 
 #include <QStackedWidget>
 
-#include "Def.h"
+#include "ElaDef.h"
 
 class QGraphicsBlurEffect;
 class ElaCentralStackedWidget : public QStackedWidget

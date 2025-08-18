@@ -3,7 +3,7 @@
 
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaLineEditStyle : public QProxyStyle
 {
     Q_OBJECT

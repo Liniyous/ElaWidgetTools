@@ -4,7 +4,7 @@
 #include <QModelIndex>
 #include <QObject>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class T_TreeItem : public QObject
 {
     Q_OBJECT

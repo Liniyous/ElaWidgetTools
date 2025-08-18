@@ -5,7 +5,7 @@
 #include <QDate>
 #include <QMetaType>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 enum ElaCalendarType
 {
     YearMode = 0x0001,
@@ -13,8 +13,7 @@ enum ElaCalendarType
     DayMode = 0x0003,
 };
 
-struct ElaCalendarData : public QObjectData
-{
+struct ElaCalendarData : public QObjectData {
 public:
     ElaCalendarData(){};
     ~ElaCalendarData(){};

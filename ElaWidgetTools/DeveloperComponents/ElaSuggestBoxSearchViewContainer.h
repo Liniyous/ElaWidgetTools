@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaSuggestBoxSearchViewContainer : public QWidget
 {
     Q_OBJECT

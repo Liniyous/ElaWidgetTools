@@ -3,7 +3,7 @@
 
 #include <QAbstractListModel>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaSuggestion;
 class ElaSuggestModel : public QAbstractListModel
 {

@@ -4,7 +4,7 @@
 #include <QQueue>
 #include <QVariantMap>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class ElaNavigationRouter;
 class ElaNavigationRouterPrivate : public QObject
 {

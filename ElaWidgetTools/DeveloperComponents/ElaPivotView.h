@@ -1,7 +1,7 @@
 #ifndef ELAPIVOTVIEW_H
 #define ELAPIVOTVIEW_H
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 #include <QListView>
 #include <QModelIndex>
 class ElaPivotStyle;

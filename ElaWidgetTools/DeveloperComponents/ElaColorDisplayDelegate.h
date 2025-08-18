@@ -3,7 +3,7 @@
 
 #include <QStyledItemDelegate>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaColorDisplayDelegate : public QStyledItemDelegate
 {
     Q_OBJECT

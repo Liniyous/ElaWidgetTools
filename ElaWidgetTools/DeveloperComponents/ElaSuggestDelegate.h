@@ -3,7 +3,7 @@
 
 #include <QStyledItemDelegate>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaSuggestDelegate : public QStyledItemDelegate
 {
     Q_OBJECT

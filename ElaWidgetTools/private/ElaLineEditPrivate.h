@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaEvent;
 class ElaLineEdit;
 class ElaLineEditPrivate : public QObject

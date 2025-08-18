@@ -1,7 +1,7 @@
 #ifndef ELAWINSHADOWHELPER_H
 #define ELAWINSHADOWHELPER_H
-#include "Def.h"
-#include "singleton.h"
+#include "ElaDef.h"
+#include "ElaSingleton.h"
 #include <QObject>
 #include <qglobal.h>
 #ifdef Q_OS_WIN

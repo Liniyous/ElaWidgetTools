@@ -4,7 +4,7 @@
 #include <QModelIndex>
 #include <QStyledItemDelegate>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaBreadcrumbBarDelegate : public QStyledItemDelegate
 {
     Q_OBJECT

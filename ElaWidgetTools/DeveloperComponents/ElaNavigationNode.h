@@ -4,7 +4,7 @@
 #include <QModelIndex>
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 
 class ElaNavigationNode : public QObject
 {

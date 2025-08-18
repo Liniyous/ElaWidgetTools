@@ -2,7 +2,7 @@
 #define ELADXGIMANAGERPRIVATE_H
 #include <QObject>
 #ifdef Q_OS_WIN
-#include "stdafx.h"
+#include "ElaProperty.h"
 #include <QImage>
 class ElaDxgi;
 class ElaDxgiManager;

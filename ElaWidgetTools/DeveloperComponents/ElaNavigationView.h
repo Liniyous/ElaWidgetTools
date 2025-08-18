@@ -1,7 +1,7 @@
 #ifndef ELANAVIGATIONVIEW_H
 #define ELANAVIGATIONVIEW_H
 
-#include "Def.h"
+#include "ElaDef.h"
 #include "ElaNavigationBarPrivate.h"
 #include <QObject>
 #include <QTreeView>

@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaWidget;
 class ElaAppBar;
 class ElaWidgetPrivate : public QObject

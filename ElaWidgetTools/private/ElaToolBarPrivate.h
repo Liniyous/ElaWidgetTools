@@ -2,7 +2,7 @@
 #define ELATOOLBARPRIVATE_H
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaToolBar;
 class ElaToolBarPrivate : public QObject
 {

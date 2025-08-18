@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class ElaMaskWidget : public QWidget
 {
     Q_OBJECT

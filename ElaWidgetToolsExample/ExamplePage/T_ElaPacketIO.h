@@ -3,9 +3,9 @@
 
 #include <QObject>
 #if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
+#include "ElaProperty.h"
 #include "ElaXIO_PacketRegistry.h"
 #include "UtCallbackHolder.h"
-#include "stdafx.h"
 #include <QImage>
 #include <QMutex>
 #include <QQueue>

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QScrollBar>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class ElaScrollBar;
 class ElaScrollArea;
 class ElaScrollAreaPrivate : public QObject

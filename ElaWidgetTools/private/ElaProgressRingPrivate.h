@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaProgressRing;
 class QPropertyAnimation;
 class ElaProgressRingPrivate : public QObject

@@ -5,8 +5,7 @@
 #include <QObject>
 #include <QPixmap>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class ElaAcrylicUrlCard;
 class ElaAcrylicUrlCardPrivate : public QObject
 {

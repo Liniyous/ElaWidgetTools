@@ -1,7 +1,7 @@
 #ifndef ELAWIDGETTOOLS_SRC_PRIVATE_ELAKEYBINDERPRIVATE_H_
 #define ELAWIDGETTOOLS_SRC_PRIVATE_ELAKEYBINDERPRIVATE_H_
 
-#include "Def.h"
+#include "ElaDef.h"
 #include <QObject>
 class ElaKeyBinder;
 class ElaContentDialog;

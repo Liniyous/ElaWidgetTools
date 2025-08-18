@@ -3,7 +3,7 @@
 
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaListViewStyle : public QProxyStyle
 {
     Q_OBJECT

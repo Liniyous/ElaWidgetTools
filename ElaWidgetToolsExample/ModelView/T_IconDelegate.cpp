@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "Def.h"
+#include "ElaDef.h"
 #include "ElaTheme.h"
 T_IconDelegate::T_IconDelegate(QObject* parent)
     : QStyledItemDelegate{parent}

@@ -3,7 +3,7 @@
 #include <QModelIndex>
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class QStyleOptionViewItem;
 class ElaTableViewStyle : public QProxyStyle
 {

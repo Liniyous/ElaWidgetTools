@@ -3,8 +3,7 @@
 
 #include <QAbstractListModel>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class ElaNavigationNode;
 class ElaFooterModel : public QAbstractListModel
 {

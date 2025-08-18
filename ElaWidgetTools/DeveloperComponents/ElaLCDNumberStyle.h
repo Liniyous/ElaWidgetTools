@@ -2,7 +2,7 @@
 #define ELAWIDGETTOOLS_ELALCDNUMBERSTYLE_H
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaLCDNumberStyle : public QProxyStyle
 {
     Q_OBJECT

@@ -3,8 +3,8 @@
 
 #include <QDialog>
 
-#include "Def.h"
 #include "ElaAppBar.h"
+#include "ElaDef.h"
 
 class QVBoxLayout;
 class ElaCustomWidget : public QDialog

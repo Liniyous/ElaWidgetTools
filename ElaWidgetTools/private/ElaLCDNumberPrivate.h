@@ -1,7 +1,7 @@
 #ifndef ELAWIDGETTOOLS_ELALCDNUMBERPRIVATE_H
 #define ELAWIDGETTOOLS_ELALCDNUMBERPRIVATE_H
 
-#include "Def.h"
+#include "ElaDef.h"
 
 #include <QObject>
 class QTimer;

@@ -5,7 +5,7 @@
 #include <QLabel>
 #include <QWidget>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaText;
 class ElaIconButton;
 class ElaDockWidget;

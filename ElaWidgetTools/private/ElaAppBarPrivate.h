@@ -2,8 +2,7 @@
 #define ELAAPPBARPRIVATE_H
 #include <QObject>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class QLabel;
 class QScreen;
 class QHBoxLayout;

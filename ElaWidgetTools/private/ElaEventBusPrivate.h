@@ -4,8 +4,8 @@
 #include <QMap>
 #include <QObject>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
+#include "ElaProperty.h"
 class ElaEvent;
 class ElaEventPrivate : public QObject
 {

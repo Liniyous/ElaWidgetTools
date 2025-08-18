@@ -8,7 +8,7 @@
 #include <d3d11.h>
 #include <dxgi1_6.h>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 
 class ElaDxgi : public QObject
 {

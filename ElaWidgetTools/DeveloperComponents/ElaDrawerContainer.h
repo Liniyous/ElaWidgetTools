@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "Def.h"
+#include "ElaDef.h"
 #include <QVBoxLayout>
 
 #include <QGraphicsOpacityEffect>

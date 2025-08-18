@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QPixmap>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class ElaTabWidget;
 class ElaTabBar;
 class ElaTabWidgetPrivate : public QObject

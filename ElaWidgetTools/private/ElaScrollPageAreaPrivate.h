@@ -3,8 +3,7 @@
 
 #include <QObject>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class ElaScrollPageArea;
 class ElaScrollPageAreaPrivate : public QObject
 {

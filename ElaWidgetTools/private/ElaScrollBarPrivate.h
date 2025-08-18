@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QScrollBar>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class QTimer;
 class QPropertyAnimation;
 class ElaScrollBar;

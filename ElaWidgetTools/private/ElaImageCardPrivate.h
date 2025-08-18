@@ -4,7 +4,7 @@
 #include <QImage>
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 
 class ElaImageCard;
 class ElaImageCardPrivate : public QObject

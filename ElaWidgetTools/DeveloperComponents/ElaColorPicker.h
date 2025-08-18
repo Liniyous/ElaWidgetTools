@@ -4,7 +4,7 @@
 #include <QPixmap>
 #include <QWidget>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaColorPicker : public QWidget
 {
     Q_OBJECT

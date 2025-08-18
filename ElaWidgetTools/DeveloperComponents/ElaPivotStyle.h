@@ -4,7 +4,7 @@
 #include <QModelIndex>
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaPivotStyle : public QProxyStyle
 {
     Q_OBJECT

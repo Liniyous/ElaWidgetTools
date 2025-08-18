@@ -4,7 +4,7 @@
 #include <QLinearGradient>
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaColorValueSliderStyle : public QProxyStyle
 {
     Q_OBJECT

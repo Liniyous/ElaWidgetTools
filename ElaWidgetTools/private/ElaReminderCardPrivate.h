@@ -6,8 +6,7 @@
 #include <QPixmap>
 #include <QSize>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class ElaReminderCard;
 class ElaReminderCardPrivate : public QObject
 {

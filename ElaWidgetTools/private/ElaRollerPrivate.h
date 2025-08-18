@@ -1,8 +1,7 @@
 #ifndef ELAFRAMEWORK_ELAWIDGETTOOLS_PRIVATE_ELAROLLERPRIVATE_H_
 #define ELAFRAMEWORK_ELAWIDGETTOOLS_PRIVATE_ELAROLLERPRIVATE_H_
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 #include <QObject>
 #include <QPoint>
 

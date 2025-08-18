@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QPointF>
 
-#include "stdafx.h"
+#include "ElaProperty.h"
 class ElaGraphicsItem;
 class ElaGraphicsLineItem;
 class ElaGraphicsLineItemPrivate

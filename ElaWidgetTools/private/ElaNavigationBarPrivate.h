@@ -4,8 +4,7 @@
 #include <QMap>
 #include <QObject>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class QLayout;
 class ElaMenu;
 class QVBoxLayout;

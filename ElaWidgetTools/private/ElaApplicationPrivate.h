@@ -5,7 +5,7 @@
 #include <QIcon>
 #include <QObject>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaApplication;
 class ElaApplicationPrivate : public QObject
 {

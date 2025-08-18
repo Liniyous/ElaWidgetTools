@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPixmap>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaPromotionCard;
 class ElaPromotionView;
 class ElaPromotionViewPrivate : public QObject

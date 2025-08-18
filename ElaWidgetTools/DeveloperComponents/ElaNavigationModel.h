@@ -4,8 +4,7 @@
 #include <QAbstractItemModel>
 #include <QObject>
 
-#include "Def.h"
-#include "stdafx.h"
+#include "ElaDef.h"
 class ElaNavigationNode;
 class ElaNavigationModel : public QAbstractItemModel
 {

@@ -2,7 +2,7 @@
 #define ELASCROLLBARSTYLE_H
 #include <QProxyStyle>
 
-#include "Def.h"
+#include "ElaDef.h"
 class ElaScrollBar;
 class ElaScrollBarStyle : public QProxyStyle
 {
