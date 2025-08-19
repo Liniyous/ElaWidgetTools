@@ -15,6 +15,7 @@ ElaGraphicsView::ElaGraphicsView(QWidget* parent)
     d->_pMaxTransform = 5;
     d->_pMinTransform = 0.15;
     d->_initStyle();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 ElaGraphicsView::ElaGraphicsView(QGraphicsScene* scene, QWidget* parent)
@@ -25,6 +26,7 @@ ElaGraphicsView::ElaGraphicsView(QGraphicsScene* scene, QWidget* parent)
     d->_pMaxTransform = 5;
     d->_pMinTransform = 0.15;
     d->_initStyle();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 ElaGraphicsView::~ElaGraphicsView()

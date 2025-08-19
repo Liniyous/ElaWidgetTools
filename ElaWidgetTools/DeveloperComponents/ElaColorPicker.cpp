@@ -3,6 +3,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
+#include <utility>
 
 #include "ElaTheme.h"
 ElaColorPicker::ElaColorPicker(QWidget* parent)
@@ -11,19 +12,19 @@ ElaColorPicker::ElaColorPicker(QWidget* parent)
     setFixedSize(260, 260);
     _pThemeMode = eTheme->getThemeMode();
     // 初始化色相图
-    QPixmap ColorPickerPix(QSize(257, 257));
-    QImage ColorPickerImage = ColorPickerPix.toImage();
-    for (int y = 0; y < ColorPickerImage.height(); y++)
+    QPixmap colorPickerPix(QSize(360, 360));
+    QImage colorPickerImage = colorPickerPix.toImage();
+    for (int y = 0; y < colorPickerImage.height(); y++)
     {
-        for (int x = 0; x < ColorPickerImage.width(); x++)
+        for (int x = 0; x < colorPickerImage.width(); x++)
         {
             QColor pixColor;
-            pixColor.setHsvF((qreal)1 / ColorPickerPix.width() * x, 1 - (qreal)1 / ColorPickerPix.height() * y, 1);
+            pixColor.setHsvF((qreal)1 / colorPickerPix.width() * x, 1 - (qreal)1 / (colorPickerPix.height() - 1) * y, 1);
             pixColor = pixColor.toRgb();
-            ColorPickerImage.setPixelColor(x, y, pixColor);
+            colorPickerImage.setPixelColor(x, y, pixColor);
         }
     }
-    _colorPickerImage = ColorPickerImage;
+    _colorPickerImage = colorPickerImage;
 }
 
 ElaColorPicker::~ElaColorPicker()
@@ -32,9 +33,8 @@ ElaColorPicker::~ElaColorPicker()
 
 void ElaColorPicker::setSelectedColor(QColor color)
 {
-    _selectedColor = color;
-    QColor hsvColor = color.toHsv();
-    _selectedPoint = QPoint(257 * hsvColor.hue() / (qreal)360, 255 - 257 * hsvColor.saturation() / (qreal)255);
+    _selectedColor = std::move(color);
+    _selectedPoint = QPoint(qRound(3 + 254 * _selectedColor.hueF() + 0.5f), qRound(257 - 254 * _selectedColor.saturationF() + 0.5f));
     update();
 }
 
@@ -46,7 +46,10 @@ QColor ElaColorPicker::getSelectedColor() const
 void ElaColorPicker::mousePressEvent(QMouseEvent* event)
 {
     _selectedPoint = _adjustPointLimit(event->pos());
-    _selectedColor = _colorPickerImage.pixelColor(_selectedPoint);
+    QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
+    QColor pixColor;
+    pixColor.setHsvF((qreal)1 / _colorPickerImage.width() * colorPoint.x(), 1 - (qreal)1 / (_colorPickerImage.height() - 1) * colorPoint.y(), 1);
+    _selectedColor = pixColor.toRgb();
     Q_EMIT selectedColorChanged(_selectedColor);
     QWidget::mousePressEvent(event);
     update();
@@ -55,7 +58,10 @@ void ElaColorPicker::mousePressEvent(QMouseEvent* event)
 void ElaColorPicker::mouseReleaseEvent(QMouseEvent* event)
 {
     _selectedPoint = _adjustPointLimit(event->pos());
-    _selectedColor = _colorPickerImage.pixelColor(_selectedPoint);
+    QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
+    QColor pixColor;
+    pixColor.setHsvF((qreal)1 / _colorPickerImage.width() * colorPoint.x(), 1 - (qreal)1 / (_colorPickerImage.height() - 1) * colorPoint.y(), 1);
+    _selectedColor = pixColor.toRgb();
     Q_EMIT selectedColorChanged(_selectedColor);
     QWidget::mouseReleaseEvent(event);
     update();
@@ -64,7 +70,10 @@ void ElaColorPicker::mouseReleaseEvent(QMouseEvent* event)
 void ElaColorPicker::mouseMoveEvent(QMouseEvent* event)
 {
     _selectedPoint = _adjustPointLimit(event->pos());
-    _selectedColor = _colorPickerImage.pixelColor(_selectedPoint);
+    QPointF colorPoint((_selectedPoint.x() - 3) / 254.0 * 359, (_selectedPoint.y() - 3) / 254.0 * 359);
+    QColor pixColor;
+    pixColor.setHsvF((qreal)1 / _colorPickerImage.width() * colorPoint.x(), 1 - (qreal)1 / (_colorPickerImage.height() - 1) * colorPoint.y(), 1);
+    _selectedColor = pixColor.toRgb();
     Q_EMIT selectedColorChanged(_selectedColor);
     QWidget::mouseMoveEvent(event);
     update();
@@ -76,7 +85,7 @@ void ElaColorPicker::paintEvent(QPaintEvent* event)
     int borderRadius = 5;
     QPainter painter(this);
     painter.save();
-    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     // 色相图绘制
     QRect pickerRect = rect();
     pickerRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
@@ -104,17 +113,17 @@ QPoint ElaColorPicker::_adjustPointLimit(QPoint point)
     {
         point.setX(3);
     }
-    else if (point.x() > pickerRect.right() - 3)
+    else if (point.x() > pickerRect.width() - 3)
     {
-        point.setX(pickerRect.right() - 3);
+        point.setX(pickerRect.width() - 3);
     }
     if (point.y() < 3)
     {
         point.setY(3);
     }
-    else if (point.y() > pickerRect.bottom() - 3)
+    else if (point.y() > pickerRect.height() - 3)
     {
-        point.setY(pickerRect.bottom() - 3);
+        point.setY(pickerRect.height() - 3);
     }
     return point;
 }

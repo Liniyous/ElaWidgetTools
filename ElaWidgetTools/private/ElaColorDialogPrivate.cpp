@@ -1,8 +1,5 @@
 #include "ElaColorDialogPrivate.h"
 
-#include <QPainter>
-#include <QSlider>
-
 #include "ElaBaseListView.h"
 #include "ElaColorDialog.h"
 #include "ElaColorDisplayModel.h"
@@ -12,6 +9,9 @@
 #include "ElaIntValidator.h"
 #include "ElaLineEdit.h"
 #include "ElaText.h"
+#include <QPainter>
+#include <QSlider>
+#include <QtMath>
 ElaColorDialogPrivate::ElaColorDialogPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -25,7 +25,7 @@ void ElaColorDialogPrivate::onColorPickerColorChanged(QColor selectedColor)
 {
     Q_Q(ElaColorDialog);
     QColor valueColor = selectedColor.toHsv();
-    valueColor.setHsv(valueColor.hue(), valueColor.saturation(), _colorValueSlider->value());
+    valueColor.setHsvF(valueColor.hueF(), valueColor.saturationF(), _colorValueSlider->value() / 255.0);
     _pCurrentColor = valueColor;
     _updateHtmlEditValue();
     _updateEditValue();
@@ -37,8 +37,8 @@ void ElaColorDialogPrivate::onColorPickerColorChanged(QColor selectedColor)
 void ElaColorDialogPrivate::onColorValueSliderChanged(int value)
 {
     Q_Q(ElaColorDialog);
-    QColor baseColor = _pCurrentColor.toHsv();
-    baseColor.setHsv(baseColor.hue(), baseColor.saturation(), _colorValueSlider->value());
+    QColor baseColor = _pCurrentColor;
+    baseColor.setHsvF(baseColor.hueF(), baseColor.saturationF(), _colorValueSlider->value() / 255.0);
     q->setCurrentColor(baseColor);
 }
 

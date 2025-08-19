@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QVBoxLayout>
+#include <utility>
 
 #include "ElaBaseListView.h"
 #include "ElaColorDialogPrivate.h"
@@ -290,7 +291,7 @@ ElaColorDialog::~ElaColorDialog()
 void ElaColorDialog::setCurrentColor(QColor currentColor)
 {
     Q_D(ElaColorDialog);
-    d->_pCurrentColor = currentColor;
+    d->_pCurrentColor = currentColor.toHsv();
     d->_updateHtmlEditValue();
     d->_updateEditValue();
     d->_updateColorPreview();
