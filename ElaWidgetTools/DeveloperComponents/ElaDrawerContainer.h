@@ -11,6 +11,8 @@ class ElaDrawerContainer : public QWidget
 {
     Q_OBJECT
     Q_PRIVATE_CREATE(int, BorderRadius)
+    Q_PRIVATE_CREATE(QPixmap, ContainerPix)
+    Q_PROPERTY_CREATE(qreal, Opacity)
 public:
     explicit ElaDrawerContainer(QWidget* parent = nullptr);
     ~ElaDrawerContainer() override;
@@ -24,13 +26,13 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
 
 private:
-    QGraphicsOpacityEffect* _opacityEffect{nullptr};
+    bool _isShowBorder{true};
     ElaThemeType::ThemeMode _themeMode;
     QVBoxLayout* _mainLayout{nullptr};
     QVBoxLayout* _containerLayout{nullptr};
     QWidget* _containerWidget{nullptr};
     QList<QWidget*> _drawerWidgetList;
-    int _calculateContainertMinimumHeight() const;
+    int _calculateContainerMinimumHeight() const;
 };
 
 #endif //ELAFRAMEWORK_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELADRAWERCONTAINER_H_
