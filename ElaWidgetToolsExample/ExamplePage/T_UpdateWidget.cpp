@@ -16,7 +16,7 @@ T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     ElaText* update2 = new ElaText("2、优化ElaDrawer抽屉组件展开收起效果", 13, this);
     ElaText* update3 = new ElaText("3、新增主要堆栈功能和堆栈切换动画支持", 13, this);
     ElaText* update4 = new ElaText("4、Linux部分组件体验优化", 13, this);
-    ElaText* update5 = new ElaText("4、QQ交流群: 850243692", 13, this);
+    ElaText* update5 = new ElaText("5、QQ交流群: 850243692", 13, this);
     update1->setIsWrapAnywhere(true);
     update2->setIsWrapAnywhere(true);
     update3->setIsWrapAnywhere(true);
