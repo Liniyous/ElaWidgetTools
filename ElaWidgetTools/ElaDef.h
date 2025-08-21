@@ -95,6 +95,8 @@ enum ThemeColor
     BasicSelectedAlpha,
     BasicSelectedHoverAlpha,
     StatusDanger,
+    Win10BorderActive,
+    Win10BorderInactive
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(ElaThemeType)
@@ -102,6 +104,7 @@ Q_END_ENUM_CREATE(ElaThemeType)
 Q_BEGIN_ENUM_CREATE(ElaAppBarType)
 enum ButtonType
 {
+    NoneButtonHint = 0x0000,
     RouteBackButtonHint = 0x0001,
     NavigationButtonHint = 0x0002,
     StayTopButtonHint = 0x0004,

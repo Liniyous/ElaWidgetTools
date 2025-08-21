@@ -107,4 +107,10 @@ void ElaThemePrivate::_initThemeColor()
     // 状态颜色
     _lightThemeColorList[ElaThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
     _darkThemeColorList[ElaThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
+
+    // Win10顶部边框颜色
+    _lightThemeColorList[ElaThemeType::Win10BorderActive] = QColor(0x6E, 0x6E, 0x6E);
+    _darkThemeColorList[ElaThemeType::Win10BorderActive] = QColor(0x33, 0x33, 0x33);
+    _lightThemeColorList[ElaThemeType::Win10BorderInactive] = QColor(0xA7, 0xA7, 0xA7);
+    _darkThemeColorList[ElaThemeType::Win10BorderInactive] = QColor(0x3D, 0x3D, 0x3D);
 }

@@ -1,9 +1,9 @@
 #ifndef T_ABOUT_H
 #define T_ABOUT_H
 
-#include <ElaWidget.h>
+#include <ElaDialog.h>
 
-class T_About : public ElaWidget
+class T_About : public ElaDialog
 {
     Q_OBJECT
 public:

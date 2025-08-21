@@ -8,6 +8,7 @@ class QVBoxLayout;
 class ElaPushButton;
 class ElaContentDialog;
 class ElaMaskWidget;
+class ElaAppBar;
 class ElaContentDialogPrivate : public QObject
 {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
 
 private:
     qint64 _currentWinID{0};
+    ElaAppBar* _appBar{nullptr};
     ElaThemeType::ThemeMode _themeMode;
     ElaMaskWidget* _maskWidget{nullptr};
     QWidget* _centralWidget{nullptr};

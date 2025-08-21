@@ -2,35 +2,42 @@
 #define ELAWINSHADOWHELPER_H
 #include "ElaDef.h"
 #include "ElaSingleton.h"
-#include <QObject>
-#include <qglobal.h>
 #ifdef Q_OS_WIN
 #include <dwmapi.h>
 #include <windowsx.h>
 
-#define Win8_Origin "6.0.0"
-#define Win8_10 "6.3.0"
+#define Win7_Origin "6.1.0"
+#define Win8_Origin "6.2.0"
 #define Win10_Origin "10.0.0"
 #define Win10_1809 "10.0.17763"
 #define Win10_1903 "10.0.18362"
 #define Win10_20H1 "10.0.19041"
 #define Win11_Origin "10.0.22000"
 #define Win11_22H2 "10.0.22621"
+
+#define eWinHelper ElaWinShadowHelper::getInstance()
 class ElaWinShadowHelper : public QObject
 {
     Q_OBJECT
+    Q_PRIVATE_CREATE(bool, IsWinVersionGreater10)
+    Q_PRIVATE_CREATE(bool, IsWinVersionGreater11)
     Q_SINGLETON_CREATE(ElaWinShadowHelper)
 private:
     explicit ElaWinShadowHelper(QObject* parent = nullptr);
     ~ElaWinShadowHelper() override;
 
 public:
-    bool initDWMAPI();
+    bool initWinAPI();
 
     void setWindowShadow(quint64 hwnd);
     void setWindowThemeMode(quint64 hwnd, bool isLightMode);
     void setWindowDisplayMode(QWidget* widget, ElaApplicationType::WindowDisplayMode displayMode, ElaApplicationType::WindowDisplayMode lastDisplayMode);
-    bool isCompositionEnabled() const;
+    bool getIsCompositionEnabled() const;
+    bool getIsFullScreen(const HWND hwnd);
+    MONITORINFOEXW getMonitorForWindow(const HWND hwnd);
+    quint32 getResizeBorderThickness(const HWND hwnd);
+    quint32 getDpiForWindow(const HWND hwnd);
+    int getSystemMetricsForDpi(const HWND hwnd, const int index);
     bool compareWindowsVersion(const QString& windowsVersion) const;
 
 private:
@@ -114,6 +121,13 @@ private:
         PVOID pvData;
         SIZE_T cbData;
     };
+    enum _MONITOR_DPI_TYPE
+    {
+        MDT_EFFECTIVE_DPI = 0,
+        MDT_ANGULAR_DPI = 1,
+        MDT_RAW_DPI = 2,
+        MDT_DEFAULT = MDT_EFFECTIVE_DPI
+    };
 
     using DwmExtendFrameIntoClientAreaFunc = HRESULT(WINAPI*)(HWND hWnd, const MARGINS* pMarInset);
     using DwmSetWindowAttributeFunc = HRESULT(WINAPI*)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
@@ -121,14 +135,19 @@ private:
     using RtlGetVersionFunc = NTSTATUS(WINAPI*)(PRTL_OSVERSIONINFOW);
     using DwmEnableBlurBehindWindowFunc = HRESULT(WINAPI*)(HWND hWnd, const DWM_BLURBEHIND* pBlurBehind);
     using SetWindowCompositionAttributeFunc = BOOL(WINAPI*)(HWND hwnd, const _WINDOWCOMPOSITIONATTRIBDATA*);
+    using GetDpiForWindowFunc = UINT(WINAPI*)(HWND hwnd);
+    using GetDpiForMonitorFunc = HRESULT(WINAPI*)(HMONITOR hmonitor, _MONITOR_DPI_TYPE dpiType, UINT* dpiX, UINT* dpiY);
+    using GetSystemMetricsForDpiFunc = int(WINAPI*)(int index, UINT dpi);
 
     DwmExtendFrameIntoClientAreaFunc _dwmExtendFrameIntoClientArea{nullptr};
     DwmSetWindowAttributeFunc _dwmSetWindowAttribute{nullptr};
     DwmIsCompositionEnabledFunc _dwmIsCompositionEnabled{nullptr};
     DwmEnableBlurBehindWindowFunc _dwmEnableBlurBehindWindow{nullptr};
     SetWindowCompositionAttributeFunc _setWindowCompositionAttribute{nullptr};
+    GetDpiForWindowFunc _getDpiForWindow{nullptr};
+    GetDpiForMonitorFunc _getDpiForMonitor{nullptr};
+    GetSystemMetricsForDpiFunc _getSystemMetricsForDpi{nullptr};
     RTL_OSVERSIONINFOW _windowsVersion{};
-
     void _externWindowMargins(HWND hwnd);
 };
 

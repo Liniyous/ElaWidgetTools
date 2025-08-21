@@ -253,6 +253,7 @@ void ElaWindowPrivate::onNavigationNodeRemoved(ElaNavigationType::NavigationNode
 void ElaWindowPrivate::onNavigationRouteBack(QVariantMap routeData)
 {
     int routeIndex = routeData.value("ElaCentralStackIndex").toUInt();
+    _centralStackTargetIndex = routeIndex;
     _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, true);
 }
 

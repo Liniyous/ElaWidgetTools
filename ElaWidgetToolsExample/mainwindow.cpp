@@ -82,10 +82,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::initWindow()
 {
+    setFocusPolicy(Qt::StrongFocus);
     // setIsCentralStackedWidgetTransparent(true);
     setWindowIcon(QIcon(":/include/Image/Cirno.jpg"));
     resize(1200, 740);
-    // ElaLog::getInstance()->initMessageLog(true);
     // eTheme->setThemeMode(ElaThemeType::Dark);
     // setIsNavigationBarEnable(false);
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
@@ -98,6 +98,7 @@ void MainWindow::initWindow()
     // setUserInfoCardVisible(false);
     // setNavigationBarWidth(260);
     ElaText* centralStack = new ElaText("这是一个主窗口堆栈页面", this);
+    centralStack->setFocusPolicy(Qt::StrongFocus);
     QFont font = centralStack->font();
     font.setPixelSize(32);
     centralStack->setFont(font);

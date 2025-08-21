@@ -7,7 +7,7 @@
 #include "ElaImageCard.h"
 #include "ElaText.h"
 T_About::T_About(QWidget* parent)
-    : ElaWidget(parent)
+    : ElaDialog(parent)
 {
     setWindowTitle("关于..");
     setWindowIcon(QIcon(":/include/Image/Moon.jpg"));
