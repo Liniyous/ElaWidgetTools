@@ -34,6 +34,7 @@ private:
     QRect _calculateWindowVirtualGeometry(QWidget* widget);
     void _updateMica(QWidget* widget, bool isProcessEvent = true);
     void _updateAllMicaWidget();
+    void _resetAllMicaWidget();
 };
 
 #endif // ELAAPPLICATIONPRIVATE_H

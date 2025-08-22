@@ -182,3 +182,13 @@ void ElaApplicationPrivate::_updateAllMicaWidget()
         }
     }
 }
+
+void ElaApplicationPrivate::_resetAllMicaWidget()
+{
+    for (auto widget: _micaWidgetList)
+    {
+        QPalette palette = widget->palette();
+        palette.setBrush(QPalette::Window, Qt::transparent);
+        widget->setPalette(palette);
+    }
+}
