@@ -126,6 +126,13 @@ void ElaWinShadowHelper::setWindowDisplayMode(QWidget* widget, ElaApplicationTyp
     HWND winHwnd = (HWND)widget->winId();
     switch (lastDisplayMode)
     {
+    case ElaApplicationType::ElaMica:
+    {
+        QPalette palette = widget->palette();
+        palette.setBrush(QPalette::Window, Qt::transparent);
+        widget->setPalette(palette);
+        break;
+    }
     case ElaApplicationType::Mica:
     {
         if (!compareWindowsVersion(Win11_Origin))
