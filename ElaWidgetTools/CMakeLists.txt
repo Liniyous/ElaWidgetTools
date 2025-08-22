@@ -2,15 +2,6 @@
 
 project(ElaWidgetTools VERSION 2.0.0 LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-
 add_definitions(-DELAWIDGETTOOLS_LIBRARY)
 option(ELAWIDGETTOOLS_BUILD_STATIC_LIB "Build static library." OFF)
 

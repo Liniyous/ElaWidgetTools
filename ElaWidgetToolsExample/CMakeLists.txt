@@ -1,18 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.5)
-
+cmake_policy(SET CMP0087 NEW)
 project(ElaWidgetToolsExample VERSION 0.1 LANGUAGES CXX)
-
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 FILE(GLOB ORIGIN *.cpp *.h)
 FILE(GLOB MODELVIEW ModelView/*.h ModelView/*.cpp)
@@ -20,7 +8,6 @@ FILE(GLOB EAXMPLEPAGE ExamplePage/*.h ExamplePage/*.cpp)
 
 source_group(ModelView FILES ${MODELVIEW})
 source_group(ExamplePage FILES ${EAXMPLEPAGE})
-
 
 set(PROJECT_SOURCES
     ${ORIGIN}
@@ -104,41 +91,31 @@ if (QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(${PROJECT_NAME})
 endif ()
 
+include(GNUInstallDirs)
+install(TARGETS ${PROJECT_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+)
+if (MSVC)
+    install(
+        FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL)
+endif ()
+find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${QT_SDK_DIR}/bin")
 if (WIN32)
-    include(GNUInstallDirs)
-    install(TARGETS ${PROJECT_NAME}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-    )
-    if (MSVC)
-        install(
-            FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL)
-    endif ()
-    # QT依赖安装 只做Release安装 Debug自行打包
-    install(FILES ${QT_SDK_DIR}/plugins/platforms/qwindows.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms)
-    install(FILES ${QT_SDK_DIR}/plugins/generic/qtuiotouchplugin.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/generic)
-    install(
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qgif.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qicns.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qico.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qjpeg.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qtga.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qtiff.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qwbmp.dll
-        FILES ${QT_SDK_DIR}/plugins/imageformats/qwebp.dll
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/imageformats
-    )
-    install(FILES ${QT_SDK_DIR}/plugins/styles/qwindowsvistastyle.dll DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/styles)
-    FILE(GLOB TRANSLATIONS ${QT_SDK_DIR}/translations_install/*.qm)
-    install(FILES ${TRANSLATIONS} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/translations)
-    install(
-        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Widgets.dll
-        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Core.dll
-        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Gui.dll
-        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Network.dll
-        FILES ${QT_SDK_DIR}/bin/Qt${QT_VERSION_MAJOR}Xml.dll
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+    install(CODE "
+    if(EXISTS \"${WINDEPLOYQT_EXECUTABLE}\" AND NOT EXISTS \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms\")
+        execute_process(
+            COMMAND \"${CMAKE_COMMAND}\" -E env PATH=\"${QT_SDK_DIR}/bin\"
+                \"${WINDEPLOYQT_EXECUTABLE}\"
+                \"$<TARGET_FILE_DIR:${PROJECT_NAME}>/$<TARGET_FILE_NAME:${PROJECT_NAME}>\"
+                --dir \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}\"
+                --no-compiler-runtime
+                --no-system-d3d-compiler
+                --no-opengl-sw
+                --verbose 1
+        )
+    endif()"
     )
 endif ()
 
