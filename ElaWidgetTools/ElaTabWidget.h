@@ -21,6 +21,9 @@ protected:
     virtual void paintEvent(QPaintEvent* event) override;
     virtual void dragEnterEvent(QDragEnterEvent* event) override;
     virtual void dropEvent(QDropEvent* event) override;
+
+private:
+    friend class ElaCustomTabWidget;
 };
 
 #endif // ELATABWIDGET_H

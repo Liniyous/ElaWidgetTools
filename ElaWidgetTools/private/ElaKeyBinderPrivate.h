@@ -20,7 +20,6 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     ElaContentDialog* _binderDialog{nullptr};
     ElaKeyBinderContainer* _binderContainer{nullptr};
-    void _changeTheme();
 };
 
 #endif //ELAWIDGETTOOLS_SRC_PRIVATE_ELAKEYBINDERPRIVATE_H_

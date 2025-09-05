@@ -45,6 +45,9 @@ public:
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
 
+protected:
+    virtual bool eventFilter(QObject* watched, QEvent* event);
+
 private:
     friend class ElaNavigationView;
     friend class ElaNavigationStyle;

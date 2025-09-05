@@ -138,3 +138,13 @@ void ElaPlainTextEdit::contextMenuEvent(QContextMenuEvent* event)
     menu->popup(event->globalPos());
     this->setFocus();
 }
+
+void ElaPlainTextEdit::paintEvent(QPaintEvent* event)
+{
+    Q_D(ElaPlainTextEdit);
+    if (palette().color(QPalette::Text) != ElaThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
+    QPlainTextEdit::paintEvent(event);
+}

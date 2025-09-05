@@ -17,6 +17,7 @@ Q_SIGNALS:
     Q_SIGNAL void mouseDoubleClick(const QModelIndex& index);
 
 protected:
+    virtual void wheelEvent(QWheelEvent* event) override;
     virtual void mousePressEvent(QMouseEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void mouseDoubleClickEvent(QMouseEvent* event) override;

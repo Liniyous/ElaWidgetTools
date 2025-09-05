@@ -8,6 +8,7 @@ ElaWinShadowHelper::ElaWinShadowHelper(QObject* parent)
     : QObject(parent)
 {
     _pIsWinVersionGreater10 = true;
+    _pIsWinVersionGreater11 = true;
     HMODULE module = LoadLibraryW(L"ntdll.dll");
     if (module)
     {

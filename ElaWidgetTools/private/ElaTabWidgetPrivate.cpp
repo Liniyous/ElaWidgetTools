@@ -1,12 +1,12 @@
 #include "ElaTabWidgetPrivate.h"
 
-#include <QApplication>
-#include <QMimeData>
-#include <QMouseEvent>
-
 #include "ElaCustomTabWidget.h"
 #include "ElaTabBar.h"
 #include "ElaTabWidget.h"
+#include <QApplication>
+#include <QDebug>
+#include <QMimeData>
+#include <QMouseEvent>
 ElaTabWidgetPrivate::ElaTabWidgetPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -29,32 +29,31 @@ void ElaTabWidgetPrivate::onTabDragCreate(QDrag* drag)
     QString tabText = q->tabText(index);
     QIcon tabIcon = q->tabIcon(index);
     QWidget* dragWidget = q->widget(index);
-    QVariant originTabWidget = dragWidget->property("ElaOriginTabWidget");
-    if (!originTabWidget.isValid())
+    QVariant originTabWidgetVariant = dragWidget->property("ElaOriginTabWidget");
+    ElaTabBar* tabBarObject = mimeData->property("ElaTabBarObject").value<ElaTabBar*>();
+    if (!originTabWidgetVariant.isValid() && q->objectName() != "ElaCustomTabWidget")
     {
         dragWidget->setProperty("ElaOriginTabWidget", QVariant::fromValue<ElaTabWidget*>(q));
     }
     mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
-    drag->setMimeData(mimeData);
     QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-    QApplication::sendEvent(mimeData->property("ElaTabBarObject").value<ElaTabBar*>(), &releaseEvent);
+    QApplication::sendEvent(tabBarObject, &releaseEvent);
     if (drag->exec() == Qt::IgnoreAction)
     {
         // 创建新窗口
-        ElaTabBar* originCustomTabBar = mimeData->property("ElaTabBarObject").value<ElaTabBar*>();
+        ElaTabBar* originCustomTabBar = tabBarObject;
         if (originCustomTabBar && originCustomTabBar->objectName() == "ElaCustomTabBar")
         {
             originCustomTabBar->removeTab(index);
         }
-        ElaTabWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-        ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(originTabWidget);
+        QWidget* floatParentWidget = originTabWidgetVariant.value<ElaTabWidget*>();
+        if (!floatParentWidget)
+        {
+            floatParentWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
+        }
+        ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(floatParentWidget);
         ElaTabBar* customTabBar = floatWidget->getCustomTabBar();
         dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(customTabBar));
-        ElaTabWidget* customTabWidget = floatWidget->getCustomTabWidget();
-        customTabWidget->d_ptr->_customTabBar = customTabBar;
-        connect(customTabBar, &ElaTabBar::tabBarPress, customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabBarPress);
-        connect(customTabBar, &ElaTabBar::tabDragCreate, customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragCreate);
-        connect(customTabBar, &ElaTabBar::tabDragDrop, customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragDrop);
         floatWidget->addTab(dragWidget, tabIcon, tabText);
         floatWidget->show();
         QPoint cursorPoint = QCursor::pos();
@@ -97,6 +96,12 @@ void ElaTabWidgetPrivate::onTabCloseRequested(int index)
             closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
         }
         originTabWidget->addTab(closeWidget, q->tabIcon(index), q->tabText(index));
+    }
+    else if (!originTabWidget && q->objectName() == "ElaCustomTabWidget")
+    {
+        _customTabBar->removeTab(index);
+        q->removeTab(index);
+        closeWidget->deleteLater();
     }
     else
     {

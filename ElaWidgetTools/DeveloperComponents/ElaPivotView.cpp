@@ -109,6 +109,12 @@ void ElaPivotView::mouseReleaseEvent(QMouseEvent* event)
     QListView::mouseReleaseEvent(event);
 }
 
+void ElaPivotView::wheelEvent(QWheelEvent* event)
+{
+    QListView::wheelEvent(event);
+    event->accept();
+}
+
 void ElaPivotView::paintEvent(QPaintEvent* event)
 {
     QPainter painter(viewport());

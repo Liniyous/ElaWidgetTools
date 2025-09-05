@@ -26,6 +26,12 @@ ElaBaseListView::~ElaBaseListView()
 {
 }
 
+void ElaBaseListView::wheelEvent(QWheelEvent* event)
+{
+    QListView::wheelEvent(event);
+    event->accept();
+}
+
 void ElaBaseListView::mousePressEvent(QMouseEvent* event)
 {
     Q_EMIT mousePress(indexAt(event->pos()));

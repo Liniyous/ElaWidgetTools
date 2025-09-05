@@ -1,10 +1,8 @@
 ﻿#include "ElaNavigationBarPrivate.h"
 
-#include <QLayout>
-#include <QPropertyAnimation>
-
 #include "ElaApplication.h"
 #include "ElaBaseListView.h"
+#include "ElaCustomTabWidget.h"
 #include "ElaCustomWidget.h"
 #include "ElaFooterDelegate.h"
 #include "ElaFooterModel.h"
@@ -19,7 +17,10 @@
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxPrivate.h"
 #include "ElaToolButton.h"
-
+#include <QDebug>
+#include <QEvent>
+#include <QLayout>
+#include <QPropertyAnimation>
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -53,14 +54,11 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     QWidget* widget = static_cast<QWidget*>(meta->newInstance());
     if (widget)
     {
-        _pageNewWindowCountMap[nodeKey] += 1;
-        ElaCustomWidget* floatWidget = new ElaCustomWidget(q);
-        connect(floatWidget, &ElaCustomWidget::customWidgetClosed, this, [=]() {
-            _pageNewWindowCountMap[nodeKey] -= 1;
-        });
-        floatWidget->setWindowIcon(widget->windowIcon());
-        floatWidget->setWindowTitle(widget->windowTitle());
-        floatWidget->setCentralWidget(widget);
+        widget->setProperty("ElaPageKey", nodeKey);
+        widget->setProperty("ElaFloatParentWidget", QVariant::fromValue(q));
+        widget->installEventFilter(this);
+        ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(q);
+        floatWidget->addTab(widget, widget->windowIcon(), widget->windowTitle());
         floatWidget->show();
         Q_EMIT q->pageOpenInNewWindow(nodeKey);
     }
@@ -230,6 +228,36 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
             _footerModel->setSelectedNode(node);
         }
     }
+}
+
+bool ElaNavigationBarPrivate::eventFilter(QObject* watched, QEvent* event)
+{
+    switch (event->type())
+    {
+    case QEvent::Show:
+    {
+        QString nodeKey = watched->property("ElaPageKey").toString();
+        if (!nodeKey.isNull())
+        {
+            _pageNewWindowCountMap[nodeKey] += 1;
+        }
+        break;
+    }
+    case QEvent::HideToParent:
+    {
+        QString nodeKey = watched->property("ElaPageKey").toString();
+        if (!nodeKey.isNull())
+        {
+            _pageNewWindowCountMap[nodeKey] -= 1;
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QObject::eventFilter(watched, event);
 }
 
 void ElaNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex)

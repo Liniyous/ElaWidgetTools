@@ -23,7 +23,6 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     ElaEvent* _focusEvent{nullptr};
     qreal _textSpacing{0.5};
-    void _changeTheme();
 };
 
 #endif // ELALINEEDITPRIVATE_H

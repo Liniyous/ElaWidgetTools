@@ -99,6 +99,10 @@ void ElaKeyBinder::mouseReleaseEvent(QMouseEvent* event)
 void ElaKeyBinder::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaKeyBinder);
+    if (palette().color(QPalette::WindowText) != ElaThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);

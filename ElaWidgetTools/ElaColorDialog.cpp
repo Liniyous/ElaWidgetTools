@@ -25,7 +25,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
 {
     Q_D(ElaColorDialog);
     d->q_ptr = this;
-    setFixedSize(620, 630); // 默认宽高
+    setFixedSize(600, 600); // 默认宽高
     setObjectName("ElaColorDialog");
     setWindowTitle("ElaColorDialog");
     setWindowModality(Qt::ApplicationModal);
@@ -270,7 +270,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     mainLayout->addLayout(colorPickerTextLayout);
     mainLayout->addSpacing(3);
     mainLayout->addLayout(colorControlLayout);
-    mainLayout->addSpacing(120);
+    mainLayout->addSpacing(80);
     mainLayout->addLayout(colorDisplayLayout);
     mainLayout->addLayout(buttonLayout);
     mainLayout->addStretch();

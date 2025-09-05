@@ -10,8 +10,11 @@ class ElaRadioButtonPrivate : public QObject
     Q_D_CREATE(ElaRadioButton)
 public:
     explicit ElaRadioButtonPrivate(QObject* parent = nullptr);
-    ~ElaRadioButtonPrivate();
+    ~ElaRadioButtonPrivate() override;
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
+
+private:
+    ElaThemeType::ThemeMode _themeMode;
 };
 
 #endif // ELARADIOBUTTONPRIVATE_H

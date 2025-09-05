@@ -27,3 +27,13 @@ ElaRadioButton::~ElaRadioButton()
 {
     delete this->style();
 }
+
+void ElaRadioButton::paintEvent(QPaintEvent* event)
+{
+    Q_D(ElaRadioButton);
+    if (palette().color(QPalette::WindowText) != ElaThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
+    QRadioButton::paintEvent(event);
+}

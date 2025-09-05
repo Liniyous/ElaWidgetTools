@@ -105,6 +105,10 @@ void ElaSpinBox::focusOutEvent(QFocusEvent* event)
 void ElaSpinBox::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaSpinBox);
+    if (palette().color(QPalette::Text) != ElaThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeChanged(d->_themeMode);
+    }
     QSpinBox::paintEvent(event);
     QPainter painter(this);
     painter.save();

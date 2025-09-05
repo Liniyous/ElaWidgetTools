@@ -20,7 +20,6 @@ private:
     ElaThemeType::ThemeMode _themeMode;
     bool _isWrapAnywhere{false};
     qreal _textSpacing{0.5};
-    void _changeTheme();
 };
 
 #endif // ELATEXTPRIVATE_H

@@ -90,3 +90,13 @@ bool ElaLCDNumber::getIsTransparent() const
     Q_D(const ElaLCDNumber);
     return d->_lcdNumberStyle->getIsTransparent();
 }
+
+void ElaLCDNumber::paintEvent(QPaintEvent* event)
+{
+    Q_D(ElaLCDNumber);
+    if (palette().color(QPalette::WindowText) != ElaThemeColor(d->_themeMode, BasicText))
+    {
+        d->onThemeModeChanged(d->_themeMode);
+    }
+    QLCDNumber::paintEvent(event);
+}

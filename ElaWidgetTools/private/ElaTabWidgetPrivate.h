@@ -21,6 +21,7 @@ public:
     Q_SLOT void onTabCloseRequested(int index);
 
 private:
+    friend class ElaCustomTabWidget;
     ElaTabBar* _customTabBar{nullptr};
 };
 

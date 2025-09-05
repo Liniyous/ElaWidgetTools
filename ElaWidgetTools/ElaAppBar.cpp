@@ -49,7 +49,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_pCustomWidgetMaximumWidth = 550;
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
-    eWinHelper->initWinAPI();
     if (!eWinHelper->getIsWinVersionGreater10())
     {
         d->_win7Margins = 8;

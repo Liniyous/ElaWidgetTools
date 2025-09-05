@@ -9,6 +9,7 @@
 T_About::T_About(QWidget* parent)
     : ElaDialog(parent)
 {
+    setFixedSize(400, 400);
     setWindowTitle("关于..");
     setWindowIcon(QIcon(":/include/Image/Moon.jpg"));
     this->setIsFixedSize(true);

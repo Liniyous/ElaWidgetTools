@@ -13,12 +13,13 @@ class ELA_EXPORT ElaPlainTextEdit : public QPlainTextEdit
 public:
     explicit ElaPlainTextEdit(QWidget* parent = nullptr);
     explicit ElaPlainTextEdit(const QString& text, QWidget* parent = nullptr);
-    virtual ~ElaPlainTextEdit();
+    ~ElaPlainTextEdit() override;
 
 protected:
     virtual void focusInEvent(QFocusEvent* event) override;
     virtual void focusOutEvent(QFocusEvent* event) override;
     virtual void contextMenuEvent(QContextMenuEvent* event) override;
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // ELAPLAINTEXTEDIT_H

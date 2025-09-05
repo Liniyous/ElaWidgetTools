@@ -17,12 +17,13 @@ class ElaPivotView : public QListView
     Q_PRIVATE_CREATE(bool, IsAnimationFinished)
 public:
     explicit ElaPivotView(QWidget* parent = nullptr);
-    ~ElaPivotView();
+    ~ElaPivotView() override;
     void doCurrentIndexChangedAnimation(const QModelIndex& index);
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
+    virtual void wheelEvent(QWheelEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };
 

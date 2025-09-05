@@ -17,9 +17,6 @@ public:
 
     void setCentralWidget(QWidget* widget);
 
-Q_SIGNALS:
-    Q_SIGNAL void customWidgetClosed();
-
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
     QVBoxLayout* _mainLayout{nullptr};

@@ -98,6 +98,9 @@ void ElaApplication::init()
     font.setFamily("Microsoft YaHei");
     font.setHintingPreference(QFont::PreferNoHinting);
     qApp->setFont(font);
+#ifdef Q_OS_WIN
+    eWinHelper->initWinAPI();
+#endif
 }
 
 void ElaApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
@@ -128,9 +131,6 @@ void ElaApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
             {
                 d->_updateMica(widget, false);
             }
-        }
-        else
-        {
         }
         break;
     }

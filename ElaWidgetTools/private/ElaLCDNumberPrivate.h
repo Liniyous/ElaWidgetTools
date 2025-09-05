@@ -20,6 +20,7 @@ public:
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
+    ElaThemeType::ThemeMode _themeMode;
     QTimer* _clockTimer{nullptr};
     ElaLCDNumberStyle* _lcdNumberStyle{nullptr};
 };

@@ -22,7 +22,6 @@ private:
     ElaSpinBoxStyle* _style{nullptr};
     ElaThemeType::ThemeMode _themeMode;
     ElaMenu* _createStandardContextMenu();
-    void _changeTheme();
 };
 
 #endif // ELASPINBOXPRIVATE_H

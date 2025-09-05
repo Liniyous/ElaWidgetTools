@@ -21,16 +21,10 @@ void ElaSpinBoxPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaSpinBox);
     _themeMode = themeMode;
-    if (q->isVisible())
-    {
-        _changeTheme();
-    }
-    else
-    {
-        QTimer::singleShot(1, this, [=] {
-            _changeTheme();
-        });
-    }
+    QPalette palette;
+    palette.setColor(QPalette::Base, Qt::transparent);
+    palette.setColor(QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    q->lineEdit()->setPalette(palette);
 }
 
 ElaMenu* ElaSpinBoxPrivate::_createStandardContextMenu()
@@ -93,13 +87,4 @@ ElaMenu* ElaSpinBoxPrivate::_createStandardContextMenu()
     action->setEnabled(!lineEdit->text().isEmpty() && !(lineEdit->selectedText() == lineEdit->text()));
     connect(action, &QAction::triggered, q, &ElaSpinBox::selectAll);
     return menu;
-}
-
-void ElaSpinBoxPrivate::_changeTheme()
-{
-    Q_Q(ElaSpinBox);
-    QPalette palette;
-    palette.setColor(QPalette::Base, Qt::transparent);
-    palette.setColor(QPalette::Text, ElaThemeColor(_themeMode, BasicText));
-    q->lineEdit()->setPalette(palette);
 }

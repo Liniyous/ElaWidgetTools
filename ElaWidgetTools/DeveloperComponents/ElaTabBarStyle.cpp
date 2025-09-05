@@ -9,7 +9,9 @@
 ElaTabBarStyle::ElaTabBarStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaTabBarStyle::~ElaTabBarStyle()
@@ -88,10 +90,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             {
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
-                if (topt->position != QStyleOptionTab::End)
-                {
-                    tabRect.setRight(tabRect.right() + margin + 1);
-                }
+                tabRect.setRight(tabRect.right() + margin + 1);
                 painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
@@ -106,6 +105,10 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 path.lineTo(tabRect.x(), tabRect.bottom() + 10);
                 path.closeSubpath();
                 painter->drawPath(path);
+                // 选中绘制
+                painter->setPen(Qt::NoPen);
+                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+                painter->drawRoundedRect(QRectF(tabRect.left() + margin + 7, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             else
             {
@@ -120,14 +123,6 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 tabRect.setHeight(tabRect.height() + 10);
                 painter->drawRoundedRect(tabRect, 0, 0);
                 tabRect.setHeight(tabRect.height() - 10);
-            }
-
-            //间隔符绘制
-            if (!topt->state.testFlag(QStyle::State_Selected) && topt->position != QStyleOptionTab::End && topt->selectedPosition != QStyleOptionTab::NextIsSelected)
-            {
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-                painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             painter->restore();
             return;
