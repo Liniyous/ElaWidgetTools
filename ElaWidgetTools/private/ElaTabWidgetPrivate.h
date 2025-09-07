@@ -1,11 +1,10 @@
 #ifndef ELATABWIDGETPRIVATE_H
 #define ELATABWIDGETPRIVATE_H
 
+#include "ElaProperty.h"
 #include <QDrag>
 #include <QObject>
 #include <QPixmap>
-
-#include "ElaProperty.h"
 class ElaTabWidget;
 class ElaTabBar;
 class ElaTabWidgetPrivate : public QObject
@@ -14,8 +13,7 @@ class ElaTabWidgetPrivate : public QObject
     Q_D_CREATE(ElaTabWidget)
 public:
     explicit ElaTabWidgetPrivate(QObject* parent = nullptr);
-    ~ElaTabWidgetPrivate();
-    Q_SLOT void onTabBarPress(int index);
+    ~ElaTabWidgetPrivate() override;
     Q_SLOT void onTabDragCreate(QDrag* drag);
     Q_SLOT void onTabDragDrop(const QMimeData* mimeData);
     Q_SLOT void onTabCloseRequested(int index);
@@ -23,6 +21,7 @@ public:
 private:
     friend class ElaCustomTabWidget;
     ElaTabBar* _customTabBar{nullptr};
+    QList<QWidget*> _allTabWidgetList;
 };
 
 #endif // ELATABWIDGETPRIVATE_H

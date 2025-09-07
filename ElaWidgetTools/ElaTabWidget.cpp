@@ -1,12 +1,12 @@
 #include "ElaTabWidget.h"
 
+#include "ElaTabBar.h"
+#include "ElaTabWidgetPrivate.h"
+#include <QDebug>
 #include <QDrag>
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QPainter>
-
-#include "ElaTabBar.h"
-#include "ElaTabWidgetPrivate.h"
 ElaTabWidget::ElaTabWidget(QWidget* parent)
     : QTabWidget(parent), d_ptr(new ElaTabWidgetPrivate())
 {
@@ -17,7 +17,6 @@ ElaTabWidget::ElaTabWidget(QWidget* parent)
     setAcceptDrops(true);
     ElaTabBar* tabBar = new ElaTabBar(this);
     setTabBar(tabBar);
-    connect(tabBar, &ElaTabBar::tabBarPress, d, &ElaTabWidgetPrivate::onTabBarPress);
     connect(tabBar, &ElaTabBar::tabDragCreate, d, &ElaTabWidgetPrivate::onTabDragCreate);
     connect(tabBar, &ElaTabBar::tabDragDrop, d, &ElaTabWidgetPrivate::onTabDragDrop);
     connect(tabBar, &ElaTabBar::tabCloseRequested, d, &ElaTabWidgetPrivate::onTabCloseRequested);
@@ -25,6 +24,15 @@ ElaTabWidget::ElaTabWidget(QWidget* parent)
 
 ElaTabWidget::~ElaTabWidget()
 {
+    Q_D(ElaTabWidget);
+    for (auto widget: d->_allTabWidgetList)
+    {
+        auto originTabWidgetVariant = widget->property("ElaOriginTabWidget");
+        if (originTabWidgetVariant.isValid() && originTabWidgetVariant.value<ElaTabWidget*>() == this)
+        {
+            widget->setProperty("ElaOriginTabWidget", QVariant());
+        }
+    }
 }
 
 void ElaTabWidget::setTabPosition(TabPosition position)
@@ -63,4 +71,15 @@ void ElaTabWidget::dropEvent(QDropEvent* event)
         event->accept();
     }
     QTabWidget::dropEvent(event);
+}
+
+void ElaTabWidget::tabInserted(int index)
+{
+    Q_D(ElaTabWidget);
+    QWidget* tabWidget = widget(index);
+    if (!tabWidget->property("ElaOriginTabWidget").isValid())
+    {
+        d->_allTabWidgetList.append(widget(index));
+    }
+    QTabWidget::tabInserted(index);
 }

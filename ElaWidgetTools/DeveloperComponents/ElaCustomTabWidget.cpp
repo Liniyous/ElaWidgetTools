@@ -39,7 +39,6 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
     connect(_customTabBar, &ElaTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
 
     _customTabWidget->d_ptr->_customTabBar = _customTabBar;
-    connect(_customTabBar, &ElaTabBar::tabBarPress, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabBarPress);
     connect(_customTabBar, &ElaTabBar::tabDragCreate, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragCreate);
     connect(_customTabBar, &ElaTabBar::tabDragDrop, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragDrop);
 

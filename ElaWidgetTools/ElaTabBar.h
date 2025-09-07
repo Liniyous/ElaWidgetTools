@@ -12,7 +12,7 @@ class ELA_EXPORT ElaTabBar : public QTabBar
     Q_Q_CREATE(ElaTabBar)
 public:
     explicit ElaTabBar(QWidget* parent = nullptr);
-    ~ElaTabBar();
+    ~ElaTabBar() override;
 Q_SIGNALS:
     Q_SIGNAL void tabBarPress(int index);
     Q_SIGNAL void tabDragCreate(QDrag* drag);

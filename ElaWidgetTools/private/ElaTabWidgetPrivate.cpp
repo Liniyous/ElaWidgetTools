@@ -16,10 +16,6 @@ ElaTabWidgetPrivate::~ElaTabWidgetPrivate()
 {
 }
 
-void ElaTabWidgetPrivate::onTabBarPress(int index)
-{
-}
-
 void ElaTabWidgetPrivate::onTabDragCreate(QDrag* drag)
 {
     Q_Q(ElaTabWidget);
