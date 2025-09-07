@@ -78,3 +78,13 @@ QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString&
     QMenuBar::addAction(action);
     return action;
 }
+
+QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString& text, const QKeySequence& shortcut)
+{
+    QAction* action = new QAction(text, this);
+    action->setShortcut(shortcut);
+    action->setProperty("ElaIconType", QChar((unsigned short)icon));
+    action->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
+    QMenuBar::addAction(action);
+    return action;
+}
