@@ -13,6 +13,9 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
 {
     resize(700, 500);
     setWindowTitle("");
+#ifndef Q_OS_WIN
+    setAttribute(Qt::WA_Hover);
+#endif
     setWindowIcon(QIcon());
     _customTabWidget = new ElaTabWidget(this);
     _customTabWidget->setIsTabTransparent(true);
