@@ -33,7 +33,7 @@ public:
 
     bool getNavigationNodeIsExpanded(QString expanderKey) const;
     void expandNavigationNode(QString expanderKey);
-    void collpaseNavigationNode(QString expanderKey);
+    void collapseNavigationNode(QString expanderKey);
     void removeNavigationNode(QString nodeKey);
 
     void setNodeKeyPoints(QString nodeKey, int keyPoints);

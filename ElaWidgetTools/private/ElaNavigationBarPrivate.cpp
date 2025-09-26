@@ -51,7 +51,7 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     {
         return;
     }
-    QWidget* widget = static_cast<QWidget*>(meta->newInstance());
+    QWidget* widget = dynamic_cast<QWidget*>(meta->newInstance());
     if (widget)
     {
         widget->setProperty("ElaPageKey", nodeKey);
@@ -83,7 +83,7 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
         }
         if (node->getIsExpanderNode())
         {
-            _expandOrCollpaseExpanderNode(node, !_navigationView->isExpanded(index));
+            _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index));
         }
         else
         {
@@ -351,7 +351,7 @@ void ElaNavigationBarPrivate::_expandSelectedNodeParent()
     }
 }
 
-void ElaNavigationBarPrivate::_expandOrCollpaseExpanderNode(ElaNavigationNode* node, bool isExpand)
+void ElaNavigationBarPrivate::_expandOrCollapseExpanderNode(ElaNavigationNode* node, bool isExpand)
 {
     if (_currentDisplayMode == ElaNavigationType::Compact)
     {

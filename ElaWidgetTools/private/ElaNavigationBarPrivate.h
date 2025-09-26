@@ -78,7 +78,7 @@ private:
     void _initNodeModelIndex(const QModelIndex& parentIndex);
     void _resetNodeSelected();
     void _expandSelectedNodeParent();
-    void _expandOrCollpaseExpanderNode(ElaNavigationNode* node, bool isExpand);
+    void _expandOrCollapseExpanderNode(ElaNavigationNode* node, bool isExpand);
 
     void _addStackedPage(QWidget* page, QString pageKey);
     void _addFooterPage(QWidget* page, QString footKey);

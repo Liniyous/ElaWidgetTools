@@ -242,6 +242,7 @@ void ElaWindowPrivate::onNavigationNodeRemoved(ElaNavigationType::NavigationNode
     }
     QWidget* page = _routeMap.value(nodeKey);
     _routeMap.remove(nodeKey);
+    _pageMetaMap.remove(nodeKey);
     _navigationCenterStackedWidget->removeWidget(page);
     QWidget* currentWidget = _navigationCenterStackedWidget->currentWidget();
     if (currentWidget)

@@ -371,7 +371,7 @@ ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString
 
 ElaNavigationType::NodeOperateReturnType ElaNavigationBar::addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints, ElaIconType::IconName awesome)
 {
-    ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_footerModel->addFooterNode(footerTitle, footerKey, page ? true : false, keyPoints, awesome);
+    ElaNavigationType::NodeOperateReturnType returnType = d_ptr->_footerModel->addFooterNode(footerTitle, footerKey, page != nullptr, keyPoints, awesome);
     if (returnType == ElaNavigationType::Success)
     {
         d_ptr->_addFooterPage(page, footerKey);
@@ -398,11 +398,11 @@ void ElaNavigationBar::expandNavigationNode(QString expanderKey)
     {
         return;
     }
-    d->_expandOrCollpaseExpanderNode(node, true);
+    d->_expandOrCollapseExpanderNode(node, true);
     d->_resetNodeSelected();
 }
 
-void ElaNavigationBar::collpaseNavigationNode(QString expanderKey)
+void ElaNavigationBar::collapseNavigationNode(QString expanderKey)
 {
     Q_D(ElaNavigationBar);
     ElaNavigationNode* node = d->_navigationModel->getNavigationNode(expanderKey);
@@ -410,7 +410,7 @@ void ElaNavigationBar::collpaseNavigationNode(QString expanderKey)
     {
         return;
     }
-    d->_expandOrCollpaseExpanderNode(node, false);
+    d->_expandOrCollapseExpanderNode(node, false);
     d->_resetNodeSelected();
 }
 

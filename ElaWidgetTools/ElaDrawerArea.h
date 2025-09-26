@@ -21,7 +21,7 @@ public:
     void removeDrawer(QWidget* widget);
 
     void expand();
-    void collpase();
+    void collapse();
 
     bool getIsExpand() const;
 Q_SIGNALS:
