@@ -39,6 +39,9 @@ public:
     void setNodeKeyPoints(QString nodeKey, int keyPoints);
     int getNodeKeyPoints(QString nodeKey) const;
 
+    void setNavigationNodeTitle(QString nodeKey, QString nodeTitle);
+    QString getNavigationNodeTitle(QString nodeKey) const;
+
     void navigation(QString pageKey, bool isLogClicked = true, bool isRouteBack = false);
     void setDisplayMode(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
 

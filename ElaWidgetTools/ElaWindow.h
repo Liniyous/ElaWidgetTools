@@ -63,6 +63,9 @@ public:
     void setNodeKeyPoints(QString nodeKey, int keyPoints);
     int getNodeKeyPoints(QString nodeKey) const;
 
+    void setNavigationNodeTitle(QString nodeKey, QString nodeTitle);
+    QString getNavigationNodeTitle(QString nodeKey) const;
+
     void navigation(QString pageKey);
     int getCurrentNavigationIndex() const;
     QString getCurrentNavigationPageKey() const;

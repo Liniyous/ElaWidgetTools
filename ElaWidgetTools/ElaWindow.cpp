@@ -475,6 +475,18 @@ int ElaWindow::getNodeKeyPoints(QString nodeKey) const
     return d->_navigationBar->getNodeKeyPoints(nodeKey);
 }
 
+void ElaWindow::setNavigationNodeTitle(QString nodeKey, QString nodeTitle)
+{
+    Q_D(ElaWindow);
+    d->_navigationBar->setNavigationNodeTitle(nodeKey, nodeTitle);
+}
+
+QString ElaWindow::getNavigationNodeTitle(QString nodeKey) const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationBar->getNavigationNodeTitle(nodeKey);
+}
+
 void ElaWindow::navigation(QString pageKey)
 {
     Q_D(ElaWindow);

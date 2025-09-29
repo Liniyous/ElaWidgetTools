@@ -492,6 +492,44 @@ int ElaNavigationBar::getNodeKeyPoints(QString nodeKey) const
     return node->getKeyPoints();
 }
 
+void ElaNavigationBar::setNavigationNodeTitle(QString nodeKey, QString nodeTitle)
+{
+    Q_D(ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    else if (node->getIsExpanderNode())
+    {
+        return;
+    }
+    if (!node)
+    {
+        return;
+    }
+    node->setNodeTitle(nodeTitle);
+}
+
+QString ElaNavigationBar::getNavigationNodeTitle(QString nodeKey) const
+{
+    Q_D(const ElaNavigationBar);
+    ElaNavigationNode* node = d->_navigationModel->getNavigationNode(nodeKey);
+    if (!node)
+    {
+        node = d->_footerModel->getNavigationNode(nodeKey);
+    }
+    else if (node->getIsExpanderNode())
+    {
+        return {};
+    }
+    if (!node)
+    {
+        return {};
+    }
+    return node->getNodeTitle();
+}
+
 void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked, bool isRouteBack)
 {
     Q_D(ElaNavigationBar);
