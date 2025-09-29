@@ -500,15 +500,12 @@ void ElaNavigationBar::setNavigationNodeTitle(QString nodeKey, QString nodeTitle
     {
         node = d->_footerModel->getNavigationNode(nodeKey);
     }
-    else if (node->getIsExpanderNode())
-    {
-        return;
-    }
     if (!node)
     {
         return;
     }
     node->setNodeTitle(nodeTitle);
+    update();
 }
 
 QString ElaNavigationBar::getNavigationNodeTitle(QString nodeKey) const
@@ -518,10 +515,6 @@ QString ElaNavigationBar::getNavigationNodeTitle(QString nodeKey) const
     if (!node)
     {
         node = d->_footerModel->getNavigationNode(nodeKey);
-    }
-    else if (node->getIsExpanderNode())
-    {
-        return {};
     }
     if (!node)
     {
