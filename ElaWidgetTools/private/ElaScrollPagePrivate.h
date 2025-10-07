@@ -20,7 +20,7 @@ class ElaScrollPagePrivate : public QObject
 public:
     explicit ElaScrollPagePrivate(QObject* parent = nullptr);
     ~ElaScrollPagePrivate();
-    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
+    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
 
 private:
     QHBoxLayout* _pageTitleLayout{nullptr};

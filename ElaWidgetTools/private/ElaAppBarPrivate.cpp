@@ -190,7 +190,7 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
     QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
     if (item == q)
     {
-        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_pCustomWidget) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
+        if (_containsCursorToItem(_routeBackButton) || _containsCursorToItem(_routeForwardButton) || _containsCursorToItem(_navigationButton) || _containsCursorToItem(_pCustomWidget) || _containsCursorToItem(_stayTopButton) || _containsCursorToItem(_themeChangeButton) || _containsCursorToItem(_minButton) || _containsCursorToItem(_maxButton) || _containsCursorToItem(_closeButton))
         {
             return false;
         }

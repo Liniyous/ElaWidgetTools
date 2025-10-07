@@ -4,9 +4,9 @@
 #include <QStackedWidget>
 
 #include "ElaDef.h"
-
+#include <QVBoxLayout>
 class QGraphicsBlurEffect;
-class ElaCentralStackedWidget : public QStackedWidget
+class ElaCentralStackedWidget : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY_CREATE(int, PopupAnimationYOffset)
@@ -17,6 +17,12 @@ class ElaCentralStackedWidget : public QStackedWidget
 public:
     explicit ElaCentralStackedWidget(QWidget* parent = nullptr);
     ~ElaCentralStackedWidget() override;
+
+    QStackedWidget* getContainerStackedWidget() const;
+
+    void setCustomWidget(QWidget* widget);
+    QWidget* getCustomWidget() const;
+
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
 
     void setIsTransparent(bool isTransparent);
@@ -36,6 +42,9 @@ private:
     QPixmap _currentStackPix;
     QGraphicsBlurEffect* _blurEffect{nullptr};
     bool _isTransparent{false};
+    QVBoxLayout* _mainLayout{nullptr};
+    QWidget* _customWidget{nullptr};
+    QStackedWidget* _containerStackedWidget{nullptr};
     bool _isHasRadius{true};
     bool _isDrawNewPix{false};
     void _getTargetStackPix();

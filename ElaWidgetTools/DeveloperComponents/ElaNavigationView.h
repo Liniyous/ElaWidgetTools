@@ -31,6 +31,7 @@ protected:
 private:
     ElaNavigationStyle* _navigationStyle{nullptr};
     ElaToolTip* _compactToolTip{nullptr};
+    void _doCompactToolTip();
 };
 
 #endif // ELANAVIGATIONVIEW_H

@@ -32,13 +32,13 @@ T_Home::T_Home(QWidget* parent)
     titleText->setTextPixelSize(35);
 
     QVBoxLayout* titleLayout = new QVBoxLayout();
-    titleLayout->setContentsMargins(30, 60, 0, 0);
+    titleLayout->setContentsMargins(30, 10, 0, 0);
     titleLayout->addWidget(desText);
     titleLayout->addWidget(titleText);
 
     ElaImageCard* backgroundCard = new ElaImageCard(this);
     backgroundCard->setBorderRadius(10);
-    backgroundCard->setFixedHeight(400);
+    backgroundCard->setFixedHeight(340);
     backgroundCard->setMaximumAspectRatio(1.7);
     backgroundCard->setCardImage(QImage(":/Resource/Image/Home_Background.png"));
 

@@ -31,8 +31,9 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
             d->_navigationTargetIndex = widgetIndex;
             QVariantMap routeData = QVariantMap();
             routeData.insert("ElaScrollPageCheckSumKey", "BreadcrumbClicked");
-            routeData.insert("LastBreadcrumbList", lastBreadcrumbList);
-            ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+            routeData.insert("ElaBackBreadcrumbList", lastBreadcrumbList);
+            routeData.insert("ElaForwardBreadcrumbList", d->_breadcrumbBar->getBreadcrumbList());
+            ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
         }
     });
     d->_pageTitleLayout = new QHBoxLayout();
@@ -43,6 +44,7 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     d->_centralStackedWidget->setContentsMargins(0, 0, 0, 0);
 
     d->_mainLayout = new QVBoxLayout(this);
+    d->_mainLayout->setSpacing(0);
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
     d->_mainLayout->addLayout(d->_pageTitleLayout);
     d->_mainLayout->addWidget(d->_centralStackedWidget);
@@ -115,15 +117,17 @@ void ElaScrollPage::navigation(int widgetIndex, bool isLogRoute)
     }
     d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
     d->_navigationTargetIndex = widgetIndex;
+    QString pagetTitle = d->_centralWidgetMap.key(widgetIndex);
     if (isLogRoute)
     {
         QVariantMap routeData = QVariantMap();
         routeData.insert("ElaScrollPageCheckSumKey", "Navigation");
         QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
-        routeData.insert("ElaPageTitle", breadcrumbList.last());
-        ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+        routeData.insert("ElaBackPageTitle", breadcrumbList.last());
+        routeData.insert("ElaForwardPageTitle", pagetTitle);
+        ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
     }
-    d->_breadcrumbBar->appendBreadcrumb(d->_centralWidgetMap.key(widgetIndex));
+    d->_breadcrumbBar->appendBreadcrumb(pagetTitle);
 }
 
 void ElaScrollPage::setPageTitleSpacing(int spacing)

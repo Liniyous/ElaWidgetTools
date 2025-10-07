@@ -70,8 +70,6 @@ ElaNavigationView::ElaNavigationView(QWidget* parent)
 
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, &ElaNavigationView::customContextMenuRequested, this, &ElaNavigationView::onCustomContextMenuRequested);
-
-    _compactToolTip = new ElaToolTip(this);
 }
 
 ElaNavigationView::~ElaNavigationView()
@@ -109,23 +107,7 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
 
 void ElaNavigationView::mouseMoveEvent(QMouseEvent* event)
 {
-    if (_pNavigationBarPrivate->_currentDisplayMode == ElaNavigationType::NavigationDisplayMode::Compact)
-    {
-        QModelIndex posIndex = indexAt(event->pos());
-        if (!posIndex.isValid())
-        {
-            _compactToolTip->hide();
-            return;
-        }
-        ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
-        _compactToolTip->setToolTip(posNode->getNodeTitle());
-        _compactToolTip->updatePos();
-        _compactToolTip->show();
-    }
-    else
-    {
-        _compactToolTip->hide();
-    }
+    _doCompactToolTip();
     QTreeView::mouseMoveEvent(event);
 }
 
@@ -157,23 +139,7 @@ bool ElaNavigationView::eventFilter(QObject* watched, QEvent* event)
     case QEvent::MouseMove:
     case QEvent::HoverMove:
     {
-        if (_pNavigationBarPrivate->_currentDisplayMode == ElaNavigationType::NavigationDisplayMode::Compact)
-        {
-            QModelIndex posIndex = indexAt(mapFromGlobal(QCursor::pos()));
-            if (!posIndex.isValid())
-            {
-                _compactToolTip->hide();
-                break;
-            }
-            ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
-            _compactToolTip->setToolTip(posNode->getNodeTitle());
-            _compactToolTip->updatePos();
-            _compactToolTip->show();
-        }
-        else
-        {
-            _compactToolTip->hide();
-        }
+        _doCompactToolTip();
         break;
     }
     default:
@@ -182,4 +148,33 @@ bool ElaNavigationView::eventFilter(QObject* watched, QEvent* event)
     }
     }
     return QAbstractItemView::eventFilter(watched, event);
+}
+
+void ElaNavigationView::_doCompactToolTip()
+{
+    if (_pNavigationBarPrivate->_currentDisplayMode == ElaNavigationType::NavigationDisplayMode::Compact)
+    {
+        if (!_compactToolTip)
+        {
+            _compactToolTip = new ElaToolTip(this);
+        }
+        QModelIndex posIndex = indexAt(mapFromGlobal(QCursor::pos()));
+        if (!posIndex.isValid())
+        {
+            _compactToolTip->hide();
+            return;
+        }
+        ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
+        _compactToolTip->setToolTip(posNode->getNodeTitle());
+        _compactToolTip->updatePos();
+        _compactToolTip->show();
+    }
+    else
+    {
+        if (_compactToolTip)
+        {
+            _compactToolTip->deleteLater();
+            _compactToolTip = nullptr;
+        }
+    }
 }

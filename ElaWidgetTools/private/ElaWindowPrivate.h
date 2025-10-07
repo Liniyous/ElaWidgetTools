@@ -32,7 +32,8 @@ public:
     Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack);
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
     Q_SLOT void onNavigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
-    Q_INVOKABLE void onNavigationRouteBack(QVariantMap routeData);
+    Q_SLOT void onNavigationRouterStateChanged(ElaNavigationRouterType::RouteMode routeMode);
+    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
 
 private:
     ElaThemeType::ThemeMode _themeMode;

@@ -26,7 +26,7 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaSuggestBoxPrivate())
 {
     Q_D(ElaSuggestBox);
-    setFixedSize(280, 35);
+    QWidget::setFixedSize(280, 35);
     d->q_ptr = this;
     d->_pBorderRadius = 6;
     d->_pCaseSensitivity = Qt::CaseInsensitive;
@@ -77,8 +77,11 @@ ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     connect(d->_searchView, &ElaBaseListView::clicked, d, &ElaSuggestBoxPrivate::onSearchViewClicked);
 
     // 焦点事件
-    connect(d->_searchEdit, &ElaLineEdit::wmFocusOut, this, [d]() {
-        d->_startCloseAnimation();
+    connect(d->_searchEdit, &ElaLineEdit::wmFocusOut, this, [=]() {
+        if (!d->_searchView->underMouse())
+        {
+            d->_startCloseAnimation();
+        }
     });
 }
 
@@ -90,6 +93,25 @@ void ElaSuggestBox::setPlaceholderText(const QString& placeholderText)
 {
     Q_D(ElaSuggestBox);
     d->_searchEdit->setPlaceholderText(placeholderText);
+}
+
+void ElaSuggestBox::setFixedSize(const QSize& size)
+{
+    Q_D(ElaSuggestBox);
+    d->_searchEdit->setFixedHeight(size.height());
+    QWidget::setFixedSize(size);
+}
+void ElaSuggestBox::setFixedSize(int w, int h)
+{
+    Q_D(ElaSuggestBox);
+    d->_searchEdit->setFixedHeight(h);
+    QWidget::setFixedSize(w, h);
+}
+void ElaSuggestBox::setFixedHeight(int h)
+{
+    Q_D(ElaSuggestBox);
+    d->_searchEdit->setFixedHeight(h);
+    QWidget::setFixedHeight(h);
 }
 
 QString ElaSuggestBox::addSuggestion(const QString& suggestText, const QVariantMap& suggestData)

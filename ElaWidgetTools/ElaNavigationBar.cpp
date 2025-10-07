@@ -88,23 +88,7 @@ ElaNavigationBar::ElaNavigationBar(QWidget* parent)
 
     // 搜索跳转
     connect(d->_navigationSuggestBox, &ElaSuggestBox::suggestionClicked, this, [=](QString suggestText, QVariantMap suggestData) {
-        ElaNavigationNode* node = nullptr;
-        if (suggestData.value("ElaNodeType").toString() == "Stacked")
-        {
-            node = d->_navigationModel->getNavigationNode(suggestData.value("ElaPageKey").toString());
-            if (node)
-            {
-                d->onTreeViewClicked(node->getModelIndex());
-            }
-        }
-        else
-        {
-            node = d->_footerModel->getNavigationNode(suggestData.value("ElaPageKey").toString());
-            if (node)
-            {
-                d->onFooterViewClicked(node->getModelIndex());
-            }
-        }
+        navigation(suggestData.value("ElaPageKey").toString());
     });
 
     // 导航模型

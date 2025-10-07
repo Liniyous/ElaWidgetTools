@@ -74,24 +74,19 @@ T_Navigation::T_Navigation(QWidget* parent)
     ElaText* tabWidgetText = new ElaText("ElaTabWidget", this);
     tabWidgetText->setTextPixelSize(18);
     _tabWidget = new ElaTabWidget(this);
-    _tabWidget->setFixedHeight(500);
+    _tabWidget->setFixedHeight(600);
     _tabWidget->setIsTabTransparent(true);
-    ElaText* page1 = new ElaText("新标签页1", this);
+    ElaText* page1 = new ElaText("新标签页", this);
     page1->setTextPixelSize(32);
     page1->setAlignment(Qt::AlignCenter);
-    ElaText* page2 = new ElaText("新标签页2", this);
-    page2->setTextPixelSize(32);
-    page2->setAlignment(Qt::AlignCenter);
-    ElaText* page3 = new ElaText("新标签页3", this);
-    page3->setTextPixelSize(32);
-    page3->setAlignment(Qt::AlignCenter);
-    ElaText* page4 = new ElaText("新标签页4", this);
-    page4->setTextPixelSize(32);
-    page4->setAlignment(Qt::AlignCenter);
-    _tabWidget->addTab(page1, QIcon(":/Resource/Image/Cirno.jpg"), "新标签页1");
-    _tabWidget->addTab(page2, "新标签页2");
-    _tabWidget->addTab(page3, "新标签页3");
-    _tabWidget->addTab(page4, "新标签页4");
+    _tabWidget->addTab(page1, QIcon(":/Resource/Image/Cirno.jpg"), "新标签页");
+    for (int i = 0; i < 5; i++)
+    {
+        ElaText* page = new ElaText(QString("新标签页%1").arg(i), this);
+        page->setTextPixelSize(32);
+        page->setAlignment(Qt::AlignCenter);
+        _tabWidget->addTab(page, QString("新标签页%1").arg(i));
+    }
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setWindowTitle("ElaNavigation");
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
@@ -107,6 +102,7 @@ T_Navigation::T_Navigation(QWidget* parent)
     centerVLayout->addWidget(tabWidgetText);
     centerVLayout->addSpacing(10);
     centerVLayout->addWidget(_tabWidget);
+    centerVLayout->addStretch();
     addCentralWidget(centralWidget, true, false, 0);
 }
 

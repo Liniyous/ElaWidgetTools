@@ -2,6 +2,7 @@
 
 #include "ElaTheme.h"
 #include <QApplication>
+#include <QDebug>
 #include <QGraphicsBlurEffect>
 #include <QPainter>
 #include <QPainterPath>
@@ -9,7 +10,7 @@
 #include <QTimer>
 #include <cmath>
 ElaCentralStackedWidget::ElaCentralStackedWidget(QWidget* parent)
-    : QStackedWidget(parent)
+    : QWidget(parent)
 {
     _pPopupAnimationYOffset = 0;
     _pScaleAnimationRatio = 1;
@@ -17,20 +18,54 @@ ElaCentralStackedWidget::ElaCentralStackedWidget(QWidget* parent)
     _pFlipAnimationRatio = 1;
     _pBlurAnimationRadius = 0;
 
-    _blurEffect = new QGraphicsBlurEffect(this);
+    setObjectName("ElaCentralStackedWidget");
+    setStyleSheet("#ElaCentralStackedWidget{background-color:transparent;}");
+
+    _containerStackedWidget = new QStackedWidget(this);
+    _containerStackedWidget->setObjectName("ElaCentralStackedWidget");
+    _containerStackedWidget->setStyleSheet("#ElaCentralStackedWidget{background-color:transparent;}");
+
+    _blurEffect = new QGraphicsBlurEffect(_containerStackedWidget);
     _blurEffect->setBlurHints(QGraphicsBlurEffect::BlurHint::QualityHint);
     _blurEffect->setBlurRadius(0);
     _blurEffect->setEnabled(false);
-    setGraphicsEffect(_blurEffect);
+    _containerStackedWidget->setGraphicsEffect(_blurEffect);
 
-    setObjectName("ElaCentralStackedWidget");
-    setStyleSheet("#ElaCentralStackedWidget{background-color:transparent;}");
+    _mainLayout = new QVBoxLayout(this);
+    _mainLayout->setSpacing(0);
+    _mainLayout->setContentsMargins(0, 0, 0, 0);
+    _mainLayout->addWidget(_containerStackedWidget);
+
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, &ElaCentralStackedWidget::onThemeModeChanged);
 }
 
 ElaCentralStackedWidget::~ElaCentralStackedWidget()
 {
+}
+
+QStackedWidget* ElaCentralStackedWidget::getContainerStackedWidget() const
+{
+    return _containerStackedWidget;
+}
+
+void ElaCentralStackedWidget::setCustomWidget(QWidget* widget)
+{
+    if (!widget)
+    {
+        return;
+    }
+    if (_customWidget)
+    {
+        _mainLayout->removeWidget(_customWidget);
+    }
+    _mainLayout->insertWidget(0, widget);
+    _customWidget = widget;
+}
+
+QWidget* ElaCentralStackedWidget::getCustomWidget() const
+{
+    return this->_customWidget;
 }
 
 void ElaCentralStackedWidget::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
@@ -62,14 +97,14 @@ void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode
     {
     case ElaWindowType::None:
     {
-        this->setCurrentIndex(nodeIndex);
+        _containerStackedWidget->setCurrentIndex(nodeIndex);
         break;
     }
     case ElaWindowType::Popup:
     {
         QTimer::singleShot(180, this, [=]() {
-            QWidget* targetWidget = this->widget(nodeIndex);
-            this->setCurrentIndex(nodeIndex);
+            QWidget* targetWidget = _containerStackedWidget->widget(nodeIndex);
+            _containerStackedWidget->setCurrentIndex(nodeIndex);
             _getTargetStackPix();
             targetWidget->setVisible(false);
             QPropertyAnimation* popupAnimation = new QPropertyAnimation(this, "pPopupAnimationYOffset");
@@ -82,7 +117,7 @@ void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode
             });
             popupAnimation->setEasingCurve(QEasingCurve::OutCubic);
             popupAnimation->setDuration(300);
-            int targetWidgetY = targetWidget->y();
+            int targetWidgetY = _containerStackedWidget->mapToParent(QPoint(0, 0)).y();
             popupAnimation->setEndValue(targetWidgetY);
             targetWidgetY += 80;
             popupAnimation->setStartValue(targetWidgetY);
@@ -92,9 +127,9 @@ void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode
     }
     case ElaWindowType::Scale:
     {
-        QWidget* targetWidget = this->widget(nodeIndex);
+        QWidget* targetWidget = _containerStackedWidget->widget(nodeIndex);
         _getCurrentStackPix();
-        this->setCurrentIndex(nodeIndex);
+        _containerStackedWidget->setCurrentIndex(nodeIndex);
         _getTargetStackPix();
         targetWidget->setVisible(false);
         _isDrawNewPix = false;
@@ -159,9 +194,9 @@ void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode
     }
     case ElaWindowType::Flip:
     {
-        QWidget* targetWidget = this->widget(nodeIndex);
+        QWidget* targetWidget = _containerStackedWidget->widget(nodeIndex);
         _getCurrentStackPix();
-        this->setCurrentIndex(nodeIndex);
+        _containerStackedWidget->setCurrentIndex(nodeIndex);
         _getTargetStackPix();
         targetWidget->setVisible(false);
         QPropertyAnimation* flipAnimation = new QPropertyAnimation(this, "pFlipAnimationRatio");
@@ -197,7 +232,7 @@ void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode
         blurAnimation->setEndValue(2);
         blurAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         QApplication::processEvents();
-        this->setCurrentIndex(nodeIndex);
+        _containerStackedWidget->setCurrentIndex(nodeIndex);
         break;
     }
     }
@@ -209,7 +244,7 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
     targetRect.adjust(1, 1, 10, 10);
     QPainter painter(this);
     painter.save();
-    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     if (!_isTransparent)
     {
         painter.setPen(QPen(ElaThemeColor(_themeMode, BasicBaseLine), 1.5));
@@ -226,8 +261,10 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
     // 切换动画
     if (!_targetStackPix.isNull())
     {
+        QPoint centralStackPos = _containerStackedWidget->mapToParent(QPoint(0, 0));
+        QRect centralStackRect = QRect(centralStackPos.x(), centralStackPos.y(), _containerStackedWidget->width(), _containerStackedWidget->height());
         QPainterPath clipPath;
-        clipPath.addRoundedRect(targetRect, 10, 10);
+        clipPath.addRoundedRect(centralStackRect, 10, 10);
         painter.setClipPath(clipPath);
         switch (_stackSwitchMode)
         {
@@ -237,24 +274,22 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
         }
         case ElaWindowType::Popup:
         {
-            painter.drawPixmap(QRect(0, _pPopupAnimationYOffset, width(), height()), _targetStackPix);
+            painter.drawPixmap(QRect(0, _pPopupAnimationYOffset, width(), _containerStackedWidget->height()), _targetStackPix);
             break;
         }
         case ElaWindowType::Scale:
         {
-            painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
             painter.setOpacity(_pScaleAnimationPixOpacity);
-            painter.translate(rect().center());
+            painter.translate(_containerStackedWidget->rect().center());
             painter.scale(_pScaleAnimationRatio, _pScaleAnimationRatio);
-            painter.translate(-rect().center());
-            painter.drawPixmap(rect(), _isDrawNewPix ? _targetStackPix : _currentStackPix);
+            painter.translate(-_containerStackedWidget->rect().center());
+            painter.drawPixmap(centralStackRect, _isDrawNewPix ? _targetStackPix : _currentStackPix);
             break;
         }
         case ElaWindowType::Flip:
         {
-            painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
             QTransform transform;
-            transform.translate(rect().center().x(), 0);
+            transform.translate(centralStackRect.center().x(), 0);
             if (abs(_pFlipAnimationRatio) >= 90)
             {
                 transform.rotate(-180 + _pFlipAnimationRatio, Qt::YAxis);
@@ -263,15 +298,15 @@ void ElaCentralStackedWidget::paintEvent(QPaintEvent* event)
             {
                 transform.rotate(_pFlipAnimationRatio, Qt::YAxis);
             }
-            transform.translate(-rect().center().x(), 0);
+            transform.translate(-centralStackRect.center().x(), 0);
             painter.setTransform(transform);
             if (abs(_pFlipAnimationRatio) >= 90)
             {
-                painter.drawPixmap(rect(), _targetStackPix);
+                painter.drawPixmap(centralStackRect, _targetStackPix);
             }
             else
             {
-                painter.drawPixmap(rect(), _currentStackPix);
+                painter.drawPixmap(centralStackRect, _currentStackPix);
             }
             break;
         }
@@ -289,9 +324,9 @@ void ElaCentralStackedWidget::_getCurrentStackPix()
     _targetStackPix = QPixmap();
     bool isTransparent = _isTransparent;
     _isTransparent = true;
-    currentWidget()->setVisible(true);
-    _currentStackPix = this->grab(rect());
-    currentWidget()->setVisible(false);
+    _containerStackedWidget->currentWidget()->setVisible(true);
+    _currentStackPix = _containerStackedWidget->grab();
+    _containerStackedWidget->currentWidget()->setVisible(false);
     _isTransparent = isTransparent;
 }
 
@@ -300,6 +335,6 @@ void ElaCentralStackedWidget::_getTargetStackPix()
     _targetStackPix = QPixmap();
     bool isTransparent = _isTransparent;
     _isTransparent = true;
-    _targetStackPix = this->grab(rect());
+    _targetStackPix = _containerStackedWidget->grab();
     _isTransparent = isTransparent;
 }

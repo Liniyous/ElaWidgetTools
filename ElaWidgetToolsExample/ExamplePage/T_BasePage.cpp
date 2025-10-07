@@ -17,6 +17,7 @@ T_BasePage::T_BasePage(QWidget* parent)
             update();
         }
     });
+    setContentsMargins(20, 5, 0, 0);
 }
 
 T_BasePage::~T_BasePage()

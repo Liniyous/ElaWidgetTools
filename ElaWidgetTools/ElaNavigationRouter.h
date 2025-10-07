@@ -5,7 +5,6 @@
 #include <QVariantMap>
 
 #include "ElaDef.h"
-#include "ElaProperty.h"
 #include "ElaSingleton.h"
 
 class ElaNavigationRouterPrivate;
@@ -20,11 +19,13 @@ private:
     ~ElaNavigationRouter() override;
 
 Q_SIGNALS:
-    Q_SIGNAL void navigationRouterStateChanged(bool state);
+    Q_SIGNAL void navigationRouterStateChanged(ElaNavigationRouterType::RouteMode routeMode);
 
 public:
     ElaNavigationRouterType::NavigationRouteType navigationRoute(QObject* routeObject, QString routeFunctionName, const QVariantMap& routeData = {}, Qt::ConnectionType connectionType = Qt::AutoConnection);
+    void clearNavigationRoute();
     void navigationRouteBack();
+    void navigationRouteForward();
 };
 
 #endif // ELANAVIGATIONROUTER_H

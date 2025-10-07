@@ -38,6 +38,7 @@ private:
     QVBoxLayout* _titleLabelLayout{nullptr};
     ElaAppBarType::ButtonFlags _buttonFlags;
     ElaToolButton* _routeBackButton{nullptr};
+    ElaToolButton* _routeForwardButton{nullptr};
     ElaToolButton* _navigationButton{nullptr};
     ElaToolButton* _themeChangeButton{nullptr};
     ElaToolButton* _stayTopButton{nullptr};

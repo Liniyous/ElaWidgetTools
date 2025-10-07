@@ -44,13 +44,14 @@ ElaWindow::ElaWindow(QWidget* parent)
     connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
         ElaNavigationRouter::getInstance()->navigationRouteBack();
     });
+    connect(d->_appBar, &ElaAppBar::routeForwardButtonClicked, this, []() {
+        ElaNavigationRouter::getInstance()->navigationRouteForward();
+    });
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWindow::closeButtonClicked);
     // 导航栏
     d->_navigationBar = new ElaNavigationBar(this);
     // 返回按钮状态变更
-    connect(ElaNavigationRouter::getInstance(), &ElaNavigationRouter::navigationRouterStateChanged, this, [d](bool isEnable) {
-        d->_appBar->setRouteBackButtonEnable(isEnable);
-    });
+    connect(ElaNavigationRouter::getInstance(), &ElaNavigationRouter::navigationRouterStateChanged, d, &ElaWindowPrivate::onNavigationRouterStateChanged);
 
     // 转发用户卡片点击信号
     connect(d->_navigationBar, &ElaNavigationBar::userInfoCardClicked, this, &ElaWindow::userInfoCardClicked);
@@ -94,7 +95,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     // 中心堆栈窗口
     d->_centerStackedWidget = new ElaCentralStackedWidget(this);
     d->_centerStackedWidget->setIsTransparent(true);
-    d->_centerStackedWidget->addWidget(navigationCentralWidget);
+    d->_centerStackedWidget->getContainerStackedWidget()->addWidget(navigationCentralWidget);
     setCentralWidget(d->_centerStackedWidget);
     setObjectName("ElaWindow");
     setStyleSheet("#ElaWindow{background-color:transparent;}");
@@ -180,6 +181,19 @@ QWidget* ElaWindow::getCustomWidget() const
     return d->_appBar->getCustomWidget();
 }
 
+void ElaWindow::setCentralCustomWidget(QWidget* customWidget)
+{
+    Q_D(ElaWindow);
+    d->_navigationCenterStackedWidget->setCustomWidget(customWidget);
+    Q_EMIT centralCustomWidgetChanged();
+}
+
+QWidget* ElaWindow::getCentralCustomWidget() const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationCenterStackedWidget->getCustomWidget();
+}
+
 void ElaWindow::setCustomMenu(QMenu* customMenu)
 {
     Q_D(ElaWindow);
@@ -247,14 +261,16 @@ int ElaWindow::getNavigationBarWidth() const
 void ElaWindow::setCurrentStackIndex(int currentStackIndex)
 {
     Q_D(ElaWindow);
-    if (currentStackIndex >= d->_centerStackedWidget->count() || currentStackIndex < 0 || currentStackIndex == d->_centralStackTargetIndex)
+    if (currentStackIndex >= d->_centerStackedWidget->getContainerStackedWidget()->count() || currentStackIndex < 0 || currentStackIndex == d->_centralStackTargetIndex)
     {
         return;
     }
     d->_centralStackTargetIndex = currentStackIndex;
     QVariantMap routeData;
-    routeData.insert("ElaCentralStackIndex", d->_centerStackedWidget->currentIndex());
-    ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRouteBack", routeData);
+    int currentCenterStackedWidgetIndex = d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
+    routeData.insert("ElaBackCentralStackIndex", currentCenterStackedWidgetIndex);
+    routeData.insert("ElaForwardCentralStackIndex", currentStackIndex);
+    ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
     d->_centerStackedWidget->doWindowStackSwitch(d->_pStackSwitchMode, currentStackIndex, false);
     Q_EMIT pCurrentStackIndexChanged();
 }
@@ -262,7 +278,7 @@ void ElaWindow::setCurrentStackIndex(int currentStackIndex)
 int ElaWindow::getCurrentStackIndex() const
 {
     Q_D(const ElaWindow);
-    return d->_centerStackedWidget->currentIndex();
+    return d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
 }
 
 void ElaWindow::moveToCenter()
@@ -397,17 +413,17 @@ void ElaWindow::addCentralWidget(QWidget* centralWidget)
     {
         return;
     }
-    d->_centerStackedWidget->addWidget(centralWidget);
+    d->_centerStackedWidget->getContainerStackedWidget()->addWidget(centralWidget);
 }
 
 QWidget* ElaWindow::getCentralWidget(int index) const
 {
     Q_D(const ElaWindow);
-    if (index >= d->_centerStackedWidget->count() || index < 1)
+    if (index >= d->_centerStackedWidget->getContainerStackedWidget()->count() || index < 1)
     {
         return nullptr;
     }
-    return d->_centerStackedWidget->widget(index);
+    return d->_centerStackedWidget->getContainerStackedWidget()->widget(index);
 }
 
 bool ElaWindow::getNavigationNodeIsExpanded(QString expanderKey) const
@@ -452,13 +468,13 @@ void ElaWindow::backtrackNavigationNode(QString nodeKey)
     if (widget)
     {
         auto originWidget = d->_routeMap[nodeKey];
-        int currentIndex = d->_navigationCenterStackedWidget->currentIndex();
-        int originIndex = d->_navigationCenterStackedWidget->indexOf(originWidget);
+        int currentIndex = d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentIndex();
+        int originIndex = d->_navigationCenterStackedWidget->getContainerStackedWidget()->indexOf(originWidget);
         widget->setProperty("ElaPageKey", nodeKey);
         d->_routeMap[nodeKey] = widget;
-        d->_navigationCenterStackedWidget->insertWidget(originIndex, widget);
-        d->_navigationCenterStackedWidget->setCurrentIndex(currentIndex);
-        d->_navigationCenterStackedWidget->removeWidget(originWidget);
+        d->_navigationCenterStackedWidget->getContainerStackedWidget()->insertWidget(originIndex, widget);
+        d->_navigationCenterStackedWidget->getContainerStackedWidget()->setCurrentIndex(currentIndex);
+        d->_navigationCenterStackedWidget->getContainerStackedWidget()->removeWidget(originWidget);
         originWidget->deleteLater();
     }
 }
@@ -496,13 +512,13 @@ void ElaWindow::navigation(QString pageKey)
 int ElaWindow::getCurrentNavigationIndex() const
 {
     Q_D(const ElaWindow);
-    return d->_navigationCenterStackedWidget->currentIndex();
+    return d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentIndex();
 }
 
 QString ElaWindow::getCurrentNavigationPageKey() const
 {
     Q_D(const ElaWindow);
-    return d->_navigationCenterStackedWidget->currentWidget()->property("ElaPageKey").toString();
+    return d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget()->property("ElaPageKey").toString();
 }
 
 void ElaWindow::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)
