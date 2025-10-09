@@ -16,6 +16,7 @@
 #include <QScreen>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QWindow>
 
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
@@ -61,12 +62,15 @@ void ElaAppBarPrivate::onStayTopButtonClicked()
     HWND hwnd = (HWND)_currentWinID;
     ::SetWindowPos(hwnd, _pIsStayTop ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 #else
-    Q_Q(const ElaAppBar);
-    bool isVisible = q->window()->isVisible();
-    q->window()->setWindowFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
-    if (isVisible)
+    Q_Q(ElaAppBar);
+    if (q->window()->isVisible())
     {
-        q->window()->show();
+        q->window()->windowHandle()->setFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
+        q->window()->update();
+    }
+    else
+    {
+        q->window()->setWindowFlag(Qt::WindowStaysOnTopHint, _pIsStayTop);
     }
 #endif
     _stayTopButton->setIsSelected(_pIsStayTop);

@@ -8,6 +8,7 @@
 #include "ElaTheme.h"
 ElaTabBarStyle::ElaTabBarStyle(QStyle* style)
 {
+    _pTabSize = QSize(220, 35);
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -77,6 +78,15 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
     int topRadius = 7;
     switch (element)
     {
+    case QStyle::CE_TabBarTab:
+    {
+        if (const QStyleOptionTab* topt = qstyleoption_cast<const QStyleOptionTab*>(option))
+        {
+            drawControl(CE_TabBarTabShape, topt, painter, widget);
+            drawControl(CE_TabBarTabLabel, topt, painter, widget);
+            return;
+        }
+    }
     case QStyle::CE_TabBarTabShape:
     {
         //背景绘制
@@ -91,7 +101,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
                 tabRect.setRight(tabRect.right() + margin + 1);
-                painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
+                painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHover));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
@@ -114,7 +124,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             {
                 if (topt->state.testFlag(QStyle::State_MouseOver))
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
                 }
                 else
                 {
@@ -180,7 +190,7 @@ QSize ElaTabBarStyle::sizeFromContents(ContentsType type, const QStyleOption* op
     {
     case CT_TabBarTab:
     {
-        return QSize(220, 35);
+        return _pTabSize;
     }
     default:
     {
@@ -196,6 +206,8 @@ QRect ElaTabBarStyle::subElementRect(SubElement element, const QStyleOption* opt
     {
     case QStyle::SE_TabBarScrollLeftButton:
     case QStyle::SE_TabBarScrollRightButton:
+    case QStyle::SE_TabBarTearIndicatorLeft:
+    case QStyle::SE_TabBarTearIndicatorRight:
     {
         return QRect();
     }

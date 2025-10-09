@@ -55,6 +55,7 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     if (widget)
     {
         widget->setProperty("ElaPageKey", nodeKey);
+        widget->setProperty("IsMetaWidget", true);
         widget->setProperty("ElaFloatParentWidget", QVariant::fromValue(q));
         widget->installEventFilter(this);
         ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(q);
