@@ -191,6 +191,15 @@ enum NavigationRouteType
     FunctionNameInvalid = 0x0002,
 };
 Q_ENUM_CREATE(NavigationRouteType)
+
+enum RouteMode
+{
+    BackValid = 0x0000,
+    BackInvalid = 0x0001,
+    ForwardValid = 0x0002,
+    ForwardInvalid = 0x0003,
+};
+Q_ENUM_CREATE(RouteMode)
 Q_END_ENUM_CREATE(ElaNavigationRouterType)
 
 Q_BEGIN_ENUM_CREATE(ElaEventBusType)
@@ -280,17 +289,6 @@ enum ButtonMode
 };
 Q_ENUM_CREATE(ButtonMode)
 Q_END_ENUM_CREATE(ElaSpinBoxType)
-
-Q_BEGIN_ENUM_CREATE(ElaNavigationRouterType)
-enum RouteMode
-{
-    BackValid = 0x0000,
-    BackInvalid = 0x0001,
-    ForwardValid = 0x0002,
-    ForwardInvalid = 0x0003,
-};
-Q_ENUM_CREATE(RouteMode)
-Q_END_ENUM_CREATE(ElaNavigationRouterType)
 
 Q_BEGIN_ENUM_CREATE(ElaIconType)
 enum IconName
