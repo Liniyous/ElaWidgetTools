@@ -9,6 +9,16 @@
 #include <QMouseEvent>
 #include <QTimer>
 #include <QWindow>
+ElaDragMonitor::ElaDragMonitor(QObject* parent)
+    : QObject(parent)
+{
+    _pIsInDrag = false;
+}
+
+ElaDragMonitor::~ElaDragMonitor()
+{
+}
+
 ElaTabWidgetPrivate::ElaTabWidgetPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -21,6 +31,11 @@ ElaTabWidgetPrivate::~ElaTabWidgetPrivate()
 void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
 {
     Q_Q(ElaTabWidget);
+    if (ElaDragMonitor::getInstance()->getIsInDrag())
+    {
+        return;
+    }
+    ElaDragMonitor::getInstance()->setIsInDrag(true);
     mimeData->setProperty("ElaTabWidgetObject", QVariant::fromValue(q));
     int index = q->currentIndex();
     QString tabText = q->tabText(index);
@@ -104,6 +119,7 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
         }
     });
     auto ret = drag->exec();
+    ElaDragMonitor::getInstance()->setIsInDrag(false);
     ElaCustomTabWidget* tempFloatWidget = mimeData->property("TempFloatWidget").value<ElaCustomTabWidget*>();
     if (tempFloatWidget)
     {
@@ -215,6 +231,7 @@ void ElaTabWidgetPrivate::onTabCloseRequested(int index)
             closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
         }
         originTabWidget->addTab(closeWidget, q->tabIcon(index), q->tabText(index));
+        originTabWidget->setCurrentWidget(closeWidget);
     }
     else
     {

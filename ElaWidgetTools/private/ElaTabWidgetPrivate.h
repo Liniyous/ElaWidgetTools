@@ -2,9 +2,20 @@
 #define ELATABWIDGETPRIVATE_H
 
 #include "ElaProperty.h"
+#include "ElaSingleton.h"
 #include <QDrag>
 #include <QObject>
 #include <QPixmap>
+class ElaDragMonitor : public QObject
+{
+    Q_OBJECT
+    Q_PRIVATE_CREATE(bool, IsInDrag)
+    Q_SINGLETON_CREATE(ElaDragMonitor)
+private:
+    explicit ElaDragMonitor(QObject* parent = nullptr);
+    virtual ~ElaDragMonitor();
+};
+
 class ElaTabWidget;
 class ElaTabBar;
 class ElaTabWidgetPrivate : public QObject

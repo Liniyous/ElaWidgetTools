@@ -39,7 +39,6 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
         {
             _pIsFinished = true;
             hide();
-            _customTabWidget->d_func()->_clearAllTabWidgetList();
         }
     });
     connect(_customTabBar, &ElaTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);

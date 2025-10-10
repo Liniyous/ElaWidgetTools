@@ -88,7 +88,7 @@ void ElaTabWidget::tabInserted(int index)
 {
     Q_D(ElaTabWidget);
     QWidget* tabWidget = widget(index);
-    if (!tabWidget->property("ElaOriginTabWidget").isValid())
+    if (!tabWidget->property("IsMetaWidget").toBool() && !tabWidget->property("ElaOriginTabWidget").isValid())
     {
         d->_allTabWidgetList.append(widget(index));
     }
