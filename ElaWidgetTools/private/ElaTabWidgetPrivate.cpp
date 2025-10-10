@@ -98,7 +98,10 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     QTimer::singleShot(1, this, [=]() {
         floatWidget->show();
         floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
-        floatWidget->resize(700, 500);
+        if (!isFloatWidget)
+        {
+            floatWidget->resize(700, 500);
+        }
     });
     auto ret = drag->exec();
     ElaCustomTabWidget* tempFloatWidget = mimeData->property("TempFloatWidget").value<ElaCustomTabWidget*>();
