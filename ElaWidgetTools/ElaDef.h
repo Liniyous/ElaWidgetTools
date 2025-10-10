@@ -5,7 +5,6 @@
 #include "ElaProperty.h"
 #define ElaDefVersion "2.0.1"
 
-//枚举类导出  兼容QT5低版本
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #define Q_BEGIN_ENUM_CREATE(CLASS) \
     namespace CLASS                \

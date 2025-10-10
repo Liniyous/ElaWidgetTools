@@ -13,7 +13,7 @@ class ElaDragMonitor : public QObject
     Q_SINGLETON_CREATE(ElaDragMonitor)
 private:
     explicit ElaDragMonitor(QObject* parent = nullptr);
-    virtual ~ElaDragMonitor();
+    ~ElaDragMonitor() override;
 };
 
 class ElaTabWidget;
