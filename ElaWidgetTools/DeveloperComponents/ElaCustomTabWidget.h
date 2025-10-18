@@ -8,6 +8,7 @@ class ElaTabWidget;
 class ElaCustomTabWidget : public ElaCustomWidget
 {
     Q_OBJECT
+    Q_PROPERTY_CREATE(bool, IsFinished)
 public:
     explicit ElaCustomTabWidget(QWidget* parent = nullptr);
     ~ElaCustomTabWidget() override;

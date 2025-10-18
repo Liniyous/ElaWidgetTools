@@ -3,8 +3,8 @@
 #include <QObject>
 
 #include "ElaProperty.h"
+#define ElaDefVersion "2.0.1"
 
-//枚举类导出  兼容QT5低版本
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #define Q_BEGIN_ENUM_CREATE(CLASS) \
     namespace CLASS                \
@@ -106,12 +106,13 @@ enum ButtonType
 {
     NoneButtonHint = 0x0000,
     RouteBackButtonHint = 0x0001,
-    NavigationButtonHint = 0x0002,
-    StayTopButtonHint = 0x0004,
-    ThemeChangeButtonHint = 0x0008,
-    MinimizeButtonHint = 0x00010,
-    MaximizeButtonHint = 0x0020,
-    CloseButtonHint = 0x0040,
+    RouteForwardButtonHint = 0x0002,
+    NavigationButtonHint = 0x0004,
+    StayTopButtonHint = 0x0008,
+    ThemeChangeButtonHint = 0x0010,
+    MinimizeButtonHint = 0x00020,
+    MaximizeButtonHint = 0x0040,
+    CloseButtonHint = 0x0080,
 };
 Q_ENUM_CREATE(ButtonType)
 Q_DECLARE_FLAGS(ButtonFlags, ButtonType)
@@ -189,6 +190,15 @@ enum NavigationRouteType
     FunctionNameInvalid = 0x0002,
 };
 Q_ENUM_CREATE(NavigationRouteType)
+
+enum RouteMode
+{
+    BackValid = 0x0000,
+    BackInvalid = 0x0001,
+    ForwardValid = 0x0002,
+    ForwardInvalid = 0x0003,
+};
+Q_ENUM_CREATE(RouteMode)
 Q_END_ENUM_CREATE(ElaNavigationRouterType)
 
 Q_BEGIN_ENUM_CREATE(ElaEventBusType)

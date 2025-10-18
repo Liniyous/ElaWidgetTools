@@ -18,6 +18,9 @@ public:
     explicit ElaSuggestBox(QWidget* parent = nullptr);
     ~ElaSuggestBox();
     void setPlaceholderText(const QString& placeholderText);
+    void setFixedSize(const QSize& size);
+    void setFixedSize(int w, int h);
+    void setFixedHeight(int h);
 
     QString addSuggestion(const QString& suggestText, const QVariantMap& suggestData = {});
     QString addSuggestion(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});

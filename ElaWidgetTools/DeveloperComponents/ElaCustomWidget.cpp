@@ -11,6 +11,7 @@ ElaCustomWidget::ElaCustomWidget(QWidget* parent)
 {
     resize(500, 500); // 默认宽高
     setObjectName("ElaCustomWidget");
+    setWindowFlags(Qt::Window | Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint | Qt::WindowFullscreenButtonHint);
 #if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
     setStyleSheet("#ElaCustomWidget{background-color:transparent;}");
 #endif

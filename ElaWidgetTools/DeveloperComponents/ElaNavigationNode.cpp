@@ -8,7 +8,7 @@ ElaNavigationNode::ElaNavigationNode(QString nodeTitle, ElaNavigationNode* paren
     _pDepth = 0;
     _pKeyPoints = 0;
     _nodeKey = QUuid::createUuid().toString().remove("{").remove("}").remove("-");
-    _nodeTitle = nodeTitle;
+    _pNodeTitle = nodeTitle;
     _pIsRootNode = false;
     _pIsFooterNode = false;
     _pIsHasFooterPage = false;
@@ -25,11 +25,6 @@ ElaNavigationNode::~ElaNavigationNode()
 QString ElaNavigationNode::getNodeKey() const
 {
     return _nodeKey;
-}
-
-QString ElaNavigationNode::getNodeTitle() const
-{
-    return _nodeTitle;
 }
 
 void ElaNavigationNode::setIsExpanded(bool isExpanded)

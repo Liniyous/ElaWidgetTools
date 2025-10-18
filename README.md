@@ -3,15 +3,15 @@
 ## 简介
 
 本项目是基于QT-Widget开发的FluentUI风格的组件库，同时提供不限于组件的常用集成功能；目前Main分支支持QT5.12以上所有版本(
-Linux为QT5.15以上)，推荐版本为QT6.4.3和QT6.6.2；
+Linux为QT5.15以上)，推荐版本为QT5.15.2和QT6.6.2；
 
 ## 重要提示
 
-该项目项目性质原因，暂不接受任何PR！！！使用问题或BUG请直接进群反馈，都会及时处理，感谢您的支持！ 企鹅群：850243692
+该项目性质原因，不会接受任何PR；如确认组件库存在BUG，请提供具体复现步骤和QT程序版本反馈至QQ群：850243692，确认后会尽快处理；
 
 ## 支持平台
 
-| [Windows][win-link] | [Ubuntu][ubuntu-link] 
+| [Windows][win-link] | [Ubuntu/Kylin][ubuntu-link] |
 |---------------------|-----------------------|
 | ![win-badge]        | ![ubuntu-badge]       |
 
@@ -98,3 +98,8 @@ Linux为QT5.15以上)，推荐版本为QT6.4.3和QT6.6.2；
 | ElaGraphicsItem        | 高级图元         | 大量实用API                    |
 | ElaWindow              | 带导航栏的无边框窗口   |                            |
 | ElaWidget              | 无边框模态窗口      |                            |
+
+## 许可证
+ElaWidgetTools 使用 MIT 许可证授权所有类型项目，但要求所有分发的软件中必须保留本项目的MIT授权许可；所有未保留授权分发的商业行为均将被视为侵权行为
+
+版权所有 © 2024 by Liniyous

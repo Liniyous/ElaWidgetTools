@@ -10,8 +10,9 @@ class ELA_EXPORT ElaTabWidget : public QTabWidget
 {
     Q_OBJECT
     Q_Q_CREATE(ElaTabWidget)
-    Q_PROPERTY_CREATE(bool, IsTabTransparent);
-
+    Q_PROPERTY_CREATE_Q_H(bool, IsTabTransparent);
+    Q_PROPERTY_CREATE_Q_H(bool, IsContainerAcceptDrops);
+    Q_PROPERTY_CREATE_Q_H(QSize, TabSize)
 public:
     explicit ElaTabWidget(QWidget* parent = nullptr);
     ~ElaTabWidget() override;

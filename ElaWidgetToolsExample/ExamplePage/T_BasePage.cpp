@@ -7,6 +7,7 @@
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaToolButton.h"
+#include "ElaWindow.h"
 T_BasePage::T_BasePage(QWidget* parent)
     : ElaScrollPage(parent)
 {
@@ -16,6 +17,7 @@ T_BasePage::T_BasePage(QWidget* parent)
             update();
         }
     });
+    setContentsMargins(20, 5, 0, 0);
 }
 
 T_BasePage::~T_BasePage()
@@ -62,12 +64,26 @@ void T_BasePage::createCustomWidget(QString desText)
         eTheme->setThemeMode(eTheme->getThemeMode() == ElaThemeType::Light ? ElaThemeType::Dark : ElaThemeType::Light);
     });
 
+    ElaToolButton* backtrackButton = new ElaToolButton(this);
+    backtrackButton->setFixedSize(35, 35);
+    backtrackButton->setIsTransparent(false);
+    backtrackButton->setElaIcon(ElaIconType::Timer);
+    connect(backtrackButton, &ElaToolButton::clicked, this, [=]() {
+        ElaWindow* window = dynamic_cast<ElaWindow*>(this->window());
+        if (window)
+        {
+            window->backtrackNavigationNode(property("ElaPageKey").toString());
+        }
+    });
+
     QHBoxLayout* buttonLayout = new QHBoxLayout();
     buttonLayout->addWidget(documentationButton);
     buttonLayout->addSpacing(5);
     buttonLayout->addWidget(sourceButton);
     buttonLayout->addStretch();
     buttonLayout->addWidget(themeButton);
+    buttonLayout->addSpacing(5);
+    buttonLayout->addWidget(backtrackButton);
     buttonLayout->addSpacing(15);
 
     ElaText* descText = new ElaText(this);

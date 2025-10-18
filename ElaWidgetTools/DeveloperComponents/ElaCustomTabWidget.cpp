@@ -6,22 +6,26 @@
 #include "ElaTabWidgetPrivate.h"
 #include <QDebug>
 #include <QMimeData>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QVariant>
 ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
     : ElaCustomWidget(parent)
 {
+    _pIsFinished = false;
     resize(700, 500);
     setWindowTitle("");
 #ifndef Q_OS_WIN
     setAttribute(Qt::WA_Hover);
 #endif
+    setMouseTracking(true);
     setWindowIcon(QIcon());
     _customTabWidget = new ElaTabWidget(this);
     _customTabWidget->setIsTabTransparent(true);
     _customTabWidget->setObjectName("ElaCustomTabWidget");
     QTabBar* originTabBar = _customTabWidget->tabBar();
     originTabBar->hide();
+    setAcceptDrops(true);
     _customTabBar = new ElaTabBar(this);
     _customTabBar->setObjectName("ElaCustomTabBar");
     connect(_customTabBar, &ElaTabBar::tabMoved, this, [=](int from, int to) {
@@ -33,7 +37,8 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
     connect(_customTabWidget, &ElaTabWidget::currentChanged, this, [=](int index) {
         if (index == -1)
         {
-            close();
+            _pIsFinished = true;
+            hide();
         }
     });
     connect(_customTabBar, &ElaTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
@@ -41,7 +46,8 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
     _customTabWidget->d_ptr->_customTabBar = _customTabBar;
     connect(_customTabBar, &ElaTabBar::tabDragCreate, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragCreate);
     connect(_customTabBar, &ElaTabBar::tabDragDrop, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragDrop);
-
+    connect(_customTabBar, &ElaTabBar::tabDragEnter, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragEnter);
+    connect(_customTabBar, &ElaTabBar::tabDragLeave, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragLeave);
     QWidget* customWidget = new QWidget(this);
     QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
     customLayout->setContentsMargins(10, 0, 10, 0);
@@ -57,11 +63,11 @@ ElaCustomTabWidget::~ElaCustomTabWidget()
     {
         QWidget* closeWidget = _customTabWidget->widget(0);
         ElaTabWidget* originTabWidget = closeWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-
         if (originTabWidget)
         {
             closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
             originTabWidget->addTab(closeWidget, _customTabWidget->tabIcon(0), _customTabWidget->tabText(0));
+            originTabWidget->setCurrentWidget(closeWidget);
         }
         else
         {

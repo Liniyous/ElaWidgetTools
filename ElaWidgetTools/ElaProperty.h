@@ -26,7 +26,6 @@ public:                                                     \
 private:                                                    \
     TYPE _p##M;
 
-// Q_D Q_Q普通属性快速创建
 #define Q_PROPERTY_CREATE_Q_H(TYPE, M)                                  \
     Q_PROPERTY(TYPE p##M READ get##M WRITE set##M NOTIFY p##M##Changed) \
 public:                                                                 \
@@ -34,7 +33,6 @@ public:                                                                 \
     void set##M(TYPE M);                                                \
     TYPE get##M() const;
 
-// Q_D Q_Q指针变量快速创建
 #define Q_PRIVATE_CREATE_Q_H(TYPE, M) \
 public:                               \
     void set##M(TYPE M);              \

@@ -77,16 +77,16 @@ void ElaDrawerArea::expand()
 {
     Q_D(ElaDrawerArea);
     d->_drawerHeader->setIsExpand(true);
-    d->_drawerHeader->doExpandOrCollpaseAnimation();
+    d->_drawerHeader->doExpandOrCollapseAnimation();
     d->_drawerContainer->doDrawerAnimation(true);
     Q_EMIT expandStateChanged(true);
 }
 
-void ElaDrawerArea::collpase()
+void ElaDrawerArea::collapse()
 {
     Q_D(ElaDrawerArea);
     d->_drawerHeader->setIsExpand(false);
-    d->_drawerHeader->doExpandOrCollpaseAnimation();
+    d->_drawerHeader->doExpandOrCollapseAnimation();
     d->_drawerContainer->doDrawerAnimation(false);
     Q_EMIT expandStateChanged(false);
 }

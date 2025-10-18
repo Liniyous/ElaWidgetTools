@@ -207,8 +207,8 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
         // 页脚没有绑定页面
         return;
     }
-    int nodeIndex = _navigationCenterStackedWidget->indexOf(page);
-    if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->count() <= nodeIndex)
+    int nodeIndex = _navigationCenterStackedWidget->getContainerStackedWidget()->indexOf(page);
+    if (_navigationTargetIndex == nodeIndex || _navigationCenterStackedWidget->getContainerStackedWidget()->count() <= nodeIndex)
     {
         return;
     }
@@ -221,14 +221,14 @@ void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeTy
     if (nodeType == ElaNavigationType::PageNode)
     {
         _routeMap.insert(nodeKey, page);
-        _navigationCenterStackedWidget->addWidget(page);
+        _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
     }
     else
     {
         _routeMap.insert(nodeKey, page);
         if (page)
         {
-            _navigationCenterStackedWidget->addWidget(page);
+            _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
         }
     }
 }
@@ -242,19 +242,60 @@ void ElaWindowPrivate::onNavigationNodeRemoved(ElaNavigationType::NavigationNode
     }
     QWidget* page = _routeMap.value(nodeKey);
     _routeMap.remove(nodeKey);
-    _navigationCenterStackedWidget->removeWidget(page);
-    QWidget* currentWidget = _navigationCenterStackedWidget->currentWidget();
+    _pageMetaMap.remove(nodeKey);
+    _navigationCenterStackedWidget->getContainerStackedWidget()->removeWidget(page);
+    QWidget* currentWidget = _navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget();
     if (currentWidget)
     {
         q->navigation(currentWidget->property("ElaPageKey").toString());
     }
 }
 
-void ElaWindowPrivate::onNavigationRouteBack(QVariantMap routeData)
+void ElaWindowPrivate::onNavigationRouterStateChanged(ElaNavigationRouterType::RouteMode routeMode)
 {
-    int routeIndex = routeData.value("ElaCentralStackIndex").toUInt();
+    switch (routeMode)
+    {
+    case ElaNavigationRouterType::BackValid:
+    {
+        _appBar->setRouteBackButtonEnable(true);
+        break;
+    }
+    case ElaNavigationRouterType::BackInvalid:
+    {
+        _appBar->setRouteBackButtonEnable(false);
+        break;
+    }
+    case ElaNavigationRouterType::ForwardValid:
+    {
+        _appBar->setRouteForwardButtonEnable(true);
+        break;
+    }
+    case ElaNavigationRouterType::ForwardInvalid:
+    {
+        _appBar->setRouteForwardButtonEnable(false);
+        break;
+    }
+    }
+}
+
+void ElaWindowPrivate::onNavigationRoute(QVariantMap routeData)
+{
+    Q_Q(ElaWindow);
+    int routeIndex = -1;
     _centralStackTargetIndex = routeIndex;
-    _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, true);
+    bool isRouteBack = routeData.value("ElaRouteBackMode").toBool();
+    if (isRouteBack)
+    {
+        routeIndex = routeData.value("ElaBackCentralStackIndex").toUInt();
+    }
+    else
+    {
+        routeIndex = routeData.value("ElaForwardCentralStackIndex").toUInt();
+    }
+    if (routeIndex != _centerStackedWidget->getContainerStackedWidget()->currentIndex())
+    {
+        _centerStackedWidget->doWindowStackSwitch(_pStackSwitchMode, routeIndex, isRouteBack);
+    }
 }
 
 qreal ElaWindowPrivate::_distance(QPoint point1, QPoint point2)

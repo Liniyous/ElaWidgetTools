@@ -139,7 +139,7 @@ T_Popup::T_Popup(QWidget* parent)
         else
         {
             drawerSwitchText->setText("关");
-            _drawer->collpase();
+            _drawer->collapse();
         }
     });
     connect(_drawer, &ElaDrawerArea::expandStateChanged, this, [=](bool isExpand) {

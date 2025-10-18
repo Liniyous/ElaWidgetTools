@@ -17,23 +17,24 @@ ElaScrollPagePrivate::~ElaScrollPagePrivate()
 {
 }
 
-void ElaScrollPagePrivate::onNavigationRouteBack(QVariantMap routeData)
+void ElaScrollPagePrivate::onNavigationRoute(QVariantMap routeData)
 {
     // 面包屑
     Q_Q(ElaScrollPage);
     QString pageCheckSumKey = routeData.value("ElaScrollPageCheckSumKey").toString();
+    bool isRouteBack = routeData.value("ElaRouteBackMode").toBool();
     if (pageCheckSumKey == "Navigation")
     {
-        QString pageTitle = routeData.value("ElaPageTitle").toString();
+        QString pageTitle = isRouteBack ? routeData.value("ElaBackPageTitle").toString() : routeData.value("ElaForwardPageTitle").toString();
         q->navigation(_centralWidgetMap.value(pageTitle), false);
     }
     else if (pageCheckSumKey == "BreadcrumbClicked")
     {
-        QStringList lastBreadcrumbList = routeData.value("LastBreadcrumbList").toStringList();
-        int widgetIndex = _centralWidgetMap.value(lastBreadcrumbList.last());
+        QStringList breadcrumbList = isRouteBack ? routeData.value("ElaBackBreadcrumbList").toStringList() : routeData.value("ElaForwardBreadcrumbList").toStringList();
+        int widgetIndex = _centralWidgetMap.value(breadcrumbList.last());
         _switchCentralStackIndex(widgetIndex, _navigationTargetIndex);
         _navigationTargetIndex = widgetIndex;
-        _breadcrumbBar->setBreadcrumbList(lastBreadcrumbList);
+        _breadcrumbBar->setBreadcrumbList(breadcrumbList);
     }
 }
 
