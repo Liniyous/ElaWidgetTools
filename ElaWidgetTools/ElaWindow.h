@@ -24,6 +24,7 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(int, CurrentStackIndex)
     Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
     Q_PROPERTY_CREATE_Q_H(ElaWindowType::StackSwitchMode, StackSwitchMode)
+    Q_PROPERTY_CREATE_Q_H(ElaWindowType::PaintMode, WindowPaintMode)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     Q_INVOKABLE explicit ElaWindow(QWidget* parent = nullptr);
@@ -76,6 +77,15 @@ public:
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;
 
+    void setWindowMoviePath(ElaThemeType::ThemeMode themeMode, const QString& moviePath);
+    QString getWindowMoviePath(ElaThemeType::ThemeMode themeMode) const;
+
+    void setWindowPixmap(ElaThemeType::ThemeMode themeMode, const QPixmap& pixmap);
+    QPixmap getWindowPixmap(ElaThemeType::ThemeMode themeMode) const;
+
+    void setWindowMovieRate(qreal rate);
+    qreal getWindowMovieRate() const;
+
     void closeWindow();
 Q_SIGNALS:
     Q_SIGNAL void userInfoCardClicked();
@@ -89,6 +99,7 @@ Q_SIGNALS:
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
     virtual QMenu* createPopupMenu() override;
+    virtual void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // ELAWINDOW_H

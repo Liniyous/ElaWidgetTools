@@ -101,7 +101,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
                 //选中背景绘制
                 tabRect.setLeft(tabRect.left() - margin);
                 tabRect.setRight(tabRect.right() + margin + 1);
-                painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHover));
+                painter->setBrush(topt->state.testFlag(QStyle::State_Sunken) ? ElaThemeColor(_themeMode, BasicSelectedHover) : ElaThemeColor(_themeMode, BasicSelectedAlpha));
                 QPainterPath path;
                 path.moveTo(tabRect.x(), tabRect.bottom() + 1);
                 path.arcTo(QRectF(tabRect.x() - margin, tabRect.bottom() - margin * 2 + 1, margin * 2, margin * 2), -90, 90);
@@ -124,7 +124,7 @@ void ElaTabBarStyle::drawControl(ControlElement element, const QStyleOption* opt
             {
                 if (topt->state.testFlag(QStyle::State_MouseOver))
                 {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
+                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
                 }
                 else
                 {

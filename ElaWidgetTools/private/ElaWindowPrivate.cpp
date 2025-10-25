@@ -110,6 +110,16 @@ void ElaWindowPrivate::onThemeReadyChange()
             {
                 eTheme->setThemeMode(ElaThemeType::Light);
             }
+
+            if (_pWindowPaintMode == ElaWindowType::PaintMode::Movie)
+            {
+                if (_windowPaintMovie->state() == QMovie::Running)
+                {
+                    _windowPaintMovie->stop();
+                }
+                _windowPaintMovie->setFileName(_themeMode == ElaThemeType::Light ? _lightWindowMoviePath : _darkWindowMoviePath);
+                _windowPaintMovie->start();
+            }
             _animationWidget->setCenter(centerPos);
             qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
             qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));
@@ -175,26 +185,21 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaWindow);
     _themeMode = themeMode;
-    switch (eApp->getWindowDisplayMode())
+    q->update();
+}
+
+void ElaWindowPrivate::onWindowDisplayModeChanged()
+{
+    Q_Q(ElaWindow);
+    _windowDisplayMode = eApp->getWindowDisplayMode();
+    if (_windowPaintMovie->state() == QMovie::Running)
     {
-    case ElaApplicationType::Normal:
-    {
-        QPalette palette = q->palette();
-        palette.setBrush(QPalette::Window, ElaThemeColor(_themeMode, WindowBase));
-        q->setPalette(palette);
-        break;
+        _windowPaintMovie->stop();
     }
-    case ElaApplicationType::ElaMica:
+    if (_windowDisplayMode == ElaApplicationType::WindowDisplayMode::Normal && _pWindowPaintMode == ElaWindowType::Movie)
     {
-        break;
-    }
-    default:
-    {
-        QPalette palette = q->palette();
-        palette.setBrush(QPalette::Window, Qt::transparent);
-        q->setPalette(palette);
-        break;
-    }
+        _windowPaintMovie->setFileName(_themeMode == ElaThemeType::Light ? _lightWindowMoviePath : _darkWindowMoviePath);
+        _windowPaintMovie->start();
     }
     q->update();
 }

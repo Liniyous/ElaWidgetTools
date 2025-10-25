@@ -15,6 +15,11 @@ public:
 private:
     ElaComboBox* _themeComboBox{nullptr};
     ElaRadioButton* _normalButton{nullptr};
+
+    ElaRadioButton* _windowNormalButton{nullptr};
+    ElaRadioButton* _windowPixmapButton{nullptr};
+    ElaRadioButton* _windowMovieButton{nullptr};
+
     ElaRadioButton* _elaMicaButton{nullptr};
 #ifdef Q_OS_WIN
     ElaRadioButton* _micaButton{nullptr};

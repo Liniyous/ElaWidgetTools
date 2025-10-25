@@ -1,5 +1,4 @@
 #include "ElaWindow.h"
-
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
 #include "ElaEventBus.h"
@@ -14,14 +13,15 @@
 #include <QApplication>
 #include <QDockWidget>
 #include <QHBoxLayout>
+#include <QMovie>
+#include <QPainter>
+#include <QPixmap>
 #include <QPropertyAnimation>
 #include <QResizeEvent>
 #include <QScreen>
-#include <QStackedWidget>
 #include <QStyleOption>
-#include <QTimer>
 #include <QToolBar>
-#include <QVBoxLayout>
+#include <QtMath>
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
 Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaWindowType::StackSwitchMode, StackSwitchMode)
@@ -101,22 +101,27 @@ ElaWindow::ElaWindow(QWidget* parent)
     setStyleSheet("#ElaWindow{background-color:transparent;}");
     setStyle(new ElaWindowStyle(style()));
 
-    //延时渲染
-    QTimer::singleShot(1, this, [=] {
-        QPalette palette = this->palette();
-        palette.setBrush(QPalette::Window, ElaThemeColor(d->_themeMode, WindowBase));
-        this->setPalette(palette);
-    });
     eApp->syncWindowDisplayMode(this);
-    connect(eApp, &ElaApplication::pWindowDisplayModeChanged, this, [=]() {
-        d->onThemeModeChanged(d->_themeMode);
+    d->_windowDisplayMode = eApp->getWindowDisplayMode();
+    connect(eApp, &ElaApplication::pWindowDisplayModeChanged, d, &ElaWindowPrivate::onWindowDisplayModeChanged);
+
+    d->_pWindowPaintMode = ElaWindowType::PaintMode::Normal;
+    d->_lightWindowPix = new QPixmap();
+    d->_darkWindowPix = new QPixmap();
+
+    d->_windowPaintMovie = new QMovie(this);
+    connect(d->_windowPaintMovie, &QMovie::frameChanged, this, [=]() {
+        update();
     });
 }
 
 ElaWindow::~ElaWindow()
 {
+    Q_D(ElaWindow);
     eApp->syncWindowDisplayMode(this, false);
     delete this->style();
+    delete d->_lightWindowPix;
+    delete d->_darkWindowPix;
 }
 
 void ElaWindow::setIsStayTop(bool isStayTop)
@@ -279,6 +284,29 @@ int ElaWindow::getCurrentStackIndex() const
 {
     Q_D(const ElaWindow);
     return d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
+}
+
+void ElaWindow::setWindowPaintMode(ElaWindowType::PaintMode windowPaintMode)
+{
+    Q_D(ElaWindow);
+    if (d->_windowPaintMovie->state() == QMovie::Running)
+    {
+        d->_windowPaintMovie->stop();
+    }
+    if (windowPaintMode == ElaWindowType::PaintMode::Movie)
+    {
+        d->_windowPaintMovie->setFileName(d->_themeMode == ElaThemeType::Light ? d->_lightWindowMoviePath : d->_darkWindowMoviePath);
+        d->_windowPaintMovie->start();
+    }
+    d->_pWindowPaintMode = windowPaintMode;
+    update();
+    Q_EMIT pWindowPaintModeChanged();
+}
+
+ElaWindowType::PaintMode ElaWindow::getWindowPaintMode() const
+{
+    Q_D(const ElaWindow);
+    return d->_pWindowPaintMode;
 }
 
 void ElaWindow::moveToCenter()
@@ -538,6 +566,66 @@ ElaAppBarType::ButtonFlags ElaWindow::getWindowButtonFlags() const
     return d_ptr->_appBar->getWindowButtonFlags();
 }
 
+void ElaWindow::setWindowMoviePath(ElaThemeType::ThemeMode themeMode, const QString& moviePath)
+{
+    Q_D(ElaWindow);
+    if (themeMode == ElaThemeType::ThemeMode::Light)
+    {
+        d->_lightWindowMoviePath = moviePath;
+    }
+    else
+    {
+        d->_darkWindowMoviePath = moviePath;
+    }
+    if (d->_themeMode == themeMode && d->_pWindowPaintMode == ElaWindowType::PaintMode::Movie)
+    {
+        if (d->_windowPaintMovie->state() == QMovie::Running)
+        {
+            d->_windowPaintMovie->stop();
+        }
+        d->_windowPaintMovie->setFileName(moviePath);
+        d->_windowPaintMovie->start();
+    }
+}
+
+QString ElaWindow::getWindowMoviePath(ElaThemeType::ThemeMode themeMode) const
+{
+    Q_D(const ElaWindow);
+    return themeMode == ElaThemeType::Light ? d->_lightWindowMoviePath : d->_darkWindowMoviePath;
+}
+
+void ElaWindow::setWindowMovieRate(qreal rate)
+{
+    Q_D(ElaWindow);
+    d->_windowPaintMovie->setSpeed(rate * 100);
+}
+
+qreal ElaWindow::getWindowMovieRate() const
+{
+    Q_D(const ElaWindow);
+    return d->_windowPaintMovie->speed() / 100.0;
+}
+
+void ElaWindow::setWindowPixmap(ElaThemeType::ThemeMode themeMode, const QPixmap& pixmap)
+{
+    Q_D(ElaWindow);
+    if (themeMode == ElaThemeType::ThemeMode::Light)
+    {
+        *d->_lightWindowPix = pixmap;
+    }
+    else
+    {
+        *d->_darkWindowPix = pixmap;
+    }
+    update();
+}
+
+QPixmap ElaWindow::getWindowPixmap(ElaThemeType::ThemeMode themeMode) const
+{
+    Q_D(const ElaWindow);
+    return themeMode == ElaThemeType::Light ? *d->_lightWindowPix : *d->_darkWindowPix;
+}
+
 void ElaWindow::closeWindow()
 {
     Q_D(ElaWindow);
@@ -602,4 +690,75 @@ QMenu* ElaWindow::createPopupMenu()
         menu->setMenuItemHeight(28);
     }
     return menu;
+}
+
+void ElaWindow::paintEvent(QPaintEvent* event)
+{
+    Q_D(ElaWindow);
+    QPainter painter(this);
+    painter.save();
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    switch (d->_windowDisplayMode)
+    {
+    case ElaApplicationType::Normal:
+    {
+        switch (d->_pWindowPaintMode)
+        {
+        case ElaWindowType::Normal:
+        {
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
+            painter.drawRect(rect());
+            break;
+        }
+        case ElaWindowType::Pixmap:
+        {
+            QPixmap* pix = d->_themeMode == ElaThemeType::Light ? d->_lightWindowPix : d->_darkWindowPix;
+            qreal windowAspectRatio = (qreal)rect().width() / rect().height();
+            qreal pixAspectRatio = (qreal)pix->width() / pix->height();
+            int targetPixWidth, targetPixHeight;
+            if (windowAspectRatio < pixAspectRatio)
+            {
+                targetPixWidth = qRound(pix->width() * windowAspectRatio / pixAspectRatio);
+                targetPixHeight = pix->height();
+            }
+            else
+            {
+                targetPixWidth = pix->width();
+                targetPixHeight = qRound(pix->height() * pixAspectRatio / windowAspectRatio);
+            }
+            painter.drawPixmap(rect(), *pix, QRect((pix->width() - targetPixWidth) / 2, (pix->height() - targetPixHeight) / 2, targetPixWidth, targetPixHeight));
+            break;
+        }
+        case ElaWindowType::Movie:
+        {
+            QPixmap pix = d->_windowPaintMovie->currentPixmap();
+            qreal windowAspectRatio = (qreal)rect().width() / rect().height();
+            qreal pixAspectRatio = (qreal)pix.width() / pix.height();
+            int targetPixWidth, targetPixHeight;
+            if (windowAspectRatio < pixAspectRatio)
+            {
+                targetPixWidth = qRound(pix.width() * windowAspectRatio / pixAspectRatio);
+                targetPixHeight = pix.height();
+            }
+            else
+            {
+                targetPixWidth = pix.width();
+                targetPixHeight = qRound(pix.height() * pixAspectRatio / windowAspectRatio);
+            }
+            painter.drawPixmap(rect(), pix, QRect((pix.width() - targetPixWidth) / 2, (pix.height() - targetPixHeight) / 2, targetPixWidth, targetPixHeight));
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
+    }
+    default:
+    {
+        break;
+    }
+    }
+    painter.restore();
 }

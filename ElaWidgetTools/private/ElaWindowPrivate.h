@@ -1,11 +1,12 @@
 #ifndef ELAWINDOWPRIVATE_H
 #define ELAWINDOWPRIVATE_H
 
+#include "ElaDef.h"
 #include <QLinearGradient>
 #include <QMap>
+#include <QMovie>
 #include <QObject>
 
-#include "ElaDef.h"
 class ElaEvent;
 class ElaWindow;
 class ElaNavigationBar;
@@ -21,6 +22,7 @@ class ElaWindowPrivate : public QObject
     Q_PROPERTY_CREATE_D(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_D(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
     Q_PROPERTY_CREATE_D(ElaWindowType::StackSwitchMode, StackSwitchMode)
+    Q_PROPERTY_CREATE_D(ElaWindowType::PaintMode, WindowPaintMode)
 public:
     explicit ElaWindowPrivate(QObject* parent = nullptr);
     ~ElaWindowPrivate() override;
@@ -29,6 +31,7 @@ public:
     Q_SLOT void onThemeReadyChange();
     Q_SLOT void onDisplayModeChanged();
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
+    Q_SLOT void onWindowDisplayModeChanged();
     Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack);
     Q_SLOT void onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page);
     Q_SLOT void onNavigationNodeRemoved(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);
@@ -37,8 +40,13 @@ public:
 
 private:
     ElaThemeType::ThemeMode _themeMode;
-    QImage _lightBaseImage;
-    QImage _darkBaseImage;
+    ElaApplicationType::WindowDisplayMode _windowDisplayMode;
+    QMovie* _windowPaintMovie{nullptr};
+    QString _lightWindowMoviePath{""};
+    QString _darkWindowMoviePath{""};
+    QPixmap* _lightWindowPix;
+    QPixmap* _darkWindowPix;
+
     bool _isWindowClosing{false};
 
     bool _isInitFinished{false};

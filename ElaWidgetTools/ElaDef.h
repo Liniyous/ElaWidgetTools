@@ -276,6 +276,14 @@ enum StackSwitchMode
     Blur = 0x0004,
 };
 Q_ENUM_CREATE(StackSwitchMode)
+
+enum PaintMode
+{
+    Normal = 0x0000,
+    Pixmap = 0x0001,
+    Movie = 0x0002,
+};
+Q_ENUM_CREATE(PaintMode)
 Q_END_ENUM_CREATE(ElaWindowType)
 
 Q_BEGIN_ENUM_CREATE(ElaSpinBoxType)

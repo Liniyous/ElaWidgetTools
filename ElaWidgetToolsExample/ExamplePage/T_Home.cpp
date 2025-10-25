@@ -39,7 +39,6 @@ T_Home::T_Home(QWidget* parent)
     ElaImageCard* backgroundCard = new ElaImageCard(this);
     backgroundCard->setBorderRadius(10);
     backgroundCard->setFixedHeight(340);
-    backgroundCard->setMaximumAspectRatio(1.7);
     backgroundCard->setCardImage(QImage(":/Resource/Image/Home_Background.png"));
 
     ElaAcrylicUrlCard* urlCard1 = new ElaAcrylicUrlCard(this);

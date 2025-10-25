@@ -1,9 +1,9 @@
 #include "ElaFlowLayoutPrivate.h"
 
+#include "ElaFlowLayout.h"
+#include <QDebug>
 #include <QPropertyAnimation>
 #include <QWidget>
-
-#include "ElaFlowLayout.h"
 ElaFlowLayoutPrivate::ElaFlowLayoutPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -22,8 +22,7 @@ int ElaFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
     int x = effectiveRect.x();
     int y = effectiveRect.y();
     int lineHeight = 0;
-
-    for (QLayoutItem* item : std::as_const(_itemList))
+    for (QLayoutItem* item: _itemList)
     {
         const QWidget* wid = item->widget();
         int spaceX = q->horizontalSpacing();
@@ -62,14 +61,15 @@ int ElaFlowLayoutPrivate::_doLayout(const QRect& rect, bool testOnly) const
                     // 阻止多重动画
                     if (_lastGeometryMap[item] == QPoint(x, y))
                     {
+                        x = nextX;
                         lineHeight = qMax(lineHeight, item->sizeHint().height());
-                        return y + lineHeight - rect.y() + bottom;
+                        continue;
                     }
                     QPropertyAnimation* geometryAnimation = new QPropertyAnimation(item->widget(), "geometry");
                     geometryAnimation->setStartValue(item->widget()->geometry());
                     geometryAnimation->setEndValue(QRect(QPoint(x, y), item->sizeHint()));
-                    geometryAnimation->setDuration(300);
-                    geometryAnimation->setEasingCurve(QEasingCurve::InOutSine);
+                    geometryAnimation->setDuration(400);
+                    geometryAnimation->setEasingCurve(QEasingCurve::OutCubic);
                     geometryAnimation->start(QAbstractAnimation::DeleteWhenStopped);
                     _lastGeometryMap[item] = QPoint(x, y);
                 }

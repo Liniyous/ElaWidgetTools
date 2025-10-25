@@ -24,8 +24,8 @@ class MainWindow : public ElaWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget* parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget* parent = nullptr);
+    ~MainWindow() override;
 
     void initWindow();
     void initEdgeLayout();

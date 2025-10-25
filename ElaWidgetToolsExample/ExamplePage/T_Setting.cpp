@@ -58,11 +58,48 @@ T_Setting::T_Setting(QWidget* parent)
         }
         _themeComboBox->blockSignals(false);
     });
+    ElaText* windowPaintText = new ElaText("主窗口绘制设置", this);
+    windowPaintText->setWordWrap(false);
+    windowPaintText->setTextPixelSize(15);
+
+    _windowNormalButton = new ElaRadioButton("Normal", this);
+    _windowNormalButton->setChecked(true);
+    _windowPixmapButton = new ElaRadioButton("Pixmap", this);
+    _windowMovieButton = new ElaRadioButton("Movie", this);
+
+    QButtonGroup* windowPaintButtonGroup = new QButtonGroup(this);
+    windowPaintButtonGroup->addButton(_windowNormalButton, 0);
+    windowPaintButtonGroup->addButton(_windowPixmapButton, 1);
+    windowPaintButtonGroup->addButton(_windowMovieButton, 2);
+    connect(windowPaintButtonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled), this, [=](QAbstractButton* button, bool isToggled) {
+        if (isToggled)
+        {
+            window->setWindowPaintMode((ElaWindowType::PaintMode)windowPaintButtonGroup->id(button));
+        }
+    });
+    connect(window, &ElaWindow::pWindowPaintModeChanged, this, [=]() {
+        auto button = windowPaintButtonGroup->button(window->getWindowPaintMode());
+        ElaRadioButton* elaRadioButton = dynamic_cast<ElaRadioButton*>(button);
+        if (elaRadioButton)
+        {
+            elaRadioButton->setChecked(true);
+        }
+    });
+    ElaScrollPageArea* windowPaintModeArea = new ElaScrollPageArea(this);
+    QHBoxLayout* windowPaintModeLayout = new QHBoxLayout(windowPaintModeArea);
+    windowPaintModeLayout->addWidget(windowPaintText);
+    windowPaintModeLayout->addStretch();
+    windowPaintModeLayout->addWidget(_windowNormalButton);
+    windowPaintModeLayout->addWidget(_windowPixmapButton);
+    windowPaintModeLayout->addWidget(_windowMovieButton);
 
     ElaText* helperText = new ElaText("应用程序设置", this);
     helperText->setWordWrap(false);
     helperText->setTextPixelSize(18);
 
+    ElaText* micaSwitchText = new ElaText("窗口效果", this);
+    micaSwitchText->setWordWrap(false);
+    micaSwitchText->setTextPixelSize(15);
     _normalButton = new ElaRadioButton("Normal", this);
     _elaMicaButton = new ElaRadioButton("ElaMica", this);
 #ifdef Q_OS_WIN
@@ -97,9 +134,6 @@ T_Setting::T_Setting(QWidget* parent)
     });
     ElaScrollPageArea* micaSwitchArea = new ElaScrollPageArea(this);
     QHBoxLayout* micaSwitchLayout = new QHBoxLayout(micaSwitchArea);
-    ElaText* micaSwitchText = new ElaText("窗口效果", this);
-    micaSwitchText->setWordWrap(false);
-    micaSwitchText->setTextPixelSize(15);
     micaSwitchLayout->addWidget(micaSwitchText);
     micaSwitchLayout->addStretch();
     micaSwitchLayout->addWidget(_normalButton);
@@ -212,6 +246,7 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addWidget(helperText);
     centerLayout->addSpacing(10);
     centerLayout->addWidget(logSwitchArea);
+    centerLayout->addWidget(windowPaintModeArea);
     centerLayout->addWidget(micaSwitchArea);
     centerLayout->addWidget(displayModeArea);
     centerLayout->addWidget(stackSwitchModeArea);

@@ -13,7 +13,6 @@ ElaFlowLayout::ElaFlowLayout(QWidget* parent, int margin, int hSpacing, int vSpa
     d->_hSpacing = hSpacing;
     d->_vSpacing = vSpacing;
     setContentsMargins(margin, margin, margin, margin);
-    d->_lastHeightMap.insert(this, 0);
 }
 
 ElaFlowLayout::ElaFlowLayout(int margin, int hSpacing, int vSpacing)
@@ -24,7 +23,6 @@ ElaFlowLayout::ElaFlowLayout(int margin, int hSpacing, int vSpacing)
     d->_hSpacing = hSpacing;
     d->_vSpacing = vSpacing;
     setContentsMargins(margin, margin, margin, margin);
-    d->_lastHeightMap.insert(this, 0);
 }
 
 ElaFlowLayout::~ElaFlowLayout()
@@ -41,6 +39,7 @@ void ElaFlowLayout::addItem(QLayoutItem* item)
     Q_D(ElaFlowLayout);
     d->_itemList.append(item);
 }
+
 int ElaFlowLayout::horizontalSpacing() const
 {
     Q_D(const ElaFlowLayout);
@@ -68,12 +67,14 @@ int ElaFlowLayout::verticalSpacing() const
 }
 int ElaFlowLayout::count() const
 {
-    return d_ptr->_itemList.size();
+    Q_D(const ElaFlowLayout);
+    return d->_itemList.size();
 }
 
 QLayoutItem* ElaFlowLayout::itemAt(int index) const
 {
-    return d_ptr->_itemList.value(index);
+    Q_D(const ElaFlowLayout);
+    return d->_itemList.value(index);
 }
 
 QLayoutItem* ElaFlowLayout::takeAt(int index)
@@ -104,9 +105,8 @@ bool ElaFlowLayout::hasHeightForWidth() const
 
 int ElaFlowLayout::heightForWidth(int width) const
 {
-    int height = d_ptr->_doLayout(QRect(0, 0, width, 0), true);
-    d_ptr->_lastHeightMap[const_cast<ElaFlowLayout*>(this)] = height;
-    return height;
+    Q_D(const ElaFlowLayout);
+    return d->_doLayout(QRect(0, 0, width, 0), true);
 }
 
 void ElaFlowLayout::setGeometry(const QRect& rect)
@@ -123,12 +123,12 @@ QSize ElaFlowLayout::sizeHint() const
 
 QSize ElaFlowLayout::minimumSize() const
 {
+    Q_D(const ElaFlowLayout);
     QSize size;
-    for (const QLayoutItem* item : std::as_const(d_ptr->_itemList))
+    for (const QLayoutItem* item: d->_itemList)
     {
         size = size.expandedTo(item->minimumSize());
     }
-
     const QMargins margins = contentsMargins();
     size += QSize(margins.left() + margins.right(), margins.top() + margins.bottom());
     return size;

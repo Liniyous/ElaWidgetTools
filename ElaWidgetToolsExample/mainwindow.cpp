@@ -105,6 +105,13 @@ void MainWindow::initWindow()
     centralStack->setAlignment(Qt::AlignCenter);
     addCentralWidget(centralStack);
 
+    // 窗口绘制模式
+    setWindowPixmap(ElaThemeType::Light, QPixmap(":/Resource/Image/WindowBase/Miku.png"));
+    setWindowPixmap(ElaThemeType::Dark, QPixmap(":/Resource/Image/WindowBase/WorldTree.jpg"));
+    setWindowMoviePath(ElaThemeType::Light, ":/Resource/Image/WindowBase/Miku.gif");
+    setWindowMoviePath(ElaThemeType::Dark, ":/Resource/Image/WindowBase/WorldTree.gif");
+    //setWindowPaintMode(ElaWindowType::PaintMode::Pixmap);
+
     // 自定义AppBar菜单
     ElaMenu* appBarMenu = new ElaMenu(this);
     appBarMenu->setMenuItemHeight(27);

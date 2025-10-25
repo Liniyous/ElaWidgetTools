@@ -14,10 +14,9 @@ class ElaImageCardPrivate : public QObject
     Q_PROPERTY_CREATE_D(QImage, CardImage);
     Q_PROPERTY_CREATE_D(int, BorderRadius)
     Q_PROPERTY_CREATE_D(bool, IsPreserveAspectCrop)
-    Q_PROPERTY_CREATE_D(qreal, MaximumAspectRatio)
 public:
     explicit ElaImageCardPrivate(QObject* parent = nullptr);
-    ~ElaImageCardPrivate();
+    ~ElaImageCardPrivate() override;
 
 private:
     ElaThemeType::ThemeMode _themeMode;

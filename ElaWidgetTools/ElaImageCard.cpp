@@ -10,14 +10,12 @@
 Q_PROPERTY_CREATE_Q_CPP(ElaImageCard, QImage, CardImage);
 Q_PROPERTY_CREATE_Q_CPP(ElaImageCard, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaImageCard, bool, IsPreserveAspectCrop)
-Q_PROPERTY_CREATE_Q_CPP(ElaImageCard, qreal, MaximumAspectRatio)
 ElaImageCard::ElaImageCard(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaImageCardPrivate())
 {
     Q_D(ElaImageCard);
     d->q_ptr = this;
     d->_pBorderRadius = 6;
-    d->_pMaximumAspectRatio = 2.2;
     d->_pIsPreserveAspectCrop = true;
     setMinimumSize(350, 260);
     d->_themeMode = eTheme->getThemeMode();
@@ -43,18 +41,20 @@ void ElaImageCard::paintEvent(QPaintEvent* event)
     // 图片绘制
     if (d->_pIsPreserveAspectCrop)
     {
-        qreal itemAspectRatio = (qreal)rect().width() / rect().height();
-        if (itemAspectRatio < d->_pMaximumAspectRatio)
+        qreal windowAspectRatio = (qreal)rect().width() / rect().height();
+        qreal pixAspectRatio = (qreal)d->_pCardImage.width() / d->_pCardImage.height();
+        int targetPixWidth, targetPixHeight;
+        if (windowAspectRatio < pixAspectRatio)
         {
-            itemAspectRatio = d->_pMaximumAspectRatio;
-            qreal cropHeight = d->_pCardImage.width() / itemAspectRatio;
-            painter.drawImage(QRect(0, 0, this->height() * d->_pMaximumAspectRatio, rect().height()), d->_pCardImage, QRectF(0, 0, d->_pCardImage.width(), cropHeight));
+            targetPixWidth = qRound(d->_pCardImage.width() * windowAspectRatio / pixAspectRatio);
+            targetPixHeight = d->_pCardImage.height();
         }
         else
         {
-            qreal cropHeight = d->_pCardImage.width() / itemAspectRatio;
-            painter.drawImage(rect(), d->_pCardImage, QRectF(0, 0, d->_pCardImage.width(), cropHeight));
+            targetPixWidth = d->_pCardImage.width();
+            targetPixHeight = qRound(d->_pCardImage.height() * pixAspectRatio / windowAspectRatio);
         }
+        painter.drawImage(rect(), d->_pCardImage, QRect((d->_pCardImage.width() - targetPixWidth) / 2, (d->_pCardImage.height() - targetPixHeight) / 2, targetPixWidth, targetPixHeight));
     }
     else
     {

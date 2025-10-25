@@ -12,7 +12,7 @@ class ELA_EXPORT ElaDockWidget : public QDockWidget
 public:
     explicit ElaDockWidget(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     explicit ElaDockWidget(const QString& title, QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
-    ~ElaDockWidget();
+    ~ElaDockWidget() override;
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

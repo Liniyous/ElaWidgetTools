@@ -19,14 +19,9 @@ ElaGraphicsView::ElaGraphicsView(QWidget* parent)
 }
 
 ElaGraphicsView::ElaGraphicsView(QGraphicsScene* scene, QWidget* parent)
-    : QGraphicsView(scene, parent), d_ptr(new ElaGraphicsViewPrivate())
+    : ElaGraphicsView(parent)
 {
-    Q_D(ElaGraphicsView);
-    d->q_ptr = this;
-    d->_pMaxTransform = 5;
-    d->_pMinTransform = 0.15;
-    d->_initStyle();
-    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+    setScene(scene);
 }
 
 ElaGraphicsView::~ElaGraphicsView()
@@ -47,6 +42,7 @@ void ElaGraphicsView::wheelEvent(QWheelEvent* event)
         {
             this->scale(1.0 / 1.1, 1.0 / 1.1);
         }
+        event->accept();
         return;
     }
     QGraphicsView::wheelEvent(event);

@@ -63,7 +63,10 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     if (isFloatWidget)
     {
         floatWidget = dynamic_cast<ElaCustomTabWidget*>(q->window());
-        floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
+        if (floatWidget->windowHandle())
+        {
+            floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
+        }
     }
     else
     {
@@ -112,7 +115,10 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     drag->setHotSpot(QPoint(tabSize.width() / 2, 0));
     QTimer::singleShot(1, this, [=]() {
         floatWidget->show();
-        floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
+        if (floatWidget->windowHandle())
+        {
+            floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
+        }
         if (!isFloatWidget)
         {
             floatWidget->resize(700, 500);
@@ -125,7 +131,10 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     {
         if (ret == Qt::IgnoreAction)
         {
-            tempFloatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+            if (tempFloatWidget->windowHandle())
+            {
+                tempFloatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+            }
         }
         else
         {
@@ -135,7 +144,10 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     }
     else
     {
-        floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+        if (floatWidget->windowHandle())
+        {
+            floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+        }
     }
 }
 
@@ -176,7 +188,10 @@ void ElaTabWidgetPrivate::onTabDragLeave(QMimeData* mimeData)
     floatWidget->addTab(dragWidget, tabIcon, tabText);
     floatWidget->show();
     floatWidget->resize(700, 500);
-    floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
+    if (floatWidget->windowHandle())
+    {
+        floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
+    }
     QPoint cursorPoint = QCursor::pos();
     floatWidget->move(cursorPoint.x() - tabSize.width() / 2, cursorPoint.y() - tabSize.height() / 2);
     QTimer* dragTimer = new QTimer(this);

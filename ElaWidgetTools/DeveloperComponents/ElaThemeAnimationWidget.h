@@ -13,13 +13,17 @@ class ElaThemeAnimationWidget : public QWidget
     Q_PROPERTY_CREATE(QImage, OldWindowBackground)
 public:
     explicit ElaThemeAnimationWidget(QWidget* parent = nullptr);
-    ~ElaThemeAnimationWidget();
+    ~ElaThemeAnimationWidget() override;
     void startAnimation(int msec);
 Q_SIGNALS:
     Q_SIGNAL void animationFinished();
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
+
+private:
+    bool _isDrawOldWindowBackground{false};
+    QImage _baseAnimationImage;
 };
 
 #endif // ELATHEMEANIMATIONWIDGET_H
