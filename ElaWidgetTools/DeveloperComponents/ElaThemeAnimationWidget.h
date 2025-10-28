@@ -20,10 +20,6 @@ Q_SIGNALS:
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
-
-private:
-    bool _isDrawOldWindowBackground{false};
-    QImage _baseAnimationImage;
 };
 
 #endif // ELATHEMEANIMATIONWIDGET_H

@@ -74,7 +74,7 @@ install(TARGETS ${PROJECT_NAME}
 if (MSVC AND NOT LIB_TYPE STREQUAL "STATIC")
     install(
         FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/ElaWidgetToolsExample
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/ElaWidgetToolsExample OPTIONAL
     )
 endif ()
 

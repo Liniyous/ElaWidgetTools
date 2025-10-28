@@ -15,6 +15,7 @@ ElaTabBar::ElaTabBar(QWidget* parent)
     Q_D(ElaTabBar);
     d->q_ptr = this;
     setObjectName("ElaTabBar");
+    setMouseTracking(true);
     setStyleSheet("#ElaTabBar{background-color:transparent;}");
     setTabsClosable(true);
     setMovable(true);
@@ -46,34 +47,18 @@ QSize ElaTabBar::sizeHint() const
 {
     QSize oldSize = QTabBar::sizeHint();
     QSize newSize = oldSize;
-    newSize.setWidth(parentWidget()->width());
+    newSize.setWidth(parentWidget()->maximumWidth());
     return oldSize.expandedTo(newSize);
 }
 
 void ElaTabBar::mouseMoveEvent(QMouseEvent* event)
 {
+    QTabBar::mouseMoveEvent(event);
     Q_D(ElaTabBar);
-    QPoint currentPos = event->pos();
-    if (objectName() == "ElaCustomTabBar" && count() == 1)
+    if (d->_tabBarPrivate->pressedIndex >= 0)
     {
-        if (!d->_mimeData)
-        {
-            d->_mimeData = new QMimeData();
-            d->_mimeData->setProperty("DragType", "ElaTabBarDrag");
-            d->_mimeData->setProperty("ElaTabBarObject", QVariant::fromValue(this));
-            d->_mimeData->setProperty("TabSize", d->_style->getTabSize());
-            d->_mimeData->setProperty("IsFloatWidget", true);
-            QRect currentTabRect = tabRect(currentIndex());
-            d->_mimeData->setProperty("DragPos", QPoint(currentPos.x() - currentTabRect.x(), currentPos.y() - currentTabRect.y()));
-            Q_EMIT tabDragCreate(d->_mimeData);
-            d->_mimeData = nullptr;
-        }
-    }
-    else
-    {
-        QRect moveRect = rect();
-        moveRect.adjust(0, -height(), 0, height());
-        if (currentPos.x() < 0 || currentPos.x() > width() || currentPos.y() > moveRect.bottom() || currentPos.y() < moveRect.y())
+        QPoint currentPos = event->pos();
+        if (objectName() == "ElaCustomTabBar" && count() == 1)
         {
             if (!d->_mimeData)
             {
@@ -81,12 +66,55 @@ void ElaTabBar::mouseMoveEvent(QMouseEvent* event)
                 d->_mimeData->setProperty("DragType", "ElaTabBarDrag");
                 d->_mimeData->setProperty("ElaTabBarObject", QVariant::fromValue(this));
                 d->_mimeData->setProperty("TabSize", d->_style->getTabSize());
+                d->_mimeData->setProperty("IsFloatWidget", true);
+                QRect currentTabRect = tabRect(currentIndex());
+                d->_mimeData->setProperty("DragPos", QPoint(currentPos.x() - currentTabRect.x(), currentPos.y() - currentTabRect.y()));
                 Q_EMIT tabDragCreate(d->_mimeData);
                 d->_mimeData = nullptr;
             }
         }
+        else
+        {
+            auto& pressTabData = d->_tabBarPrivate->tabList[d->_tabBarPrivate->pressedIndex];
+            QRect firstTabRect = tabRect(0);
+#if (QT_VERSION > QT_VERSION_CHECK(6, 0, 0))
+            QRect pressTabRect = pressTabData->rect;
+            if (pressTabRect.right() + pressTabData->dragOffset > width() - firstTabRect.x())
+            {
+                pressTabData->dragOffset = width() - pressTabRect.right() - firstTabRect.x();
+            }
+            if (pressTabRect.x() + pressTabData->dragOffset < -firstTabRect.x())
+            {
+                pressTabData->dragOffset = -pressTabRect.x() - firstTabRect.x();
+            }
+#else
+            QRect pressTabRect = pressTabData.rect;
+            if (pressTabRect.right() + pressTabData.dragOffset > width() - firstTabRect.x())
+            {
+                pressTabData.dragOffset = width() - pressTabRect.right() - firstTabRect.x();
+            }
+            if (pressTabRect.x() + pressTabData.dragOffset < -firstTabRect.x())
+            {
+                pressTabData.dragOffset = -pressTabRect.x() - firstTabRect.x();
+            }
+#endif
+
+            QRect moveRect = rect();
+            moveRect.adjust(0, -height(), 0, height());
+            if (currentPos.x() < 0 || currentPos.x() > width() || currentPos.y() > moveRect.bottom() || currentPos.y() < moveRect.y())
+            {
+                if (!d->_mimeData)
+                {
+                    d->_mimeData = new QMimeData();
+                    d->_mimeData->setProperty("DragType", "ElaTabBarDrag");
+                    d->_mimeData->setProperty("ElaTabBarObject", QVariant::fromValue(this));
+                    d->_mimeData->setProperty("TabSize", d->_style->getTabSize());
+                    Q_EMIT tabDragCreate(d->_mimeData);
+                    d->_mimeData = nullptr;
+                }
+            }
+        }
     }
-    QTabBar::mouseMoveEvent(event);
 }
 
 void ElaTabBar::dragEnterEvent(QDragEnterEvent* event)
@@ -103,12 +131,11 @@ void ElaTabBar::dragEnterEvent(QDragEnterEvent* event)
         mimeData->setProperty("TabDropIndex", tabAt(event->pos()));
 #endif
         Q_EMIT tabDragEnter(mimeData);
-        QTimer::singleShot(10, this, [=]() {
-            QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + 110, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-            QApplication::sendEvent(this, &pressEvent);
-            QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-            QApplication::sendEvent(this, &moveEvent);
-        });
+        qApp->processEvents();
+        QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + d->_style->getTabSize().width() / 2, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(this, &pressEvent);
+        QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+        QApplication::sendEvent(this, &moveEvent);
     }
     QTabBar::dragEnterEvent(event);
 }
@@ -153,7 +180,6 @@ void ElaTabBar::dropEvent(QDropEvent* event)
 #endif
         Q_EMIT tabDragDrop(data);
     }
-    event->accept();
     QTabBar::dropEvent(event);
 }
 

@@ -25,8 +25,6 @@ void ElaThemeAnimationWidget::startAnimation(int msec)
     connect(themeChangeAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         update();
     });
-    _baseAnimationImage = QImage(_pOldWindowBackground.size(), QImage::Format_ARGB32);
-    _baseAnimationImage.fill(Qt::transparent);
     themeChangeAnimation->setStartValue(0);
     themeChangeAnimation->setEndValue(_pEndRadius);
     themeChangeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -40,22 +38,20 @@ void ElaThemeAnimationWidget::paintEvent(QPaintEvent* event)
     painter.setPen(Qt::NoPen);
 
     // 合成图片
-    QPainter animationImagePainter(&_baseAnimationImage);
+    QImage animationImage(_pOldWindowBackground.size(), QImage::Format_ARGB32);
+    animationImage.fill(Qt::transparent);
+    QPainter animationImagePainter(&animationImage);
     animationImagePainter.setRenderHints(QPainter::Antialiasing);
-    if (!_isDrawOldWindowBackground)
-    {
-        _isDrawOldWindowBackground = true;
-        animationImagePainter.drawImage(_pOldWindowBackground.rect(), _pOldWindowBackground);
-    }
+    animationImagePainter.drawImage(_pOldWindowBackground.rect(), _pOldWindowBackground);
     animationImagePainter.setCompositionMode(QPainter::CompositionMode::CompositionMode_SourceOut);
     qreal devicePixelRatioF = _pOldWindowBackground.devicePixelRatioF();
     QPainterPath clipPath;
     clipPath.moveTo(_pCenter.x() * devicePixelRatioF, _pCenter.y() * devicePixelRatioF);
     clipPath.addEllipse(QPointF(_pCenter.x() * devicePixelRatioF, _pCenter.y() * devicePixelRatioF), _pRadius * devicePixelRatioF, _pRadius * devicePixelRatioF);
     animationImagePainter.setClipPath(clipPath);
-    animationImagePainter.drawImage(_baseAnimationImage.rect(), _baseAnimationImage);
+    animationImagePainter.drawImage(animationImage.rect(), animationImage);
     animationImagePainter.end();
 
-    painter.drawImage(rect(), _baseAnimationImage);
+    painter.drawImage(rect(), animationImage);
     painter.restore();
 }

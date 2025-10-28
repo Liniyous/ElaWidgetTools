@@ -5,7 +5,9 @@
 #include "ElaTabWidget.h"
 #include "ElaTabWidgetPrivate.h"
 #include <QDebug>
+#include <QEvent>
 #include <QMimeData>
+#include <QMouseEvent>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QVariant>
@@ -53,7 +55,7 @@ ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
     customLayout->setContentsMargins(10, 0, 10, 0);
     customLayout->addStretch();
     customLayout->addWidget(_customTabBar);
-    _appBar->setCustomWidget(ElaAppBarType::LeftArea, customWidget);
+    _appBar->setCustomWidget(ElaAppBarType::LeftArea, customWidget, this, "processHitTest");
     setCentralWidget(_customTabWidget);
 }
 
@@ -90,4 +92,10 @@ ElaTabBar* ElaCustomTabWidget::getCustomTabBar() const
 ElaTabWidget* ElaCustomTabWidget::getCustomTabWidget() const
 {
     return _customTabWidget;
+}
+
+bool ElaCustomTabWidget::processHitTest()
+{
+    auto point = _customTabBar->mapFromGlobal(QCursor::pos());
+    return _customTabBar->tabAt(point) < 0;
 }

@@ -45,8 +45,6 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_pIsDefaultClosed = true;
     d->_pIsOnlyAllowMinAndClose = false;
     d->_pCustomMenu = nullptr;
-    d->_pCustomWidget = nullptr;
-    d->_pCustomWidgetMaximumWidth = 550;
     window()->installEventFilter(this);
 #ifdef Q_OS_WIN
     if (!eWinHelper->getIsWinVersionGreater10())
@@ -159,18 +157,49 @@ ElaAppBar::ElaAppBar(QWidget* parent)
     d->_mainLayout = new QHBoxLayout(this);
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
     d->_mainLayout->setSpacing(0);
-    d->_mainLayout->addLayout(d->_createVLayout(d->_routeBackButton));
-    d->_mainLayout->addLayout(d->_createVLayout(d->_routeForwardButton));
-    d->_mainLayout->addLayout(d->_createVLayout(d->_navigationButton));
-    d->_mainLayout->addLayout(d->_iconLabelLayout);
-    d->_mainLayout->addLayout(d->_titleLabelLayout);
-    d->_mainLayout->addStretch();
-    d->_mainLayout->addStretch();
-    d->_mainLayout->addLayout(d->_createVLayout(d->_stayTopButton));
-    d->_mainLayout->addLayout(d->_createVLayout(d->_themeChangeButton));
-    d->_mainLayout->addLayout(d->_createVLayout(d->_minButton));
-    d->_mainLayout->addLayout(d->_createVLayout(d->_maxButton));
-    d->_mainLayout->addLayout(d->_createVLayout(d->_closeButton));
+    QHBoxLayout* leftLayout = new QHBoxLayout();
+    leftLayout->setSpacing(0);
+    leftLayout->setContentsMargins(0, 0, 0, 0);
+    leftLayout->setAlignment(Qt::AlignLeft);
+    leftLayout->addLayout(d->_createVLayout(d->_routeBackButton));
+    leftLayout->addLayout(d->_createVLayout(d->_routeForwardButton));
+    leftLayout->addLayout(d->_createVLayout(d->_navigationButton));
+    leftLayout->addLayout(d->_iconLabelLayout);
+    leftLayout->addLayout(d->_titleLabelLayout);
+    d->_mainLayout->addLayout(leftLayout);
+
+    auto leftAreaWidget = new QWidget(this);
+    leftAreaWidget->setVisible(false);
+    auto middleAreaWidget = new QWidget(this);
+    middleAreaWidget->setVisible(false);
+    auto rightAreaWidget = new QWidget(this);
+    rightAreaWidget->setVisible(false);
+    d->_customAreaWidgetList[0] = leftAreaWidget;
+    d->_customAreaWidgetList[1] = middleAreaWidget;
+    d->_customAreaWidgetList[2] = rightAreaWidget;
+    d->_mainLayout->addWidget(leftAreaWidget);
+    d->_mainLayout->addWidget(middleAreaWidget);
+    d->_mainLayout->addWidget(rightAreaWidget);
+
+    QHBoxLayout* rightLayout = new QHBoxLayout();
+    rightLayout->setSpacing(0);
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+    rightLayout->setAlignment(Qt::AlignRight);
+    rightLayout->addLayout(d->_createVLayout(d->_stayTopButton));
+    rightLayout->addLayout(d->_createVLayout(d->_themeChangeButton));
+    rightLayout->addLayout(d->_createVLayout(d->_minButton));
+    rightLayout->addLayout(d->_createVLayout(d->_maxButton));
+    rightLayout->addLayout(d->_createVLayout(d->_closeButton));
+    d->_mainLayout->addLayout(rightLayout);
+
+    d->_clientWidgetList.append(d->_routeBackButton);
+    d->_clientWidgetList.append(d->_routeForwardButton);
+    d->_clientWidgetList.append(d->_navigationButton);
+    d->_clientWidgetList.append(d->_stayTopButton);
+    d->_clientWidgetList.append(d->_themeChangeButton);
+    d->_clientWidgetList.append(d->_minButton);
+    d->_clientWidgetList.append(d->_maxButton);
+    d->_clientWidgetList.append(d->_closeButton);
 
 #ifdef Q_OS_WIN
     for (int i = 0; i < qApp->screens().count(); i++)
@@ -218,7 +247,7 @@ int ElaAppBar::getAppBarHeight() const
     return d->_pAppBarHeight;
 }
 
-void ElaAppBar::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget)
+void ElaAppBar::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget, QObject* hitTestObject, const QString& hitTestFunctionName)
 {
     Q_D(ElaAppBar);
     if (!widget || widget == this)
@@ -227,38 +256,21 @@ void ElaAppBar::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* w
     }
     widget->setMinimumHeight(0);
     widget->setMaximumHeight(height());
-    widget->setMaximumWidth(d->_pCustomWidgetMaximumWidth);
     widget->setParent(this);
-    if (d->_pCustomWidget)
-    {
-        d->_mainLayout->removeWidget(d->_pCustomWidget);
-    }
-    switch (customArea)
-    {
-    case ElaAppBarType::LeftArea:
-    {
-        d->_mainLayout->insertWidget(5, widget);
-        break;
-    }
-    case ElaAppBarType::MiddleArea:
-    {
-        d->_mainLayout->insertWidget(6, widget);
-        break;
-    }
-    case ElaAppBarType::RightArea:
-    {
-        d->_mainLayout->insertWidget(7, widget);
-        break;
-    }
-    }
-    d->_pCustomWidget = widget;
+    int customAreaIndex = (int)customArea - 1;
+    d->_mainLayout->removeWidget(d->_customAreaWidgetList[customAreaIndex]);
+    d->_mainLayout->insertWidget(customAreaIndex + 1, widget);
+    d->_customAreaWidgetList[customAreaIndex] = widget;
+    d->_customAreaHitTestObjectList[customAreaIndex] = hitTestObject;
+    d->_customAreaHitTestFunctionNameList[customAreaIndex] = hitTestFunctionName;
     Q_EMIT customWidgetChanged();
 }
 
-QWidget* ElaAppBar::getCustomWidget() const
+QWidget* ElaAppBar::getCustomWidget(ElaAppBarType::CustomArea customArea) const
 {
     Q_D(const ElaAppBar);
-    return d->_pCustomWidget;
+    int customAreaIndex = (int)customArea - 1;
+    return d->_customAreaWidgetList[customAreaIndex];
 }
 
 void ElaAppBar::setCustomMenu(QMenu* customMenu)
@@ -272,23 +284,6 @@ QMenu* ElaAppBar::getCustomMenu() const
 {
     Q_D(const ElaAppBar);
     return d->_pCustomMenu;
-}
-
-void ElaAppBar::setCustomWidgetMaximumWidth(int width)
-{
-    Q_D(ElaAppBar);
-    d->_pCustomWidgetMaximumWidth = width;
-    if (d->_pCustomWidget)
-    {
-        d->_pCustomWidget->setMaximumWidth(width);
-    }
-    Q_EMIT pCustomWidgetMaximumWidthChanged();
-}
-
-int ElaAppBar::getCustomWidgetMaximumWidth() const
-{
-    Q_D(const ElaAppBar);
-    return d->_pCustomWidgetMaximumWidth;
 }
 
 void ElaAppBar::setIsFixedSize(bool isFixedSize)

@@ -20,8 +20,6 @@ class ElaAppBarPrivate : public QObject
     Q_PROPERTY_CREATE_D(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_D(bool, IsOnlyAllowMinAndClose)
     Q_PROPERTY_CREATE_D(int, AppBarHeight)
-    Q_PRIVATE_CREATE_D(QWidget*, CustomWidget)
-    Q_PROPERTY_CREATE_D(int, CustomWidgetMaximumWidth)
     Q_PRIVATE_CREATE_D(QMenu*, CustomMenu)
 public:
     explicit ElaAppBarPrivate(QObject* parent = nullptr);
@@ -45,6 +43,10 @@ private:
     ElaToolButton* _minButton{nullptr};
     ElaToolButton* _maxButton{nullptr};
     ElaIconButton* _closeButton{nullptr};
+    QList<QWidget*> _customAreaWidgetList{nullptr, nullptr, nullptr};
+    QList<QObject*> _customAreaHitTestObjectList{nullptr, nullptr, nullptr};
+    QStringList _customAreaHitTestFunctionNameList{"", "", ""};
+    QList<QWidget*> _clientWidgetList;
     QScreen* _lastScreen{nullptr};
     ElaText* _titleLabel{nullptr};
     QLabel* _iconLabel{nullptr};

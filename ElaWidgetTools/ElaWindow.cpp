@@ -173,17 +173,17 @@ int ElaWindow::getAppBarHeight() const
     return d->_appBar->getAppBarHeight();
 }
 
-void ElaWindow::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget)
+void ElaWindow::setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* widget, QObject* hitTestObject, const QString& hitTestFunctionName)
 {
     Q_D(ElaWindow);
-    d->_appBar->setCustomWidget(customArea, widget);
+    d->_appBar->setCustomWidget(customArea, widget, hitTestObject, hitTestFunctionName);
     Q_EMIT customWidgetChanged();
 }
 
-QWidget* ElaWindow::getCustomWidget() const
+QWidget* ElaWindow::getCustomWidget(ElaAppBarType::CustomArea customArea) const
 {
     Q_D(const ElaWindow);
-    return d->_appBar->getCustomWidget();
+    return d->_appBar->getCustomWidget(customArea);
 }
 
 void ElaWindow::setCentralCustomWidget(QWidget* customWidget)
@@ -210,19 +210,6 @@ QMenu* ElaWindow::getCustomMenu() const
 {
     Q_D(const ElaWindow);
     return d->_appBar->getCustomMenu();
-}
-
-void ElaWindow::setCustomWidgetMaximumWidth(int width)
-{
-    Q_D(ElaWindow);
-    d->_appBar->setCustomWidgetMaximumWidth(width);
-    Q_EMIT pCustomWidgetMaximumWidthChanged();
-}
-
-int ElaWindow::getCustomWidgetMaximumWidth() const
-{
-    Q_D(const ElaWindow);
-    return d->_appBar->getCustomWidgetMaximumWidth();
 }
 
 void ElaWindow::setIsCentralStackedWidgetTransparent(bool isTransparent)

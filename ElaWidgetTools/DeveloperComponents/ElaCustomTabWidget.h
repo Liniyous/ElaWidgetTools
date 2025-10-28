@@ -16,7 +16,10 @@ public:
     ElaTabBar* getCustomTabBar() const;
     ElaTabWidget* getCustomTabWidget() const;
 
+    Q_INVOKABLE bool processHitTest();
+
 private:
+    bool _isAllowLeave{false};
     ElaTabBar* _customTabBar{nullptr};
     ElaTabWidget* _customTabWidget{nullptr};
 };

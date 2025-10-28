@@ -15,7 +15,6 @@ class ELA_EXPORT ElaWindow : public QMainWindow
     Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
     Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
     Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(int, CustomWidgetMaximumWidth)
     Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
     Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
     Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
@@ -32,8 +31,8 @@ public:
 
     void moveToCenter();
 
-    void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget);
-    QWidget* getCustomWidget() const;
+    void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget, QObject* hitTestObject = nullptr, const QString& hitTestFunctionName = "");
+    QWidget* getCustomWidget(ElaAppBarType::CustomArea customArea) const;
 
     void setCentralCustomWidget(QWidget* customWidget);
     QWidget* getCentralCustomWidget() const;
