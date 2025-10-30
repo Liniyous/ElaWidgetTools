@@ -11,13 +11,13 @@ class ElaKeyBinderContainer : public QWidget
     Q_PRIVATE_CREATE(quint32, NativeVirtualBinderKey)
 public:
     explicit ElaKeyBinderContainer(QWidget* parent = nullptr);
-    ~ElaKeyBinderContainer();
+    ~ElaKeyBinderContainer() override;
     void logOrResetHistoryData(bool isLog);
     void saveBinderChanged();
 
 protected:
+    bool event(QEvent* event) override;
     virtual void mousePressEvent(QMouseEvent* event) override;
-    virtual void keyPressEvent(QKeyEvent* event) override;
     virtual void focusOutEvent(QFocusEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 

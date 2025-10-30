@@ -56,6 +56,37 @@ void ElaKeyBinderContainer::saveBinderChanged()
     }
 }
 
+bool ElaKeyBinderContainer::event(QEvent* event)
+{
+    switch (event->type())
+    {
+    case QEvent::KeyPress:
+    {
+        QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
+        if (!keyEvent->isAutoRepeat())
+        {
+            if (keyEvent->key() == Qt::Key_Shift)
+            {
+                _pBinderKeyText = "Shift";
+            }
+            else
+            {
+                _pBinderKeyText = QKeySequence(keyEvent->key()).toString();
+            }
+            _pNativeVirtualBinderKey = keyEvent->nativeVirtualKey();
+            update();
+        }
+        event->accept();
+        return true;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    return QWidget::event(event);
+}
+
 void ElaKeyBinderContainer::mousePressEvent(QMouseEvent* event)
 {
     switch (event->button())
@@ -97,17 +128,6 @@ void ElaKeyBinderContainer::mousePressEvent(QMouseEvent* event)
     }
     QWidget::mousePressEvent(event);
     update();
-}
-
-void ElaKeyBinderContainer::keyPressEvent(QKeyEvent* event)
-{
-    if (!event->isAutoRepeat())
-    {
-        _pBinderKeyText = QKeySequence(event->key()).toString();
-        _pNativeVirtualBinderKey = event->nativeVirtualKey();
-        update();
-    }
-    QWidget::keyPressEvent(event);
 }
 
 void ElaKeyBinderContainer::focusOutEvent(QFocusEvent* event)

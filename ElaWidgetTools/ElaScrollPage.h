@@ -15,7 +15,7 @@ class ELA_EXPORT ElaScrollPage : public QWidget
     Q_PROPERTY_CREATE_Q_H(QWidget*, CustomWidget)
 public:
     explicit ElaScrollPage(QWidget* parent = nullptr);
-    ~ElaScrollPage();
+    ~ElaScrollPage() override;
 
     void addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable = true, bool isVerticalGrabGesture = true, qreal mousePressEventDelay = 0.5);
 

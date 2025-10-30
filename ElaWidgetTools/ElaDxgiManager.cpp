@@ -27,7 +27,7 @@ ElaDxgiManager::ElaDxgiManager(QObject* parent)
     {
         for (int i = 1; i < d->_dxgi->getDxDeviceList().count(); i++)
         {
-            bool ret = d->_dxgi->initialize(i, 0);
+            ret = d->_dxgi->initialize(i, 0);
             if (ret)
             {
                 break;
