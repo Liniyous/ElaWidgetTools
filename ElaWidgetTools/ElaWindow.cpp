@@ -41,6 +41,7 @@ ElaWindow::ElaWindow(QWidget* parent)
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
+    d->_appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint);
     connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
         ElaNavigationRouter::getInstance()->navigationRouteBack();
     });
@@ -74,7 +75,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     navigationCentralWidget->setStyleSheet("#ElaWindowNavigationCentralWidget{background-color:transparent;}");
     navigationCentralWidget->installEventFilter(this);
     d->_centerLayout = new QHBoxLayout(navigationCentralWidget);
-    d->_centerLayout->setSpacing(0);
+    d->_centerLayout->setSpacing(5);
     d->_centerLayout->addWidget(d->_navigationBar);
     d->_centerLayout->addWidget(d->_navigationCenterStackedWidget);
     d->_centerLayout->setContentsMargins(d->_contentsMargins, 0, 0, 0);
@@ -83,7 +84,7 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_focusEvent = new ElaEvent("WMWindowClicked", "onWMWindowClickedEvent", d);
     d->_focusEvent->registerAndInit();
 
-    // 展开导航栏
+    // 导航栏操作
     connect(d->_appBar, &ElaAppBar::navigationButtonClicked, d, &ElaWindowPrivate::onNavigationButtonClicked);
 
     // 主题变更动画
@@ -444,25 +445,25 @@ QWidget* ElaWindow::getCentralWidget(int index) const
 bool ElaWindow::getNavigationNodeIsExpanded(QString expanderKey) const
 {
     Q_D(const ElaWindow);
-    return d->_navigationBar->getNavigationNodeIsExpanded(expanderKey);
+    return d->_navigationBar->getNodeIsExpanded(expanderKey);
 }
 
 void ElaWindow::expandNavigationNode(QString expanderKey)
 {
     Q_D(ElaWindow);
-    d->_navigationBar->expandNavigationNode(expanderKey);
+    d->_navigationBar->expandNode(expanderKey);
 }
 
 void ElaWindow::collapseNavigationNode(QString expanderKey)
 {
     Q_D(ElaWindow);
-    d->_navigationBar->collapseNavigationNode(expanderKey);
+    d->_navigationBar->collapseNode(expanderKey);
 }
 
 void ElaWindow::removeNavigationNode(QString nodeKey) const
 {
     Q_D(const ElaWindow);
-    d->_navigationBar->removeNavigationNode(nodeKey);
+    d->_navigationBar->removeNode(nodeKey);
 }
 
 int ElaWindow::getPageOpenInNewWindowCount(QString nodeKey) const
@@ -509,13 +510,13 @@ int ElaWindow::getNodeKeyPoints(QString nodeKey) const
 void ElaWindow::setNavigationNodeTitle(QString nodeKey, QString nodeTitle)
 {
     Q_D(ElaWindow);
-    d->_navigationBar->setNavigationNodeTitle(nodeKey, nodeTitle);
+    d->_navigationBar->setNodeTitle(nodeKey, nodeTitle);
 }
 
 QString ElaWindow::getNavigationNodeTitle(QString nodeKey) const
 {
     Q_D(const ElaWindow);
-    return d->_navigationBar->getNavigationNodeTitle(nodeKey);
+    return d->_navigationBar->getNodeTitle(nodeKey);
 }
 
 void ElaWindow::navigation(QString pageKey)
@@ -534,6 +535,12 @@ QString ElaWindow::getCurrentNavigationPageKey() const
 {
     Q_D(const ElaWindow);
     return d->_navigationCenterStackedWidget->getContainerStackedWidget()->currentWidget()->property("ElaPageKey").toString();
+}
+
+QList<ElaSuggestBox::SuggestData> ElaWindow::getNavigationSuggestDataList() const
+{
+    Q_D(const ElaWindow);
+    return d->_navigationBar->getSuggestDataList();
 }
 
 void ElaWindow::setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable)

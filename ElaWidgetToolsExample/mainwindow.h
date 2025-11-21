@@ -36,6 +36,7 @@ protected:
 
 private:
     ElaContentDialog* _closeDialog{nullptr};
+    ElaSuggestBox* _windowSuggestBox{nullptr};
     T_Home* _homePage{nullptr};
 #ifdef Q_OS_WIN
     T_ElaScreen* _elaScreenPage{nullptr};

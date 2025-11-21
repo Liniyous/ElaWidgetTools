@@ -166,6 +166,19 @@ T_Setting::T_Setting(QWidget* parent)
         }
     });
 
+    _userCardSwitchButton = new ElaToggleSwitch(this);
+    ElaScrollPageArea* userCardSwitchArea = new ElaScrollPageArea(this);
+    QHBoxLayout* userCardSwitchLayout = new QHBoxLayout(userCardSwitchArea);
+    ElaText* userCardSwitchText = new ElaText("隐藏用户卡片", this);
+    userCardSwitchText->setWordWrap(false);
+    userCardSwitchText->setTextPixelSize(15);
+    userCardSwitchLayout->addWidget(userCardSwitchText);
+    userCardSwitchLayout->addStretch();
+    userCardSwitchLayout->addWidget(_userCardSwitchButton);
+    connect(_userCardSwitchButton, &ElaToggleSwitch::toggled, this, [=](bool checked) {
+        window->setUserInfoCardVisible(!checked);
+    });
+
     _minimumButton = new ElaRadioButton("Minimum", this);
     _compactButton = new ElaRadioButton("Compact", this);
     _maximumButton = new ElaRadioButton("Maximum", this);
@@ -246,6 +259,7 @@ T_Setting::T_Setting(QWidget* parent)
     centerLayout->addWidget(helperText);
     centerLayout->addSpacing(10);
     centerLayout->addWidget(logSwitchArea);
+    centerLayout->addWidget(userCardSwitchArea);
     centerLayout->addWidget(windowPaintModeArea);
     centerLayout->addWidget(micaSwitchArea);
     centerLayout->addWidget(displayModeArea);

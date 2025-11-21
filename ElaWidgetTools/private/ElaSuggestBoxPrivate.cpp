@@ -8,7 +8,6 @@
 #include <QLayout>
 #include <QPropertyAnimation>
 #include <QUuid>
-
 ElaSuggestion::ElaSuggestion(QObject* parent)
     : QObject(parent)
 {
@@ -98,7 +97,9 @@ void ElaSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
         return;
     }
     ElaSuggestion* suggest = _searchModel->getSearchSuggestion(index.row());
-    Q_EMIT q->suggestionClicked(suggest->getSuggestText(), suggest->getSuggestData());
+    ElaSuggestBox::SuggestData data(suggest->getElaIcon(), suggest->getSuggestText(), suggest->getSuggestData());
+    data.setSuggestKey(suggest->getSuggestKey());
+    Q_EMIT q->suggestionClicked(data);
     _startCloseAnimation();
 }
 

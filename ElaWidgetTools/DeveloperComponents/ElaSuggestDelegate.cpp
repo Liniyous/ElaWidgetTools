@@ -1,16 +1,18 @@
 #include "ElaSuggestDelegate.h"
 
-#include <QPainter>
-#include <QPainterPath>
-
+#include "ElaSuggestBox.h"
 #include "ElaSuggestBoxPrivate.h"
 #include "ElaSuggestModel.h"
 #include "ElaTheme.h"
+#include <QPainter>
+#include <QPainterPath>
 ElaSuggestDelegate::ElaSuggestDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaSuggestDelegate::~ElaSuggestDelegate()

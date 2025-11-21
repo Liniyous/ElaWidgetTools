@@ -1,10 +1,10 @@
 ﻿#ifndef ELANAVIGATIONBARPRIVATE_H
 #define ELANAVIGATIONBARPRIVATE_H
 
+#include "ElaDef.h"
+#include "ElaSuggestBox.h"
 #include <QMap>
 #include <QObject>
-
-#include "ElaDef.h"
 class QLayout;
 class ElaMenu;
 class QVBoxLayout;
@@ -15,7 +15,6 @@ class ElaNavigationBar;
 class ElaNavigationNode;
 class ElaNavigationModel;
 class ElaNavigationView;
-class ElaSuggestBox;
 class ElaInteractiveCard;
 
 class ElaBaseListView;
@@ -31,11 +30,11 @@ class ElaNavigationBarPrivate : public QObject
     Q_PROPERTY_CREATE_D(bool, IsAllowPageOpenInNewWindow)
     Q_PROPERTY_CREATE_D(int, NavigationBarWidth)
     Q_PROPERTY_CREATE(int, NavigationViewWidth);
+    Q_PROPERTY_CREATE(int, UserButtonSpacing);
 
 public:
     explicit ElaNavigationBarPrivate(QObject* parent = nullptr);
     ~ElaNavigationBarPrivate() override;
-    Q_SLOT void onNavigationButtonClicked();
     Q_SLOT void onNavigationOpenNewWindow(QString nodeKey);
 
     Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
@@ -51,23 +50,19 @@ private:
     friend class ElaNavigationView;
     friend class ElaNavigationStyle;
     ElaThemeType::ThemeMode _themeMode;
-    QMap<QString, QString> _suggestKeyMap;
+    QList<ElaSuggestBox::SuggestData> _suggestDataList;
     QMap<QString, const QMetaObject*> _pageMetaMap;
     QMap<QString, int> _pageNewWindowCountMap;
     QMap<ElaNavigationNode*, ElaMenu*> _compactMenuMap;
-    QVBoxLayout* _navigationButtonLayout{nullptr};
-    QHBoxLayout* _navigationSuggestLayout{nullptr};
+    QVBoxLayout* _userCardLayout{nullptr};
     QVBoxLayout* _userButtonLayout{nullptr};
 
     ElaIconButton* _userButton{nullptr};
-    ElaToolButton* _searchButton{nullptr};
-    ElaToolButton* _navigationButton{nullptr};
     ElaNavigationModel* _navigationModel{nullptr};
     ElaNavigationView* _navigationView{nullptr};
     ElaBaseListView* _footerView{nullptr};
     ElaFooterModel* _footerModel{nullptr};
     ElaFooterDelegate* _footerDelegate{nullptr};
-    ElaSuggestBox* _navigationSuggestBox{nullptr};
     ElaInteractiveCard* _userCard{nullptr};
     bool _isShowUserCard{true};
 
@@ -86,14 +81,11 @@ private:
 
     void _doComponentAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
     void _handleNavigationExpandState(bool isSave);
-    void _handleMaximalToCompactLayout();
-    void _handleCompactToMaximalLayout();
+    void _handleUserButtonLayout(bool isCompact);
     void _resetLayout();
 
     void _doNavigationBarWidthAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
     void _doNavigationViewWidthAnimation(bool isAnimation);
-    void _doNavigationButtonAnimation(bool isCompact, bool isAnimation);
-    void _doSearchButtonAnimation(bool isCompact, bool isAnimation);
     void _doUserButtonAnimation(bool isCompact, bool isAnimation);
 };
 

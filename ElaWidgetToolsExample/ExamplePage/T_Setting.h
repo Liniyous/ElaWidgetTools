@@ -28,6 +28,7 @@ private:
     ElaRadioButton* _dwmBlurnormalButton{nullptr};
 #endif
     ElaToggleSwitch* _logSwitchButton{nullptr};
+    ElaToggleSwitch* _userCardSwitchButton{nullptr};
     ElaRadioButton* _minimumButton{nullptr};
     ElaRadioButton* _compactButton{nullptr};
     ElaRadioButton* _maximumButton{nullptr};

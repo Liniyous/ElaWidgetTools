@@ -176,11 +176,15 @@ void MainWindow::initWindow()
         }
         }
     });
-    ElaSuggestBox* centralStackSuggest = new ElaSuggestBox(this);
-    centralStackSuggest->setFixedHeight(32);
-    centralStackSuggest->setPlaceholderText("搜索关键字");
+    _windowSuggestBox = new ElaSuggestBox(this);
+    _windowSuggestBox->setFixedHeight(32);
+    _windowSuggestBox->setPlaceholderText("搜索关键字");
+    connect(_windowSuggestBox, &ElaSuggestBox::suggestionClicked, this, [=](const ElaSuggestBox::SuggestData& suggestData) {
+        navigation(suggestData.getSuggestData().value("ElaPageKey").toString());
+    });
 
     ElaText* progressBusyRingText = new ElaText("系统运行中", this);
+    progressBusyRingText->setIsWrapAnywhere(false);
     progressBusyRingText->setTextPixelSize(15);
 
     ElaProgressRing* progressBusyRing = new ElaProgressRing(this);
@@ -190,7 +194,7 @@ void MainWindow::initWindow()
 
     centralCustomWidgetLayout->addWidget(leftButton);
     centralCustomWidgetLayout->addWidget(rightButton);
-    centralCustomWidgetLayout->addWidget(centralStackSuggest);
+    centralCustomWidgetLayout->addWidget(_windowSuggestBox);
     centralCustomWidgetLayout->addStretch();
     centralCustomWidgetLayout->addWidget(progressBusyRingText);
     centralCustomWidgetLayout->addWidget(progressBusyRing);
@@ -400,6 +404,8 @@ void MainWindow::initContent()
     connect(_homePage, &T_Home::elaCardNavigation, this, [=]() {
         this->navigation(_cardPage->property("ElaPageKey").toString());
     });
+
+    _windowSuggestBox->addSuggestion(getNavigationSuggestDataList());
     qDebug() << "已注册的事件列表" << ElaEventBus::getInstance()->getRegisteredEventsName();
 }
 

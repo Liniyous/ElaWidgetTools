@@ -22,6 +22,19 @@
 
 Q_PROPERTY_CREATE_Q_CPP(ElaSuggestBox, int, BorderRadius)
 Q_PROPERTY_CREATE_Q_CPP(ElaSuggestBox, Qt::CaseSensitivity, CaseSensitivity)
+ElaSuggestBox::SuggestData::SuggestData()
+{
+}
+
+ElaSuggestBox::SuggestData::SuggestData(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData)
+    : _pElaIcon(icon), _pSuggestText(suggestText), _pSuggestData(suggestData)
+{
+}
+
+ElaSuggestBox::SuggestData::~SuggestData()
+{
+}
+
 ElaSuggestBox::ElaSuggestBox(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaSuggestBoxPrivate())
 {
@@ -135,6 +148,33 @@ QString ElaSuggestBox::addSuggestion(ElaIconType::IconName icon, const QString& 
     return suggest->getSuggestKey();
 }
 
+QString ElaSuggestBox::addSuggestion(const ElaSuggestBox::SuggestData& suggestData)
+{
+    Q_D(ElaSuggestBox);
+    ElaSuggestion* suggest = new ElaSuggestion(this);
+    suggest->setElaIcon(suggestData.getElaIcon());
+    suggest->setSuggestText(suggestData.getSuggestText());
+    suggest->setSuggestData(suggestData.getSuggestData());
+    d->_suggestionVector.append(suggest);
+    return suggest->getSuggestKey();
+}
+
+QStringList ElaSuggestBox::addSuggestion(const QList<ElaSuggestBox::SuggestData>& suggestDataList)
+{
+    Q_D(ElaSuggestBox);
+    QStringList suggestKeyList;
+    for (const auto& suggestData: suggestDataList)
+    {
+        ElaSuggestion* suggest = new ElaSuggestion(this);
+        suggest->setElaIcon(suggestData.getElaIcon());
+        suggest->setSuggestText(suggestData.getSuggestText());
+        suggest->setSuggestData(suggestData.getSuggestData());
+        d->_suggestionVector.append(suggest);
+        suggestKeyList.append(suggest->getSuggestKey());
+    }
+    return suggestKeyList;
+}
+
 void ElaSuggestBox::removeSuggestion(const QString& suggestKey)
 {
     Q_D(ElaSuggestBox);
@@ -158,4 +198,14 @@ void ElaSuggestBox::removeSuggestion(int index)
     ElaSuggestion* suggest = d->_suggestionVector[index];
     d->_suggestionVector.removeOne(suggest);
     suggest->deleteLater();
+}
+
+void ElaSuggestBox::clearSuggestion()
+{
+    Q_D(ElaSuggestBox);
+    foreach (auto suggest, d->_suggestionVector)
+    {
+        d->_suggestionVector.removeOne(suggest);
+        suggest->deleteLater();
+    }
 }

@@ -83,6 +83,12 @@ void ElaToolButton::setElaIcon(ElaIconType::IconName icon)
     setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
 }
 
+void ElaToolButton::setElaIcon(ElaIconType::IconName icon, int rotate)
+{
+    setElaIcon(icon);
+    setProperty("ElaIconRotate", rotate);
+}
+
 bool ElaToolButton::eventFilter(QObject* watched, QEvent* event)
 {
     Q_D(ElaToolButton);

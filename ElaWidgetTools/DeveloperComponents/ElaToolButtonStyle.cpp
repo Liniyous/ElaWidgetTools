@@ -228,12 +228,19 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
                 painter->setPen(ElaThemeColor(_themeMode, BasicTextDisable));
             }
             QFont iconFont = QFont("ElaAwesome");
+            int iconRotate = widget->property("ElaIconRotate").toInt();
             switch (bopt->toolButtonStyle)
             {
             case Qt::ToolButtonIconOnly:
             {
                 iconFont.setPixelSize(0.75 * std::min(iconSize.width(), iconSize.height()));
                 painter->setFont(iconFont);
+                if (iconRotate)
+                {
+                    painter->translate(iconRect.center());
+                    painter->rotate(iconRotate);
+                    painter->translate(-iconRect.center());
+                }
                 painter->drawText(iconRect, Qt::AlignCenter, widget->property("ElaIconType").toString());
                 break;
             }
@@ -243,6 +250,12 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
                 QRect adjustIconRect(iconRect.x() + _contentMargin, iconRect.y(), iconSize.width(), iconRect.height());
                 iconFont.setPixelSize(0.75 * std::min(iconSize.width(), iconSize.height()));
                 painter->setFont(iconFont);
+                if (iconRotate)
+                {
+                    painter->translate(adjustIconRect.center());
+                    painter->rotate(iconRotate);
+                    painter->translate(-adjustIconRect.center());
+                }
                 painter->drawText(adjustIconRect, Qt::AlignCenter, widget->property("ElaIconType").toString());
                 break;
             }
@@ -255,6 +268,12 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
                 QRect adjustIconRect(iconRect.center().x() - iconSize.width() / 2, iconRect.y() + 0.2 * std::min(iconSize.width(), iconSize.height()), iconSize.width(), iconSize.height());
                 iconFont.setPixelSize(0.8 * std::min(iconSize.width(), iconSize.height()));
                 painter->setFont(iconFont);
+                if (iconRotate)
+                {
+                    painter->translate(adjustIconRect.center());
+                    painter->rotate(iconRotate);
+                    painter->translate(-adjustIconRect.center());
+                }
                 painter->drawText(adjustIconRect, Qt::AlignHCenter, widget->property("ElaIconType").toString());
                 break;
             }

@@ -5,7 +5,7 @@
 
 #include "ElaAppBar.h"
 #include "ElaDef.h"
-
+#include "ElaSuggestBox.h"
 class ElaWindowPrivate;
 class ELA_EXPORT ElaWindow : public QMainWindow
 {
@@ -72,6 +72,9 @@ public:
     void navigation(QString pageKey);
     int getCurrentNavigationIndex() const;
     QString getCurrentNavigationPageKey() const;
+
+    QList<ElaSuggestBox::SuggestData> getNavigationSuggestDataList() const;
+
     void setWindowButtonFlag(ElaAppBarType::ButtonType buttonFlag, bool isEnable = true);
     void setWindowButtonFlags(ElaAppBarType::ButtonFlags buttonFlags);
     ElaAppBarType::ButtonFlags getWindowButtonFlags() const;

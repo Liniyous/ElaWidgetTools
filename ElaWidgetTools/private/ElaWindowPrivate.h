@@ -60,7 +60,7 @@ private:
     bool _isNavigationDisplayModeChanged{false};
     bool _isNavigationEnable{true};
     bool _isNavigationBarExpanded{false};
-    bool _isWMClickedAnimationFinished{true};
+    bool _isNavigationBarFloat{false};
     ElaThemeAnimationWidget* _animationWidget{nullptr};
 
     ElaNavigationType::NavigationDisplayMode _currentNavigationBarDisplayMode{ElaNavigationType::Maximal};

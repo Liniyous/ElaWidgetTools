@@ -5,7 +5,7 @@
 
 #include "ElaDef.h"
 #include "ElaProperty.h"
-
+#include "ElaSuggestBox.h"
 class ElaNavigationBarPrivate;
 class ELA_EXPORT ElaNavigationBar : public QWidget
 {
@@ -31,21 +31,24 @@ public:
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None);
     ElaNavigationType::NodeOperateReturnType addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints = 0, ElaIconType::IconName awesome = ElaIconType::None);
 
-    bool getNavigationNodeIsExpanded(QString expanderKey) const;
-    void expandNavigationNode(QString expanderKey);
-    void collapseNavigationNode(QString expanderKey);
-    void removeNavigationNode(QString nodeKey);
+    bool getNodeIsExpanded(QString expanderKey) const;
+    void expandNode(QString expanderKey);
+    void collapseNode(QString expanderKey);
+    void removeNode(QString nodeKey);
 
     void setNodeKeyPoints(QString nodeKey, int keyPoints);
     int getNodeKeyPoints(QString nodeKey) const;
 
-    void setNavigationNodeTitle(QString nodeKey, QString nodeTitle);
-    QString getNavigationNodeTitle(QString nodeKey) const;
+    void setNodeTitle(QString nodeKey, QString nodeTitle);
+    QString getNodeTitle(QString nodeKey) const;
 
     void navigation(QString pageKey, bool isLogClicked = true, bool isRouteBack = false);
     void setDisplayMode(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation = true);
+    ElaNavigationType::NavigationDisplayMode getDisplayMode() const;
 
     int getPageOpenInNewWindowCount(QString nodeKey) const;
+
+    QList<ElaSuggestBox::SuggestData> getSuggestDataList() const;
 
 Q_SIGNALS:
     Q_SIGNAL void pageOpenInNewWindow(QString nodeKey);

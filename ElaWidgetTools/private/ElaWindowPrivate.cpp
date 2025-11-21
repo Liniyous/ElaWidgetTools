@@ -23,7 +23,12 @@ ElaWindowPrivate::~ElaWindowPrivate()
 
 void ElaWindowPrivate::onNavigationButtonClicked()
 {
-    if (_isWMClickedAnimationFinished)
+    if (_isNavigationBarFloat)
+    {
+        return;
+    }
+    auto currentDisplayMode = _navigationBar->getDisplayMode();
+    if (currentDisplayMode == ElaNavigationType::Minimal)
     {
         _isNavigationDisplayModeChanged = false;
         _resetWindowLayout(true);
@@ -40,14 +45,25 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
         navigationMoveAnimation->setEndValue(QPoint(0, 0));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-        _isWMClickedAnimationFinished = false;
+        _isNavigationBarFloat = true;
+    }
+    else
+    {
+        if (currentDisplayMode == ElaNavigationType::Compact)
+        {
+            _navigationBar->setDisplayMode(ElaNavigationType::Maximal);
+        }
+        else
+        {
+            _navigationBar->setDisplayMode(ElaNavigationType::Compact);
+        }
     }
 }
 
 void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
 {
     ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
-    if (actionType == ElaAppBarType::WMLBUTTONDBLCLK || actionType == ElaAppBarType::WMLBUTTONUP || actionType == ElaAppBarType::WMNCLBUTTONDOWN)
+    if (actionType == ElaAppBarType::WMLBUTTONDBLCLK || actionType == ElaAppBarType::WMLBUTTONUP)
     {
         if (ElaApplication::containsCursorToItem(_navigationBar))
         {
@@ -59,7 +75,7 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
             connect(navigationMoveAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
                 if (_isNavigationDisplayModeChanged)
                 {
-                    _isWMClickedAnimationFinished = true;
+                    _isNavigationBarFloat = false;
                     _resetWindowLayout(false);
                     navigationMoveAnimation->deleteLater();
                 }
@@ -70,7 +86,7 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
                     _navigationBar->setDisplayMode(ElaNavigationType::Minimal, false);
                     _resetWindowLayout(false);
                 }
-                _isWMClickedAnimationFinished = true;
+                _isNavigationBarFloat = false;
             });
             navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
             navigationMoveAnimation->setDuration(300);
@@ -156,26 +172,22 @@ void ElaWindowPrivate::onDisplayModeChanged()
     {
     case ElaNavigationType::Auto:
     {
-        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         _doNavigationDisplayModeChange();
         break;
     }
     case ElaNavigationType::Minimal:
     {
         _navigationBar->setDisplayMode(ElaNavigationType::Minimal, true);
-        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint);
         break;
     }
     case ElaNavigationType::Compact:
     {
         _navigationBar->setDisplayMode(ElaNavigationType::Compact, true);
-        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         break;
     }
     case ElaNavigationType::Maximal:
     {
         _navigationBar->setDisplayMode(ElaNavigationType::Maximal, true);
-        _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         break;
     }
     }
@@ -343,20 +355,18 @@ void ElaWindowPrivate::_doNavigationDisplayModeChange()
     if (_pNavigationBarDisplayMode == ElaNavigationType::Auto)
     {
         _isNavigationDisplayModeChanged = true;
-        _isWMClickedAnimationFinished = true;
+        _isNavigationBarFloat = false;
         _resetWindowLayout(false);
         int width = q->centralWidget()->width();
         if (width >= 850 && _currentNavigationBarDisplayMode != ElaNavigationType::Maximal)
         {
             _navigationBar->setDisplayMode(ElaNavigationType::Maximal);
             _currentNavigationBarDisplayMode = ElaNavigationType::Maximal;
-            _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         }
         else if (width >= 550 && width < 850 && _currentNavigationBarDisplayMode != ElaNavigationType::Compact)
         {
             _navigationBar->setDisplayMode(ElaNavigationType::Compact);
             _currentNavigationBarDisplayMode = ElaNavigationType::Compact;
-            _appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint, false);
         }
         else if (width < 550 && _currentNavigationBarDisplayMode != ElaNavigationType::Minimal)
         {

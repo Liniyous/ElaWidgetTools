@@ -15,13 +15,14 @@ class ELA_EXPORT ElaToolButton : public QToolButton
 
 public:
     explicit ElaToolButton(QWidget* parent = nullptr);
-    ~ElaToolButton();
+    ~ElaToolButton() override;
 
     void setIsTransparent(bool isTransparent);
     bool getIsTransparent() const;
 
     void setMenu(ElaMenu* menu);
     void setElaIcon(ElaIconType::IconName icon);
+    void setElaIcon(ElaIconType::IconName icon, int rotate);
 
 protected:
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
