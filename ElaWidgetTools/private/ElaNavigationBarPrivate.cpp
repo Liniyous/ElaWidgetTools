@@ -1,5 +1,4 @@
 ﻿#include "ElaNavigationBarPrivate.h"
-
 #include "ElaApplication.h"
 #include "ElaBaseListView.h"
 #include "ElaCustomTabWidget.h"
@@ -20,6 +19,8 @@
 #include <QEvent>
 #include <QLayout>
 #include <QPropertyAnimation>
+#include <QScrollBar>
+#include <QTimer>
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -413,6 +414,31 @@ void ElaNavigationBarPrivate::_raiseNavigationBar()
 {
     Q_Q(ElaNavigationBar);
     q->raise();
+}
+
+void ElaNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& index)
+{
+    QTimer::singleShot(200, this, [=]() {
+        if (_currentDisplayMode == ElaNavigationType::Compact)
+        {
+            return;
+        }
+        QRect indexRect = _navigationView->visualRect(index);
+        QRect viewportRect = _navigationView->viewport()->rect();
+        if (viewportRect.contains(indexRect))
+        {
+            return;
+        }
+        auto vScrollBar = _navigationView->verticalScrollBar();
+        int startValue = vScrollBar->value();
+        int endValue = startValue + indexRect.top() - ((viewportRect.height() - indexRect.height()) / 2);
+        QPropertyAnimation* scrollAnimation = new QPropertyAnimation(vScrollBar, "value");
+        scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
+        scrollAnimation->setDuration(285);
+        scrollAnimation->setStartValue(startValue);
+        scrollAnimation->setEndValue(endValue);
+        scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    });
 }
 
 void ElaNavigationBarPrivate::_doComponentAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation)

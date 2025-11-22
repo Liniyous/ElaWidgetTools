@@ -24,14 +24,16 @@ ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
     _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "lastSelectMarkTop");
     connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _lastSelectMarkTop = value.toReal();
-        _pElaListView->viewport()->update(); });
+        _pElaListView->viewport()->update();
+    });
     _lastSelectMarkTopAnimation->setDuration(300);
     _lastSelectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
     _selectMarkBottomAnimation = new QPropertyAnimation(this, "selectMarkBottom");
     connect(_selectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _selectMarkBottom = value.toReal();
-        _pElaListView->viewport()->update(); });
+        _pElaListView->viewport()->update();
+    });
     _selectMarkBottomAnimation->setDuration(300);
     _selectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
     connect(_lastSelectMarkTopAnimation, &QPropertyAnimation::finished, this, [=]() {
@@ -39,20 +41,23 @@ ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
         _lastSelectedNode = nullptr;
         _selectMarkBottomAnimation->setStartValue(0);
         _selectMarkBottomAnimation->setEndValue(10);
-        _selectMarkBottomAnimation->start(); });
+        _selectMarkBottomAnimation->start();
+    });
 
     // Mark向下
     _lastSelectMarkBottomAnimation = new QPropertyAnimation(this, "lastSelectMarkBottom");
     connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _lastSelectMarkBottom = value.toReal();
-        _pElaListView->viewport()->update(); });
+        _pElaListView->viewport()->update();
+    });
     _lastSelectMarkBottomAnimation->setDuration(300);
     _lastSelectMarkBottomAnimation->setEasingCurve(QEasingCurve::InOutSine);
 
     _selectMarkTopAnimation = new QPropertyAnimation(this, "selectMarkTop");
     connect(_selectMarkTopAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         _selectMarkTop = value.toReal();
-        _pElaListView->viewport()->update(); });
+        _pElaListView->viewport()->update();
+    });
     _selectMarkTopAnimation->setDuration(300);
     _selectMarkTopAnimation->setEasingCurve(QEasingCurve::InOutSine);
     connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
@@ -60,7 +65,8 @@ ElaFooterDelegate::ElaFooterDelegate(QObject* parent)
         _lastSelectedNode = nullptr;
         _selectMarkTopAnimation->setStartValue(0);
         _selectMarkTopAnimation->setEndValue(10);
-        _selectMarkTopAnimation->start(); });
+        _selectMarkTopAnimation->start();
+    });
 }
 
 ElaFooterDelegate::~ElaFooterDelegate()

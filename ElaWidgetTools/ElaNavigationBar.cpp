@@ -507,6 +507,7 @@ void ElaNavigationBar::navigation(QString pageKey, bool isLogClicked, bool isRou
             if (!node->getIsExpanderNode())
             {
                 d->onTreeViewClicked(node->getModelIndex(), isLogClicked, isRouteBack);
+                d->_smoothScrollNavigationView(node->getModelIndex());
             }
         }
     }

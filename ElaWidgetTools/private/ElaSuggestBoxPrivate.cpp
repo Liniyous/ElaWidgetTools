@@ -67,11 +67,8 @@ void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
             q->raise();
             _searchViewBaseWidget->show();
             _searchViewBaseWidget->raise();
-            QPoint cyclePoint = _searchViewBaseWidget->mapFromGlobal(q->mapToGlobal(QPoint(-5, q->height())));
-            if (cyclePoint != QPoint(0, 0))
-            {
-                _searchViewBaseWidget->move(cyclePoint);
-            }
+            QPoint cyclePoint = q->mapTo(q->window(), QPoint(-5, q->height()));
+            _searchViewBaseWidget->move(cyclePoint);
             _startSizeAnimation(QSize(q->width() + 10, 0), QSize(q->width() + 10, 40 * rowCount + 16));
             _searchView->move(_searchView->x(), -(40 * rowCount + 16));
         }

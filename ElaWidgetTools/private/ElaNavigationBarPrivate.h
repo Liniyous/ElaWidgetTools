@@ -78,6 +78,7 @@ private:
     void _addFooterPage(QWidget* page, QString footKey);
 
     void _raiseNavigationBar();
+    void _smoothScrollNavigationView(const QModelIndex& index);
 
     void _doComponentAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
     void _handleNavigationExpandState(bool isSave);
