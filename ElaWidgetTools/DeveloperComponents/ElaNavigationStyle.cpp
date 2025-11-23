@@ -341,9 +341,9 @@ void ElaNavigationStyle::navigationNodeStateChange(QVariantMap data)
         connect(nodeOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
             _pNavigationView->viewport()->update();
         });
-        nodeOpacityAnimation->setDuration(600);
+        nodeOpacityAnimation->setDuration(480);
         nodeOpacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        nodeOpacityAnimation->setKeyValueAt(0.4, 0);
+        nodeOpacityAnimation->setKeyValueAt(0.5, 0);
         nodeOpacityAnimation->setStartValue(0);
         nodeOpacityAnimation->setEndValue(1);
         nodeOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);

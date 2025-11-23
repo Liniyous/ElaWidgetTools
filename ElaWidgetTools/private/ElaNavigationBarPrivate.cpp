@@ -434,7 +434,7 @@ void ElaNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& ind
         int endValue = startValue + indexRect.top() - ((viewportRect.height() - indexRect.height()) / 2);
         QPropertyAnimation* scrollAnimation = new QPropertyAnimation(vScrollBar, "value");
         scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
-        scrollAnimation->setDuration(225);
+        scrollAnimation->setDuration(255);
         scrollAnimation->setStartValue(startValue);
         scrollAnimation->setEndValue(endValue);
         scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -538,7 +538,7 @@ void ElaNavigationBarPrivate::_doNavigationBarWidthAnimation(ElaNavigationType::
     QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(q, "maximumWidth");
     navigationBarWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
     navigationBarWidthAnimation->setStartValue(q->width());
-    navigationBarWidthAnimation->setDuration(isAnimation ? 225 : 0);
+    navigationBarWidthAnimation->setDuration(isAnimation ? 255 : 0);
     switch (displayMode)
     {
     case ElaNavigationType::Minimal:
@@ -585,7 +585,7 @@ void ElaNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation)
     navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
     navigationViewWidthAnimation->setStartValue(_navigationView->columnWidth(0));
     navigationViewWidthAnimation->setEndValue(40);
-    navigationViewWidthAnimation->setDuration(isAnimation ? 225 : 0);
+    navigationViewWidthAnimation->setDuration(isAnimation ? 255 : 0);
     navigationViewWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
@@ -622,8 +622,8 @@ void ElaNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnim
         {
             _userButton->setVisible(true);
         }
-        userButtonAnimation->setDuration(isAnimation ? 225 : 0);
-        spacingAnimation->setDuration(isAnimation ? 225 : 0);
+        userButtonAnimation->setDuration(isAnimation ? 255 : 0);
+        spacingAnimation->setDuration(isAnimation ? 255 : 0);
     }
     else
     {
