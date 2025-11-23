@@ -434,7 +434,7 @@ void ElaNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& ind
         int endValue = startValue + indexRect.top() - ((viewportRect.height() - indexRect.height()) / 2);
         QPropertyAnimation* scrollAnimation = new QPropertyAnimation(vScrollBar, "value");
         scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
-        scrollAnimation->setDuration(285);
+        scrollAnimation->setDuration(225);
         scrollAnimation->setStartValue(startValue);
         scrollAnimation->setEndValue(endValue);
         scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -538,7 +538,7 @@ void ElaNavigationBarPrivate::_doNavigationBarWidthAnimation(ElaNavigationType::
     QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(q, "maximumWidth");
     navigationBarWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
     navigationBarWidthAnimation->setStartValue(q->width());
-    navigationBarWidthAnimation->setDuration(isAnimation ? 285 : 0);
+    navigationBarWidthAnimation->setDuration(isAnimation ? 225 : 0);
     switch (displayMode)
     {
     case ElaNavigationType::Minimal:
@@ -585,7 +585,7 @@ void ElaNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation)
     navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
     navigationViewWidthAnimation->setStartValue(_navigationView->columnWidth(0));
     navigationViewWidthAnimation->setEndValue(40);
-    navigationViewWidthAnimation->setDuration(isAnimation ? 285 : 0);
+    navigationViewWidthAnimation->setDuration(isAnimation ? 225 : 0);
     navigationViewWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
@@ -622,20 +622,20 @@ void ElaNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnim
         {
             _userButton->setVisible(true);
         }
-        userButtonAnimation->setDuration(isAnimation ? 285 : 0);
-        spacingAnimation->setDuration(isAnimation ? 285 : 0);
+        userButtonAnimation->setDuration(isAnimation ? 225 : 0);
+        spacingAnimation->setDuration(isAnimation ? 225 : 0);
     }
     else
     {
         connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() {
-            if (_isShowUserCard)
-            {
-                _userCard->setVisible(true);
-            }
             _userButton->setFixedSize(36, 36);
             _userButton->setGeometry(QRect(3, 10, 36, 36));
             _userButton->setVisible(false);
             _resetLayout();
+            if (_isShowUserCard)
+            {
+                _userCard->setVisible(true);
+            }
         });
         userButtonAnimation->setDuration(isAnimation ? 135 : 0);
         spacingAnimation->setDuration(isAnimation ? 135 : 0);

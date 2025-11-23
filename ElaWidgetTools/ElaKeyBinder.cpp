@@ -107,7 +107,7 @@ void ElaKeyBinder::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
-    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : Qt::transparent);
+    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase));
     QRect borderRect = rect();
     borderRect.adjust(1, 1, -1, -1);
     painter.drawRoundedRect(borderRect, d->_pBorderRadius, d->_pBorderRadius);

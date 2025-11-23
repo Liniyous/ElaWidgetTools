@@ -9,7 +9,7 @@ class ElaCalendarPickerContainer : public QWidget
     Q_OBJECT
 public:
     explicit ElaCalendarPickerContainer(QWidget* parent = nullptr);
-    ~ElaCalendarPickerContainer();
+    ~ElaCalendarPickerContainer() override;
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

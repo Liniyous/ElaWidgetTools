@@ -1,5 +1,4 @@
 #include "ElaCalendarPickerContainer.h"
-
 #include <QPainter>
 
 #include "ElaTheme.h"
@@ -12,7 +11,10 @@ ElaCalendarPickerContainer::ElaCalendarPickerContainer(QWidget* parent)
     setObjectName("ElaCalendarPickerContainer");
     setStyleSheet("#ElaCalendarPickerContainer{background-color:transparent}");
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+        update();
+    });
 }
 
 ElaCalendarPickerContainer::~ElaCalendarPickerContainer()

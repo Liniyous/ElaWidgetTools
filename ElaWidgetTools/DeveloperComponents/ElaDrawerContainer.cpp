@@ -30,6 +30,7 @@ ElaDrawerContainer::ElaDrawerContainer(QWidget* parent)
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
+        update();
     });
 }
 

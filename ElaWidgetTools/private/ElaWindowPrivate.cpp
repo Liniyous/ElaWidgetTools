@@ -40,8 +40,8 @@ void ElaWindowPrivate::onNavigationButtonClicked()
         connect(navigationMoveAnimation, &QPropertyAnimation::finished, this, [=]() {
             _isNavigationBarExpanded = true;
         });
-        navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        navigationMoveAnimation->setDuration(300);
+        navigationMoveAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        navigationMoveAnimation->setDuration(225);
         navigationMoveAnimation->setStartValue(_navigationBar->pos());
         navigationMoveAnimation->setEndValue(QPoint(0, 0));
         navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -88,8 +88,8 @@ void ElaWindowPrivate::onWMWindowClickedEvent(QVariantMap data)
                 }
                 _isNavigationBarFloat = false;
             });
-            navigationMoveAnimation->setEasingCurve(QEasingCurve::InOutSine);
-            navigationMoveAnimation->setDuration(300);
+            navigationMoveAnimation->setEasingCurve(QEasingCurve::OutCubic);
+            navigationMoveAnimation->setDuration(225);
             navigationMoveAnimation->setStartValue(_navigationBar->pos());
             navigationMoveAnimation->setEndValue(QPoint(-_navigationBar->width(), 0));
             navigationMoveAnimation->start(QAbstractAnimation::DeleteWhenStopped);

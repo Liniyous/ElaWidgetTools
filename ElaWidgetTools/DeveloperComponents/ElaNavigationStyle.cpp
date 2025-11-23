@@ -229,7 +229,6 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                     if (node->getIsHasChild())
                     {
                         QRectF expandIconRect(itemRect.right() - _indicatorIconAreaWidth, itemRect.y(), 17, itemRect.height());
-
                         painter->save();
                         QFont iconFont = QFont("ElaAwesome");
                         iconFont.setPixelSize(17);
@@ -273,11 +272,10 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                         // KeyPoints
                         painter->save();
                         painter->setPen(Qt::NoPen);
-                        painter->setBrush(Qt::white);
-                        painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), 10, 10);
-                        painter->setBrush(ElaThemeColor(_themeMode, StatusDanger));
-                        painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), 9, 9);
-                        painter->setPen(QPen(Qt::white, 2));
+                        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+                        int keyPointRadius = 8;
+                        painter->drawEllipse(QPoint(itemRect.right() - 26, itemRect.y() + itemRect.height() / 2), keyPointRadius, keyPointRadius);
+                        painter->setPen(QPen(ElaThemeColor(_themeMode, BasicTextInvert), 2));
                         QFont font = painter->font();
                         font.setBold(true);
                         if (keyPoints > 99)
@@ -286,14 +284,14 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
                         }
                         if (keyPoints > 9)
                         {
-                            font.setPixelSize(11);
+                            font.setPixelSize(10);
                         }
                         else
                         {
-                            font.setPixelSize(12);
+                            font.setPixelSize(11);
                         }
                         painter->setFont(font);
-                        painter->drawText(keyPoints > 9 ? itemRect.right() - 33 : itemRect.right() - 30, itemRect.y() + itemRect.height() / 2 + 4, QString::number(keyPoints));
+                        painter->drawText(QRect(QPoint(itemRect.right() - 26 - keyPointRadius, itemRect.y() + itemRect.height() / 2 - keyPointRadius), QSize(2 * keyPointRadius, 2 * keyPointRadius)), Qt::AlignCenter, QString::number(keyPoints));
                         painter->restore();
                     }
                 }

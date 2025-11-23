@@ -1,8 +1,5 @@
 #include "T_Popup.h"
 
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-
 #include "ElaCalendar.h"
 #include "ElaCalendarPicker.h"
 #include "ElaCheckBox.h"
@@ -12,10 +9,16 @@
 #include "ElaMenu.h"
 #include "ElaPushButton.h"
 #include "ElaRoller.h"
+#include "ElaRollerPicker.h"
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
 #include "ElaToggleSwitch.h"
 #include "ElaToolButton.h"
+#include <QDateTime>
+#include <QDebug>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
 T_Popup::T_Popup(QWidget* parent)
     : T_BasePage(parent)
 {
@@ -115,6 +118,45 @@ T_Popup::T_Popup(QWidget* parent)
     rollerText->setTextPixelSize(15);
     rollerLayout->addWidget(rollerText);
     rollerLayout->addWidget(_roller);
+    rollerLayout->addSpacing(30);
+
+    ElaText* rollerPickerText = new ElaText("ElaRollerPicker", this);
+    rollerPickerText->setTextPixelSize(15);
+    rollerLayout->addWidget(rollerPickerText);
+
+    QTime currentTime = QTime::currentTime();
+    QString currentHour = QString("%1").arg(currentTime.hour(), 2, 10, QChar('0'));
+    QString currentMinute = QString("%1").arg(currentTime.minute(), 2, 10, QChar('0'));
+    _timeRollerPicker = new ElaRollerPicker(this);
+    QStringList hourItemList;
+    for (int i = 0; i < 24; i++)
+    {
+        hourItemList.append(QString("%1").arg(i, 2, 10, QChar('0')));
+    }
+    QStringList minuteList;
+    for (int i = 0; i < 61; i++)
+    {
+        minuteList.append(QString("%1").arg(i, 2, 10, QChar('0')));
+    }
+    _timeRollerPicker->addRoller(hourItemList);
+    _timeRollerPicker->addRoller(minuteList);
+    _timeRollerPicker->addRoller({"AM", "PM"}, false);
+    _timeRollerPicker->setCurrentData({currentHour,
+                                       currentMinute,
+                                       currentTime.hour() >= 12 ? "PM" : "AM"});
+
+    _clockRollerPicker = new ElaRollerPicker(this);
+    _clockRollerPicker->addRoller(hourItemList);
+    _clockRollerPicker->addRoller(minuteList);
+    _clockRollerPicker->setRollerWidth(0, 135);
+    _clockRollerPicker->setRollerWidth(1, 135);
+    _clockRollerPicker->setCurrentData({currentHour,
+                                        currentMinute});
+
+    QVBoxLayout* rollerPickerLayout = new QVBoxLayout();
+    rollerPickerLayout->addWidget(_timeRollerPicker);
+    rollerPickerLayout->addWidget(_clockRollerPicker);
+    rollerLayout->addLayout(rollerPickerLayout);
     rollerLayout->addStretch();
 
     _drawer = new ElaDrawerArea(this);

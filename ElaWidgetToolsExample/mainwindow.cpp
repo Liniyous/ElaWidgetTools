@@ -356,21 +356,16 @@ void MainWindow::initContent()
     addPageNode("ElaNavigation", _navigationPage, ElaIconType::LocationArrow);
     addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
     addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontCase);
-    addExpanderNode("TEST4", testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST5", testKey_1, testKey_2, ElaIconType::Acorn);
-    addPageNode("Third Level", new QWidget(this), testKey_1, ElaIconType::Acorn);
-    addExpanderNode("TEST6", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST7", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST8", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST9", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST10", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST11", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST12", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST13", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST14", testKey_1, testKey_2, ElaIconType::Acorn);
-    addExpanderNode("TEST15", testKey_1, ElaIconType::Acorn);
-    addExpanderNode("TEST16", testKey_1, ElaIconType::Acorn);
-    addExpanderNode("TEST17", testKey_1, ElaIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE1", testKey_1, ElaIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE2", testKey_2, testKey_1, ElaIconType::Acorn);
+    addPageNode("TEST_NODE3", new QWidget(this), testKey_2, ElaIconType::Acorn);
+    for (int i = 0; i < 10; i++)
+    {
+        addExpanderNode(QString("TEST_EXPAND_NODE%1").arg(i + 4), testKey_1, testKey_2, ElaIconType::Acorn);
+    }
+    addExpanderNode("TEST_EXPAND_NODE14", testKey_1, ElaIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE5", testKey_1, ElaIconType::Acorn);
+    addExpanderNode("TEST_EXPAND_NODE16", testKey_1, ElaIconType::Acorn);
 
     addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
     _aboutPage = new T_About();

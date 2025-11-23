@@ -15,7 +15,7 @@ class ElaMenuPrivate : public QObject
     Q_PROPERTY_CREATE(int, AnimationImagePosY)
 public:
     explicit ElaMenuPrivate(QObject* parent = nullptr);
-    ~ElaMenuPrivate();
+    ~ElaMenuPrivate() override;
 
 private:
     QPixmap _animationPix;
