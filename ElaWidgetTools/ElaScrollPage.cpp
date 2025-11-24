@@ -79,9 +79,15 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ElaScrollBar* floatVScrollBar = new ElaScrollBar(scrollArea->verticalScrollBar(), scrollArea);
     floatVScrollBar->setIsAnimation(true);
-    scrollArea->setWidget(centralWidget);
-    centralWidget->setObjectName("ElaScrollPage_CentralPage");
-    centralWidget->setStyleSheet("#ElaScrollPage_CentralPage{background-color:transparent;}");
+
+    QWidget* scrollPageContainer = new QWidget(this);
+    scrollPageContainer->setObjectName("ElaScrollPageContainer");
+    scrollPageContainer->setStyleSheet("#ElaScrollPageContainer{background-color:transparent;}");
+    QVBoxLayout* scrollPageContainerLayout = new QVBoxLayout(scrollPageContainer);
+    scrollPageContainerLayout->setContentsMargins(0, 0, 0, 0);
+    scrollPageContainerLayout->addWidget(centralWidget);
+    scrollArea->setWidget(scrollPageContainer);
+    
     d->_centralWidgetMap.insert(centralWidget->windowTitle(), d->_centralStackedWidget->count());
     d->_centralStackedWidget->addWidget(scrollArea);
 }
