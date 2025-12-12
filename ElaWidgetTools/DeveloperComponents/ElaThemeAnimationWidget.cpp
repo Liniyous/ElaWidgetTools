@@ -28,6 +28,7 @@ void ElaThemeAnimationWidget::startAnimation(int msec)
     themeChangeAnimation->setStartValue(0);
     themeChangeAnimation->setEndValue(_pEndRadius);
     themeChangeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    show();
 }
 
 void ElaThemeAnimationWidget::paintEvent(QPaintEvent* event)

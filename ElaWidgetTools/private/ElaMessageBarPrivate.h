@@ -23,7 +23,7 @@ class ElaMessageBarManager : public QObject
     Q_SINGLETON_CREATE_H(ElaMessageBarManager)
 private:
     explicit ElaMessageBarManager(QObject* parent = nullptr);
-    ~ElaMessageBarManager();
+    ~ElaMessageBarManager() override;
 
 public:
     //请求事件堆栈调用

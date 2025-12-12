@@ -146,7 +146,6 @@ void ElaWindowPrivate::onThemeReadyChange()
             _animationWidget->setEndRadius(disList[3]);
             _animationWidget->resize(q->width(), q->height());
             _animationWidget->startAnimation(_pThemeChangeTime);
-            _animationWidget->show();
         }
         break;
     }

@@ -5,6 +5,7 @@
 
 #include "ElaTheme.h"
 #include "private/ElaScrollPageAreaPrivate.h"
+
 Q_PROPERTY_CREATE_Q_CPP(ElaScrollPageArea, int, BorderRadius)
 ElaScrollPageArea::ElaScrollPageArea(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaScrollPageAreaPrivate())
