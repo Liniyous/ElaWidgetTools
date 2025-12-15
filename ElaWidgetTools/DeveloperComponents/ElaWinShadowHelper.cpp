@@ -113,7 +113,7 @@ void ElaWinShadowHelper::setWindowShadow(quint64 hwnd)
 
 void ElaWinShadowHelper::setWindowThemeMode(quint64 hwnd, bool isLightMode)
 {
-    if (!compareWindowsVersion(Win10_1809))
+    if (!compareWindowsVersion(Win10_1809) || !_dwmSetWindowAttribute)
     {
         return;
     }
@@ -270,11 +270,14 @@ void ElaWinShadowHelper::setWindowDisplayMode(QWidget* widget, ElaApplicationTyp
 bool ElaWinShadowHelper::getIsCompositionEnabled() const
 {
     BOOL isCompositionEnabled = false;
-    _dwmIsCompositionEnabled(&isCompositionEnabled);
+    if (_dwmIsCompositionEnabled)
+    {
+        _dwmIsCompositionEnabled(&isCompositionEnabled);
+    }
     return isCompositionEnabled;
 }
 
-bool ElaWinShadowHelper::getIsFullScreen(const HWND hwnd)
+bool ElaWinShadowHelper::getIsFullScreen(const HWND& hwnd)
 {
     RECT windowRect{};
     ::GetWindowRect(hwnd, &windowRect);
@@ -282,7 +285,7 @@ bool ElaWinShadowHelper::getIsFullScreen(const HWND hwnd)
     return windowRect.top == rcMonitor.top && windowRect.left == rcMonitor.left && windowRect.right == rcMonitor.right && windowRect.bottom == rcMonitor.bottom;
 }
 
-MONITORINFOEXW ElaWinShadowHelper::getMonitorForWindow(const HWND hwnd)
+MONITORINFOEXW ElaWinShadowHelper::getMonitorForWindow(const HWND& hwnd)
 {
     HMONITOR monitor = ::MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
     MONITORINFOEXW monitorInfo{};
@@ -291,12 +294,12 @@ MONITORINFOEXW ElaWinShadowHelper::getMonitorForWindow(const HWND hwnd)
     return monitorInfo;
 }
 
-quint32 ElaWinShadowHelper::getResizeBorderThickness(const HWND hwnd)
+quint32 ElaWinShadowHelper::getResizeBorderThickness(const HWND& hwnd)
 {
     return getSystemMetricsForDpi(hwnd, SM_CXSIZEFRAME) + getSystemMetricsForDpi(hwnd, SM_CXPADDEDBORDER);
 }
 
-quint32 ElaWinShadowHelper::getDpiForWindow(const HWND hwnd)
+quint32 ElaWinShadowHelper::getDpiForWindow(const HWND& hwnd)
 {
     if (_getDpiForWindow)
     {
@@ -319,7 +322,7 @@ quint32 ElaWinShadowHelper::getDpiForWindow(const HWND hwnd)
     }
 }
 
-int ElaWinShadowHelper::getSystemMetricsForDpi(const HWND hwnd, const int index)
+int ElaWinShadowHelper::getSystemMetricsForDpi(const HWND& hwnd, const int index)
 {
     const quint32 dpi = getDpiForWindow(hwnd);
     if (_getSystemMetricsForDpi)
@@ -348,6 +351,9 @@ bool ElaWinShadowHelper::compareWindowsVersion(const QString& windowsVersion) co
 void ElaWinShadowHelper::_externWindowMargins(HWND hwnd)
 {
     static const MARGINS margins = {65536, 0, 0, 0};
-    _dwmExtendFrameIntoClientArea(hwnd, &margins);
+    if (_dwmExtendFrameIntoClientArea)
+    {
+        _dwmExtendFrameIntoClientArea(hwnd, &margins);
+    }
 }
 #endif

@@ -33,11 +33,11 @@ public:
     void setWindowThemeMode(quint64 hwnd, bool isLightMode);
     void setWindowDisplayMode(QWidget* widget, ElaApplicationType::WindowDisplayMode displayMode, ElaApplicationType::WindowDisplayMode lastDisplayMode);
     bool getIsCompositionEnabled() const;
-    bool getIsFullScreen(const HWND hwnd);
-    MONITORINFOEXW getMonitorForWindow(const HWND hwnd);
-    quint32 getResizeBorderThickness(const HWND hwnd);
-    quint32 getDpiForWindow(const HWND hwnd);
-    int getSystemMetricsForDpi(const HWND hwnd, const int index);
+    bool getIsFullScreen(const HWND& hwnd);
+    MONITORINFOEXW getMonitorForWindow(const HWND& hwnd);
+    quint32 getResizeBorderThickness(const HWND& hwnd);
+    quint32 getDpiForWindow(const HWND& hwnd);
+    int getSystemMetricsForDpi(const HWND& hwnd, const int index);
     bool compareWindowsVersion(const QString& windowsVersion) const;
 
 private:
