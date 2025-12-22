@@ -137,6 +137,7 @@ void ElaMenu::showEvent(QShowEvent* event)
     Q_D(ElaMenu);
     //消除阴影偏移
     move(this->pos().x() - 6, this->pos().y());
+    updateGeometry();
     if (!d->_animationPix.isNull())
     {
         d->_animationPix = QPixmap();
