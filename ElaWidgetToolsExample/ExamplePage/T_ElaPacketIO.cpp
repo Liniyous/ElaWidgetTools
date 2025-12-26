@@ -93,7 +93,7 @@ void T_ElaPacketIO::handleGrabImage()
             {
                 screenPkt._currentDataLen = dataTotalLen - i * 1024;
             }
-            memcpy(screenPkt._data, imageData + screenPkt._dataOffset, 1024);
+            memcpy(screenPkt._data, imageData + screenPkt._dataOffset, screenPkt._currentDataLen);
             _sendToXIO(screenPkt);
             //  和下面这句等效 但下方写法效率较低
             //  _interface->send(screenPkt, _interface->GetConnections()[0]);
@@ -136,7 +136,6 @@ void T_ElaPacketIO::_handleScreenPkt(ElaXIO_ScreenPkt& screenPkt)
         // 新的一帧开始
         //recvTimer.start();
         _imageArray.clear();
-        _imageArray.append(screenPkt._data, screenPkt._currentDataLen);
     }
     else
     {
@@ -144,33 +143,33 @@ void T_ElaPacketIO::_handleScreenPkt(ElaXIO_ScreenPkt& screenPkt)
         {
             return;
         }
-        _imageArray.append(screenPkt._data, screenPkt._currentDataLen);
-        if (screenPkt._currentDataLen + screenPkt._dataOffset == screenPkt._dataTotalLen)
+    }
+    _imageArray.append(screenPkt._data, screenPkt._currentDataLen);
+    if (screenPkt._currentDataLen + screenPkt._dataOffset == screenPkt._dataTotalLen)
+    {
+        // 尾包 开始生成图片
+        if (_imageArray.size() == screenPkt._dataTotalLen)
         {
-            // 尾包 开始生成图片
-            if (_imageArray.size() == screenPkt._dataTotalLen)
-            {
-                //qDebug() << recvTimer.elapsed();
-                uchar* imageData = (uchar*)(_imageArray.data());
-                QImage recvImage = QImage(imageData, screenPkt._imageWidth, screenPkt._imageHeight, QImage::Format_ARGB32);
-                Q_EMIT sendHandleResult(std::move(QPixmap::fromImage(recvImage)));
-            }
-            else
-            {
-                // 包大小不正确 丢包
-                qDebug() << u8"丢包" << screenPkt._dataID << _lastImageIndex;
-                _imageArray.clear();
-            }
+            //qDebug() << recvTimer.elapsed();
+            uchar* imageData = (uchar*)(_imageArray.data());
+            QImage recvImage = QImage(imageData, screenPkt._imageWidth, screenPkt._imageHeight, QImage::Format_ARGB32);
+            Q_EMIT sendHandleResult(std::move(QPixmap::fromImage(recvImage)));
         }
         else
         {
-            // 中间包处理
-            if (_lastImageIndex != screenPkt._dataID - 1)
-            {
-                // ID不连续 丢包
-                qDebug() << u8"丢包" << screenPkt._dataID << _lastImageIndex;
-                _imageArray.clear();
-            }
+            // 包大小不正确 丢包
+            qDebug() << u8"丢包" << screenPkt._dataID << _lastImageIndex;
+            _imageArray.clear();
+        }
+    }
+    else
+    {
+        // 中间包处理
+        if (screenPkt._dataID != 0 && _lastImageIndex != screenPkt._dataID - 1)
+        {
+            // ID不连续 丢包
+            qDebug() << u8"丢包" << screenPkt._dataID << _lastImageIndex;
+            _imageArray.clear();
         }
     }
     _lastImageIndex = screenPkt._dataID;
