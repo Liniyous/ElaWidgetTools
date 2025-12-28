@@ -451,10 +451,7 @@ void ElaNavigationBarPrivate::_doComponentAnimation(ElaNavigationType::Navigatio
         if (_currentDisplayMode == ElaNavigationType::Maximal)
         {
             _userCard->setVisible(false);
-            if (_isShowUserCard)
-            {
-                _userButton->setVisible(true);
-            }
+            _doUserButtonAnimation(true, isAnimation);
             _handleNavigationExpandState(true);
         }
         _currentDisplayMode = displayMode;
@@ -466,7 +463,6 @@ void ElaNavigationBarPrivate::_doComponentAnimation(ElaNavigationType::Navigatio
         _doNavigationViewWidthAnimation(isAnimation);
         if (_currentDisplayMode != ElaNavigationType::Minimal)
         {
-            _handleUserButtonLayout(true);
             _doUserButtonAnimation(true, isAnimation);
             _handleNavigationExpandState(true);
         }
@@ -475,7 +471,6 @@ void ElaNavigationBarPrivate::_doComponentAnimation(ElaNavigationType::Navigatio
     }
     case ElaNavigationType::Maximal:
     {
-        _handleUserButtonLayout(false);
         _doNavigationBarWidthAnimation(displayMode, isAnimation);
         _doUserButtonAnimation(false, isAnimation);
         _currentDisplayMode = displayMode;
@@ -508,18 +503,6 @@ void ElaNavigationBarPrivate::_handleNavigationExpandState(bool isSave)
         {
             onTreeViewClicked(node->getModelIndex(), false);
         }
-    }
-}
-
-void ElaNavigationBarPrivate::_handleUserButtonLayout(bool isCompact)
-{
-    while (_userButtonLayout->count())
-    {
-        _userButtonLayout->takeAt(0);
-    }
-    if (_isShowUserCard)
-    {
-        _userButtonLayout->addSpacing(isCompact ? 36 : 80);
     }
 }
 
@@ -624,12 +607,15 @@ void ElaNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnim
         }
         userButtonAnimation->setDuration(isAnimation ? 255 : 0);
         spacingAnimation->setDuration(isAnimation ? 255 : 0);
+        connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() {
+            _resetLayout();
+        });
     }
     else
     {
         connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _userButton->setFixedSize(36, 36);
-            _userButton->setGeometry(QRect(3, 10, 36, 36));
+            _userButton->setFixedSize(64, 64);
+            _userButton->setGeometry(QRect(13, 18, 64, 64));
             _userButton->setVisible(false);
             _resetLayout();
             if (_isShowUserCard)

@@ -82,7 +82,6 @@ private:
 
     void _doComponentAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
     void _handleNavigationExpandState(bool isSave);
-    void _handleUserButtonLayout(bool isCompact);
     void _resetLayout();
 
     void _doNavigationBarWidthAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation);
