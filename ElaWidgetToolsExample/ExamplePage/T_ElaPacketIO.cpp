@@ -77,7 +77,16 @@ void T_ElaPacketIO::handleGrabImage()
             std::this_thread::sleep_for(std::chrono::microseconds(2));
             continue;
         }
-        for (int i = 0; i < dataTotalLen / 1024; i++)
+        int targetIndex = 0;
+        if (dataTotalLen % 1024 == 0)
+        {
+            targetIndex = dataTotalLen / 1024;
+        }
+        else
+        {
+            targetIndex = dataTotalLen / 1024 + 1;
+        }
+        for (int i = 0; i < targetIndex; i++)
         {
             ElaXIO_ScreenPkt screenPkt;
             screenPkt._imageWidth = imageWidth;
