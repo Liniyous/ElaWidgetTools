@@ -7,8 +7,6 @@
 #include "ElaScrollPageArea.h"
 #include "ElaText.h"
 #include "ElaToggleButton.h"
-#include "T_ElaPacketIO.h"
-#include "T_RecvScreen.h"
 #include <QThread>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -85,124 +83,10 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
     centerLayout->setContentsMargins(0, 0, 0, 0);
     centerLayout->addLayout(comboBoxLayout);
     centerLayout->addWidget(dxgiScreenArea);
-
-#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
-    QHBoxLayout* packetLayout = new QHBoxLayout();
-    ElaText* packetIOText = new ElaText("网络视图 (需要先进行屏幕捕获 若接口IP不正确或不可用 程序可能会崩溃)", this);
-    packetIOText->setTextPixelSize(17);
-
-    ElaText* interfaceIPText = new ElaText("接口IP", this);
-    interfaceIPText->setTextPixelSize(15);
-    ElaLineEdit* interfaceIPEdit = new ElaLineEdit(this);
-    interfaceIPEdit->setMaximumWidth(140);
-    interfaceIPEdit->setFixedHeight(33);
-    interfaceIPEdit->setPlaceholderText("接口IP");
-    interfaceIPEdit->setText("192.168.1");
-
-    ElaToggleButton* sendButton = new ElaToggleButton("初始发送", this);
-    connect(sendButton, &ElaToggleButton::toggled, this, [=](bool isToggled) {
-        if (isToggled)
-        {
-            _initSendThread(interfaceIPEdit->text().trimmed());
-        }
-        else
-        {
-            _unInitThread(true);
-        }
-    });
-    ElaToggleButton* recvButton = new ElaToggleButton("初始接收", this);
-    connect(recvButton, &ElaToggleButton::toggled, this, [=](bool isToggled) {
-        if (isToggled)
-        {
-            _initRecvThread(interfaceIPEdit->text().trimmed());
-        }
-        else
-        {
-            _unInitThread(false);
-        }
-    });
-    packetLayout->addWidget(interfaceIPText);
-    packetLayout->addWidget(interfaceIPEdit);
-    packetLayout->addWidget(sendButton);
-    packetLayout->addWidget(recvButton);
-    packetLayout->addStretch();
-    _recvScreen = new T_RecvScreen(this);
-    ElaScrollPageArea* recvScreenArea = new ElaScrollPageArea(this);
-    recvScreenArea->setFixedHeight(700);
-    QHBoxLayout* recvScreenLayout = new QHBoxLayout(recvScreenArea);
-    recvScreenLayout->addWidget(_recvScreen);
-    centerLayout->addSpacing(30);
-    centerLayout->addWidget(packetIOText);
-    centerLayout->addLayout(packetLayout);
-    centerLayout->addWidget(recvScreenArea);
-#endif
-
     addCentralWidget(centralWidget, false, true);
 }
 
 T_ElaScreen::~T_ElaScreen()
 {
-#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
-    _unInitThread(true);
-    _unInitThread(false);
-#endif
 }
-
-#if defined(Q_OS_WIN) && defined(BUILD_WITH_ELAPACKETIO)
-void T_ElaScreen::_initSendThread(QString interfaceIP)
-{
-    _packetIOSendThread = new QThread(this);
-    _packetSendIO = new T_ElaPacketIO();
-    _packetSendIO->setInterfaceIP(interfaceIP);
-    _packetSendIO->moveToThread(_packetIOSendThread);
-    connect(_packetIOSendThread, &QThread::started, _packetSendIO, &T_ElaPacketIO::handleGrabImage);
-    _packetIOSendThread->start();
-}
-
-void T_ElaScreen::_initRecvThread(QString interfaceIP)
-{
-    // 原则上一个程序最好只初始化一个XIO 但如果需要多个XIO 则控制初始化间隔 不能同时进行初始化
-    QTimer::singleShot(1000, this, [=]() {
-        _packetIORecvThread = new QThread(this);
-        _packetRecvIO = new T_ElaPacketIO();
-        _packetRecvIO->setInterfaceIP(interfaceIP);
-        _packetRecvIO->moveToThread(_packetIORecvThread);
-        connect(_packetIORecvThread, &QThread::started, _packetRecvIO, &T_ElaPacketIO::handleImagePacket);
-        _packetIORecvThread->start();
-        connect(_packetRecvIO, &T_ElaPacketIO::sendHandleResult, _recvScreen, &T_RecvScreen::onSendHandleResult);
-    });
-}
-
-void T_ElaScreen::_unInitThread(bool isSend)
-{
-    if (isSend)
-    {
-        if (!_packetSendIO || !_packetIOSendThread)
-        {
-            return;
-        }
-        _packetSendIO->setIsActive(false);
-        _packetIOSendThread->quit();
-        _packetIOSendThread->wait();
-        delete _packetSendIO;
-        delete _packetIOSendThread;
-        _packetSendIO = nullptr;
-        _packetIOSendThread = nullptr;
-    }
-    else
-    {
-        if (!_packetRecvIO || !_packetIORecvThread)
-        {
-            return;
-        }
-        _packetRecvIO->setIsActive(false);
-        _packetIORecvThread->quit();
-        _packetIORecvThread->wait();
-        delete _packetRecvIO;
-        delete _packetIORecvThread;
-        _packetRecvIO = nullptr;
-        _packetIORecvThread = nullptr;
-    }
-}
-#endif
 #endif

@@ -50,18 +50,10 @@ if (WIN32)
         ExamplePage
         ModelView
     )
-    if (BUILD_ELAPACKETIO)
-        target_link_libraries(${PROJECT_NAME} PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            ElaWidgetTools
-            ElaPacketIO
-        )
-    else ()
-        target_link_libraries(${PROJECT_NAME} PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            ElaWidgetTools
-        )
-    endif ()
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        Qt${QT_VERSION_MAJOR}::Widgets
+        ElaWidgetTools
+    )
 
 else ()
     target_include_directories(${PROJECT_NAME} PUBLIC
@@ -96,12 +88,12 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
 )
-if (MSVC)
-    install(
-        FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL
-    )
-endif ()
+#if (MSVC)
+#    install(
+#        FILES $<TARGET_PDB_FILE:${PROJECT_NAME}>
+#        DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME} OPTIONAL
+#    )
+#endif ()
 find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${QT_SDK_DIR}/bin")
 if (WIN32)
     install(CODE "
