@@ -127,15 +127,6 @@ void ElaWindowPrivate::onThemeReadyChange()
                 eTheme->setThemeMode(ElaThemeType::Light);
             }
 
-            if (_pWindowPaintMode == ElaWindowType::PaintMode::Movie)
-            {
-                if (_windowPaintMovie->state() == QMovie::Running)
-                {
-                    _windowPaintMovie->stop();
-                }
-                _windowPaintMovie->setFileName(_themeMode == ElaThemeType::Light ? _lightWindowMoviePath : _darkWindowMoviePath);
-                _windowPaintMovie->start();
-            }
             _animationWidget->setCenter(centerPos);
             qreal topLeftDis = _distance(centerPos, QPoint(0, 0));
             qreal topRightDis = _distance(centerPos, QPoint(q->width(), 0));
@@ -196,6 +187,15 @@ void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaWindow);
     _themeMode = themeMode;
+    if (_pWindowPaintMode == ElaWindowType::PaintMode::Movie)
+    {
+        if (_windowPaintMovie->state() == QMovie::Running)
+        {
+            _windowPaintMovie->stop();
+        }
+        _windowPaintMovie->setFileName(_themeMode == ElaThemeType::Light ? _lightWindowMoviePath : _darkWindowMoviePath);
+        _windowPaintMovie->start();
+    }
     q->update();
 }
 
