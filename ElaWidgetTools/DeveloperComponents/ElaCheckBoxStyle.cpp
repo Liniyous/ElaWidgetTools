@@ -92,7 +92,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             }
             //文字绘制
             painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
-            QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height() - 5);
+            QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height() - 3);
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             painter->restore();
         }
