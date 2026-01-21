@@ -70,6 +70,11 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
         {
             return;
         }
+        if (node->getIsCategoryNode())
+        {
+            Q_EMIT q->navigationNodeClicked(ElaNavigationType::CategoryNode, node->getNodeKey(), isRouteBack);
+            return;
+        }
         if (node->getIsExpanderNode())
         {
             _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index));

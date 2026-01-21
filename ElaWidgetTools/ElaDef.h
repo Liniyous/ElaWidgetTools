@@ -3,7 +3,7 @@
 #include <QObject>
 
 #include "ElaProperty.h"
-#define ElaDefVersion "2.0.1"
+#define ElaDefVersion "2.0.2"
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #define Q_BEGIN_ENUM_CREATE(CLASS) \
@@ -74,6 +74,7 @@ enum ThemeColor
     BasicTextNoFocus,
     BasicTextDisable,
     BasicTextPress,
+    BasicTextCategory,
     BasicBorder,
     BasicBorderDeep,
     BasicBorderHover,
@@ -154,7 +155,7 @@ Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(ElaTextType)
 
 Q_BEGIN_ENUM_CREATE(ElaNavigationType)
-enum NodeOperateReturnType
+enum NodeResult
 {
     Success = 0x0000,
     TargetNodeInvalid = 0x0001,
@@ -163,7 +164,7 @@ enum NodeOperateReturnType
     PageInvalid = 0x0004,
     FooterUpperLimit = 0x0005,
 };
-Q_ENUM_CREATE(NodeOperateReturnType)
+Q_ENUM_CREATE(NodeResult)
 
 enum NavigationDisplayMode
 {
@@ -178,6 +179,7 @@ enum NavigationNodeType
 {
     PageNode = 0x0000,
     FooterNode = 0x0001,
+    CategoryNode = 0x0002
 };
 Q_ENUM_CREATE(NavigationNodeType)
 Q_END_ENUM_CREATE(ElaNavigationType)

@@ -1,22 +1,22 @@
 #include "ElaNavigationStyle.h"
 
-#include <QPainter>
-#include <QPainterPath>
-#include <QPropertyAnimation>
-#include <QStyleOption>
-
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
 #include "ElaNavigationView.h"
 #include "ElaTheme.h"
+#include <QDebug>
+#include <QPainter>
+#include <QPainterPath>
+#include <QPropertyAnimation>
+#include <QStyleOption>
 ElaNavigationStyle::ElaNavigationStyle(QStyle* style)
 {
     _pOpacity = 1;
-    _pItemHeight = 40;
-    _pLastSelectMarkTop = 10.0;
-    _pLastSelectMarkBottom = 10.0;
-    _pSelectMarkTop = 10.0;
-    _pSelectMarkBottom = 10.0;
+    _pItemHeight = 38;
+    _pLastSelectMarkTop = 10.5;
+    _pLastSelectMarkBottom = 10.5;
+    _pSelectMarkTop = 10.5;
+    _pSelectMarkBottom = 10.5;
 
     // Mark向上
     _lastSelectMarkTopAnimation = new QPropertyAnimation(this, "pLastSelectMarkTop");
@@ -36,7 +36,7 @@ ElaNavigationStyle::ElaNavigationStyle(QStyle* style)
         _isSelectMarkDisplay = true;
         _lastSelectedNode = nullptr;
         _selectMarkBottomAnimation->setStartValue(0);
-        _selectMarkBottomAnimation->setEndValue(10);
+        _selectMarkBottomAnimation->setEndValue(10.5);
         _selectMarkBottomAnimation->start();
     });
 
@@ -57,8 +57,8 @@ ElaNavigationStyle::ElaNavigationStyle(QStyle* style)
     connect(_lastSelectMarkBottomAnimation, &QPropertyAnimation::finished, this, [=]() {
         _isSelectMarkDisplay = true;
         _lastSelectedNode = nullptr;
-        _selectMarkTopAnimation->setStartValue(0);
-        _selectMarkTopAnimation->setEndValue(10);
+        _selectMarkTopAnimation->setStartValue(0.0);
+        _selectMarkTopAnimation->setEndValue(10.5);
         _selectMarkTopAnimation->start();
     });
     _themeMode = eTheme->getThemeMode();
@@ -80,9 +80,13 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
         // Item背景
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
-            painter->save();
             QModelIndex index = vopt->index;
             ElaNavigationNode* node = static_cast<ElaNavigationNode*>(index.internalPointer());
+            if (node->getIsCategoryNode())
+            {
+                return;
+            }
+            painter->save();
             if (this->_opacityAnimationTargetNode && node->getParentNode() == this->_opacityAnimationTargetNode)
             {
                 painter->setOpacity(_pOpacity);
@@ -92,7 +96,7 @@ void ElaNavigationStyle::drawPrimitive(PrimitiveElement element, const QStyleOpt
             itemRect.setTop(itemRect.top() + 2);
             itemRect.setBottom(itemRect.bottom() - 2);
             QPainterPath path;
-            path.addRoundedRect(itemRect, 8, 8);
+            path.addRoundedRect(itemRect, 5, 5);
             if (vopt->state & QStyle::State_Selected)
             {
                 if (index == _pPressIndex)
@@ -185,13 +189,13 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
             {
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pSelectMarkTop, 3, itemRect.height() - _pSelectMarkTop - _pSelectMarkBottom), 3, 3);
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pSelectMarkTop, 3, itemRect.height() - _pSelectMarkTop - _pSelectMarkBottom), 1.5, 1.5);
             }
             if (node == _lastSelectedNode)
             {
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 3, 3);
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _pLastSelectMarkTop, 3, itemRect.height() - _pLastSelectMarkTop - _pLastSelectMarkBottom), 1.5, 1.5);
             }
 
             // 图标绘制
@@ -208,7 +212,17 @@ void ElaNavigationStyle::drawControl(ControlElement element, const QStyleOption*
 
             int viewWidth = widget->width();
             // 文字绘制
-            painter->setPen(vopt->index == _pPressIndex ? ElaThemeColor(_themeMode, BasicTextPress) : ElaThemeColor(_themeMode, BasicText));
+            if (node->getIsCategoryNode())
+            {
+                QFont categoryFont = painter->font();
+                categoryFont.setBold(true);
+                painter->setFont(categoryFont);
+                painter->setPen(ElaThemeColor(_themeMode, BasicTextCategory));
+            }
+            else
+            {
+                painter->setPen((vopt->index == _pPressIndex) ? ElaThemeColor(_themeMode, BasicTextPress) : ElaThemeColor(_themeMode, BasicText));
+            }
             QRect textRect;
             if (node->getAwesome() != ElaIconType::None)
             {
@@ -401,14 +415,14 @@ void ElaNavigationStyle::navigationNodeStateChange(QVariantMap data)
         _lastSelectedNode = data.value("LastSelectedNode").value<ElaNavigationNode*>();
         ElaNavigationNode* selectedNode = data.value("SelectedNode").value<ElaNavigationNode*>();
         bool direction = _compareItemY(selectedNode, _lastSelectedNode);
-        _pLastSelectMarkTop = 10;
-        _pLastSelectMarkBottom = 10;
-        _pSelectMarkTop = 10;
-        _pSelectMarkBottom = 10;
+        _pLastSelectMarkTop = 10.5;
+        _pLastSelectMarkBottom = 10.5;
+        _pSelectMarkTop = 10.5;
+        _pSelectMarkBottom = 10.5;
         if (direction)
         {
-            _lastSelectMarkTopAnimation->setStartValue(10);
-            _lastSelectMarkTopAnimation->setEndValue(0);
+            _lastSelectMarkTopAnimation->setStartValue(10.5);
+            _lastSelectMarkTopAnimation->setEndValue(0.0);
             _lastSelectMarkTopAnimation->start();
             _lastSelectMarkBottomAnimation->stop();
             _selectMarkTopAnimation->stop();
@@ -416,8 +430,8 @@ void ElaNavigationStyle::navigationNodeStateChange(QVariantMap data)
         }
         else
         {
-            _lastSelectMarkBottomAnimation->setStartValue(10);
-            _lastSelectMarkBottomAnimation->setEndValue(0);
+            _lastSelectMarkBottomAnimation->setStartValue(10.5);
+            _lastSelectMarkBottomAnimation->setEndValue(0.0);
             _lastSelectMarkBottomAnimation->start();
             _lastSelectMarkTopAnimation->stop();
             _selectMarkBottomAnimation->stop();

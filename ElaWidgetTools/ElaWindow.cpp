@@ -349,19 +349,19 @@ void ElaWindow::setUserInfoCardSubTitle(QString subTitle)
     d->_navigationBar->setUserInfoCardSubTitle(subTitle);
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addExpanderNode(QString expanderTitle, QString& expanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeResult ElaWindow::addExpanderNode(const QString& expanderTitle, QString& expanderKey, ElaIconType::IconName awesome) const
 {
     Q_D(const ElaWindow);
     return d->_navigationBar->addExpanderNode(expanderTitle, expanderKey, awesome);
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addExpanderNode(QString expanderTitle, QString& expanderKey, QString targetExpanderKey, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeResult ElaWindow::addExpanderNode(const QString& expanderTitle, QString& expanderKey, const QString& targetExpanderKey, ElaIconType::IconName awesome) const
 {
     Q_D(const ElaWindow);
     return d->_navigationBar->addExpanderNode(expanderTitle, expanderKey, targetExpanderKey, awesome);
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitle, QWidget* page, ElaIconType::IconName awesome)
+ElaNavigationType::NodeResult ElaWindow::addPageNode(const QString& pageTitle, QWidget* page, ElaIconType::IconName awesome)
 {
     Q_D(ElaWindow);
     auto returnType = d->_navigationBar->addPageNode(pageTitle, page, awesome);
@@ -372,18 +372,7 @@ ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitl
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, ElaIconType::IconName awesome)
-{
-    Q_D(ElaWindow);
-    auto returnType = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
-    if (returnType == ElaNavigationType::Success)
-    {
-        d->_pageMetaMap.insert(page->property("ElaPageKey").toString(), page->metaObject());
-    }
-    return returnType;
-}
-
-ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitle, QWidget* page, int keyPoints, ElaIconType::IconName awesome)
+ElaNavigationType::NodeResult ElaWindow::addPageNode(const QString& pageTitle, QWidget* page, int keyPoints, ElaIconType::IconName awesome)
 {
     Q_D(ElaWindow);
     auto returnType = d->_navigationBar->addPageNode(pageTitle, page, keyPoints, awesome);
@@ -394,7 +383,18 @@ ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitl
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitle, QWidget* page, QString targetExpanderKey, int keyPoints, ElaIconType::IconName awesome)
+ElaNavigationType::NodeResult ElaWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, ElaIconType::IconName awesome)
+{
+    Q_D(ElaWindow);
+    auto returnType = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, awesome);
+    if (returnType == ElaNavigationType::Success)
+    {
+        d->_pageMetaMap.insert(page->property("ElaPageKey").toString(), page->metaObject());
+    }
+    return returnType;
+}
+
+ElaNavigationType::NodeResult ElaWindow::addPageNode(const QString& pageTitle, QWidget* page, const QString& targetExpanderKey, int keyPoints, ElaIconType::IconName awesome)
 {
     Q_D(ElaWindow);
     auto returnType = d->_navigationBar->addPageNode(pageTitle, page, targetExpanderKey, keyPoints, awesome);
@@ -405,13 +405,13 @@ ElaNavigationType::NodeOperateReturnType ElaWindow::addPageNode(QString pageTitl
     return returnType;
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addFooterNode(QString footerTitle, QString& footerKey, int keyPoints, ElaIconType::IconName awesome) const
+ElaNavigationType::NodeResult ElaWindow::addFooterNode(const QString& footerTitle, QString& footerKey, int keyPoints, ElaIconType::IconName awesome) const
 {
     Q_D(const ElaWindow);
     return d->_navigationBar->addFooterNode(footerTitle, nullptr, footerKey, keyPoints, awesome);
 }
 
-ElaNavigationType::NodeOperateReturnType ElaWindow::addFooterNode(QString footerTitle, QWidget* page, QString& footerKey, int keyPoints, ElaIconType::IconName awesome)
+ElaNavigationType::NodeResult ElaWindow::addFooterNode(const QString& footerTitle, QWidget* page, QString& footerKey, int keyPoints, ElaIconType::IconName awesome)
 {
     Q_D(ElaWindow);
     auto returnType = d->_navigationBar->addFooterNode(footerTitle, page, footerKey, keyPoints, awesome);
@@ -420,6 +420,18 @@ ElaNavigationType::NodeOperateReturnType ElaWindow::addFooterNode(QString footer
         d->_pageMetaMap.insert(page->property("ElaPageKey").toString(), page->metaObject());
     }
     return returnType;
+}
+
+ElaNavigationType::NodeResult ElaWindow::addCategoryNode(const QString& categoryTitle, QString& categoryKey)
+{
+    Q_D(const ElaWindow);
+    return d->_navigationBar->addCategoryNode(categoryTitle, categoryKey);
+}
+
+ElaNavigationType::NodeResult ElaWindow::addCategoryNode(const QString& categoryTitle, QString& categoryKey, const QString& targetExpanderKey)
+{
+    Q_D(const ElaWindow);
+    return d->_navigationBar->addCategoryNode(categoryTitle, categoryKey, targetExpanderKey);
 }
 
 void ElaWindow::addCentralWidget(QWidget* centralWidget)

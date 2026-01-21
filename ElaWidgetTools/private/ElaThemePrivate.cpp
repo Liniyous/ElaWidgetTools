@@ -63,6 +63,8 @@ void ElaThemePrivate::_initThemeColor()
     _darkThemeColorList[ElaThemeType::BasicTextDisable] = QColor(0xA7, 0xA7, 0xA7);
     _lightThemeColorList[ElaThemeType::BasicTextPress] = QColor(0x5A, 0x5A, 0x5D);
     _darkThemeColorList[ElaThemeType::BasicTextPress] = QColor(0xBB, 0xBB, 0xBF);
+    _lightThemeColorList[ElaThemeType::BasicTextCategory] = QColor(0x5C, 0x5C, 0x5F);
+    _darkThemeColorList[ElaThemeType::BasicTextCategory] = QColor(0xCC, 0xCC, 0xCE);
     _lightThemeColorList[ElaThemeType::BasicBorder] = QColor(0xE5, 0xE5, 0xE5);
     _darkThemeColorList[ElaThemeType::BasicBorder] = QColor(0x4B, 0x4B, 0x4B);
     _lightThemeColorList[ElaThemeType::BasicBorderDeep] = QColor(0xA8, 0xA8, 0xA8);

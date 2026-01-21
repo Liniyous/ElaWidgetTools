@@ -31,7 +31,7 @@ QVariant ElaFooterModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-ElaNavigationType::NodeOperateReturnType ElaFooterModel::addFooterNode(QString footerTitle, QString& footerKey, bool isHasFooterPage, int keyPoints, ElaIconType::IconName awesome)
+ElaNavigationType::NodeResult ElaFooterModel::addFooterNode(QString footerTitle, QString& footerKey, bool isHasFooterPage, int keyPoints, ElaIconType::IconName awesome)
 {
     if (_footerNodeList.count() >= 3)
     {

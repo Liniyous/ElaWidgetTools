@@ -234,18 +234,14 @@ void ElaWindowPrivate::onNavigationNodeClicked(ElaNavigationType::NavigationNode
 
 void ElaWindowPrivate::onNavigationNodeAdded(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, QWidget* page)
 {
-    if (nodeType == ElaNavigationType::PageNode)
+    if (nodeType == ElaNavigationType::CategoryNode)
     {
-        _routeMap.insert(nodeKey, page);
-        _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
+        return;
     }
-    else
+    _routeMap.insert(nodeKey, page);
+    if (page)
     {
-        _routeMap.insert(nodeKey, page);
-        if (page)
-        {
-            _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
-        }
+        _navigationCenterStackedWidget->getContainerStackedWidget()->addWidget(page);
     }
 }
 

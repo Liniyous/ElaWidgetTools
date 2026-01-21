@@ -9,20 +9,21 @@
 class ElaNavigationNode : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(QList<ElaNavigationNode*>, ChildrenNodes)
+    Q_PRIVATE_CREATE(QList<ElaNavigationNode*>, ChildrenNodes)
     Q_PRIVATE_CREATE(ElaNavigationNode*, ParentNode)
-    Q_PROPERTY_CREATE(ElaIconType::IconName, Awesome)
-    Q_PROPERTY_CREATE(QModelIndex, ModelIndex)
-    Q_PROPERTY_CREATE(int, KeyPoints)
-    Q_PROPERTY_CREATE(int, Depth)
-    Q_PROPERTY_CREATE(bool, IsRootNode)
-    Q_PROPERTY_CREATE(bool, IsFooterNode)
-    Q_PROPERTY_CREATE(bool, IsHasFooterPage)
-    Q_PROPERTY_CREATE(bool, IsExpanderNode)
-    Q_PROPERTY_CREATE(bool, IsVisible)
-    Q_PROPERTY_CREATE(QString, NodeTitle)
+    Q_PRIVATE_CREATE(ElaIconType::IconName, Awesome)
+    Q_PRIVATE_CREATE(QModelIndex, ModelIndex)
+    Q_PRIVATE_CREATE(int, KeyPoints)
+    Q_PRIVATE_CREATE(int, Depth)
+    Q_PRIVATE_CREATE(bool, IsRootNode)
+    Q_PRIVATE_CREATE(bool, IsFooterNode)
+    Q_PRIVATE_CREATE(bool, IsHasFooterPage)
+    Q_PRIVATE_CREATE(bool, IsExpanderNode)
+    Q_PRIVATE_CREATE(bool, IsCategoryNode)
+    Q_PRIVATE_CREATE(bool, IsVisible)
+    Q_PRIVATE_CREATE(QString, NodeTitle)
 public:
-    explicit ElaNavigationNode(QString nodeTitle, ElaNavigationNode* parent = nullptr);
+    explicit ElaNavigationNode(const QString& nodeTitle, ElaNavigationNode* parent = nullptr);
     ~ElaNavigationNode() override;
 
     QString getNodeKey() const;
@@ -43,6 +44,8 @@ public:
     bool getIsChildNode(ElaNavigationNode* node);
 
     int getRow() const;
+
+    QList<ElaNavigationNode*> getExceptCategoryNodes();
 
 private:
     QString _nodeKey = "";

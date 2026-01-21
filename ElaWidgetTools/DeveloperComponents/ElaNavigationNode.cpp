@@ -2,7 +2,7 @@
 
 #include <QUuid>
 
-ElaNavigationNode::ElaNavigationNode(QString nodeTitle, ElaNavigationNode* parent)
+ElaNavigationNode::ElaNavigationNode(const QString& nodeTitle, ElaNavigationNode* parent)
     : QObject(parent)
 {
     _pDepth = 0;
@@ -15,6 +15,8 @@ ElaNavigationNode::ElaNavigationNode(QString nodeTitle, ElaNavigationNode* paren
     _pParentNode = parent;
     _pIsExpanderNode = false;
     _pIsVisible = false;
+    _pIsCategoryNode = false;
+    _pAwesome = ElaIconType::None;
 }
 
 ElaNavigationNode::~ElaNavigationNode()
@@ -166,4 +168,17 @@ int ElaNavigationNode::getRow() const
         return _pParentNode->getChildrenNodes().indexOf(const_cast<ElaNavigationNode*>(this));
     }
     return 0;
+}
+
+QList<ElaNavigationNode*> ElaNavigationNode::getExceptCategoryNodes()
+{
+    QList<ElaNavigationNode*> exceptCategoryNodeList;
+    for (auto node: _pChildrenNodes)
+    {
+        if (!node->getIsCategoryNode())
+        {
+            exceptCategoryNodeList.append(node);
+        }
+    }
+    return exceptCategoryNodeList;
 }

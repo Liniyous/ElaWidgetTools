@@ -340,19 +340,26 @@ void MainWindow::initContent()
     addPageNode("HOME", _homePage, ElaIconType::House);
 #ifdef Q_OS_WIN
     addExpanderNode("ElaDxgi", _elaDxgiKey, ElaIconType::TvMusic);
+    QString dxgiCategoryKey;
+    addCategoryNode("Windows-DXGI", dxgiCategoryKey, _elaDxgiKey);
     addPageNode("ElaScreen", _elaScreenPage, _elaDxgiKey, 3, ElaIconType::ObjectGroup);
 #endif
+    QString controlCategoryKey;
+    addCategoryNode("Controls", controlCategoryKey);
     // navigation(elaScreenWidget->property("ElaPageKey").toString());
     addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
 
     addExpanderNode("ElaView", _viewKey, ElaIconType::CameraViewfinder);
+    QString viewCategoryKey;
+    addCategoryNode("View Content", viewCategoryKey, _viewKey);
     addPageNode("ElaListView", _listViewPage, _viewKey, 9, ElaIconType::List);
     addPageNode("ElaTableView", _tableViewPage, _viewKey, ElaIconType::Table);
     addPageNode("ElaTreeView", _treeViewPage, _viewKey, ElaIconType::ListTree);
     expandNavigationNode(_viewKey);
-
     addPageNode("ElaGraphics", _graphicsPage, 9, ElaIconType::Paintbrush);
     addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
+    QString customKey;
+    addCategoryNode("Custom", customKey);
     addPageNode("ElaNavigation", _navigationPage, ElaIconType::LocationArrow);
     addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
     addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontCase);

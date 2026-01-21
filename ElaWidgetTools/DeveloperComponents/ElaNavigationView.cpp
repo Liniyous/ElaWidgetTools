@@ -93,7 +93,7 @@ void ElaNavigationView::onCustomContextMenuRequested(const QPoint& pos)
         return;
     }
     ElaNavigationNode* posNode = static_cast<ElaNavigationNode*>(posIndex.internalPointer());
-    if (!posNode->getIsExpanderNode())
+    if (!posNode->getIsExpanderNode() && !posNode->getIsCategoryNode())
     {
         ElaMenu menu;
         menu.setMenuItemHeight(27);
