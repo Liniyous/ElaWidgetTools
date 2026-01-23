@@ -155,34 +155,6 @@ void ElaWindowPrivate::onThemeReadyChange()
     }
 }
 
-void ElaWindowPrivate::onDisplayModeChanged()
-{
-    _currentNavigationBarDisplayMode = _pNavigationBarDisplayMode;
-    switch (_pNavigationBarDisplayMode)
-    {
-    case ElaNavigationType::Auto:
-    {
-        _doNavigationDisplayModeChange();
-        break;
-    }
-    case ElaNavigationType::Minimal:
-    {
-        _navigationBar->setDisplayMode(ElaNavigationType::Minimal, true);
-        break;
-    }
-    case ElaNavigationType::Compact:
-    {
-        _navigationBar->setDisplayMode(ElaNavigationType::Compact, true);
-        break;
-    }
-    case ElaNavigationType::Maximal:
-    {
-        _navigationBar->setDisplayMode(ElaNavigationType::Maximal, true);
-        break;
-    }
-    }
-}
-
 void ElaWindowPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 {
     Q_Q(ElaWindow);

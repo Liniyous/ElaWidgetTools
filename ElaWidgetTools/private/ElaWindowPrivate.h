@@ -29,7 +29,6 @@ public:
     Q_SLOT void onNavigationButtonClicked();
     Q_INVOKABLE void onWMWindowClickedEvent(QVariantMap data);
     Q_SLOT void onThemeReadyChange();
-    Q_SLOT void onDisplayModeChanged();
     Q_SLOT void onThemeModeChanged(ElaThemeType::ThemeMode themeMode);
     Q_SLOT void onWindowDisplayModeChanged();
     Q_SLOT void onNavigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack);
