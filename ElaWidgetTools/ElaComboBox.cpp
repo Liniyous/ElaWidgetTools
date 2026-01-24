@@ -6,6 +6,7 @@
 #include "private/ElaComboBoxPrivate.h"
 #include <QAbstractItemView>
 #include <QApplication>
+#include <QDebug>
 #include <QLayout>
 #include <QLineEdit>
 #include <QListView>
@@ -100,7 +101,7 @@ void ElaComboBox::showPopup()
                 containerHeight = count() * 35 + 8;
             }
             view()->resize(view()->width(), containerHeight - 8);
-            container->move(container->x(), container->y() + 3);
+            container->move(mapToGlobal(QPoint(0, height() + 3)));
             QLayout* layout = container->layout();
             while (layout->count())
             {
@@ -161,6 +162,7 @@ void ElaComboBox::hidePopup()
             {
                 layout->takeAt(0);
             }
+            QPoint viewPos = view()->pos();
             QPropertyAnimation* viewPosAnimation = new QPropertyAnimation(view(), "pos");
             connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
                 layout->addWidget(view());
@@ -168,9 +170,6 @@ void ElaComboBox::hidePopup()
                 QApplication::sendEvent(parentWidget(), &focusEvent);
                 QComboBox::hidePopup();
                 container->setFixedHeight(containerHeight);
-            });
-            QPoint viewPos = view()->pos();
-            connect(viewPosAnimation, &QPropertyAnimation::finished, this, [=]() {
                 view()->move(viewPos);
             });
             viewPosAnimation->setStartValue(viewPos);

@@ -228,7 +228,7 @@ void ElaMultiSelectComboBox::showPopup()
                 containerHeight = count() * 35 + 8;
             }
             view()->resize(view()->width(), containerHeight - 8);
-            container->move(container->x(), container->y() + 3);
+            container->move(mapToGlobal(QPoint(0, height() + 3)));
             QLayout* layout = container->layout();
             while (layout->count())
             {
