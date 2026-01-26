@@ -21,9 +21,7 @@ ElaNavigationModel::~ElaNavigationModel()
 
 void ElaNavigationModel::setIsMaximalMode(bool isMaximal)
 {
-    beginResetModel();
     _isMaximalMode = isMaximal;
-    endResetModel();
 }
 
 bool ElaNavigationModel::getIsMaximalMode()
@@ -70,11 +68,11 @@ QModelIndex ElaNavigationModel::index(int row, int column, const QModelIndex& pa
     {
         if (parentNode == _rootNode && !_isMaximalMode)
         {
-            childNode = parentNode->getExceptCategoryNodes().at(row);
+            childNode = parentNode->getExceptCategoryNodes()[row];
         }
         else
         {
-            childNode = parentNode->getChildrenNodes().at(row);
+            childNode = parentNode->getChildrenNodes()[row];
         }
     }
     if (childNode)
