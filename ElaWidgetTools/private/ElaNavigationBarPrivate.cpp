@@ -428,15 +428,10 @@ void ElaNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& ind
         {
             return;
         }
-        QRect indexRect = _navigationView->visualRect(index);
-        QRect viewportRect = _navigationView->viewport()->rect();
-        if (viewportRect.contains(indexRect))
-        {
-            return;
-        }
         auto vScrollBar = _navigationView->verticalScrollBar();
         int startValue = vScrollBar->value();
-        int endValue = startValue + indexRect.top() - ((viewportRect.height() - indexRect.height()) / 2);
+        _navigationView->scrollTo(index, QAbstractItemView::PositionAtCenter);
+        int endValue = vScrollBar->value();
         QPropertyAnimation* scrollAnimation = new QPropertyAnimation(vScrollBar, "value");
         scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
         scrollAnimation->setDuration(255);
