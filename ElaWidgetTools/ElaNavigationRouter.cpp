@@ -47,14 +47,7 @@ ElaNavigationRouterType::NavigationRouteType ElaNavigationRouter::navigationRout
     saveData.insert("ElaRouteConnectionType", QVariant::fromValue<Qt::ConnectionType>(connectionType));
     if (d->_currentIndex != d->_routeList.count() - 1)
     {
-        if (d->_currentIndex == -1)
-        {
-            d->_routeList.clear();
-        }
-        else
-        {
-            d->_routeList.remove(d->_currentIndex + 1, d->_routeList.count() - d->_currentIndex - 1);
-        }
+        d->_routeList.remove(d->_currentIndex + 1, d->_routeList.count() - d->_currentIndex - 1);
         Q_EMIT navigationRouterStateChanged(ElaNavigationRouterType::ForwardInvalid);
     }
     if (d->_currentIndex <= 0)
@@ -73,7 +66,7 @@ void ElaNavigationRouter::clearNavigationRoute()
     d->_currentIndex = -1;
     d->_routeList.clear();
     Q_EMIT navigationRouterStateChanged(ElaNavigationRouterType::BackInvalid);
-    Q_EMIT navigationRouterStateChanged(ElaNavigationRouterType::ForwardValid);
+    Q_EMIT navigationRouterStateChanged(ElaNavigationRouterType::ForwardInvalid);
 }
 
 void ElaNavigationRouter::navigationRouteBack()
