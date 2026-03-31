@@ -159,9 +159,8 @@ bool ElaApplication::containsCursorToItem(QWidget* item)
     {
         return false;
     }
-    auto point = item->window()->mapFromGlobal(QCursor::pos());
-    QRectF rect = QRectF(item->mapTo(item->window(), QPoint(0, 0)), item->size());
-    if (rect.contains(point))
+    auto itemRect = QRect(item->mapToGlobal(QPoint(0, 0)), item->size());
+    if (itemRect.contains(QCursor::pos()))
     {
         return true;
     }
