@@ -17,6 +17,7 @@ ElaCentralStackedWidget::ElaCentralStackedWidget(QWidget* parent)
     _pScaleAnimationPixOpacity = 1;
     _pFlipAnimationRatio = 1;
     _pBlurAnimationRadius = 0;
+    _pLastTargetIndex = 0;
 
     setObjectName("ElaCentralStackedWidget");
     setStyleSheet("#ElaCentralStackedWidget{background-color:transparent;}");
@@ -92,6 +93,11 @@ void ElaCentralStackedWidget::setIsHasRadius(bool isHasRadius)
 
 void ElaCentralStackedWidget::doWindowStackSwitch(ElaWindowType::StackSwitchMode stackSwitchMode, int nodeIndex, bool isRouteBack)
 {
+    if (_pLastTargetIndex == nodeIndex)
+    {
+        return;
+    }
+    _pLastTargetIndex = nodeIndex;
     _stackSwitchMode = stackSwitchMode;
     switch (stackSwitchMode)
     {

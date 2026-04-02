@@ -8,11 +8,11 @@
 #include <QVBoxLayout>
 
 #include "ElaAcrylicUrlCard.h"
+#include "ElaActionCommander.h"
 #include "ElaFlowLayout.h"
 #include "ElaImageCard.h"
 #include "ElaMenu.h"
 #include "ElaMessageBar.h"
-#include "ElaNavigationRouter.h"
 #include "ElaPopularCard.h"
 #include "ElaScrollArea.h"
 #include "ElaText.h"
@@ -199,7 +199,7 @@ T_Home::T_Home(QWidget* parent)
     _homeMenu->addElaIconAction(ElaIconType::ArrowRotateRight, "刷新");
     QAction* action = _homeMenu->addElaIconAction(ElaIconType::ArrowRotateLeft, "撤销");
     connect(action, &QAction::triggered, this, [=]() {
-        ElaNavigationRouter::getInstance()->navigationRouteBack();
+        ElaActionCommander::getInstance()->undoCommand("ElaWidgetToolsAction");
     });
 
     _homeMenu->addElaIconAction(ElaIconType::Copy, "复制");

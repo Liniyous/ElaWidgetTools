@@ -19,10 +19,10 @@ class ElaScrollPagePrivate : public QObject
     Q_PROPERTY_CREATE_D(QWidget*, CustomWidget)
 public:
     explicit ElaScrollPagePrivate(QObject* parent = nullptr);
-    ~ElaScrollPagePrivate();
-    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
+    ~ElaScrollPagePrivate() override;
 
 private:
+    friend class ElaScrollPageRouteCommand;
     QHBoxLayout* _pageTitleLayout{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
     QStackedWidget* _centralStackedWidget{nullptr};

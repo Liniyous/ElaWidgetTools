@@ -37,14 +37,12 @@ public:
     ~ElaNavigationBarPrivate() override;
     Q_SLOT void onNavigationOpenNewWindow(QString nodeKey);
 
-    Q_INVOKABLE void onNavigationRoute(QVariantMap routeData);
-
     //核心跳转逻辑
     void onTreeViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
     void onFooterViewClicked(const QModelIndex& index, bool isLogRoute = true, bool isRouteBack = false);
 
 protected:
-    virtual bool eventFilter(QObject* watched, QEvent* event);
+    bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
     friend class ElaNavigationView;

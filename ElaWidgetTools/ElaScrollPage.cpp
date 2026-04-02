@@ -10,9 +10,9 @@
 #include <QVBoxLayout>
 
 #include "ElaBreadcrumbBar.h"
-#include "ElaNavigationRouter.h"
 #include "ElaScrollArea.h"
 #include "ElaScrollBar.h"
+#include "ElaScrollPageRouteCommand.h"
 #include "private/ElaScrollPagePrivate.h"
 ElaScrollPage::ElaScrollPage(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaScrollPagePrivate())
@@ -23,17 +23,15 @@ ElaScrollPage::ElaScrollPage(QWidget* parent)
     d->_pCustomWidget = nullptr;
     d->_breadcrumbBar = new ElaBreadcrumbBar(this);
     d->_breadcrumbBar->setTextPixelSize(28);
-    connect(d->_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [=](QString breadcrumb, QStringList lastBreadcrumbList) {
+    connect(d->_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [=](const QString& breadcrumb, const QStringList& lastBreadcrumbList) {
         if (d->_centralWidgetMap.contains(breadcrumb))
         {
-            int widgetIndex = d->_centralWidgetMap.value(breadcrumb);
-            d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
-            d->_navigationTargetIndex = widgetIndex;
-            QVariantMap routeData = QVariantMap();
-            routeData.insert("ElaScrollPageCheckSumKey", "BreadcrumbClicked");
-            routeData.insert("ElaBackBreadcrumbList", lastBreadcrumbList);
-            routeData.insert("ElaForwardBreadcrumbList", d->_breadcrumbBar->getBreadcrumbList());
-            ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
+            auto command = new ElaScrollPageRouteCommand(this);
+            command->setIsBreadcrumbClicked(true);
+            command->setScrollPagePrivate(d);
+            command->setUndoBreadcrumbList(lastBreadcrumbList);
+            command->setRedoBreadcrumbList(d->_breadcrumbBar->getBreadcrumbList());
+            ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command);
         }
     });
     d->_pageTitleLayout = new QHBoxLayout();
@@ -87,7 +85,7 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
     scrollPageContainerLayout->setContentsMargins(0, 0, 0, 0);
     scrollPageContainerLayout->addWidget(centralWidget);
     scrollArea->setWidget(scrollPageContainer);
-    
+
     d->_centralWidgetMap.insert(centralWidget->windowTitle(), d->_centralStackedWidget->count());
     d->_centralStackedWidget->addWidget(scrollArea);
 }
@@ -121,17 +119,18 @@ void ElaScrollPage::navigation(int widgetIndex, bool isLogRoute)
     {
         return;
     }
+    int currentIndex = d->_navigationTargetIndex;
     d->_switchCentralStackIndex(widgetIndex, d->_navigationTargetIndex);
     d->_navigationTargetIndex = widgetIndex;
     QString pagetTitle = d->_centralWidgetMap.key(widgetIndex);
     if (isLogRoute)
     {
-        QVariantMap routeData = QVariantMap();
-        routeData.insert("ElaScrollPageCheckSumKey", "Navigation");
-        QStringList breadcrumbList = d->_breadcrumbBar->getBreadcrumbList();
-        routeData.insert("ElaBackPageTitle", breadcrumbList.last());
-        routeData.insert("ElaForwardPageTitle", pagetTitle);
-        ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
+        auto command = new ElaScrollPageRouteCommand(this);
+        command->setIsBreadcrumbClicked(false);
+        command->setScrollPagePrivate(d);
+        command->setUndoPageIndex(currentIndex);
+        command->setRedoPageIndex(widgetIndex);
+        ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command, false);
     }
     d->_breadcrumbBar->appendBreadcrumb(pagetTitle);
 }

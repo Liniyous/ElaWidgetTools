@@ -1,11 +1,12 @@
 #include "ElaWindow.h"
+#include "ElaActionCommander.h"
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
 #include "ElaEventBus.h"
 #include "ElaMenu.h"
 #include "ElaNavigationBar.h"
-#include "ElaNavigationRouter.h"
 #include "ElaTheme.h"
+#include "ElaWindowStackChangeCommand.h"
 #include "ElaWindowStyle.h"
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
@@ -41,16 +42,16 @@ ElaWindow::ElaWindow(QWidget* parent)
     d->_appBar = new ElaAppBar(this);
     d->_appBar->setWindowButtonFlag(ElaAppBarType::NavigationButtonHint);
     connect(d->_appBar, &ElaAppBar::routeBackButtonClicked, this, []() {
-        ElaNavigationRouter::getInstance()->navigationRouteBack();
+        ElaActionCommander::getInstance()->undoCommand("ElaWidgetToolsAction");
     });
     connect(d->_appBar, &ElaAppBar::routeForwardButtonClicked, this, []() {
-        ElaNavigationRouter::getInstance()->navigationRouteForward();
+        ElaActionCommander::getInstance()->redoCommand("ElaWidgetToolsAction");
     });
     connect(d->_appBar, &ElaAppBar::closeButtonClicked, this, &ElaWindow::closeButtonClicked);
     // 导航栏
     d->_navigationBar = new ElaNavigationBar(this);
     // 返回按钮状态变更
-    connect(ElaNavigationRouter::getInstance(), &ElaNavigationRouter::navigationRouterStateChanged, d, &ElaWindowPrivate::onNavigationRouterStateChanged);
+    connect(ElaActionCommander::getInstance(), &ElaActionCommander::commanderStateChanged, d, &ElaWindowPrivate::onNavigationRouterStateChanged);
 
     // 转发用户卡片点击信号
     connect(d->_navigationBar, &ElaNavigationBar::userInfoCardClicked, this, &ElaWindow::userInfoCardClicked);
@@ -252,18 +253,16 @@ int ElaWindow::getNavigationBarWidth() const
 void ElaWindow::setCurrentStackIndex(int currentStackIndex)
 {
     Q_D(ElaWindow);
-    if (currentStackIndex >= d->_centerStackedWidget->getContainerStackedWidget()->count() || currentStackIndex < 0 || currentStackIndex == d->_centralStackTargetIndex)
+    if (currentStackIndex >= d->_centerStackedWidget->getContainerStackedWidget()->count() || currentStackIndex < 0 || currentStackIndex == d->_centerStackedWidget->getLastTargetIndex())
     {
         return;
     }
-    d->_centralStackTargetIndex = currentStackIndex;
-    QVariantMap routeData;
     int currentCenterStackedWidgetIndex = d->_centerStackedWidget->getContainerStackedWidget()->currentIndex();
-    routeData.insert("ElaBackCentralStackIndex", currentCenterStackedWidgetIndex);
-    routeData.insert("ElaForwardCentralStackIndex", currentStackIndex);
-    ElaNavigationRouter::getInstance()->navigationRoute(d, "onNavigationRoute", routeData);
-    d->_centerStackedWidget->doWindowStackSwitch(d->_pStackSwitchMode, currentStackIndex, false);
-    Q_EMIT pCurrentStackIndexChanged();
+    auto command = new ElaWindowStackChangeCommand(this);
+    command->setWindowPrivate(d);
+    command->setUndoStackIndex(currentCenterStackedWidgetIndex);
+    command->setRedoStackIndex(currentStackIndex);
+    ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command);
 }
 
 int ElaWindow::getCurrentStackIndex() const

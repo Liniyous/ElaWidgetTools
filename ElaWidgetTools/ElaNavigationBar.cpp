@@ -563,7 +563,14 @@ void ElaNavigationBar::setDisplayMode(ElaNavigationType::NavigationDisplayMode d
     {
         return;
     }
-    d->_navigationModel->setIsMaximalMode(displayMode == ElaNavigationType::Maximal);
+    if (displayMode == ElaNavigationType::Maximal)
+    {
+        d->_navigationModel->setIsMaximalMode(true);
+    }
+    else
+    {
+        d->_navigationModel->setIsMaximalMode(false);
+    }
     d->_doComponentAnimation(displayMode, isAnimation);
     d->_raiseNavigationBar();
 }

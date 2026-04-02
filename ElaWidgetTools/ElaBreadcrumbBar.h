@@ -13,7 +13,7 @@ class ELA_EXPORT ElaBreadcrumbBar : public QWidget
     Q_PROPERTY_CREATE_Q_H(bool, IsAutoRemove)
 public:
     explicit ElaBreadcrumbBar(QWidget* parent = nullptr);
-    ~ElaBreadcrumbBar();
+    ~ElaBreadcrumbBar() override;
     void setBreadcrumbList(QStringList breadcrumbList);
     QStringList appendBreadcrumb(QString breadcrumb);
     QStringList removeBreadcrumb(QString breadcrumb);

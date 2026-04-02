@@ -17,27 +17,6 @@ ElaScrollPagePrivate::~ElaScrollPagePrivate()
 {
 }
 
-void ElaScrollPagePrivate::onNavigationRoute(QVariantMap routeData)
-{
-    // 面包屑
-    Q_Q(ElaScrollPage);
-    QString pageCheckSumKey = routeData.value("ElaScrollPageCheckSumKey").toString();
-    bool isRouteBack = routeData.value("ElaRouteBackMode").toBool();
-    if (pageCheckSumKey == "Navigation")
-    {
-        QString pageTitle = isRouteBack ? routeData.value("ElaBackPageTitle").toString() : routeData.value("ElaForwardPageTitle").toString();
-        q->navigation(_centralWidgetMap.value(pageTitle), false);
-    }
-    else if (pageCheckSumKey == "BreadcrumbClicked")
-    {
-        QStringList breadcrumbList = isRouteBack ? routeData.value("ElaBackBreadcrumbList").toStringList() : routeData.value("ElaForwardBreadcrumbList").toStringList();
-        int widgetIndex = _centralWidgetMap.value(breadcrumbList.last());
-        _switchCentralStackIndex(widgetIndex, _navigationTargetIndex);
-        _navigationTargetIndex = widgetIndex;
-        _breadcrumbBar->setBreadcrumbList(breadcrumbList);
-    }
-}
-
 void ElaScrollPagePrivate::_switchCentralStackIndex(int targetIndex, int lastIndex)
 {
     QWidget* currentWidget = _centralStackedWidget->widget(lastIndex);

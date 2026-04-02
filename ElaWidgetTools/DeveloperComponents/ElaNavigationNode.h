@@ -44,6 +44,7 @@ public:
     bool getIsChildNode(ElaNavigationNode* node);
 
     int getRow() const;
+    int getRowExceptCategoryNodes() const;
 
     QList<ElaNavigationNode*> getExceptCategoryNodes();
 

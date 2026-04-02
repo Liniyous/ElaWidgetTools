@@ -1,4 +1,5 @@
 ﻿#include "ElaNavigationBarPrivate.h"
+#include "ElaActionCommander.h"
 #include "ElaApplication.h"
 #include "ElaBaseListView.h"
 #include "ElaCustomTabWidget.h"
@@ -11,7 +12,7 @@
 #include "ElaNavigationBar.h"
 #include "ElaNavigationModel.h"
 #include "ElaNavigationNode.h"
-#include "ElaNavigationRouter.h"
+#include "ElaNavigationRouteCommand.h"
 #include "ElaNavigationView.h"
 #include "ElaToolButton.h"
 #include <QApplication>
@@ -52,14 +53,6 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(QString nodeKey)
     }
 }
 
-void ElaNavigationBarPrivate::onNavigationRoute(QVariantMap routeData)
-{
-    Q_Q(ElaNavigationBar);
-    bool isRouteBack = routeData.value("ElaRouteBackMode").toBool();
-    QString pageKey = isRouteBack ? routeData.value("ElaBackPageKey").toString() : routeData.value("ElaForwardPageKey").toString();
-    q->navigation(pageKey, false, isRouteBack);
-}
-
 void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
 {
     Q_Q(ElaNavigationBar);
@@ -92,7 +85,6 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                 // 记录跳转
                 if (isLogRoute)
                 {
-                    QVariantMap routeData = QVariantMap();
                     QString backPageKey;
                     if (selectedNode)
                     {
@@ -105,9 +97,11 @@ void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool i
                             backPageKey = _footerModel->getSelectedNode()->getNodeKey();
                         }
                     }
-                    routeData.insert("ElaBackPageKey", backPageKey);
-                    routeData.insert("ElaForwardPageKey", node->getNodeKey());
-                    ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRoute", routeData);
+                    ElaNavigationRouteCommand* command = new ElaNavigationRouteCommand(this);
+                    command->setNavigationBar(q);
+                    command->setUndoPageKey(backPageKey);
+                    command->setRedoPageKey(node->getNodeKey());
+                    ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command, false);
                 }
                 Q_EMIT q->navigationNodeClicked(ElaNavigationType::PageNode, node->getNodeKey(), isRouteBack);
 
@@ -195,9 +189,11 @@ void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool
                     backPageKey = _navigationModel->getSelectedNode()->getNodeKey();
                 }
             }
-            routeData.insert("ElaBackPageKey", backPageKey);
-            routeData.insert("ElaForwardPageKey", node->getNodeKey());
-            ElaNavigationRouter::getInstance()->navigationRoute(this, "onNavigationRoute", routeData);
+            ElaNavigationRouteCommand* command = new ElaNavigationRouteCommand(this);
+            command->setNavigationBar(q);
+            command->setUndoPageKey(backPageKey);
+            command->setRedoPageKey(node->getNodeKey());
+            ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command, false);
         }
         Q_EMIT q->navigationNodeClicked(ElaNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
 

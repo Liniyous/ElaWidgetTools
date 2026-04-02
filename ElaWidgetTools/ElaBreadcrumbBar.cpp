@@ -35,8 +35,10 @@ ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
         {
             if (d->_listModel->getBreadcrumbListCount() != 1 && index.row() != d->_listModel->getBreadcrumbListCount() * 2 - 2 && index.data(Qt::DisplayRole).toString() != ">")
             {
-                Q_EMIT breadcrumbClicked(index.data(Qt::DisplayRole).toString(), d->_listModel->getBreadcrumbList());
+                auto breadcrumb = index.data(Qt::DisplayRole).toString();
+                auto lastBreadcrumbList = d->_listModel->getBreadcrumbList();
                 d->_listModel->removeBreadcrumb(index.row() / 2 + 1);
+                Q_EMIT breadcrumbClicked(breadcrumb, lastBreadcrumbList);
             }
         }
         else

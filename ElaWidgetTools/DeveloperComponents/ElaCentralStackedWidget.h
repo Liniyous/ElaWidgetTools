@@ -14,6 +14,7 @@ class ElaCentralStackedWidget : public QWidget
     Q_PROPERTY_CREATE(qreal, ScaleAnimationPixOpacity)
     Q_PROPERTY_CREATE(qreal, FlipAnimationRatio)
     Q_PROPERTY_CREATE(int, BlurAnimationRadius)
+    Q_PROPERTY_CREATE(int, LastTargetIndex)
 public:
     explicit ElaCentralStackedWidget(QWidget* parent = nullptr);
     ~ElaCentralStackedWidget() override;

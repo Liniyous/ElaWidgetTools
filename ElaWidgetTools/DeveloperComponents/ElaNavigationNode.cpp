@@ -169,6 +169,15 @@ int ElaNavigationNode::getRow() const
     return 0;
 }
 
+int ElaNavigationNode::getRowExceptCategoryNodes() const
+{
+    if (_pParentNode)
+    {
+        return _pParentNode->getExceptCategoryNodes().indexOf(const_cast<ElaNavigationNode*>(this));
+    }
+    return 0;
+}
+
 QList<ElaNavigationNode*> ElaNavigationNode::getExceptCategoryNodes()
 {
     QList<ElaNavigationNode*> exceptCategoryNodeList;
