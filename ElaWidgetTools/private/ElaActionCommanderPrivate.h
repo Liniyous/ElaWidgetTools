@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QVector>
 
-#include "ElaProperty.h"
+#include "ElaDef.h"
 class ElaActionCommand;
 class ElaActionCommander;
 class ElaActionCommanderPrivate : public QObject
@@ -13,15 +13,17 @@ class ElaActionCommanderPrivate : public QObject
     Q_D_CREATE(ElaActionCommander)
     Q_PROPERTY_CREATE_D(int, MaxRouteCount)
 public:
-    struct ElaActionCommandData {
+    struct ElaActionCommandDomainData {
         int currentIndex{-1};
+        ElaActionCommanderType::CommanderState undoState{ElaActionCommanderType::UndoInvalid};
+        ElaActionCommanderType::CommanderState redoState{ElaActionCommanderType::RedoInvalid};
         QVector<ElaActionCommand*> commandList;
     };
     explicit ElaActionCommanderPrivate(QObject* parent = nullptr);
     ~ElaActionCommanderPrivate() override;
 
 private:
-    QMap<QString, ElaActionCommandData> _commandDataMap;
+    QMap<QString, ElaActionCommandDomainData> _commandDomainMap;
 };
 
 #endif // ELAACTIONCOMMANDERPRIVATE_H

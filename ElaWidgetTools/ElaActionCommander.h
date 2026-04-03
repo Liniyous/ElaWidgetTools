@@ -37,6 +37,9 @@ public:
     void clearCommand(const QString& domainName);
     void undoCommand(const QString& domainName);
     void redoCommand(const QString& domainName);
+
+    ElaActionCommanderType::CommanderState getCommanderUndoState(const QString& domainName) const;
+    ElaActionCommanderType::CommanderState getCommanderRedoState(const QString& domainName) const;
 };
 
 #endif // ELAACTIONCOMMANDER_H
