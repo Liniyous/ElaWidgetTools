@@ -64,7 +64,7 @@ ElaMenu* ElaMenuBar::addMenu(ElaIconType::IconName icon, const QString& title)
 {
     ElaMenu* menu = new ElaMenu(title, this);
     menu->setMenuItemHeight(27);
-    menu->menuAction()->setProperty("ElaIconType", QChar((unsigned short)icon));
+    menu->menuAction()->setProperty("ElaIconType", QChar(icon));
     menu->menuAction()->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
     QMenuBar::addAction(menu->menuAction());
     return menu;
@@ -73,7 +73,7 @@ ElaMenu* ElaMenuBar::addMenu(ElaIconType::IconName icon, const QString& title)
 QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString& text)
 {
     QAction* action = new QAction(text, this);
-    action->setProperty("ElaIconType", QChar((unsigned short)icon));
+    action->setProperty("ElaIconType", QChar(icon));
     action->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
     QMenuBar::addAction(action);
     return action;
@@ -83,7 +83,7 @@ QAction* ElaMenuBar::addElaIconAction(ElaIconType::IconName icon, const QString&
 {
     QAction* action = new QAction(text, this);
     action->setShortcut(shortcut);
-    action->setProperty("ElaIconType", QChar((unsigned short)icon));
+    action->setProperty("ElaIconType", QChar(icon));
     action->setIcon(ElaIcon::getInstance()->getElaIcon(ElaIconType::Broom, 1));
     QMenuBar::addAction(action);
     return action;

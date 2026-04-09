@@ -170,7 +170,7 @@ void ElaText::paintEvent(QPaintEvent* event)
         iconFont.setPixelSize(this->font().pixelSize());
         painter.setFont(iconFont);
         painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
-        painter.drawText(rect(), Qt::AlignCenter, QChar((unsigned short)d->_pElaIcon));
+        painter.drawText(rect(), Qt::AlignCenter, QChar(d->_pElaIcon));
         painter.restore();
     }
     else

@@ -14,13 +14,14 @@ ElaDrawerContainer::ElaDrawerContainer(QWidget* parent)
     setStyleSheet("#ElaDrawerContainer{background-color:transparent;}");
 
     _mainLayout = new QVBoxLayout(this);
+    _mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     _mainLayout->setContentsMargins(0, 0, 0, 0);
 
     _containerWidget = new QWidget(this);
     _containerWidget->setObjectName("ElaDrawerContainerWidget");
     _containerWidget->setStyleSheet("#ElaDrawerContainerWidget{background-color:transparent;}");
-    setMaximumHeight(0);
-
+    _containerWidget->setVisible(false);
+    
     _containerLayout = new QVBoxLayout(_containerWidget);
     _containerLayout->setContentsMargins(0, 0, 0, 0);
     _containerLayout->setSpacing(0);
@@ -65,11 +66,10 @@ void ElaDrawerContainer::doDrawerAnimation(bool isExpand)
         return;
     }
     _containerWidget->setVisible(true);
+    _mainLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+    int expandHeight = height();
     _isShowBorder = true;
-    if (isExpand)
-    {
-        setFixedHeight(_calculateContainerMinimumHeight());
-    }
+    setFixedHeight(expandHeight);
     _pContainerPix = grab(rect());
     QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
     connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
@@ -77,15 +77,9 @@ void ElaDrawerContainer::doDrawerAnimation(bool isExpand)
     });
     connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
         _pContainerPix = QPixmap();
-        if (isExpand)
-        {
-            _containerWidget->setVisible(true);
-            _isShowBorder = true;
-        }
-        else
-        {
-            setFixedHeight(0);
-        }
+        _isShowBorder = isExpand;
+        _containerWidget->setVisible(isExpand);
+        _mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
     });
     opacityAnimation->setEasingCurve(QEasingCurve::OutCubic);
     opacityAnimation->setDuration(300);
@@ -123,15 +117,4 @@ void ElaDrawerContainer::paintEvent(QPaintEvent* event)
         painter.drawPixmap(QRect(0, -height() * (1 - _pOpacity), width(), height()), _pContainerPix);
     }
     painter.restore();
-}
-
-int ElaDrawerContainer::_calculateContainerMinimumHeight() const
-{
-    int minimumHeight = 0;
-    for (auto widget: _drawerWidgetList)
-    {
-        minimumHeight += widget->minimumHeight();
-    }
-    minimumHeight = std::max(100, minimumHeight);
-    return minimumHeight;
 }

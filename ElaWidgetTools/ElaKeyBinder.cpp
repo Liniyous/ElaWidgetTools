@@ -118,7 +118,7 @@ void ElaKeyBinder::paintEvent(QPaintEvent* event)
     painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
     QRect iconRect = rect();
     iconRect.adjust(0, 0, -10, 0);
-    painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar((unsigned short)ElaIconType::Pencil));
+    painter.drawText(iconRect, Qt::AlignVCenter | Qt::AlignRight, QChar(ElaIconType::Pencil));
     painter.restore();
     QLabel::paintEvent(event);
 }

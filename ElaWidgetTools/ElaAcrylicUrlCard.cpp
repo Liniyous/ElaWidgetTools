@@ -124,6 +124,6 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     iconFont.setPixelSize(13);
     painter.setFont(iconFont);
     painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
-    painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(), QChar((unsigned short)ElaIconType::UpRightFromSquare));
+    painter.drawText(width - 1.5 * iconFont.pixelSize(), height() - iconFont.pixelSize(), QChar(ElaIconType::UpRightFromSquare));
     painter.restore();
 }

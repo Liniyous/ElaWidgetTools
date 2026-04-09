@@ -1,160 +1,16 @@
 #include "ElaMessageBarPrivate.h"
 
+#include "ElaIconButton.h"
+#include "ElaMessageBar.h"
 #include <QDateTime>
+#include <QDebug>
 #include <QGraphicsOpacityEffect>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QTimer>
 
-#include "ElaIconButton.h"
-#include "ElaMessageBar.h"
-Q_SINGLETON_CREATE_CPP(ElaMessageBarManager)
 QMap<ElaMessageBarType::PositionPolicy, QList<ElaMessageBar*>*> _messageBarActiveMap;
-ElaMessageBarManager::ElaMessageBarManager(QObject* parent)
-{
-}
-
-ElaMessageBarManager::~ElaMessageBarManager()
-{
-}
-
-void ElaMessageBarManager::requestMessageBarEvent(ElaMessageBar* messageBar)
-{
-    if (!messageBar)
-    {
-        return;
-    }
-    if (_messageBarEventMap.contains(messageBar))
-    {
-        QList<QVariantMap> eventList = _messageBarEventMap.value(messageBar);
-        QVariantMap eventData = eventList.last();
-        eventList.removeLast();
-        if (eventList.isEmpty())
-        {
-            _messageBarEventMap.remove(messageBar);
-        }
-        else
-        {
-            _messageBarEventMap[messageBar] = eventList;
-        }
-        //触发事件
-        QString functionName = eventData.value("EventFunctionName").toString();
-        QVariantMap functionData = eventData.value("EventFunctionData").toMap();
-        QMetaObject::invokeMethod(messageBar->d_func(), functionName.toLocal8Bit().constData(), Qt::AutoConnection, Q_ARG(QVariantMap, functionData));
-    }
-}
-
-void ElaMessageBarManager::postMessageBarCreateEvent(ElaMessageBar* messageBar)
-{
-    if (!messageBar)
-    {
-        return;
-    }
-    updateActiveMap(messageBar, true); // 计算坐标前增加
-    if (!_messageBarEventMap.contains(messageBar))
-    {
-        QList<QVariantMap> eventList;
-        QVariantMap eventData;
-        eventData.insert("EventFunctionName", "messageBarEnd");
-        eventList.append(eventData);
-        _messageBarEventMap.insert(messageBar, eventList);
-    }
-}
-
-void ElaMessageBarManager::postMessageBarEndEvent(ElaMessageBar* messageBar)
-{
-    if (!messageBar)
-    {
-        return;
-    }
-    updateActiveMap(messageBar, false);
-    //Other MessageBar事件入栈 记录同一策略事件
-    ElaMessageBarType::PositionPolicy policy = messageBar->d_ptr->_policy;
-    foreach (auto otherMessageBar, *_messageBarActiveMap.value(policy))
-    {
-        if (otherMessageBar->d_ptr->_judgeCreateOrder(messageBar))
-        {
-            QList<QVariantMap> eventList = _messageBarEventMap[otherMessageBar];
-            //优先执行先触发的事件 End事件保持首位
-            QVariantMap eventData;
-            eventData.insert("EventFunctionName", "onOtherMessageBarEnd");
-            QVariantMap functionData;
-            functionData.insert("TargetPosY", otherMessageBar->d_ptr->_calculateTargetPosY());
-            eventData.insert("EventFunctionData", functionData);
-            //若处于创建动画阶段  则合并事件动画
-            if (otherMessageBar->d_ptr->getWorkMode() == WorkStatus::CreateAnimation)
-            {
-                while (eventList.count() > 1)
-                {
-                    eventList.removeLast();
-                }
-            }
-            eventList.insert(1, eventData);
-            _messageBarEventMap[otherMessageBar] = eventList;
-            otherMessageBar->d_ptr->tryToRequestMessageBarEvent();
-        }
-    }
-}
-
-void ElaMessageBarManager::forcePostMessageBarEndEvent(ElaMessageBar* messageBar)
-{
-    if (!messageBar)
-    {
-        return;
-    }
-    //清除事件堆栈记录
-    _messageBarEventMap.remove(messageBar);
-    //发布终止事件
-    postMessageBarEndEvent(messageBar);
-}
-
-int ElaMessageBarManager::getMessageBarEventCount(ElaMessageBar* messageBar)
-{
-    if (!messageBar)
-    {
-        return -1;
-    }
-    if (!_messageBarEventMap.contains(messageBar))
-    {
-        return -1;
-    }
-    QList<QVariantMap> eventList = _messageBarEventMap[messageBar];
-    return eventList.count();
-}
-
-void ElaMessageBarManager::updateActiveMap(ElaMessageBar* messageBar, bool isActive)
-{
-    if (!messageBar)
-    {
-        return;
-    }
-    ElaMessageBarType::PositionPolicy policy = messageBar->d_ptr->_policy;
-    if (isActive)
-    {
-        if (_messageBarActiveMap.contains(policy))
-        {
-            _messageBarActiveMap[policy]->append(messageBar);
-        }
-        else
-        {
-            QList<ElaMessageBar*>* messageBarList = new QList<ElaMessageBar*>();
-            messageBarList->append(messageBar);
-            _messageBarActiveMap.insert(policy, messageBarList);
-        }
-    }
-    else
-    {
-        if (_messageBarActiveMap.contains(policy))
-        {
-            if (_messageBarActiveMap[policy]->count() > 0)
-            {
-                _messageBarActiveMap[policy]->removeOne(messageBar);
-            }
-        }
-    }
-}
-
 ElaMessageBarPrivate::ElaMessageBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -168,48 +24,13 @@ ElaMessageBarPrivate::~ElaMessageBarPrivate()
 {
 }
 
-void ElaMessageBarPrivate::tryToRequestMessageBarEvent()
+void ElaMessageBarPrivate::onOtherMessageBarEnd()
 {
     Q_Q(ElaMessageBar);
-    if (!_isMessageBarCreateAnimationFinished || _isMessageBarEventAnimationStart)
-    {
-        return;
-    }
-    ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
-}
-
-WorkStatus ElaMessageBarPrivate::getWorkMode() const
-{
-    if (!_isMessageBarCreateAnimationFinished)
-    {
-        return WorkStatus::CreateAnimation;
-    }
-    if (_isMessageBarEventAnimationStart)
-    {
-        return WorkStatus::OtherEventAnimation;
-    }
-    return WorkStatus::Idle;
-}
-
-void ElaMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
-{
-    Q_Q(ElaMessageBar);
-    _isMessageBarEventAnimationStart = true;
-    qreal targetPosY = eventData.value("TargetPosY").toReal();
+    qreal targetPosY = _calculateTargetPosY();
     QPropertyAnimation* closePosAnimation = new QPropertyAnimation(this, "MessageBarClosedY");
     connect(closePosAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
         q->move(q->pos().x(), value.toUInt());
-    });
-    connect(closePosAnimation, &QPropertyAnimation::finished, this, [=]() {
-        _isMessageBarEventAnimationStart = false;
-        if (ElaMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
-        {
-            ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
-        }
-        if (_isReadyToEnd)
-        {
-            ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
-        }
     });
     closePosAnimation->setEasingCurve(QEasingCurve::OutCubic);
     closePosAnimation->setDuration(220);
@@ -218,10 +39,11 @@ void ElaMessageBarPrivate::onOtherMessageBarEnd(QVariantMap eventData)
     closePosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-void ElaMessageBarPrivate::messageBarEnd(QVariantMap eventData)
+void ElaMessageBarPrivate::messageBarEnd()
 {
     Q_Q(ElaMessageBar);
-    ElaMessageBarManager::getInstance()->postMessageBarEndEvent(q);
+    _closeButton->setEnabled(false);
+    _updateActiveMap(false);
     QPropertyAnimation* barFinishedOpacityAnimation = new QPropertyAnimation(this, "pOpacity");
     connect(barFinishedOpacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
         _closeButton->setOpacity(_pOpacity);
@@ -235,31 +57,18 @@ void ElaMessageBarPrivate::messageBarEnd(QVariantMap eventData)
     barFinishedOpacityAnimation->setStartValue(1);
     barFinishedOpacityAnimation->setEndValue(0);
     barFinishedOpacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
-void ElaMessageBarPrivate::onCloseButtonClicked()
-{
-    Q_Q(ElaMessageBar);
-    if (_isReadyToEnd)
+    // 通知同类型的其他MessageBar
+    for (const auto messageBar: *_messageBarActiveMap[_policy])
     {
-        return;
+        if (messageBar->d_ptr->_isNormalDisplay)
+        {
+            messageBar->d_ptr->onOtherMessageBarEnd();
+        }
+        else
+        {
+            messageBar->d_ptr->_isOtherMessageBarEnd = true;
+        }
     }
-    _isReadyToEnd = true;
-    _isNormalDisplay = false;
-    ElaMessageBarManager::getInstance()->forcePostMessageBarEndEvent(q);
-    QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-    connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-        _closeButton->setOpacity(_pOpacity);
-        q->update();
-    });
-    connect(opacityAnimation, &QPropertyAnimation::finished, q, [=]() {
-        q->deleteLater();
-    });
-    opacityAnimation->setStartValue(_pOpacity);
-    opacityAnimation->setEndValue(0);
-    opacityAnimation->setDuration(220);
-    opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
@@ -277,24 +86,22 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     int textWidth = q->fontMetrics().horizontalAdvance(_text);
     int fixedWidth = _closeButtonLeftRightMargin + _leftPadding + _titleLeftSpacing + _textLeftSpacing + _closeButtonWidth + titleWidth + textWidth + 2 * _shadowBorderWidth;
     q->setFixedWidth(fixedWidth > 500 ? 500 : fixedWidth);
-    ElaMessageBarManager::getInstance()->postMessageBarCreateEvent(q);
     int startX = 0;
     int startY = 0;
     int endX = 0;
     int endY = 0;
+    _updateActiveMap(true);
     _calculateInitialPos(startX, startY, endX, endY);
     // 滑入动画
     QPropertyAnimation* barPosAnimation = new QPropertyAnimation(q, "pos");
     connect(barPosAnimation, &QPropertyAnimation::finished, q, [=]() {
         _isNormalDisplay = true;
-        _isMessageBarCreateAnimationFinished = true;
-        if (ElaMessageBarManager::getInstance()->getMessageBarEventCount(q) > 1)
+        if (_isOtherMessageBarEnd)
         {
-            ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
+            onOtherMessageBarEnd();
         }
         QTimer::singleShot(displayMsec, q, [=]() {
-            _isReadyToEnd = true;
-            ElaMessageBarManager::getInstance()->requestMessageBarEvent(q);
+            messageBarEnd();
         });
         QPropertyAnimation* timePercentAnimation = new QPropertyAnimation(this, "pTimePercent");
         connect(timePercentAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
@@ -316,7 +123,7 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     }
     default:
     {
-        barPosAnimation->setDuration(450);
+        barPosAnimation->setDuration(350);
         break;
     }
     }
@@ -407,25 +214,25 @@ void ElaMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& e
     }
     if (endY < _messageBarVerticalTopMargin || endY > q->parentWidget()->height() - _messageBarVerticalBottomMargin - q->minimumHeight())
     {
-        (*_messageBarActiveMap[_policy])[0]->d_ptr->onCloseButtonClicked();
+        (*_messageBarActiveMap[_policy])[0]->d_ptr->messageBarEnd();
         _calculateInitialPos(startX, startY, endX, endY);
     }
 }
 
-QList<int> ElaMessageBarPrivate::_getOtherMessageBarTotalData(bool isJudgeCreateOrder)
+QList<int> ElaMessageBarPrivate::_getOtherMessageBarTotalData()
 {
     Q_Q(ElaMessageBar);
     QList<int> resultList;
     int minimumHeightTotal = 0;
     int indexLessCount = 0;
     QList<ElaMessageBar*>* messageBarList = _messageBarActiveMap[_policy];
-    for (auto messageBar: *messageBarList)
+    for (const auto messageBar: *messageBarList)
     {
         if (messageBar == q)
         {
             continue;
         }
-        if (!isJudgeCreateOrder || (isJudgeCreateOrder && _judgeCreateOrder(messageBar)))
+        if (_judgeCreateOrder(messageBar))
         {
             indexLessCount++;
             minimumHeightTotal += messageBar->minimumHeight();
@@ -439,7 +246,7 @@ QList<int> ElaMessageBarPrivate::_getOtherMessageBarTotalData(bool isJudgeCreate
 qreal ElaMessageBarPrivate::_calculateTargetPosY()
 {
     Q_Q(ElaMessageBar);
-    QList<int> resultList = _getOtherMessageBarTotalData(true);
+    QList<int> resultList = _getOtherMessageBarTotalData();
     int minimumHeightTotal = resultList[0];
     int indexLessCount = resultList[1];
     switch (_policy)
@@ -478,6 +285,35 @@ bool ElaMessageBarPrivate::_judgeCreateOrder(ElaMessageBar* otherMessageBar)
     }
 }
 
+void ElaMessageBarPrivate::_updateActiveMap(bool isActive)
+{
+    Q_Q(ElaMessageBar);
+    ElaMessageBarType::PositionPolicy policy = _policy;
+    if (isActive)
+    {
+        if (_messageBarActiveMap.contains(policy))
+        {
+            _messageBarActiveMap[policy]->append(q);
+        }
+        else
+        {
+            QList<ElaMessageBar*>* messageBarList = new QList<ElaMessageBar*>();
+            messageBarList->append(q);
+            _messageBarActiveMap.insert(policy, messageBarList);
+        }
+    }
+    else
+    {
+        if (_messageBarActiveMap.contains(policy))
+        {
+            if (_messageBarActiveMap[policy]->count() > 0)
+            {
+                _messageBarActiveMap[policy]->removeOne(q);
+            }
+        }
+    }
+}
+
 void ElaMessageBarPrivate::_drawSuccess(QPainter* painter)
 {
     Q_Q(ElaMessageBar);
@@ -494,7 +330,7 @@ void ElaMessageBarPrivate::_drawSuccess(QPainter* painter)
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(12);
     painter->setFont(iconFont);
-    painter->drawText(_leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)ElaIconType::Check));
+    painter->drawText(_leftPadding, 0, q->width(), q->height(), Qt::AlignVCenter, QChar(ElaIconType::Check));
     // 时间进度条绘制
     QPainterPath clipPath;
     clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);
@@ -576,7 +412,7 @@ void ElaMessageBarPrivate::_drawError(QPainter* painter)
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(13);
     painter->setFont(iconFont);
-    painter->drawText(_leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar((unsigned short)ElaIconType::Xmark));
+    painter->drawText(_leftPadding + 1, 0, q->width(), q->height(), Qt::AlignVCenter, QChar(ElaIconType::Xmark));
     // 时间进度条绘制
     QPainterPath clipPath;
     clipPath.addRoundedRect(foregroundRect, _borderRadius, _borderRadius);

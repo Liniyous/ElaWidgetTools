@@ -77,6 +77,6 @@ void ElaCalendarPicker::paintEvent(QPaintEvent* event)
     QFont iconFont = QFont("ElaAwesome");
     iconFont.setPixelSize(17);
     painter.setFont(iconFont);
-    painter.drawText(QRect(baseRect.right() - 25, 0, 15, height()), Qt::AlignVCenter | Qt::AlignRight, QChar((unsigned short)ElaIconType::CalendarRange));
+    painter.drawText(QRect(baseRect.right() - 25, 0, 15, height()), Qt::AlignVCenter | Qt::AlignRight, QChar(ElaIconType::CalendarRange));
     painter.restore();
 }

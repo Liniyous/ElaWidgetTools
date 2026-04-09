@@ -60,7 +60,7 @@ void ElaTabBarStyle::drawPrimitive(PrimitiveElement pe, const QStyleOption* opt,
         iconFont.setPixelSize(16);
         p->setFont(iconFont);
         p->setPen(ElaThemeColor(_themeMode, BasicText));
-        p->drawText(opt->rect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::Xmark));
+        p->drawText(opt->rect, Qt::AlignCenter, QChar(ElaIconType::Xmark));
         p->restore();
         return;
     }

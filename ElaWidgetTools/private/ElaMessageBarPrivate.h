@@ -9,42 +9,9 @@
 #include "ElaDef.h"
 #include "ElaSingleton.h"
 
-enum WorkStatus
-{
-    Idle = 0x0000,
-    CreateAnimation = 0x0001,
-    OtherEventAnimation = 0x0002,
-};
-
-class ElaMessageBar;
-class ElaMessageBarManager : public QObject
-{
-    Q_OBJECT
-    Q_SINGLETON_CREATE_H(ElaMessageBarManager)
-private:
-    explicit ElaMessageBarManager(QObject* parent = nullptr);
-    ~ElaMessageBarManager() override;
-
-public:
-    //请求事件堆栈调用
-    void requestMessageBarEvent(ElaMessageBar* messageBar);
-    //发布创建事件
-    void postMessageBarCreateEvent(ElaMessageBar* messageBar);
-    //发布终止事件
-    void postMessageBarEndEvent(ElaMessageBar* messageBar);
-    //强制发布终止事件
-    void forcePostMessageBarEndEvent(ElaMessageBar* messageBar);
-    //获取当前事件数量
-    int getMessageBarEventCount(ElaMessageBar* messageBar);
-    //更新活动序列
-    void updateActiveMap(ElaMessageBar* messageBar, bool isActive);
-
-private:
-    QMap<ElaMessageBar*, QList<QVariantMap>> _messageBarEventMap;
-};
-
 class ElaIconButton;
 class QPainter;
+class ElaMessageBar;
 class ElaMessageBarPrivate : public QObject
 {
     Q_OBJECT
@@ -54,11 +21,8 @@ class ElaMessageBarPrivate : public QObject
 public:
     explicit ElaMessageBarPrivate(QObject* parent = nullptr);
     ~ElaMessageBarPrivate() override;
-    void tryToRequestMessageBarEvent();
-    WorkStatus getWorkMode() const;
-    Q_INVOKABLE void onOtherMessageBarEnd(QVariantMap eventData);
-    Q_INVOKABLE void messageBarEnd(QVariantMap eventData);
-    Q_SLOT void onCloseButtonClicked();
+    void onOtherMessageBarEnd();
+    Q_SLOT void messageBarEnd();
 
 private:
     friend class ElaMessageBarManager;
@@ -78,28 +42,27 @@ private:
     int _closeButtonWidth{30};
     int _messageBarHorizontalMargin{20};
     int _messageBarVerticalBottomMargin{20};
-    int _messageBarVerticalTopMargin{50};
+    int _messageBarVerticalTopMargin{20};
     int _messageBarSpacing{15};
     int _shadowBorderWidth{6};
     qreal _timePercentHeight{2};
 
     // 逻辑数据
-    bool _isMessageBarCreateAnimationFinished{false};
-    bool _isReadyToEnd{false};
     bool _isNormalDisplay{false};
-    bool _isMessageBarEventAnimationStart{false};
+    bool _isOtherMessageBarEnd{false};
     ElaIconButton* _closeButton{nullptr};
-    Q_INVOKABLE void _messageBarCreate(int displayMsec);
+    void _messageBarCreate(int displayMsec);
 
     // 初始坐标计算
     void _calculateInitialPos(int& startX, int& startY, int& endX, int& endY);
     //获取总高度和次序信息
-    QList<int> _getOtherMessageBarTotalData(bool isJudgeCreateOrder = false);
+    QList<int> _getOtherMessageBarTotalData();
     //计算目标坐标
     qreal _calculateTargetPosY();
 
     //创建次序判断
     bool _judgeCreateOrder(ElaMessageBar* otherMessageBar);
+    void _updateActiveMap(bool isActive);
 
     // 绘制函数
     void _drawSuccess(QPainter* painter);

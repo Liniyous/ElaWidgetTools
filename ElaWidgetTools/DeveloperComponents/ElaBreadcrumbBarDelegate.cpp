@@ -51,7 +51,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
         iconFont.setPixelSize(painter->font().pixelSize() * 0.785);
         painter->setFont(iconFont);
         itemRect.setX(itemRect.x() - itemRect.width() * 0.36);
-        painter->drawText(itemRect, Qt::AlignCenter, QChar((unsigned short)ElaIconType::AngleRight));
+        painter->drawText(itemRect, Qt::AlignCenter, QChar(ElaIconType::AngleRight));
     }
     painter->restore();
 }
