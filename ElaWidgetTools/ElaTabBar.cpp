@@ -254,8 +254,6 @@ void ElaTabBar::resizeEvent(QResizeEvent* event)
 void ElaTabBar::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaTabBar);
-    // 兜底同步: Qt 内部(moveTab/makeVisible 等)可能已修改 scrollOffset
-    d->setScrollOffset(d->_tabBarPrivate->scrollOffset);
     QSize tabSize = d->_style->getTabSize();
     for (int i = 0; i < d->_tabBarPrivate->tabList.size(); i++)
     {
