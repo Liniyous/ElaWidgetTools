@@ -6,10 +6,10 @@
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QtMath>
-Q_PROPERTY_CREATE_Q_CPP(ElaProgressRing, bool, IsTransparent)
-Q_PROPERTY_CREATE_Q_CPP(ElaProgressRing, bool, IsDisplayValue)
-Q_PROPERTY_CREATE_Q_CPP(ElaProgressRing, ElaProgressRingType::ValueDisplayMode, ValueDisplayMode)
-Q_PROPERTY_CREATE_Q_CPP(ElaProgressRing, int, ValuePixelSize)
+ELA_PROPERTY_Q_CPP(ElaProgressRing, bool, IsTransparent)
+ELA_PROPERTY_Q_CPP(ElaProgressRing, bool, IsDisplayValue)
+ELA_PROPERTY_Q_CPP(ElaProgressRing, ElaProgressRingType::ValueDisplayMode, ValueDisplayMode)
+ELA_PROPERTY_Q_CPP(ElaProgressRing, int, ValuePixelSize)
 ElaProgressRing::ElaProgressRing(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaProgressRingPrivate())
 {

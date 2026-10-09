@@ -10,17 +10,20 @@ class ElaColorDialogPrivate;
 class ELA_EXPORT ElaColorDialog : public QDialog
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaColorDialog)
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, CurrentColor)
+    ELA_PIMPL_Q(ElaColorDialog)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaColorDialog(QWidget* parent = nullptr);
     ~ElaColorDialog() override;
 
+    void setCurrentColor(const QColor& currentColor);
+    Q_REQUIRED_RESULT const QColor& getCurrentColor() const;
+
     const QList<QColor>& getCustomColorList() const;
     QColor getCustomColor(int index) const;
     QString getCurrentColorRGB() const;
 Q_SIGNALS:
+    Q_SIGNAL void pCurrentColorChanged();
     Q_SIGNAL void colorSelected(const QColor& color);
 
 protected:

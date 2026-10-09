@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOLORVALUESLIDERSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOLORVALUESLIDERSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QLinearGradient>
 #include <QProxyStyle>
 
@@ -8,7 +9,7 @@
 class ElaColorValueSliderStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QColor, BaseColor)
+    ELA_VARIABLE(QColor, BaseColor)
 public:
     explicit ElaColorValueSliderStyle(QStyle* style = nullptr);
     ~ElaColorValueSliderStyle();

@@ -1,7 +1,8 @@
-#ifndef T_TREEVIEWMODEL_H
-#define T_TREEVIEWMODEL_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MODELVIEW_T_TREEVIEWMODEL_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MODELVIEW_T_TREEVIEWMODEL_H_
 
 #include <QAbstractItemModel>
+#include <QMap>
 #include <QObject>
 
 class T_TreeItem;
@@ -27,4 +28,5 @@ private:
     T_TreeItem* _rootItem{nullptr};
 };
 
-#endif // T_TREEVIEWMODEL_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MODELVIEW_T_TREEVIEWMODEL_H_
+

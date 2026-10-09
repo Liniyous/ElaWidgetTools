@@ -1,17 +1,19 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOMBOBOXSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOMBOBOXSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
 class ElaComboBoxStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
-    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
+    ELA_PROPERTY(qreal, ExpandIconRotate)
+    ELA_PROPERTY(qreal, ExpandMarkWidth)
 public:
     explicit ElaComboBoxStyle(QStyle* style = nullptr);
     ~ElaComboBoxStyle() override;
+    int getShadowBorderWidth() const;
     void drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawControl(ControlElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget = nullptr) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex* option, QPainter* painter, const QWidget* widget = nullptr) const override;

@@ -3,7 +3,7 @@
 #include "ElaApplication.h"
 #include <QPainter>
 #include <QPixmap>
-Q_SINGLETON_CREATE_CPP(ElaIcon)
+ELA_SINGLETON_CPP(ElaIcon)
 ElaIcon::ElaIcon()
 {
 }

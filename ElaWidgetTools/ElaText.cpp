@@ -17,6 +17,7 @@ ElaText::ElaText(QWidget* parent)
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
     textFont.setPixelSize(28);
+    textFont.setBold(false);
     setFont(textFont);
     setWordWrap(true);
     d->_themeMode = eTheme->getThemeMode();
@@ -53,6 +54,19 @@ bool ElaText::getIsWrapAnywhere() const
 {
     Q_D(const ElaText);
     return d->_isWrapAnywhere;
+}
+
+void ElaText::setIsBold(bool isBold)
+{
+    QFont textFont = font();
+    textFont.setBold(isBold);
+    setFont(textFont);
+    Q_EMIT pIsBoldChanged();
+}
+
+bool ElaText::getIsBold() const
+{
+    return font().bold();
 }
 
 void ElaText::setTextPixelSize(int size)

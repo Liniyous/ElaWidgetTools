@@ -1,5 +1,5 @@
-#ifndef T_POPUP_H
-#define T_POPUP_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_POPUP_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_POPUP_H_
 
 #include "T_BasePage.h"
 
@@ -30,4 +30,5 @@ private:
     ElaDrawerArea* _drawer{nullptr};
 };
 
-#endif // T_POPUP_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_POPUP_H_
+

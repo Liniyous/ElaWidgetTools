@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELACALENDARPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELACALENDARPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QDate>
 #include <QObject>
 #include <QPixmap>
@@ -14,11 +15,11 @@ class ElaToolButton;
 class ElaCalendarPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaCalendar)
-    Q_PROPERTY_CREATE_D(int, BorderRaiuds)
-    Q_PROPERTY_CREATE_D(QDate, SelectedDate)
-    Q_PROPERTY_CREATE(qreal, ZoomRatio)
-    Q_PROPERTY_CREATE(qreal, PixOpacity)
+    ELA_PIMPL_D(ElaCalendar)
+    ELA_PROPERTY_D(int, BorderRaiuds)
+    ELA_PROPERTY_D(QDate, SelectedDate)
+    ELA_PROPERTY(qreal, ZoomRatio)
+    ELA_PROPERTY(qreal, PixOpacity)
 public:
     explicit ElaCalendarPrivate(QObject* parent = nullptr);
     ~ElaCalendarPrivate() override;

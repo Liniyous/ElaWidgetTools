@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONMODEL_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONMODEL_H_
 
+#include "ElaPropertyMacro.h"
 #include <QAbstractItemModel>
 #include <QObject>
 
@@ -9,8 +10,8 @@ class ElaNavigationNode;
 class ElaNavigationModel : public QAbstractItemModel
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(ElaNavigationNode*, SelectedNode)
-    Q_PRIVATE_CREATE(ElaNavigationNode*, SelectedExpandedNode)
+    ELA_VARIABLE(ElaNavigationNode*, SelectedNode)
+    ELA_VARIABLE(ElaNavigationNode*, SelectedExpandedNode)
 
 public:
     explicit ElaNavigationModel(QObject* parent = nullptr);

@@ -12,7 +12,7 @@ class ElaScrollPagePrivate;
 class ELA_EXPORT ElaScrollPage : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaScrollPage)
+    ELA_PIMPL_Q(ElaScrollPage)
 
 public:
     explicit ElaScrollPage(QWidget* parent = nullptr);
@@ -24,7 +24,7 @@ public:
     void setBottomCustomWidget(QWidget* customWidget);
     QWidget* getBottomCustomWidget() const;
 
-    void addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable = true, bool isVerticalGrabGesture = true, qreal mousePressEventDelay = 0.5);
+    void addCentralWidget(QWidget* centralWidget, bool isWidgetResizeable = true, bool isVerticalGrabGesture = true, qreal mousePressEventDelay = 0.0);
 
     void navigation(int widgetIndex, bool isLogRoute = true);
 

@@ -13,7 +13,7 @@
 
 #include "ElaDxgi.h"
 #include "ElaDxgiManagerPrivate.h"
-Q_SINGLETON_CREATE_CPP(ElaDxgiManager);
+ELA_SINGLETON_CPP(ElaDxgiManager);
 ElaDxgiManager::ElaDxgiManager(QObject* parent)
     : QObject{parent}, d_ptr(new ElaDxgiManagerPrivate())
 {
@@ -76,10 +76,6 @@ const QStringList& ElaDxgiManager::getOutputDeviceList() const
 QImage ElaDxgiManager::grabScreenToImage() const
 {
     Q_D(const ElaDxgiManager);
-    if (!d->_dxgi->getIsInitSuccess())
-    {
-        return {};
-    }
     return d->_dxgi->getGrabImage();
 }
 
@@ -115,7 +111,7 @@ bool ElaDxgiManager::setDxDeviceID(int dxID)
         return false;
     }
     d->_dxgi->setIsGrabActive(false);
-    while (!d->_dxgi->getIsGrabStoped())
+    while (!d->_dxgi->getIsGrabStopped())
     {
         //等待任务结束
         QApplication::processEvents();
@@ -147,7 +143,7 @@ bool ElaDxgiManager::setOutputDeviceID(int deviceID)
     }
 
     d->_dxgi->setIsGrabActive(false);
-    while (!d->_dxgi->getIsGrabStoped())
+    while (!d->_dxgi->getIsGrabStopped())
     {
         //等待任务结束
         QApplication::processEvents();

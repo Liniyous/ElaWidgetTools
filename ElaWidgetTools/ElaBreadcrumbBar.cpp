@@ -8,7 +8,7 @@
 #include "ElaBreadcrumbBarDelegate.h"
 #include "ElaBreadcrumbBarModel.h"
 #include "ElaBreadcrumbBarPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaBreadcrumbBar, bool, IsAutoRemove);
+ELA_PROPERTY_Q_CPP(ElaBreadcrumbBar, bool, IsAutoRemove);
 ElaBreadcrumbBar::ElaBreadcrumbBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaBreadcrumbBarPrivate())
 {

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATEXTPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATEXTPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,9 +9,9 @@ class ElaText;
 class ElaTextPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaText)
-    Q_PROPERTY_CREATE_D(ElaTextType::TextStyle, TextStyle)
-    Q_PROPERTY_CREATE_D(ElaIconType::IconName, ElaIcon)
+    ELA_PIMPL_D(ElaText)
+    ELA_PROPERTY_D(ElaTextType::TextStyle, TextStyle)
+    ELA_PROPERTY_D(ElaIconType::IconName, ElaIcon)
 public:
     explicit ElaTextPrivate(QObject* parent = nullptr);
     ~ElaTextPrivate() override;

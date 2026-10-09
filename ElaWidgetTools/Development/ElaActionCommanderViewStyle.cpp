@@ -300,7 +300,7 @@ void ElaActionCommanderViewStyle::drawControl(ControlElement element, const QSty
             painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             if (vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning || vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne))
             {
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 1.5, 1.5);
             }
             painter->restore();
         }

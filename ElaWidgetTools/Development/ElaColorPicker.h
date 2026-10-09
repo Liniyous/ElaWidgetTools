@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOLORPICKER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOLORPICKER_H_
 
+#include "ElaPropertyMacro.h"
 #include <QPixmap>
 #include <QWidget>
 
@@ -8,7 +9,7 @@
 class ElaColorPicker : public QWidget
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(ElaThemeType::ThemeMode, ThemeMode)
+    ELA_VARIABLE(ElaThemeType::ThemeMode, ThemeMode)
 
 public:
     explicit ElaColorPicker(QWidget* parent = nullptr);

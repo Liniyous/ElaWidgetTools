@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_ELATOOLBAR_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_ELATOOLBAR_H_
 
+#include "ElaPropertyMacro.h"
 #include <QToolBar>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,7 +9,7 @@ class ElaToolBarPrivate;
 class ELA_EXPORT ElaToolBar : public QToolBar
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaToolBar)
+    ELA_PIMPL_Q(ElaToolBar)
 public:
     explicit ElaToolBar(QWidget* parent = nullptr);
     explicit ElaToolBar(const QString& title, QWidget* parent = nullptr);

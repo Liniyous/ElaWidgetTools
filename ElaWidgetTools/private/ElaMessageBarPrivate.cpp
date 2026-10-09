@@ -5,6 +5,7 @@
 #include "ElaMessageBar.h"
 #include <QDateTime>
 #include <QDebug>
+#include <QFontMetrics>
 #include <QGraphicsOpacityEffect>
 #include <QPainter>
 #include <QPainterPath>
@@ -12,13 +13,14 @@
 #include <QTimer>
 
 QMap<QObject*, QMap<ElaMessageBarType::PositionPolicy, QList<ElaMessageBar*>*>> ElaMessageBarPrivate::_messageBarActiveMap;
+std::atomic<quint64> ElaMessageBarPrivate::_nextCreateSerial{0};
 ElaMessageBarPrivate::ElaMessageBarPrivate(QObject* parent)
     : QObject{parent}
 {
     setProperty("MessageBarClosedY", 0);
     setProperty("MessageBarFinishY", 0);
     _pTimePercent = 100;
-    _createTime = QDateTime::currentMSecsSinceEpoch();
+    _createSerial = _nextCreateSerial.fetch_add(1) + 1;
 }
 
 ElaMessageBarPrivate::~ElaMessageBarPrivate()
@@ -91,6 +93,7 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     int textWidth = q->fontMetrics().horizontalAdvance(_text);
     int fixedWidth = _closeButtonLeftRightMargin + _leftPadding + _titleLeftSpacing + _textLeftSpacing + _closeButtonWidth + titleWidth + textWidth + 2 * _shadowBorderWidth;
     q->setFixedWidth(fixedWidth > 500 ? 500 : fixedWidth);
+    q->setFixedHeight(qMax(50, _getTextHeight()));
     int startX = 0;
     int startY = 0;
     int endX = 0;
@@ -136,6 +139,27 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     barPosAnimation->setEndValue(QPoint(endX, endY));
     barPosAnimation->setEasingCurve(QEasingCurve::InOutSine);
     barPosAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+int ElaMessageBarPrivate::_getTextHeight()
+{
+    Q_Q(ElaMessageBar);
+    int fontPixelSize = eApp->getFontPixelSize();
+    QFont font = q->font();
+    font.setPixelSize(fontPixelSize);
+    font.setWeight(QFont::Bold);
+    QFontMetrics titleFontMetrics(font);
+    int titleTextWidth = titleFontMetrics.horizontalAdvance(_title) + 1;
+    if (titleTextWidth > 100)
+    {
+        titleTextWidth = 100;
+    }
+    font.setWeight(QFont::Light);
+    QFontMetrics textFontMetrics(font);
+    int textRectWidth = q->minimumWidth() - (_leftPadding + _titleLeftSpacing + titleTextWidth + _textLeftSpacing + _closeButtonWidth + _closeButtonLeftRightMargin);
+    int textFlags = Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere;
+    int textHeight = textFontMetrics.boundingRect(QRect(0, 0, textRectWidth, 10000), textFlags, _text).height();
+    return textHeight + 20;
 }
 
 void ElaMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& endX, int& endY)
@@ -283,15 +307,7 @@ qreal ElaMessageBarPrivate::_calculateTargetPosY()
 
 bool ElaMessageBarPrivate::_judgeCreateOrder(ElaMessageBar* otherMessageBar)
 {
-    if (otherMessageBar->d_ptr->_createTime < _createTime)
-    {
-        //otherMessageBar先创建
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return otherMessageBar->d_ptr->_createSerial < _createSerial;
 }
 
 void ElaMessageBarPrivate::_updateActiveMap(bool isActive)

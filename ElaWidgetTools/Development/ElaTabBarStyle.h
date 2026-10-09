@@ -1,13 +1,14 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATABBARSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATABBARSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
 class ElaTabBarStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(QSize, TabSize)
+    ELA_VARIABLE(QSize, TabSize)
 public:
     explicit ElaTabBarStyle(QStyle* style = nullptr);
     ~ElaTabBarStyle() override;

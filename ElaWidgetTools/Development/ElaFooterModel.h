@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAFOOTERMODEL_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAFOOTERMODEL_H_
 
+#include "ElaPropertyMacro.h"
 #include <QAbstractListModel>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,7 +9,7 @@ class ElaNavigationNode;
 class ElaFooterModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(ElaNavigationNode*, SelectedNode)
+    ELA_VARIABLE(ElaNavigationNode*, SelectedNode)
 public:
     explicit ElaFooterModel(QObject* parent = nullptr);
     ~ElaFooterModel();

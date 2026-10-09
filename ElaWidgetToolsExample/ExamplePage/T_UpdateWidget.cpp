@@ -1,8 +1,9 @@
 #include "T_UpdateWidget.h"
 
+#include "ElaText.h"
+
 #include <QVBoxLayout>
 
-#include "ElaText.h"
 T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     : QWidget{parent}
 {
@@ -11,12 +12,11 @@ T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     mainLayout->setSizeConstraint(QLayout::SetMaximumSize);
     mainLayout->setContentsMargins(5, 10, 5, 5);
     mainLayout->setSpacing(4);
-    ElaText* updateTitle = new ElaText("2026-8-14更新", 15, this);
-    ElaText* update1 = new ElaText("1、新增ElaRibbon组件", 13, this);
-    ElaText* update2 = new ElaText("2、ElaTabWidget等组件体验优化", 13, this);
-    ElaText* update3 = new ElaText("3、无边框窗口动画效果优化", 13, this);
-    ElaText* update4 = new ElaText("4、组件库整体API及规范优化", 13, this);
-    ElaText* update5 = new ElaText("5、QQ交流群: 850243692", 13, this);
+    ElaText* updateTitle = new ElaText("2026-10-09 更新汇总", 15, this);
+    ElaText* update1 = new ElaText("1、增强 Ribbon 与 Pivot 联动，完善动作状态同步。", 13, this);
+    ElaText* update2 = new ElaText("2、标签页支持平滑滚动与定位，改进拖拽及浮动页面管理。", 13, this);
+    ElaText* update3 = new ElaText("3、优化 DXGI 采集稳定性，完善图像快照与资源释放。", 13, this);
+    ElaText* update4 = new ElaText("4、完善全局字号适配，优化控件尺寸及交互动画。", 13, this);
     update1->setIsWrapAnywhere(true);
     update2->setIsWrapAnywhere(true);
     update3->setIsWrapAnywhere(true);
@@ -27,7 +27,6 @@ T_UpdateWidget::T_UpdateWidget(QWidget* parent)
     mainLayout->addWidget(update2);
     mainLayout->addWidget(update3);
     mainLayout->addWidget(update4);
-    mainLayout->addWidget(update5);
     mainLayout->addStretch();
 }
 

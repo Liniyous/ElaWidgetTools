@@ -11,7 +11,7 @@ class ElaTableViewStyle;
 class ElaTableViewPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaTableView)
+    ELA_PIMPL_D(ElaTableView)
 public:
     explicit ElaTableViewPrivate(QObject* parent = nullptr);
     ~ElaTableViewPrivate();

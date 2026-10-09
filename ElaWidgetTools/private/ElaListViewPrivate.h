@@ -11,7 +11,7 @@ class ElaListViewStyle;
 class ElaListViewPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaListView)
+    ELA_PIMPL_D(ElaListView)
 public:
     explicit ElaListViewPrivate(QObject* parent = nullptr);
     ~ElaListViewPrivate();

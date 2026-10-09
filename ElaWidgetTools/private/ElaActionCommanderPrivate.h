@@ -1,5 +1,6 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAACTIONCOMMANDERPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAACTIONCOMMANDERPRIVATE_H_
+#include "ElaPropertyMacro.h"
 #include <QMap>
 #include <QObject>
 #include <QVector>
@@ -14,11 +15,11 @@ class ElaActionCommanderView;
 class ElaActionCommanderPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaActionCommander)
-    Q_PROPERTY_CREATE_D(int, IsMessageDisplayEnable)
-    Q_PROPERTY_CREATE_D(int, MessageDisplayMesc)
-    Q_PROPERTY_CREATE_D(int, MaxCommandCount)
-    Q_PROPERTY_CREATE_D(bool, IsRunToCommandProcessEventEnable)
+    ELA_PIMPL_D(ElaActionCommander)
+    ELA_PROPERTY_D(int, IsMessageDisplayEnable)
+    ELA_PROPERTY_D(int, MessageDisplayMesc)
+    ELA_PROPERTY_D(int, MaxCommandCount)
+    ELA_PROPERTY_D(bool, IsRunToCommandProcessEventEnable)
 public:
     struct ElaActionCommandDomainData {
         bool isBusyMode{false};

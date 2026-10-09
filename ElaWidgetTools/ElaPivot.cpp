@@ -1,5 +1,7 @@
 #include "ElaPivot.h"
 
+#include "ElaApplication.h"
+
 #include <QPainter>
 #include <QScroller>
 #include <QVBoxLayout>
@@ -13,8 +15,8 @@ ElaPivot::ElaPivot(QWidget* parent)
 {
     Q_D(ElaPivot);
     d->q_ptr = this;
-    d->_pTextPixelSize = 20;
-    setFixedHeight(40);
+    d->_pTextPixelSize = eApp->getFontPixelSize() + 1;
+    setFixedHeight(35);
     setObjectName("ElaPivot");
     setStyleSheet("#ElaPivot{background-color:transparent;}");
     setMouseTracking(true);
@@ -24,6 +26,7 @@ ElaPivot::ElaPivot(QWidget* parent)
     d->_listView->setFlow(QListView::LeftToRight);
     d->_listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     d->_listView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    d->_listView->setAutoScroll(false);
     d->_listModel = new ElaPivotModel(this);
     d->_listView->setModel(d->_listModel);
     d->_listStyle = new ElaPivotStyle(d->_listView->style());
@@ -58,12 +61,11 @@ ElaPivot::ElaPivot(QWidget* parent)
         }
     });
     connect(d->_listView, &ElaPivotView::clicked, this, [=](const QModelIndex& index) {
-        if (index.row() != d->_listStyle->getCurrentIndex())
+        if (index.row() != d->_listView->currentIndex().row())
         {
             Q_EMIT pCurrentIndexChanged();
         }
         d->_listView->doCurrentIndexChangedAnimation(index);
-        d->_listStyle->setCurrentIndex(index.row());
         Q_EMIT pivotClicked(index.row());
     });
     connect(d->_listView, &ElaPivotView::doubleClicked, this, [=](const QModelIndex& index) {
@@ -94,6 +96,25 @@ void ElaPivot::removePivot(const QString& pivotTitle)
     d->_checkCurrentIndex();
 }
 
+void ElaPivot::clearPivot()
+{
+    Q_D(ElaPivot);
+    d->_listModel->clearPivot();
+    d->_checkCurrentIndex();
+}
+
+const QStringList& ElaPivot::getPivotTitle() const
+{
+    Q_D(const ElaPivot);
+    return d->_listModel->getPivotList();
+}
+
+void ElaPivot::setCurrentTitle(const QString& pivotTitle)
+{
+    Q_D(ElaPivot);
+    setCurrentIndex(d->_listModel->getPivotIndex(pivotTitle));
+}
+
 void ElaPivot::setTextPixelSize(int textPixelSize)
 {
     Q_D(ElaPivot);
@@ -117,16 +138,17 @@ int ElaPivot::getTextPixelSize() const
 void ElaPivot::setCurrentIndex(int currentIndex)
 {
     Q_D(ElaPivot);
-    if (currentIndex < d->_listModel->getPivotListCount())
+    if (currentIndex < 0 || currentIndex >= d->_listModel->getPivotListCount())
     {
-        QModelIndex index = d->_listModel->index(currentIndex, 0);
-        d->_listView->doCurrentIndexChangedAnimation(index);
-        if (index.row() != d->_listStyle->getCurrentIndex())
-        {
-            Q_EMIT pCurrentIndexChanged();
-        }
-        d->_listStyle->setCurrentIndex(currentIndex);
+        return;
     }
+    if (currentIndex == d->_listView->currentIndex().row())
+    {
+        return;
+    }
+    QModelIndex index = d->_listModel->index(currentIndex, 0);
+    d->_listView->doCurrentIndexChangedAnimation(index);
+    Q_EMIT pCurrentIndexChanged();
 }
 
 int ElaPivot::getCurrentIndex() const

@@ -15,8 +15,8 @@ ElaScrollArea::ElaScrollArea(QWidget* parent)
     setStyleSheet("#ElaScrollArea{background-color:transparent;border:0px;}");
     setHorizontalScrollBar(new ElaScrollBar(this));
     setVerticalScrollBar(new ElaScrollBar(this));
-    QScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    QScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QScrollArea::setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    QScrollArea::setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 }
 
 ElaScrollArea::~ElaScrollArea()

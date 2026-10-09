@@ -10,13 +10,16 @@ class ElaTableViewPrivate;
 class ELA_EXPORT ElaTableView : public QTableView
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaTableView)
-    Q_PROPERTY_CREATE_Q_H(int, HeaderMargin)
+    ELA_PIMPL_Q(ElaTableView)
 public:
     explicit ElaTableView(QWidget* parent = nullptr);
     ~ElaTableView();
 
+    void setHeaderMargin(int headerMargin);
+    Q_REQUIRED_RESULT int getHeaderMargin() const;
+
 Q_SIGNALS:
+    Q_SIGNAL void pHeaderMarginChanged();
     Q_SIGNAL void tableViewShow();
     Q_SIGNAL void tableViewHide();
 

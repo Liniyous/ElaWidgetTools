@@ -16,7 +16,7 @@ class ElaBreadcrumbBar;
 class ElaScrollPagePrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaScrollPage)
+    ELA_PIMPL_D(ElaScrollPage)
 
 public:
     explicit ElaScrollPagePrivate(QObject* parent = nullptr);

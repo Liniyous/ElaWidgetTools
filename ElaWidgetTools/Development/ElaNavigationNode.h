@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONNODE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONNODE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QObject>
 
@@ -9,19 +10,19 @@
 class ElaNavigationNode : public QObject
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QList<ElaNavigationNode*>, ChildrenNodes)
-    Q_PRIVATE_CREATE(ElaNavigationNode*, ParentNode)
-    Q_PRIVATE_CREATE(ElaIconType::IconName, Awesome)
-    Q_PRIVATE_REF_CREATE(QModelIndex, ModelIndex)
-    Q_PRIVATE_CREATE(int, KeyPoints)
-    Q_PRIVATE_CREATE(int, Depth)
-    Q_PRIVATE_CREATE(bool, IsRootNode)
-    Q_PRIVATE_CREATE(bool, IsFooterNode)
-    Q_PRIVATE_CREATE(bool, IsHasFooterPage)
-    Q_PRIVATE_CREATE(bool, IsExpanderNode)
-    Q_PRIVATE_CREATE(bool, IsCategoryNode)
-    Q_PRIVATE_CREATE(bool, IsVisible)
-    Q_PRIVATE_REF_CREATE(QString, NodeTitle)
+    ELA_VARIABLE(QList<ElaNavigationNode*>, ChildrenNodes)
+    ELA_VARIABLE(ElaNavigationNode*, ParentNode)
+    ELA_VARIABLE(ElaIconType::IconName, Awesome)
+    ELA_VARIABLE(QModelIndex, ModelIndex)
+    ELA_VARIABLE(int, KeyPoints)
+    ELA_VARIABLE(int, Depth)
+    ELA_VARIABLE(bool, IsRootNode)
+    ELA_VARIABLE(bool, IsFooterNode)
+    ELA_VARIABLE(bool, IsHasFooterPage)
+    ELA_VARIABLE(bool, IsExpanderNode)
+    ELA_VARIABLE(bool, IsCategoryNode)
+    ELA_VARIABLE(bool, IsVisible)
+    ELA_VARIABLE(QString, NodeTitle)
 public:
     explicit ElaNavigationNode(const QString& nodeTitle, ElaNavigationNode* parent = nullptr);
     ~ElaNavigationNode() override;

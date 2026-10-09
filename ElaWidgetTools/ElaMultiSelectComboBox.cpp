@@ -7,13 +7,13 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
-#include "ElaComboBoxView.h"
 #include "ElaApplication.h"
 #include "ElaComboBoxStyle.h"
+#include "ElaComboBoxView.h"
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
 #include "private/ElaMultiSelectComboBoxPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaMultiSelectComboBox, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaMultiSelectComboBox, int, BorderRadius)
 ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     : QComboBox(parent), d_ptr(new ElaMultiSelectComboBoxPrivate())
 {
@@ -23,7 +23,7 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->_pExpandIconRotate = 0;
     d->_pExpandMarkWidth = 0;
     d->_themeMode = eTheme->getThemeMode();
-    setFixedHeight(35);
+    setFixedHeight(30);
 
     d->_comboBoxStyle = new ElaComboBoxStyle(style());
     setStyle(d->_comboBoxStyle);
@@ -175,7 +175,7 @@ void ElaMultiSelectComboBox::paintEvent(QPaintEvent* e)
     painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
     painter.setBrush(isEnabled() ? underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase) : Qt::transparent);
     QRect foregroundRect = rect();
-    foregroundRect.adjust(6, 1, -6, -1);
+    foregroundRect.adjust(1, 1, -1, -1);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     // 底边线绘制
     painter.setPen(ElaThemeColor(d->_themeMode, BasicBaseLine));
@@ -227,8 +227,12 @@ void ElaMultiSelectComboBox::showPopup()
             {
                 containerHeight = count() * 35 + 8;
             }
-            view()->resize(view()->width(), containerHeight - 8);
-            container->move(container->x(), container->y() + 3);
+            // 容器实际宽度在组合框宽度基础上两侧各扩展阴影宽度
+            // 阴影绘制于外围 前景绘制宽度与组合框宽度保持一致
+            const int shadowBorderWidth = d->_comboBoxStyle->getShadowBorderWidth();
+            container->resize(width() + 2 * shadowBorderWidth, containerHeight);
+            container->move(container->x() - shadowBorderWidth, container->y() + 3);
+            view()->resize(width(), containerHeight - 8);
             QLayout* layout = container->layout();
             while (layout->count())
             {

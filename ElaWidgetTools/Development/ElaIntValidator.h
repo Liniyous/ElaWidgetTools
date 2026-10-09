@@ -8,7 +8,7 @@
 class ElaIntValidator : public QIntValidator
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsHexMode)
+    ELA_VARIABLE(bool, IsHexMode)
 public:
     explicit ElaIntValidator(QObject* parent = nullptr);
     explicit ElaIntValidator(int bottom, int top, QObject* parent = nullptr);

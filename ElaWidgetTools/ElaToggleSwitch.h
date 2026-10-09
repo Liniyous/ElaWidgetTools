@@ -9,7 +9,7 @@ class ElaToggleSwitchPrivate;
 class ELA_EXPORT ElaToggleSwitch : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaToggleSwitch);
+    ELA_PIMPL_Q(ElaToggleSwitch);
 
 public:
     explicit ElaToggleSwitch(QWidget* parent = nullptr);

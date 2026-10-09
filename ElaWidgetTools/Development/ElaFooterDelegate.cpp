@@ -227,7 +227,7 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
     {
         painter->setPen(Qt::NoPen);
         painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _selectMarkTop, 3, itemRect.height() - _selectMarkTop - _selectMarkBottom), 3, 3);
+        painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + _selectMarkTop, 3, itemRect.height() - _selectMarkTop - _selectMarkBottom), 1.5, 1.5);
     }
     if (node == _lastSelectedNode)
     {

@@ -10,15 +10,20 @@ class ElaTabBarPrivate;
 class ELA_EXPORT ElaTabBar : public QTabBar
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaTabBar)
-    Q_PROPERTY_CREATE_Q_H(QSize, TabSize)
+    ELA_PIMPL_Q(ElaTabBar)
 public:
     explicit ElaTabBar(QWidget* parent = nullptr);
     ~ElaTabBar() override;
 
+    void setTabSize(QSize tabSize);
+    Q_REQUIRED_RESULT QSize getTabSize() const;
+
     void setTabText(int index, const QString& text);
+    // 将内部滚动平滑定位到当前选中Tab 使其位于最左侧
+    void locateCurrentTab();
 
 Q_SIGNALS:
+    Q_SIGNAL void pTabSizeChanged();
     Q_SIGNAL void tabBarTextChanged(int tabIndex, const QString& tabText);
     Q_SIGNAL void tabDragCreate(QMimeData* mimeData);
     Q_SIGNAL void tabDragEnter(QMimeData* mimeData);

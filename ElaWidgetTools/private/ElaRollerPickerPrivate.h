@@ -1,16 +1,17 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAROLLERPICKERPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAROLLERPICKERPRIVATE_H_
-#include "ElaWidgetToolsDef.h"
+#include "ElaPropertyMacro.h"
 #include "ElaRoller.h"
 #include "ElaRollerPickerContainer.h"
+#include "ElaWidgetToolsDef.h"
 #include <QObject>
 class QHBoxLayout;
 class ElaRollerPicker;
 class ElaRollerPickerPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaRollerPicker)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
+    ELA_PIMPL_D(ElaRollerPicker)
+    ELA_PROPERTY_D(int, BorderRadius)
 public:
     explicit ElaRollerPickerPrivate(QObject* parent = nullptr);
     ~ElaRollerPickerPrivate() override;

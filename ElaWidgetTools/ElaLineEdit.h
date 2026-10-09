@@ -10,14 +10,17 @@ class ElaLineEditPrivate;
 class ELA_EXPORT ElaLineEdit : public QLineEdit
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaLineEdit)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(bool, IsClearButtonEnable)
+    ELA_PIMPL_Q(ElaLineEdit)
+    ELA_PROPERTY_Q_H(int, BorderRadius)
 public:
     explicit ElaLineEdit(QWidget* parent = nullptr);
     ~ElaLineEdit() override;
 
+    void setIsClearButtonEnable(bool isClearButtonEnable);
+    Q_REQUIRED_RESULT bool getIsClearButtonEnable() const;
+
 Q_SIGNALS:
+    Q_SIGNAL void pIsClearButtonEnableChanged();
     Q_SIGNAL void focusIn(QString text);
     Q_SIGNAL void focusOut(QString text);
     Q_SIGNAL void wmFocusOut(QString text);

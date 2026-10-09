@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELACOLORDIALOGPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELACOLORDIALOGPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QObject>
 #include <QPixmap>
@@ -23,8 +24,8 @@ class ElaColorValueSliderStyle;
 class ElaColorDialogPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaColorDialog)
-    Q_PROPERTY_CREATE_D(QColor, CurrentColor)
+    ELA_PIMPL_D(ElaColorDialog)
+    ELA_PROPERTY_D(QColor, CurrentColor)
 public:
     explicit ElaColorDialogPrivate(QObject* parent = nullptr);
     ~ElaColorDialogPrivate() override;

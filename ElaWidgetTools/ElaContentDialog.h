@@ -10,7 +10,7 @@ class ElaContentDialogPrivate;
 class ELA_EXPORT ElaContentDialog : public QDialog
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaContentDialog)
+    ELA_PIMPL_Q(ElaContentDialog)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     explicit ElaContentDialog(QWidget* parent);

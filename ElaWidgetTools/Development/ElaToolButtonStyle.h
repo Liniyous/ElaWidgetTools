@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATOOLBUTTONSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATOOLBUTTONSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,10 +9,10 @@ class QStyleOptionToolButton;
 class ElaToolButtonStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsTransparent)
-    Q_PRIVATE_CREATE(int, BorderRadius)
-    Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
-    Q_PRIVATE_CREATE(bool, IsSelected);
+    ELA_VARIABLE(bool, IsTransparent)
+    ELA_VARIABLE(int, BorderRadius)
+    ELA_PROPERTY(qreal, ExpandIconRotate)
+    ELA_VARIABLE(bool, IsSelected);
 
 public:
     explicit ElaToolButtonStyle(QStyle* style = nullptr);

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_ELAAPPBAR_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_ELAAPPBAR_H_
 
+#include "ElaPropertyMacro.h"
 #include <QWidget>
 
 #include "ElaWidgetToolsDef.h"
@@ -52,16 +53,20 @@ class ElaAppBarPrivate;
 class ELA_EXPORT ElaAppBar : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaAppBar)
-    Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
-    Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
-    Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
-    Q_PROPERTY_CREATE_Q_H(bool, IsOnlyAllowMinAndClose)
-    Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(int, RibbonHeight)
+    ELA_PIMPL_Q(ElaAppBar)
+    ELA_PROPERTY_Q_H(bool, IsStayTop)
+    ELA_PROPERTY_Q_H(bool, IsDefaultClosed)
+    ELA_PROPERTY_Q_H(bool, IsOnlyAllowMinAndClose)
 public:
     explicit ElaAppBar(QWidget* parent = nullptr);
     ~ElaAppBar() override;
+
+    void setIsFixedSize(bool isFixedSize);
+    Q_REQUIRED_RESULT bool getIsFixedSize() const;
+    void setAppBarHeight(int height);
+    Q_REQUIRED_RESULT int getAppBarHeight() const;
+    void setRibbonHeight(int height);
+    Q_REQUIRED_RESULT int getRibbonHeight() const;
 
     void setCustomWidget(ElaAppBarType::CustomArea customArea, QWidget* customWidget, QObject* hitTestObject = nullptr, const QString& hitTestFunctionName = "");
     QWidget* getCustomWidget(ElaAppBarType::CustomArea customArea) const;
@@ -84,6 +89,9 @@ public:
 #endif
 #endif
 Q_SIGNALS:
+    Q_SIGNAL void pIsFixedSizeChanged();
+    Q_SIGNAL void pAppBarHeightChanged();
+    Q_SIGNAL void pRibbonHeightChanged();
     Q_SIGNAL void routeBackButtonClicked();
     Q_SIGNAL void routeForwardButtonClicked();
     Q_SIGNAL void navigationButtonClicked();

@@ -6,16 +6,16 @@
 
 #include "ElaTheme.h"
 #include "private/ElaReminderCardPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, int, BorderRadius)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaReminderCard, QString, Title);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaReminderCard, QString, SubTitle);
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, int, TitlePixelSize);
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, int, SubTitlePixelSize);
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, int, TitleSpacing);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaReminderCard, QPixmap, CardPixmap);
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, QSize, CardPixmapSize);
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, int, CardPixmapBorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(ElaReminderCard, ElaCardPixType::PixMode, CardPixMode);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaReminderCard, QString, Title);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, QString, SubTitle);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, int, TitlePixelSize);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, int, SubTitlePixelSize);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, int, TitleSpacing);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, QPixmap, CardPixmap);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, QSize, CardPixmapSize);
+ELA_PROPERTY_Q_CPP(ElaReminderCard, int, CardPixmapBorderRadius)
+ELA_PROPERTY_Q_CPP(ElaReminderCard, ElaCardPixType::PixMode, CardPixMode);
 
 ElaReminderCard::ElaReminderCard(QWidget* parent)
     : QPushButton{parent}, d_ptr(new ElaReminderCardPrivate())

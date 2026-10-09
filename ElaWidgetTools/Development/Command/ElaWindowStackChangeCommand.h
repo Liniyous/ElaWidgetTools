@@ -2,13 +2,14 @@
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_COMMAND_ELAWINDOWSTACKCHANGECOMMAND_H_
 
 #include "ElaActionCommander.h"
+#include "ElaPropertyMacro.h"
 #include "ElaWindowPrivate.h"
 class ElaWindowStackChangeCommand : public ElaActionCommand
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(int, UndoStackIndex);
-    Q_PRIVATE_CREATE(int, RedoStackIndex);
-    Q_PRIVATE_CREATE(ElaWindowPrivate*, WindowPrivate)
+    ELA_VARIABLE(int, UndoStackIndex);
+    ELA_VARIABLE(int, RedoStackIndex);
+    ELA_VARIABLE(ElaWindowPrivate*, WindowPrivate)
 public:
     explicit ElaWindowStackChangeCommand(QObject* parent = nullptr);
     ~ElaWindowStackChangeCommand() override;

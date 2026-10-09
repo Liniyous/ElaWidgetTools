@@ -1,5 +1,6 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATOOLBARPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATOOLBARPRIVATE_H_
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,7 +9,7 @@ class ElaToolBar;
 class ElaToolBarPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaToolBar)
+    ELA_PIMPL_D(ElaToolBar)
 public:
     explicit ElaToolBarPrivate(QObject* parent = nullptr);
     ~ElaToolBarPrivate() override;

@@ -23,12 +23,12 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     d->_policy = policy;
     d->_messageMode = messageMode;
     d->_themeMode = eTheme->getThemeMode();
-    setFixedHeight(60);
     setMouseTracking(true);
     d->_pOpacity = 1;
-    setFont(QFont("微软雅黑"));
     parent->installEventFilter(this);
-    d->_closeButton = new ElaIconButton(ElaIconType::Xmark, 17, d->_closeButtonWidth, 30, this);
+    int fontPixelSize = eApp->getFontPixelSize();
+    setFont(QFont("微软雅黑"));
+    d->_closeButton = new ElaIconButton(ElaIconType::Xmark, fontPixelSize + 3, d->_closeButtonWidth, 30, this);
     switch (d->_messageMode)
     {
     case ElaMessageBarType::Success:
@@ -41,11 +41,10 @@ ElaMessageBar::ElaMessageBar(ElaMessageBarType::PositionPolicy policy, ElaMessag
     }
     case ElaMessageBarType::Warning:
     {
-        d->_closeButton->setLightHoverColor(QColor(0x5E, 0x4C, 0x22));
-        d->_closeButton->setDarkHoverColor(QColor(0x5E, 0x4C, 0x22));
-        d->_closeButton->setLightIconColor(Qt::white);
-        d->_closeButton->setDarkIconColor(Qt::white);
-        d->_closeButton->setLightHoverIconColor(Qt::white);
+        d->_closeButton->setLightHoverColor(QColor(0xE8, 0xDE, 0xBB));
+        d->_closeButton->setDarkHoverColor(QColor(0xE8, 0xDE, 0xBB));
+        d->_closeButton->setDarkIconColor(Qt::black);
+        d->_closeButton->setDarkHoverIconColor(Qt::black);
         break;
     }
     case ElaMessageBarType::Information:
@@ -165,7 +164,7 @@ void ElaMessageBar::error(ElaMessageBarType::PositionPolicy policy, QString titl
     ElaMessageBar* bar = new ElaMessageBar(policy, ElaMessageBarType::Error, title, text, displayMsec, parent);
     Q_UNUSED(bar);
 }
-
+#include <QDebug>
 void ElaMessageBar::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaMessageBar);
@@ -206,7 +205,7 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
     // 标题
     QFont font = this->font();
     font.setWeight(QFont::Bold);
-    font.setPixelSize(fontPixelSize + 3);
+    font.setPixelSize(fontPixelSize);
     painter.setFont(font);
     int titleTextWidth = painter.fontMetrics().horizontalAdvance(d->_title) + 1;
     if (titleTextWidth > 100)
@@ -217,14 +216,8 @@ void ElaMessageBar::paintEvent(QPaintEvent* event)
     painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing, -1, titleTextWidth, height()), textFlags, d->_title);
     // 正文
     font.setWeight(QFont::Light);
-    font.setPixelSize(fontPixelSize + 2);
     painter.setFont(font);
     painter.drawText(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0, width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing + d->_closeButtonWidth + d->_closeButtonLeftRightMargin / 2), height() - d->_timePercentHeight), textFlags, d->_text);
-    int textHeight = painter.fontMetrics().boundingRect(QRect(d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing, 0, width() - (d->_leftPadding + d->_titleLeftSpacing + titleTextWidth + d->_textLeftSpacing + d->_closeButtonWidth + d->_closeButtonLeftRightMargin), height()), textFlags, d->_text).height();
-    if (textHeight >= minimumHeight() - 20)
-    {
-        setMinimumHeight(textHeight + 20);
-    }
     painter.restore();
 }
 

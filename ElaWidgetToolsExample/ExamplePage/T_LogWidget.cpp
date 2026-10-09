@@ -19,10 +19,10 @@ T_LogWidget::T_LogWidget(QWidget* parent)
     connect(ElaLog::getInstance(), &ElaLog::logMessage, this, [=](QString log) {
         _logModel->appendLogList(log);
     });
-    _logModel->appendLogList("测试条例11223344556677889900");
-    _logModel->appendLogList("测试条例11223344556677889900");
-    _logModel->appendLogList("测试条例11223344556677889900");
-    _logModel->appendLogList("测试条例11223344556677889900");
+    _logModel->appendLogList("[INFO] 日志服务已就绪");
+    _logModel->appendLogList("[INFO] 加载界面组件");
+    _logModel->appendLogList("[INFO] 初始化导航页面");
+    _logModel->appendLogList("[INFO] 等待用户操作");
 }
 
 T_LogWidget::~T_LogWidget()

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAINTERACTIVECARDPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAINTERACTIVECARDPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QImage>
 #include <QObject>
 #include <QPixmap>
@@ -11,17 +12,17 @@ class ElaInteractiveCard;
 class ElaInteractiveCardPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaInteractiveCard)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
-    Q_PROPERTY_CREATE_D(QString, Title);
-    Q_PROPERTY_CREATE_D(QString, SubTitle);
-    Q_PROPERTY_CREATE_D(int, TitlePixelSize);
-    Q_PROPERTY_CREATE_D(int, SubTitlePixelSize);
-    Q_PROPERTY_CREATE_D(int, TitleSpacing);
-    Q_PROPERTY_CREATE_D(QPixmap, CardPixmap);
-    Q_PROPERTY_CREATE_D(QSize, CardPixmapSize);
-    Q_PROPERTY_CREATE_D(int, CardPixmapBorderRadius)
-    Q_PROPERTY_CREATE_D(ElaCardPixType::PixMode, CardPixMode);
+    ELA_PIMPL_D(ElaInteractiveCard)
+    ELA_PROPERTY_D(int, BorderRadius)
+    ELA_PROPERTY_D(QString, Title);
+    ELA_PROPERTY_D(QString, SubTitle);
+    ELA_PROPERTY_D(int, TitlePixelSize);
+    ELA_PROPERTY_D(int, SubTitlePixelSize);
+    ELA_PROPERTY_D(int, TitleSpacing);
+    ELA_PROPERTY_D(QPixmap, CardPixmap);
+    ELA_PROPERTY_D(QSize, CardPixmapSize);
+    ELA_PROPERTY_D(int, CardPixmapBorderRadius)
+    ELA_PROPERTY_D(ElaCardPixType::PixMode, CardPixMode);
 
 public:
     explicit ElaInteractiveCardPrivate(QObject* parent = nullptr);

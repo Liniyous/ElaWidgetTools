@@ -14,7 +14,7 @@
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
 #include "ElaToolButton.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaCalendar, int, BorderRaiuds)
+ELA_PROPERTY_Q_CPP(ElaCalendar, int, BorderRaiuds)
 ElaCalendar::ElaCalendar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaCalendarPrivate())
 {

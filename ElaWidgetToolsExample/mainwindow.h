@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MAINWINDOW_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MAINWINDOW_H_
 
 #include "ElaWindow.h"
 
@@ -16,8 +16,8 @@ class T_TableView;
 class T_TreeView;
 class T_About;
 class T_Setting;
+class ElaRibbonBar;
 class ElaContentDialog;
-
 class MainWindow : public ElaWindow
 {
     Q_OBJECT
@@ -27,19 +27,19 @@ public:
     ~MainWindow() override;
 
     void initWindow();
+    void initRibbon();
     void initEdgeLayout();
     void initContent();
 
 protected:
-    virtual void mouseReleaseEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
+    ElaRibbonBar* _ribbonBar{nullptr};
     ElaContentDialog* _closeDialog{nullptr};
     ElaSuggestBox* _windowSuggestBox{nullptr};
     T_Home* _homePage{nullptr};
-#ifdef Q_OS_WIN
     T_ElaScreen* _elaScreenPage{nullptr};
-#endif
     T_Icon* _iconPage{nullptr};
     T_BaseComponents* _baseComponentsPage{nullptr};
     T_Navigation* _navigationPage{nullptr};
@@ -55,4 +55,4 @@ private:
     QString _aboutKey{""};
     QString _settingKey{""};
 };
-#endif // MAINWINDOW_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MAINWINDOW_H_

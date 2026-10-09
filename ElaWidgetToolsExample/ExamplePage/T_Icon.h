@@ -1,5 +1,5 @@
-﻿#ifndef T_ICON_H
-#define T_ICON_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_ICON_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_ICON_H_
 
 #include <QMetaEnum>
 
@@ -24,4 +24,6 @@ private:
     T_IconDelegate* _iconDelegate;
 };
 
-#endif // T_ICON_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_ICON_H_
+
+

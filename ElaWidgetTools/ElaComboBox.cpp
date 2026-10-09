@@ -11,7 +11,7 @@
 #include <QListView>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
-Q_PROPERTY_CREATE_Q_CPP(ElaComboBox, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaComboBox, int, BorderRadius)
 ElaComboBox::ElaComboBox(QWidget* parent)
     : QComboBox(parent), d_ptr(new ElaComboBoxPrivate())
 {
@@ -20,7 +20,7 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     d->_pBorderRadius = 3;
     d->_themeMode = eTheme->getThemeMode();
     setObjectName("ElaComboBox");
-    setFixedHeight(35);
+    setFixedHeight(30);
     d->_comboBoxStyle = new ElaComboBoxStyle(style());
     setStyle(d->_comboBoxStyle);
 
@@ -99,8 +99,12 @@ void ElaComboBox::showPopup()
             {
                 containerHeight = count() * 35 + 8;
             }
-            view()->resize(view()->width(), containerHeight - 8);
-            container->move(container->x(), container->y() + 3);
+            // 容器实际宽度在组合框宽度基础上两侧各扩展阴影宽度
+            // 阴影绘制于外围 前景绘制宽度与组合框宽度保持一致
+            const int shadowBorderWidth = d->_comboBoxStyle->getShadowBorderWidth();
+            container->resize(width() + 2 * shadowBorderWidth, containerHeight);
+            container->move(container->x() - shadowBorderWidth, container->y() + 3);
+            view()->resize(width(), containerHeight - 8);
             QLayout* layout = container->layout();
             while (layout->count())
             {

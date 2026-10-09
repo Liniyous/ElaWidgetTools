@@ -2,6 +2,7 @@
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAPIVOTMODEL_H_
 
 #include <QAbstractListModel>
+#include <QStringList>
 
 class ElaPivotModel : public QAbstractListModel
 {
@@ -12,8 +13,11 @@ public:
 
     void appendPivot(const QString& pivot);
     void removePivot(const QString& pivot);
+    void clearPivot();
 
     int getPivotListCount() const;
+    const QStringList& getPivotList() const;
+    int getPivotIndex(const QString& pivotTitle) const;
 
 protected:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;

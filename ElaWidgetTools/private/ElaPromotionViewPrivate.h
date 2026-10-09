@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAPROMOTIONVIEWPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAPROMOTIONVIEWPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 #include <QPixmap>
 
@@ -10,12 +11,12 @@ class ElaPromotionView;
 class ElaPromotionViewPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaPromotionView)
-    Q_PROPERTY_CREATE_D(int, CardExpandWidth)
-    Q_PROPERTY_CREATE_D(int, CardCollapseWidth)
-    Q_PROPERTY_CREATE_D(int, CurrentIndex)
-    Q_PROPERTY_CREATE_D(bool, IsAutoScroll)
-    Q_PROPERTY_CREATE_D(int, AutoScrollInterval)
+    ELA_PIMPL_D(ElaPromotionView)
+    ELA_PROPERTY_D(int, CardExpandWidth)
+    ELA_PROPERTY_D(int, CardCollapseWidth)
+    ELA_PROPERTY_D(int, CurrentIndex)
+    ELA_PROPERTY_D(bool, IsAutoScroll)
+    ELA_PROPERTY_D(int, AutoScrollInterval)
 public:
     explicit ElaPromotionViewPrivate(QObject* parent = nullptr);
     ~ElaPromotionViewPrivate();

@@ -10,7 +10,7 @@ ElaCheckBox::ElaCheckBox(QWidget* parent)
     setObjectName("ElaCheckBox");
     setStyle(new ElaCheckBoxStyle(style()));
     QFont font = this->font();
-    font.setPixelSize(eApp->getFontPixelSize() + 2);
+    font.setPixelSize(eApp->getFontPixelSize());
     setFont(font);
 }
 

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELARIBBONBARDELEGATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELARIBBONBARDELEGATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QStyledItemDelegate>
 
@@ -8,8 +9,8 @@
 class ElaRibbonBarDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QModelIndex, PressIndex);
-    Q_PRIVATE_CREATE(int, BottomMargin);
+    ELA_VARIABLE(QModelIndex, PressIndex);
+    ELA_VARIABLE(int, BottomMargin);
 
 public:
     explicit ElaRibbonBarDelegate(QObject* parent = nullptr);

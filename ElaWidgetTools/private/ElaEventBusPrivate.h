@@ -11,10 +11,10 @@ class ElaEvent;
 class ElaEventPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaEvent)
-    Q_PROPERTY_CREATE_D(QString, EventName);
-    Q_PROPERTY_CREATE_D(QString, FunctionName);
-    Q_PROPERTY_CREATE_D(Qt::ConnectionType, ConnectionType);
+    ELA_PIMPL_D(ElaEvent)
+    ELA_PROPERTY_D(QString, EventName);
+    ELA_PROPERTY_D(QString, FunctionName);
+    ELA_PROPERTY_D(Qt::ConnectionType, ConnectionType);
 
 public:
     explicit ElaEventPrivate(QObject* parent = nullptr);
@@ -25,7 +25,7 @@ class ElaEventBus;
 class ElaEventBusPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaEventBus)
+    ELA_PIMPL_D(ElaEventBus)
 public:
     explicit ElaEventBusPrivate(QObject* parent = nullptr);
     ~ElaEventBusPrivate();

@@ -1,5 +1,6 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELASCROLLBARSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELASCROLLBARSTYLE_H_
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
@@ -7,10 +8,10 @@ class ElaScrollBar;
 class ElaScrollBarStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsExpand)
-    Q_PROPERTY_CREATE(qreal, Opacity)
-    Q_PROPERTY_CREATE(qreal, SliderExtent)
-    Q_PRIVATE_CREATE(ElaScrollBar*, ScrollBar)
+    ELA_VARIABLE(bool, IsExpand)
+    ELA_PROPERTY(qreal, Opacity)
+    ELA_PROPERTY(qreal, SliderExtent)
+    ELA_VARIABLE(ElaScrollBar*, ScrollBar)
 public:
     explicit ElaScrollBarStyle(QStyle* style = nullptr);
     ~ElaScrollBarStyle();

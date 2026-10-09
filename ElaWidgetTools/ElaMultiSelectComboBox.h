@@ -8,8 +8,8 @@ class ElaMultiSelectComboBoxPrivate;
 class ELA_EXPORT ElaMultiSelectComboBox : public QComboBox
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaMultiSelectComboBox)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    ELA_PIMPL_Q(ElaMultiSelectComboBox)
+    ELA_PROPERTY_Q_H(int, BorderRadius)
 public:
     explicit ElaMultiSelectComboBox(QWidget* parent = nullptr);
     ~ElaMultiSelectComboBox();

@@ -1,7 +1,8 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAWINSHADOWHELPER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAWINSHADOWHELPER_H_
-#include "ElaWidgetToolsDef.h"
+#include "ElaPropertyMacro.h"
 #include "ElaSingletonMacro.h"
+#include "ElaWidgetToolsDef.h"
 #ifdef Q_OS_WIN
 #include <dwmapi.h>
 #include <windowsx.h>
@@ -19,9 +20,9 @@
 class ElaWinShadowHelper : public QObject
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsWinVersionGreater10)
-    Q_PRIVATE_CREATE(bool, IsWinVersionGreater11)
-    Q_SINGLETON_CREATE(ElaWinShadowHelper)
+    ELA_VARIABLE(bool, IsWinVersionGreater10)
+    ELA_VARIABLE(bool, IsWinVersionGreater11)
+    ELA_SINGLETON(ElaWinShadowHelper)
 private:
     explicit ElaWinShadowHelper(QObject* parent = nullptr);
     ~ElaWinShadowHelper() override;

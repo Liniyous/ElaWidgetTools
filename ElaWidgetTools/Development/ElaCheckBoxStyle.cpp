@@ -4,10 +4,10 @@
 #include <QPainter>
 #include <QStyleOption>
 
+#include "ElaApplication.h"
 #include "ElaTheme.h"
 ElaCheckBoxStyle::ElaCheckBoxStyle(QStyle* style)
 {
-    _pCheckIndicatorWidth = 21;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -30,8 +30,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             bool isEnabled = bopt->state.testFlag(QStyle::State_Enabled);
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-            QRect checkBoxRect = bopt->rect;
-            QRect checkRect(checkBoxRect.x(), checkBoxRect.y(), _pCheckIndicatorWidth, _pCheckIndicatorWidth);
+            QRect checkRect = subElementRect(SE_CheckBoxIndicator, bopt, widget);
             checkRect.adjust(1, 1, -1, -1);
             //复选框绘制
             painter->setPen(Qt::NoPen);
@@ -80,7 +79,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             {
                 painter->save();
                 QFont iconFont = QFont("ElaAwesome");
-                iconFont.setPixelSize(_pCheckIndicatorWidth * 0.75);
+                iconFont.setPixelSize(checkRect.height() * 0.75);
                 painter->setFont(iconFont);
                 painter->drawText(checkRect, Qt::AlignCenter, QChar(ElaIconType::Check));
                 painter->restore();
@@ -92,7 +91,7 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             }
             //文字绘制
             painter->setPen(isEnabled ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
-            QRect textRect(checkRect.right() + 10, checkBoxRect.y(), checkBoxRect.width(), checkBoxRect.height() - 3);
+            QRect textRect = subElementRect(SE_CheckBoxContents, bopt, widget);
             painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, bopt->text);
             painter->restore();
         }
@@ -109,20 +108,16 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
 
 int ElaCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QWidget* widget) const
 {
-    // qDebug() << metric << QProxyStyle::pixelMetric(metric, option, widget);
     switch (metric)
     {
     case QStyle::PM_IndicatorWidth:
-    {
-        return _pCheckIndicatorWidth;
-    }
     case QStyle::PM_IndicatorHeight:
     {
-        return _pCheckIndicatorWidth;
+        return widget ? widget->fontMetrics().height() : QProxyStyle::pixelMetric(metric, option, widget);
     }
     case QStyle::PM_CheckBoxLabelSpacing:
     {
-        return 10;
+        return _labelSpacing;
     }
     default:
     {
@@ -130,4 +125,24 @@ int ElaCheckBoxStyle::pixelMetric(PixelMetric metric, const QStyleOption* option
     }
     }
     return QProxyStyle::pixelMetric(metric, option, widget);
+}
+
+QRect ElaCheckBoxStyle::subElementRect(SubElement element, const QStyleOption* option, const QWidget* widget) const
+{
+    QRect subRect = QProxyStyle::subElementRect(element, option, widget);
+    if (!widget)
+    {
+        return subRect;
+    }
+    if (element == SE_CheckBoxIndicator)
+    {
+        const int indicatorSize = widget->fontMetrics().height();
+        subRect.setSize(QSize(indicatorSize, indicatorSize));
+    }
+    else if (element == SE_CheckBoxContents)
+    {
+        const QRect indicatorRect = subElementRect(SE_CheckBoxIndicator, option, widget);
+        subRect.setLeft(indicatorRect.right() + _labelSpacing);
+    }
+    return subRect;
 }

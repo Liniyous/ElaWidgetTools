@@ -13,9 +13,9 @@ class QPropertyAnimation;
 class ElaTabBarPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaTabBar)
-    Q_PROPERTY_CREATE(qreal, ScrollOffset)
-    Q_PROPERTY_CREATE(qreal, TargetScrollOffset)
+    ELA_PIMPL_D(ElaTabBar)
+    ELA_PROPERTY(qreal, ScrollOffset)
+    ELA_PROPERTY(qreal, TargetScrollOffset)
 public:
     explicit ElaTabBarPrivate(QObject* parent = nullptr);
     ~ElaTabBarPrivate() override;

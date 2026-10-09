@@ -1,14 +1,15 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAKEYBINDERCONTAINER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAKEYBINDERCONTAINER_H_
 
+#include "ElaPropertyMacro.h"
 #include "ElaWidgetToolsDef.h"
 #include <QWidget>
 class ElaKeyBinder;
 class ElaKeyBinderContainer : public QWidget
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QString, BinderKeyText)
-    Q_PRIVATE_CREATE(quint32, NativeVirtualBinderKey)
+    ELA_VARIABLE(QString, BinderKeyText)
+    ELA_VARIABLE(quint32, NativeVirtualBinderKey)
 public:
     explicit ElaKeyBinderContainer(QWidget* parent = nullptr);
     ~ElaKeyBinderContainer() override;

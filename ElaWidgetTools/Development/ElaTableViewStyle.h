@@ -1,5 +1,6 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATABLEVIEWSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATABLEVIEWSTYLE_H_
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QProxyStyle>
 
@@ -8,8 +9,8 @@ class QStyleOptionViewItem;
 class ElaTableViewStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, HeaderMargin)
-    Q_PROPERTY_CREATE(int, CurrentHoverRow)
+    ELA_PROPERTY(int, HeaderMargin)
+    ELA_PROPERTY(int, CurrentHoverRow)
 public:
     explicit ElaTableViewStyle(QStyle* style = nullptr);
     ~ElaTableViewStyle();

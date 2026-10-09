@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_ELAWINDOW_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_ELAWINDOW_H_
 
+#include "ElaPropertyMacro.h"
 #include <QMainWindow>
 
 #include "ElaAppBar.h"
@@ -10,25 +11,38 @@ class ElaWindowPrivate;
 class ELA_EXPORT ElaWindow : public QMainWindow
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaWindow)
-    Q_PROPERTY_CREATE_Q_H(bool, IsStayTop)
-    Q_PROPERTY_CREATE_Q_H(bool, IsFixedSize)
-    Q_PROPERTY_CREATE_Q_H(bool, IsDefaultClosed)
-    Q_PROPERTY_CREATE_Q_H(int, AppBarHeight)
-    Q_PROPERTY_CREATE_Q_H(int, RibbonHeight)
-    Q_PROPERTY_CREATE_Q_H(int, ThemeChangeTime)
-    Q_PROPERTY_CREATE_Q_H(bool, IsCentralStackedWidgetTransparent)
-    Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
-    Q_PROPERTY_CREATE_Q_H(bool, IsNavigationBarEnable)
-    Q_PROPERTY_CREATE_Q_H(int, NavigationBarWidth)
-    Q_PROPERTY_CREATE_Q_H(int, CurrentStackIndex)
-    Q_PROPERTY_CREATE_Q_H(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
-    Q_PROPERTY_CREATE_Q_H(ElaWindowType::StackSwitchMode, StackSwitchMode)
-    Q_PROPERTY_CREATE_Q_H(ElaWindowType::PaintMode, WindowPaintMode)
+    ELA_PIMPL_Q(ElaWindow)
+    ELA_PROPERTY_Q_H(int, ThemeChangeTime)
+    ELA_PROPERTY_Q_H(ElaWindowType::StackSwitchMode, StackSwitchMode)
     Q_TAKEOVER_NATIVEEVENT_H
 public:
     Q_INVOKABLE explicit ElaWindow(QWidget* parent = nullptr);
     ~ElaWindow() override;
+
+    void setIsStayTop(bool isStayTop);
+    Q_REQUIRED_RESULT bool getIsStayTop() const;
+    void setIsFixedSize(bool isFixedSize);
+    Q_REQUIRED_RESULT bool getIsFixedSize() const;
+    void setIsDefaultClosed(bool isDefaultClosed);
+    Q_REQUIRED_RESULT bool getIsDefaultClosed() const;
+    void setAppBarHeight(int appBarHeight);
+    Q_REQUIRED_RESULT int getAppBarHeight() const;
+    void setRibbonHeight(int ribbonHeight);
+    Q_REQUIRED_RESULT int getRibbonHeight() const;
+    void setIsCentralStackedWidgetTransparent(bool isTransparent);
+    Q_REQUIRED_RESULT bool getIsCentralStackedWidgetTransparent() const;
+    void setIsAllowPageOpenInNewWindow(bool isAllowPageOpenInNewWindow);
+    Q_REQUIRED_RESULT bool getIsAllowPageOpenInNewWindow() const;
+    void setIsNavigationBarEnable(bool isVisible);
+    Q_REQUIRED_RESULT bool getIsNavigationBarEnable() const;
+    void setNavigationBarWidth(int navigationBarWidth);
+    Q_REQUIRED_RESULT int getNavigationBarWidth() const;
+    void setCurrentStackIndex(int currentStackIndex);
+    Q_REQUIRED_RESULT int getCurrentStackIndex() const;
+    void setNavigationBarDisplayMode(ElaNavigationType::NavigationDisplayMode navigationBarDisplayMode);
+    Q_REQUIRED_RESULT ElaNavigationType::NavigationDisplayMode getNavigationBarDisplayMode() const;
+    void setWindowPaintMode(ElaWindowType::PaintMode windowPaintMode);
+    Q_REQUIRED_RESULT ElaWindowType::PaintMode getWindowPaintMode() const;
 
     void moveToCenter();
 
@@ -95,6 +109,18 @@ public:
     void tabifyDockWidget(Qt::DockWidgetArea area, const QString& targetDockTitle, QDockWidget* dockWidget);
 
 Q_SIGNALS:
+    Q_SIGNAL void pIsStayTopChanged();
+    Q_SIGNAL void pIsFixedSizeChanged();
+    Q_SIGNAL void pIsDefaultClosedChanged();
+    Q_SIGNAL void pAppBarHeightChanged();
+    Q_SIGNAL void pRibbonHeightChanged();
+    Q_SIGNAL void pIsCentralStackedWidgetTransparentChanged();
+    Q_SIGNAL void pIsAllowPageOpenInNewWindowChanged();
+    Q_SIGNAL void pIsNavigationBarEnableChanged();
+    Q_SIGNAL void pNavigationBarWidthChanged();
+    Q_SIGNAL void pCurrentStackIndexChanged();
+    Q_SIGNAL void pNavigationBarDisplayModeChanged();
+    Q_SIGNAL void pWindowPaintModeChanged();
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void closeButtonClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey);

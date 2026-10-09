@@ -7,7 +7,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <cmath>
 #endif
-Q_SINGLETON_CREATE_CPP(ElaExponentialBlur)
+ELA_SINGLETON_CPP(ElaExponentialBlur)
 ElaExponentialBlur::ElaExponentialBlur(QObject* parent)
     : QObject{parent}, d_ptr(new ElaExponentialBlurPrivate())
 {

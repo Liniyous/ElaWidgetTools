@@ -10,7 +10,7 @@ class ElaDxgiManager;
 class ElaDxgiManagerPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaDxgiManager)
+    ELA_PIMPL_D(ElaDxgiManager)
 public:
     explicit ElaDxgiManagerPrivate(QObject* parent = nullptr);
     ~ElaDxgiManagerPrivate() override;

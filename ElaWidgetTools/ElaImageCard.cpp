@@ -7,8 +7,8 @@
 #include "ElaImageCardPrivate.h"
 #include "ElaTheme.h"
 
-Q_PROPERTY_CREATE_Q_CPP(ElaImageCard, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(ElaImageCard, bool, IsPreserveAspectCrop)
+ELA_PROPERTY_Q_CPP(ElaImageCard, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaImageCard, bool, IsPreserveAspectCrop)
 ElaImageCard::ElaImageCard(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaImageCardPrivate())
 {

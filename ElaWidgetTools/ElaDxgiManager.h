@@ -11,8 +11,8 @@ class ElaDxgiManagerPrivate;
 class ELA_EXPORT ElaDxgiManager : public QObject
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaDxgiManager)
-    Q_SINGLETON_CREATE_H(ElaDxgiManager);
+    ELA_PIMPL_Q(ElaDxgiManager)
+    ELA_SINGLETON_H(ElaDxgiManager);
 
 private:
     explicit ElaDxgiManager(QObject* parent = nullptr);

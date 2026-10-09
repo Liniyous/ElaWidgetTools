@@ -9,7 +9,7 @@ class ElaDockWidgetPrivate;
 class ELA_EXPORT ElaDockWidget : public QDockWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaDockWidget)
+    ELA_PIMPL_Q(ElaDockWidget)
 public:
     explicit ElaDockWidget(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     explicit ElaDockWidget(const QString& title, QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());

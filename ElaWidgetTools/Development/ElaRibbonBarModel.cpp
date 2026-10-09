@@ -16,28 +16,34 @@ ElaRibbonBarModel::~ElaRibbonBarModel()
 QAction* ElaRibbonBarModel::addRibbonAction(const QString& actionName)
 {
     auto action = new QAction(actionName, this);
-    beginResetModel();
+    const int insertIndex = _ribbonDataList[0].ribbonDataList.count();
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
     _ribbonDataList[0].ribbonDataList.append(action);
-    endResetModel();
+    endInsertRows();
+    _watchAction(action);
     return action;
 }
 
 QAction* ElaRibbonBarModel::addRibbonAction(const QString& actionName, ElaIconType::IconName icon)
 {
     auto action = new QAction(actionName, this);
-    beginResetModel();
     action->setProperty("ElaRibbonIcon", QChar(icon));
+    const int insertIndex = _ribbonDataList[0].ribbonDataList.count();
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
     _ribbonDataList[0].ribbonDataList.append(action);
-    endResetModel();
+    endInsertRows();
+    _watchAction(action);
     return action;
 }
 
 QAction* ElaRibbonBarModel::addRibbonAction(const QString& actionName, const QIcon& icon)
 {
     auto action = new QAction(icon, actionName, this);
-    beginResetModel();
+    const int insertIndex = _ribbonDataList[0].ribbonDataList.count();
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
     _ribbonDataList[0].ribbonDataList.append(action);
-    endResetModel();
+    endInsertRows();
+    _watchAction(action);
     return action;
 }
 
@@ -45,26 +51,32 @@ QAction* ElaRibbonBarModel::addRibbonAction(const QString& groupName, const QStr
 {
     auto action = new QAction(actionName, this);
     action->setProperty("ElaRibbonGroupName", groupName);
-    // 查找指定Group
-    beginResetModel();
-    bool isFindGroup = false;
-    for (auto& groupListData: _ribbonDataList)
+    ElaRibbonGroupData* targetGroup = nullptr;
+    int insertIndex = 0;
+    for (auto& groupData: _ribbonDataList)
     {
-        if (groupListData.groupName == groupName)
+        if (groupData.groupName == groupName)
         {
-            isFindGroup = true;
-            groupListData.ribbonDataList.append(action);
+            targetGroup = &groupData;
+            insertIndex += groupData.ribbonDataList.count();
             break;
         }
+        insertIndex += groupData.ribbonDataList.count();
     }
-    if (!isFindGroup)
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
+    if (targetGroup)
+    {
+        targetGroup->ribbonDataList.append(action);
+    }
+    else
     {
         ElaRibbonGroupData groupData;
         groupData.groupName = groupName;
         groupData.ribbonDataList.append(action);
         _ribbonDataList.append(groupData);
     }
-    endResetModel();
+    endInsertRows();
+    _watchAction(action);
     return action;
 }
 
@@ -73,26 +85,32 @@ QAction* ElaRibbonBarModel::addRibbonAction(const QString& groupName, const QStr
     auto action = new QAction(actionName, this);
     action->setProperty("ElaRibbonGroupName", groupName);
     action->setProperty("ElaRibbonIcon", QChar(icon));
-    // 查找指定Group
-    beginResetModel();
-    bool isFindGroup = false;
-    for (auto& groupListData: _ribbonDataList)
+    ElaRibbonGroupData* targetGroup = nullptr;
+    int insertIndex = 0;
+    for (auto& groupData: _ribbonDataList)
     {
-        if (groupListData.groupName == groupName)
+        if (groupData.groupName == groupName)
         {
-            isFindGroup = true;
-            groupListData.ribbonDataList.append(action);
+            targetGroup = &groupData;
+            insertIndex += groupData.ribbonDataList.count();
             break;
         }
+        insertIndex += groupData.ribbonDataList.count();
     }
-    if (!isFindGroup)
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
+    if (targetGroup)
+    {
+        targetGroup->ribbonDataList.append(action);
+    }
+    else
     {
         ElaRibbonGroupData groupData;
         groupData.groupName = groupName;
         groupData.ribbonDataList.append(action);
         _ribbonDataList.append(groupData);
     }
-    endResetModel();
+    endInsertRows();
+    _watchAction(action);
     return action;
 }
 
@@ -100,26 +118,32 @@ QAction* ElaRibbonBarModel::addRibbonAction(const QString& groupName, const QStr
 {
     auto action = new QAction(icon, actionName, this);
     action->setProperty("ElaRibbonGroupName", groupName);
-    // 查找指定Group
-    beginResetModel();
-    bool isFindGroup = false;
-    for (auto& groupListData: _ribbonDataList)
+    ElaRibbonGroupData* targetGroup = nullptr;
+    int insertIndex = 0;
+    for (auto& groupData: _ribbonDataList)
     {
-        if (groupListData.groupName == groupName)
+        if (groupData.groupName == groupName)
         {
-            isFindGroup = true;
-            groupListData.ribbonDataList.append(action);
+            targetGroup = &groupData;
+            insertIndex += groupData.ribbonDataList.count();
             break;
         }
+        insertIndex += groupData.ribbonDataList.count();
     }
-    if (!isFindGroup)
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
+    if (targetGroup)
+    {
+        targetGroup->ribbonDataList.append(action);
+    }
+    else
     {
         ElaRibbonGroupData groupData;
         groupData.groupName = groupName;
         groupData.ribbonDataList.append(action);
         _ribbonDataList.append(groupData);
     }
-    endResetModel();
+    endInsertRows();
+    _watchAction(action);
     return action;
 }
 
@@ -130,42 +154,56 @@ void ElaRibbonBarModel::removeRibbonAction(QAction* action)
         return;
     }
     auto ribbonGroupName = action->property("ElaRibbonGroupName").toString();
-    beginResetModel();
+    int actionIndex = 0;
     for (auto& groupData: _ribbonDataList)
     {
-        if (groupData.groupName == ribbonGroupName)
+        if (groupData.groupName != ribbonGroupName)
         {
-            groupData.ribbonDataList.removeAll(action);
-            if (auto indexWidget = action->property("ElaRibbonWidget").value<QWidget*>())
-            {
-                indexWidget->deleteLater();
-            }
-            action->deleteLater();
-            break;
+            actionIndex += groupData.ribbonDataList.count();
+            continue;
         }
+        const int groupActionIndex = groupData.ribbonDataList.indexOf(action);
+        if (groupActionIndex < 0)
+        {
+            return;
+        }
+        const int removeIndex = actionIndex + groupActionIndex;
+        beginRemoveRows(QModelIndex(), removeIndex, removeIndex);
+        groupData.ribbonDataList.removeAt(groupActionIndex);
+        endRemoveRows();
+        if (auto indexWidget = action->property("ElaRibbonWidget").value<QWidget*>())
+        {
+            indexWidget->deleteLater();
+        }
+        action->deleteLater();
+        return;
     }
-    endResetModel();
 }
 
 void ElaRibbonBarModel::removeRibbonAction(const QString& groupName, const QString& actionName)
 {
-    beginResetModel();
+    int actionIndex = 0;
     for (auto& groupData: _ribbonDataList)
     {
-        if (groupData.groupName == groupName)
+        if (groupData.groupName != groupName)
         {
-            for (auto action: groupData.ribbonDataList)
+            actionIndex += groupData.ribbonDataList.count();
+            continue;
+        }
+        for (int i = 0; i < groupData.ribbonDataList.count(); i++)
+        {
+            if (groupData.ribbonDataList[i]->text() == actionName)
             {
-                if (action->text() == actionName)
-                {
-                    groupData.ribbonDataList.removeOne(action);
-                    action->deleteLater();
-                    break;
-                }
+                const int removeIndex = actionIndex + i;
+                QAction* action = groupData.ribbonDataList[i];
+                beginRemoveRows(QModelIndex(), removeIndex, removeIndex);
+                groupData.ribbonDataList.removeAt(i);
+                endRemoveRows();
+                action->deleteLater();
+                return;
             }
         }
     }
-    endResetModel();
 }
 
 const QList<ElaRibbonGroupData>& ElaRibbonBarModel::getRibbonGroupData() const
@@ -288,4 +326,26 @@ QVariant ElaRibbonBarModel::data(const QModelIndex& index, int role) const
     }
     }
     return {};
+}
+
+void ElaRibbonBarModel::_watchAction(QAction* action)
+{
+    connect(action, &QAction::changed, this, [this, action]() {
+        const auto index = getRibbonActionModelIndex(action);
+        if (index.isValid())
+        {
+            Q_EMIT dataChanged(index, index, {Qt::DisplayRole, Qt::UserRole, Qt::SizeHintRole});
+        }
+    });
+}
+
+Qt::ItemFlags ElaRibbonBarModel::flags(const QModelIndex& index) const
+{
+    auto result = QAbstractListModel::flags(index);
+    const auto action = getRibbonAction(index.row());
+    if (!action || !action->isEnabled())
+    {
+        result &= ~Qt::ItemIsEnabled;
+    }
+    return result;
 }

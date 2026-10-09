@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAACTIONCOMMANDERVIEWSTYLE_H
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAACTIONCOMMANDERVIEWSTYLE_H
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,8 +9,8 @@
 class ElaActionCommanderViewStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, ItemHeight)
-    Q_PROPERTY_CREATE(int, HeaderMargin)
+    ELA_PROPERTY(int, ItemHeight)
+    ELA_PROPERTY(int, HeaderMargin)
 public:
     explicit ElaActionCommanderViewStyle(QStyle* style = nullptr);
     ~ElaActionCommanderViewStyle() override;

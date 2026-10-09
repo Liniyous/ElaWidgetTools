@@ -10,7 +10,7 @@ class ElaPlainTextEditPrivate;
 class ELA_EXPORT ElaPlainTextEdit : public QPlainTextEdit
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaPlainTextEdit)
+    ELA_PIMPL_Q(ElaPlainTextEdit)
 public:
     explicit ElaPlainTextEdit(QWidget* parent = nullptr);
     explicit ElaPlainTextEdit(const QString& text, QWidget* parent = nullptr);

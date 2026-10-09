@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAFOOTERDELEGATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAFOOTERDELEGATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QStyledItemDelegate>
 
@@ -11,8 +12,8 @@ class ElaBaseListView;
 class ElaFooterDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(ElaBaseListView*, ElaListView);
-    Q_PRIVATE_CREATE(QModelIndex, PressIndex);
+    ELA_VARIABLE(ElaBaseListView*, ElaListView);
+    ELA_VARIABLE(QModelIndex, PressIndex);
 
 public:
     explicit ElaFooterDelegate(QObject* parent = nullptr);

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELADRAWERCONTAINER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELADRAWERCONTAINER_H_
 
+#include "ElaPropertyMacro.h"
 #include <QWidget>
 
 #include "ElaWidgetToolsDef.h"
@@ -10,9 +11,9 @@
 class ElaDrawerContainer : public QWidget
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(int, BorderRadius)
-    Q_PRIVATE_REF_CREATE(QPixmap, ContainerPix)
-    Q_PROPERTY_CREATE(qreal, Opacity)
+    ELA_VARIABLE(int, BorderRadius)
+    ELA_VARIABLE(QPixmap, ContainerPix)
+    ELA_PROPERTY(qreal, Opacity)
 public:
     explicit ElaDrawerContainer(QWidget* parent = nullptr);
     ~ElaDrawerContainer() override;

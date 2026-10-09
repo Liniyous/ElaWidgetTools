@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELADIALOGPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELADIALOGPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -9,7 +10,7 @@ class ElaDialog;
 class ElaDialogPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaDialog)
+    ELA_PIMPL_D(ElaDialog)
 public:
     explicit ElaDialogPrivate(QObject* parent = nullptr);
     ~ElaDialogPrivate() override;

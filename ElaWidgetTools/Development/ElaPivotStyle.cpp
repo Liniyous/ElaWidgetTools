@@ -7,7 +7,6 @@
 #include "ElaTheme.h"
 ElaPivotStyle::ElaPivotStyle(QStyle* style)
 {
-    _pCurrentIndex = -1;
     _pPivotSpacing = 5;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
@@ -60,19 +59,14 @@ void ElaPivotStyle::drawControl(ControlElement element, const QStyleOption* opti
             // 文字绘制
             if (!vopt->text.isEmpty())
             {
-                if (_pPressIndex == vopt->index)
+                painter->setPen(ElaThemeColor(_themeMode, BasicText));
+                if (_pPressIndex != vopt->index)
                 {
-                    painter->setPen(ElaThemeColor(_themeMode, BasicTextPress));
-                }
-                else
-                {
-                    if (_pCurrentIndex == vopt->index.row() || vopt->state.testFlag(QStyle::State_MouseOver))
+                    if (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver))
                     {
-                        painter->setPen(ElaThemeColor(_themeMode, BasicText));
-                    }
-                    else
-                    {
-                        painter->setPen(ElaThemeColor(_themeMode, BasicTextNoFocus));
+                        auto textFont = painter->font();
+                        textFont.setBold(true);
+                        painter->setFont(textFont);
                     }
                 }
                 painter->drawText(textRect, Qt::AlignCenter, vopt->text);

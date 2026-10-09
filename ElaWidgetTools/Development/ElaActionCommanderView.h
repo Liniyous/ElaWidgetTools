@@ -9,7 +9,7 @@ class ElaActionCommanderViewStyle;
 class ElaActionCommanderView : public QTreeView
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QString, DomainName)
+    ELA_VARIABLE(QString, DomainName)
 public:
     explicit ElaActionCommanderView(QWidget* parent = nullptr);
     ~ElaActionCommanderView() override;

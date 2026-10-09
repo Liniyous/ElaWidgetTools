@@ -12,7 +12,7 @@ class ElaFlowLayout;
 class ElaFlowLayoutPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaFlowLayout)
+    ELA_PIMPL_D(ElaFlowLayout)
 public:
     explicit ElaFlowLayoutPrivate(QObject* parent = nullptr);
     ~ElaFlowLayoutPrivate() override;

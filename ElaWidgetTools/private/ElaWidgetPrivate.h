@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAWIDGETPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAWIDGETPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -9,7 +10,7 @@ class ElaAppBar;
 class ElaWidgetPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaWidget)
+    ELA_PIMPL_D(ElaWidget)
 public:
     explicit ElaWidgetPrivate(QObject* parent = nullptr);
     ~ElaWidgetPrivate() override;

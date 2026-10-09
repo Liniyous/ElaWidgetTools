@@ -23,8 +23,8 @@
 #include <QStyleOption>
 #include <QToolBar>
 #include <QtMath>
-Q_PROPERTY_CREATE_Q_CPP(ElaWindow, int, ThemeChangeTime)
-Q_PROPERTY_CREATE_Q_CPP(ElaWindow, ElaWindowType::StackSwitchMode, StackSwitchMode)
+ELA_PROPERTY_Q_CPP(ElaWindow, int, ThemeChangeTime)
+ELA_PROPERTY_Q_CPP(ElaWindow, ElaWindowType::StackSwitchMode, StackSwitchMode)
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaWindow, d_func()->_appBar);
 ElaWindow::ElaWindow(QWidget* parent)
     : QMainWindow{parent}, d_ptr(new ElaWindowPrivate())

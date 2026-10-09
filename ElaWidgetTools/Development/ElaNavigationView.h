@@ -1,8 +1,9 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONVIEW_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONVIEW_H_
 
-#include "ElaWidgetToolsDef.h"
 #include "ElaNavigationBarPrivate.h"
+#include "ElaPropertyMacro.h"
+#include "ElaWidgetToolsDef.h"
 #include <QObject>
 #include <QTreeView>
 class ElaScrollBar;
@@ -11,7 +12,7 @@ class ElaToolTip;
 class ElaNavigationView : public QTreeView
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(const ElaNavigationBarPrivate*, NavigationBarPrivate)
+    ELA_VARIABLE(const ElaNavigationBarPrivate*, NavigationBarPrivate)
 public:
     explicit ElaNavigationView(QWidget* parent = nullptr);
     ~ElaNavigationView() override;

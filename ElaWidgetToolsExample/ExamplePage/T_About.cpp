@@ -41,10 +41,10 @@ T_About::T_About(QWidget* parent)
     contactText->setWordWrap(false);
     contactText->setTextInteractionFlags(Qt::TextSelectableByMouse);
     contactText->setTextPixelSize(14);
-    ElaText* helperText = new ElaText("用户手册及API文档付费提供\n提供额外的专业技术支持", this);
+    ElaText* helperText = new ElaText("用户手册及API文档免费提供\n提供额外的专业技术支持", this);
     helperText->setWordWrap(false);
     helperText->setTextPixelSize(14);
-    ElaText* copyrightText = new ElaText("版权所有 © 2024 Liniyous", this);
+    ElaText* copyrightText = new ElaText("版权所有 © 2026 Liniyous", this);
     copyrightText->setWordWrap(false);
     copyrightText->setTextPixelSize(14);
 

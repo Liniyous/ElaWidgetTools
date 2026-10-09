@@ -5,16 +5,16 @@
 
 #include "ElaTheme.h"
 #include "private/ElaInteractiveCardPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, int, BorderRadius)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaInteractiveCard, QString, Title);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaInteractiveCard, QString, SubTitle);
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, int, TitlePixelSize);
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, int, SubTitlePixelSize);
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, int, TitleSpacing);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaInteractiveCard, QPixmap, CardPixmap);
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, QSize, CardPixmapSize);
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, int, CardPixmapBorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(ElaInteractiveCard, ElaCardPixType::PixMode, CardPixMode);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, QString, Title);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, QString, SubTitle);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, int, TitlePixelSize);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, int, SubTitlePixelSize);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, int, TitleSpacing);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, QPixmap, CardPixmap);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, QSize, CardPixmapSize);
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, int, CardPixmapBorderRadius)
+ELA_PROPERTY_Q_CPP(ElaInteractiveCard, ElaCardPixType::PixMode, CardPixMode);
 ElaInteractiveCard::ElaInteractiveCard(QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaInteractiveCardPrivate())
 {

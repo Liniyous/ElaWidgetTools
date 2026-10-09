@@ -1,13 +1,14 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELASPINBOXSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELASPINBOXSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
 class ElaSpinBoxStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(ElaSpinBoxType::ButtonMode, ButtonMode)
+    ELA_VARIABLE(ElaSpinBoxType::ButtonMode, ButtonMode)
 public:
     explicit ElaSpinBoxStyle(QStyle* style = nullptr);
     ~ElaSpinBoxStyle() override;

@@ -1,5 +1,5 @@
-﻿#ifndef T_ICONMODEL_H
-#define T_ICONMODEL_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MODELVIEW_T_ICONMODEL_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MODELVIEW_T_ICONMODEL_H_
 
 #include <QAbstractListModel>
 #include <QMetaEnum>
@@ -8,7 +8,7 @@
 class T_IconModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(bool, IsSearchMode)
+    ELA_PROPERTY(bool, IsSearchMode)
 public:
     explicit T_IconModel(QObject* parent = nullptr);
     ~T_IconModel();
@@ -25,4 +25,6 @@ private:
     int _rowCount;
 };
 
-#endif // T_ICONMODEL_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_MODELVIEW_T_ICONMODEL_H_
+
+

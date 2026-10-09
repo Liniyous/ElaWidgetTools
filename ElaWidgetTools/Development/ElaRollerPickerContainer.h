@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAROLLERPICKERCONTAINER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAROLLERPICKERCONTAINER_H_
 
+#include "ElaPropertyMacro.h"
 #include "ElaWidgetToolsDef.h"
 #include <QPropertyAnimation>
 #include <QWidget>
@@ -8,8 +9,8 @@ class ElaRoller;
 class ElaRollerPickerContainer : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, AnimationPixOffsetY)
-    Q_PRIVATE_CREATE(int, ButtonAreaHeight)
+    ELA_PROPERTY(int, AnimationPixOffsetY)
+    ELA_VARIABLE(int, ButtonAreaHeight)
 public:
     explicit ElaRollerPickerContainer(QWidget* parent = nullptr);
     ~ElaRollerPickerContainer() override;

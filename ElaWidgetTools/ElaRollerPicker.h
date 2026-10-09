@@ -9,8 +9,8 @@ class ElaRollerPickerPrivate;
 class ELA_EXPORT ElaRollerPicker : public QPushButton
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaRollerPicker)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
+    ELA_PIMPL_Q(ElaRollerPicker)
+    ELA_PROPERTY_Q_H(int, BorderRadius)
 public:
     explicit ElaRollerPicker(QWidget* parent = nullptr);
     ~ElaRollerPicker() override;

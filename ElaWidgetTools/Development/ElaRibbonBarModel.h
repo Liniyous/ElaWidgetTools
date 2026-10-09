@@ -38,10 +38,11 @@ public:
 protected:
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 private:
+    void _watchAction(QAction* action);
     QList<ElaRibbonGroupData> _ribbonDataList;
 };
 
 #endif //ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELARIBBONBARMODEL_H_
-

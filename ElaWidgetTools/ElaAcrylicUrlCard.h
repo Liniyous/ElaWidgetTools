@@ -11,22 +11,22 @@ class ElaAcrylicUrlCardPrivate;
 class ELA_EXPORT ElaAcrylicUrlCard : public QPushButton
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaAcrylicUrlCard);
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(qreal, MainOpacity)
-    Q_PROPERTY_CREATE_Q_H(qreal, NoiseOpacity)
-    Q_PROPERTY_CREATE_Q_H(int, BrushAlpha)
-    Q_PROPERTY_REF_CREATE_Q_H(QString, Title);
-    Q_PROPERTY_REF_CREATE_Q_H(QString, SubTitle);
-    Q_PROPERTY_CREATE_Q_H(int, TitlePixelSize);
-    Q_PROPERTY_CREATE_Q_H(int, SubTitlePixelSize);
-    Q_PROPERTY_CREATE_Q_H(int, TitleSpacing);
-    Q_PROPERTY_CREATE_Q_H(int, SubTitleSpacing);
-    Q_PROPERTY_REF_CREATE_Q_H(QPixmap, CardPixmap);
-    Q_PROPERTY_CREATE_Q_H(QSize, CardPixmapSize);
-    Q_PROPERTY_CREATE_Q_H(int, CardPixmapBorderRadius)
-    Q_PROPERTY_CREATE_Q_H(ElaCardPixType::PixMode, CardPixMode);
-    Q_PROPERTY_REF_CREATE_Q_H(QString, Url);
+    ELA_PIMPL_Q(ElaAcrylicUrlCard);
+    ELA_PROPERTY_Q_H(int, BorderRadius)
+    ELA_PROPERTY_Q_H(qreal, MainOpacity)
+    ELA_PROPERTY_Q_H(qreal, NoiseOpacity)
+    ELA_PROPERTY_Q_H(int, BrushAlpha)
+    ELA_PROPERTY_Q_H(QString, Title);
+    ELA_PROPERTY_Q_H(QString, SubTitle);
+    ELA_PROPERTY_Q_H(int, TitlePixelSize);
+    ELA_PROPERTY_Q_H(int, SubTitlePixelSize);
+    ELA_PROPERTY_Q_H(int, TitleSpacing);
+    ELA_PROPERTY_Q_H(int, SubTitleSpacing);
+    ELA_PROPERTY_Q_H(QPixmap, CardPixmap);
+    ELA_PROPERTY_Q_H(QSize, CardPixmapSize);
+    ELA_PROPERTY_Q_H(int, CardPixmapBorderRadius)
+    ELA_PROPERTY_Q_H(ElaCardPixType::PixMode, CardPixMode);
+    ELA_PROPERTY_Q_H(QString, Url);
 
 public:
     explicit ElaAcrylicUrlCard(QWidget* parent = nullptr);

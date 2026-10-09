@@ -7,7 +7,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <utility>
-Q_PROPERTY_CREATE_Q_CPP(ElaKeyBinder, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaKeyBinder, int, BorderRadius)
 ElaKeyBinder::ElaKeyBinder(QWidget* parent)
     : QLabel(parent), d_ptr(new ElaKeyBinderPrivate())
 {

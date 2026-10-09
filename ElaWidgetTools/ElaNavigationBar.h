@@ -11,13 +11,16 @@ class ElaNavigationBarPrivate;
 class ELA_EXPORT ElaNavigationBar : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaNavigationBar)
-    Q_PROPERTY_CREATE_Q_H(bool, IsTransparent)
-    Q_PROPERTY_CREATE_Q_H(bool, IsAllowPageOpenInNewWindow)
-    Q_PROPERTY_CREATE_Q_H(int, NavigationBarWidth)
+    ELA_PIMPL_Q(ElaNavigationBar)
+    ELA_PROPERTY_Q_H(bool, IsTransparent)
+    ELA_PROPERTY_Q_H(bool, IsAllowPageOpenInNewWindow)
 public:
     explicit ElaNavigationBar(QWidget* parent = nullptr);
     ~ElaNavigationBar() override;
+
+    void setNavigationBarWidth(int navigationBarWidth);
+    Q_REQUIRED_RESULT int getNavigationBarWidth() const;
+
     void setUserInfoCardVisible(bool isVisible);
     void setUserInfoCardPixmap(const QPixmap& pix);
     void setUserInfoCardTitle(const QString& title);
@@ -54,6 +57,7 @@ public:
     const QList<ElaSuggestBox::SuggestData>& getSuggestDataList() const;
 
 Q_SIGNALS:
+    Q_SIGNAL void pNavigationBarWidthChanged();
     Q_SIGNAL void pageOpenInNewWindow(QString nodeKey);
     Q_SIGNAL void userInfoCardClicked();
     Q_SIGNAL void navigationNodeClicked(ElaNavigationType::NavigationNodeType nodeType, QString nodeKey, bool isRouteBack);

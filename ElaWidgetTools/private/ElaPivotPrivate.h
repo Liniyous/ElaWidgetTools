@@ -13,8 +13,8 @@ class ElaPivotView;
 class ElaPivotPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaPivot)
-    Q_PROPERTY_CREATE_D(int, TextPixelSize)
+    ELA_PIMPL_D(ElaPivot)
+    ELA_PROPERTY_D(int, TextPixelSize)
 public:
     explicit ElaPivotPrivate(QObject* parent = nullptr);
     ~ElaPivotPrivate();

@@ -22,8 +22,8 @@
 #include <QResizeEvent>
 #include <QScroller>
 #include <QVBoxLayout>
-Q_PROPERTY_CREATE_Q_CPP(ElaNavigationBar, bool, IsTransparent)
-Q_PROPERTY_CREATE_Q_CPP(ElaNavigationBar, bool, IsAllowPageOpenInNewWindow)
+ELA_PROPERTY_Q_CPP(ElaNavigationBar, bool, IsTransparent)
+ELA_PROPERTY_Q_CPP(ElaNavigationBar, bool, IsAllowPageOpenInNewWindow)
 ElaNavigationBar::ElaNavigationBar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaNavigationBarPrivate())
 {

@@ -1,13 +1,14 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAPLAINTEXTEDITSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAPLAINTEXTEDITSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
 class ElaPlainTextEditStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
+    ELA_PROPERTY(qreal, ExpandMarkWidth)
 public:
     explicit ElaPlainTextEditStyle(QStyle* style = nullptr);
     ~ElaPlainTextEditStyle();

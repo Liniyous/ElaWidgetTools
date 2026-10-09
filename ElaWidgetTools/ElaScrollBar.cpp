@@ -10,8 +10,8 @@
 #include "ElaMenu.h"
 #include "ElaScrollBarStyle.h"
 #include "private/ElaScrollBarPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, bool, IsAnimation)
-Q_PROPERTY_CREATE_Q_CPP(ElaScrollBar, qreal, SpeedLimit)
+ELA_PROPERTY_Q_CPP(ElaScrollBar, bool, IsAnimation)
+ELA_PROPERTY_Q_CPP(ElaScrollBar, qreal, SpeedLimit)
 ElaScrollBar::ElaScrollBar(QWidget* parent)
     : QScrollBar(parent), d_ptr(new ElaScrollBarPrivate())
 {

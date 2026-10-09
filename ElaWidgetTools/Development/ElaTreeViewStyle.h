@@ -1,14 +1,15 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATREEVIEWSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATREEVIEWSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
 class ElaTreeViewStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, ItemHeight)
-    Q_PROPERTY_CREATE(int, HeaderMargin)
+    ELA_PROPERTY(int, ItemHeight)
+    ELA_PROPERTY(int, HeaderMargin)
 public:
     explicit ElaTreeViewStyle(QStyle* style = nullptr);
     ~ElaTreeViewStyle() override;

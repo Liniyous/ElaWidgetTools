@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELABREADCRUMBBARDELEGATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELABREADCRUMBBARDELEGATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QStyledItemDelegate>
 
@@ -8,7 +9,7 @@
 class ElaBreadcrumbBarDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(QModelIndex, PressIndex)
+    ELA_VARIABLE(QModelIndex, PressIndex)
 public:
     explicit ElaBreadcrumbBarDelegate(QObject* parent = nullptr);
     ~ElaBreadcrumbBarDelegate();

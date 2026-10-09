@@ -8,10 +8,10 @@
 class ElaThemeAnimationWidget : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(qreal, Radius)
-    Q_PROPERTY_CREATE(qreal, EndRadius)
-    Q_PROPERTY_CREATE(QPoint, Center)
-    Q_PROPERTY_REF_CREATE(QImage, OldWindowBackground)
+    ELA_PROPERTY(qreal, Radius)
+    ELA_PROPERTY(qreal, EndRadius)
+    ELA_PROPERTY(QPoint, Center)
+    ELA_PROPERTY(QImage, OldWindowBackground)
 public:
     explicit ElaThemeAnimationWidget(QWidget* parent = nullptr);
     ~ElaThemeAnimationWidget() override;

@@ -1,5 +1,6 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONSTYLE_H_
+#include "ElaPropertyMacro.h"
 #include <QModelIndex>
 #include <QProxyStyle>
 
@@ -10,15 +11,15 @@ class QPropertyAnimation;
 class ElaNavigationStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(qreal, Opacity)
-    Q_PROPERTY_CREATE(qreal, Rotate)
-    Q_PROPERTY_CREATE(int, ItemHeight)
-    Q_PRIVATE_CREATE(ElaNavigationView*, NavigationView)
-    Q_PROPERTY_CREATE(qreal, LastSelectMarkTop)
-    Q_PROPERTY_CREATE(qreal, LastSelectMarkBottom)
-    Q_PROPERTY_CREATE(qreal, SelectMarkTop)
-    Q_PROPERTY_CREATE(qreal, SelectMarkBottom)
-    Q_PRIVATE_CREATE(QModelIndex, PressIndex)
+    ELA_PROPERTY(qreal, Opacity)
+    ELA_PROPERTY(qreal, Rotate)
+    ELA_PROPERTY(int, ItemHeight)
+    ELA_VARIABLE(ElaNavigationView*, NavigationView)
+    ELA_PROPERTY(qreal, LastSelectMarkTop)
+    ELA_PROPERTY(qreal, LastSelectMarkBottom)
+    ELA_PROPERTY(qreal, SelectMarkTop)
+    ELA_PROPERTY(qreal, SelectMarkBottom)
+    ELA_VARIABLE(QModelIndex, PressIndex)
 public:
     explicit ElaNavigationStyle(QStyle* style = nullptr);
     ~ElaNavigationStyle() override;

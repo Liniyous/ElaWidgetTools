@@ -9,9 +9,9 @@
 #include <QWheelEvent>
 #include <QtMath>
 #include <utility>
-Q_PROPERTY_CREATE_Q_CPP(ElaRoller, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(ElaRoller, bool, IsContainer)
-Q_PROPERTY_CREATE_Q_CPP(ElaRoller, bool, IsEnableLoop)
+ELA_PROPERTY_Q_CPP(ElaRoller, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaRoller, bool, IsContainer)
+ELA_PROPERTY_Q_CPP(ElaRoller, bool, IsEnableLoop)
 ElaRoller::ElaRoller(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaRollerPrivate())
 {

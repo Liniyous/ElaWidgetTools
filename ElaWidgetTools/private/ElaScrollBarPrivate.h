@@ -13,10 +13,10 @@ class ElaScrollBar;
 class ElaScrollBarPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaScrollBar)
-    Q_PROPERTY_CREATE_D(bool, IsAnimation)
-    Q_PROPERTY_CREATE_D(qreal, SpeedLimit)
-    Q_PROPERTY_CREATE(int, TargetMaximum)
+    ELA_PIMPL_D(ElaScrollBar)
+    ELA_PROPERTY_D(bool, IsAnimation)
+    ELA_PROPERTY_D(qreal, SpeedLimit)
+    ELA_PROPERTY(int, TargetMaximum)
 public:
     explicit ElaScrollBarPrivate(QObject* parent = nullptr);
     ~ElaScrollBarPrivate();

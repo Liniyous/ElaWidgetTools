@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAWINDOWPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAWINDOWPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include "ElaWidgetToolsDef.h"
 #include <QLinearGradient>
 #include <QMap>
@@ -18,11 +19,11 @@ class ElaThemeAnimationWidget;
 class ElaWindowPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaWindow)
-    Q_PROPERTY_CREATE_D(int, ThemeChangeTime)
-    Q_PROPERTY_CREATE_D(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
-    Q_PROPERTY_CREATE_D(ElaWindowType::StackSwitchMode, StackSwitchMode)
-    Q_PROPERTY_CREATE_D(ElaWindowType::PaintMode, WindowPaintMode)
+    ELA_PIMPL_D(ElaWindow)
+    ELA_PROPERTY_D(int, ThemeChangeTime)
+    ELA_PROPERTY_D(ElaNavigationType::NavigationDisplayMode, NavigationBarDisplayMode)
+    ELA_PROPERTY_D(ElaWindowType::StackSwitchMode, StackSwitchMode)
+    ELA_PROPERTY_D(ElaWindowType::PaintMode, WindowPaintMode)
 public:
     explicit ElaWindowPrivate(QObject* parent = nullptr);
     ~ElaWindowPrivate() override;

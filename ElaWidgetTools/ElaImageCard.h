@@ -10,16 +10,21 @@ class ElaImageCardPrivate;
 class ELA_EXPORT ElaImageCard : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaImageCard)
-    Q_PROPERTY_REF_CREATE_Q_H(QImage, CardImage);
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(bool, IsPreserveAspectCrop)
+    ELA_PIMPL_Q(ElaImageCard)
+    ELA_PROPERTY_Q_H(int, BorderRadius)
+    ELA_PROPERTY_Q_H(bool, IsPreserveAspectCrop)
 public:
     explicit ElaImageCard(QWidget* parent = nullptr);
     ~ElaImageCard() override;
 
+    void setCardImage(const QImage& cardImage);
+    Q_REQUIRED_RESULT const QImage& getCardImage() const;
+
 protected:
     void paintEvent(QPaintEvent* event) override;
+
+Q_SIGNALS:
+    Q_SIGNAL void pCardImageChanged();
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_ELAIMAGECARD_H_

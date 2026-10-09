@@ -4,7 +4,7 @@
 #include <QPainterPath>
 
 #include "ElaThemePrivate.h"
-Q_SINGLETON_CREATE_CPP(ElaTheme)
+ELA_SINGLETON_CPP(ElaTheme)
 ElaTheme::ElaTheme(QObject* parent)
     : QObject{parent}, d_ptr(new ElaThemePrivate())
 {

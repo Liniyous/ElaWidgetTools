@@ -10,7 +10,7 @@ class ElaProgressBarPrivate;
 class ELA_EXPORT ElaProgressBar : public QProgressBar
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaProgressBar)
+    ELA_PIMPL_Q(ElaProgressBar)
 public:
     explicit ElaProgressBar(QWidget* parent = nullptr);
     ~ElaProgressBar() override;

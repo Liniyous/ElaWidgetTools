@@ -8,7 +8,7 @@
 #include <QFontDatabase>
 #include <QWidget>
 #include <utility>
-Q_SINGLETON_CREATE_CPP(ElaApplication)
+ELA_SINGLETON_CPP(ElaApplication)
 ElaApplication::ElaApplication(QObject* parent)
     : QObject{parent}, d_ptr(new ElaApplicationPrivate())
 {

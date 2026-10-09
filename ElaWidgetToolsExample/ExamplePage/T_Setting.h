@@ -1,5 +1,5 @@
-#ifndef T_SETTING_H
-#define T_SETTING_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_SETTING_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_SETTING_H_
 
 #include "T_BasePage.h"
 class ElaRadioButton;
@@ -41,4 +41,5 @@ private:
     ElaRadioButton* _blurButton{nullptr};
 };
 
-#endif // T_SETTING_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_SETTING_H_
+

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAPOPULARCARDFLOATER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELAPOPULARCARDFLOATER_H_
 
+#include "ElaPropertyMacro.h"
 #include <QWidget>
 
 #include "ElaWidgetToolsDef.h"
@@ -11,8 +12,8 @@ class QGraphicsOpacityEffect;
 class ElaPopularCardFloater : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(qreal, HoverYOffset);
-    Q_PROPERTY_CREATE(qreal, HoverOpacity);
+    ELA_PROPERTY(qreal, HoverYOffset);
+    ELA_PROPERTY(qreal, HoverOpacity);
 
 public:
     explicit ElaPopularCardFloater(ElaPopularCard* card, ElaPopularCardPrivate* cardPrivate, QWidget* parent = nullptr);

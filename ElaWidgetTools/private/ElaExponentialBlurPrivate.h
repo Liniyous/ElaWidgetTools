@@ -10,7 +10,7 @@ class ElaExponentialBlur;
 class ElaExponentialBlurPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaExponentialBlur)
+    ELA_PIMPL_D(ElaExponentialBlur)
 public:
     explicit ElaExponentialBlurPrivate(QObject* parent = nullptr);
     ~ElaExponentialBlurPrivate();

@@ -21,6 +21,11 @@ ElaComboBoxStyle::~ElaComboBoxStyle()
 {
 }
 
+int ElaComboBoxStyle::getShadowBorderWidth() const
+{
+    return _shadowBorderWidth;
+}
+
 void ElaComboBoxStyle::drawPrimitive(PrimitiveElement element, const QStyleOption* option, QPainter* painter, const QWidget* widget) const
 {
     switch (element)
@@ -103,10 +108,10 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
                     painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
                     painter->drawPath(path);
                 }
-                //选中Mark
+                // 选中Mark
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-                painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() - +optionRect.height() * 0.4), 2, 2);
+                painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() - +optionRect.height() * 0.4), 1.5, 1.5);
             }
             else
             {
@@ -153,7 +158,7 @@ void ElaComboBoxStyle::drawComplexControl(ComplexControl control, const QStyleOp
                                       : ElaThemeColor(_themeMode, BasicBase)
                                         : ElaThemeColor(_themeMode, BasicDisable));
             QRect comboBoxRect = copt->rect;
-            comboBoxRect.adjust(_shadowBorderWidth, 1, -_shadowBorderWidth, -1);
+            comboBoxRect.adjust(1, 1, -1, -1);
             painter->drawRoundedRect(comboBoxRect, 3, 3);
             // 底边线绘制
             painter->setPen(ElaThemeColor(_themeMode, BasicBaseLine));
@@ -207,7 +212,7 @@ QRect ElaComboBoxStyle::subControlRect(ComplexControl cc, const QStyleOptionComp
         {
             //文字区域
             QRect textRect = QProxyStyle::subControlRect(cc, opt, sc, widget);
-            textRect.setLeft(16);
+            textRect.setLeft(10);
             textRect.setRight(textRect.right() - 15);
             return textRect;
         }

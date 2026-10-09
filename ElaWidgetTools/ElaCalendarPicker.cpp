@@ -10,7 +10,7 @@
 #include "ElaCalendarPickerContainer.h"
 #include "ElaCalendarPickerPrivate.h"
 #include "ElaTheme.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaCalendarPicker, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaCalendarPicker, int, BorderRadius)
 ElaCalendarPicker::ElaCalendarPicker(QWidget* parent)
     : QPushButton{parent}, d_ptr(new ElaCalendarPickerPrivate())
 {

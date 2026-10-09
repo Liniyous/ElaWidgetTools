@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATOOLBARSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELATOOLBARSTYLE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,7 +9,7 @@ class QStyleOptionToolButton;
 class ElaToolBarStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QSize, ToolButtonSize)
+    ELA_VARIABLE(QSize, ToolButtonSize)
 public:
     explicit ElaToolBarStyle(QStyle* style = nullptr);
     ~ElaToolBarStyle() override;

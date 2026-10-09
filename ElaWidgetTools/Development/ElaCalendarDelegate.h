@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACALENDARDELEGATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACALENDARDELEGATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QDate>
 #include <QStyledItemDelegate>
 
@@ -9,9 +10,9 @@
 class ElaCalendarDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(int, ItemWidth)
-    Q_PRIVATE_CREATE(int, ItemHeight)
-    Q_PRIVATE_CREATE(bool, IsTransparent)
+    ELA_VARIABLE(int, ItemWidth)
+    ELA_VARIABLE(int, ItemHeight)
+    ELA_VARIABLE(bool, IsTransparent)
 public:
     explicit ElaCalendarDelegate(ElaCalendarModel* calendarModel, QObject* parent = nullptr);
     ~ElaCalendarDelegate();

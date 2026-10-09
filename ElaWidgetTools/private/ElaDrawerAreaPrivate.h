@@ -1,15 +1,16 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELADRAWERAREAPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELADRAWERAREAPRIVATE_H_
 
-#include "ElaWidgetToolsDef.h"
 #include "ElaDrawerContainer.h"
 #include "ElaDrawerHeader.h"
+#include "ElaPropertyMacro.h"
+#include "ElaWidgetToolsDef.h"
 #include <QObject>
 class ElaDrawerArea;
 class ElaDrawerAreaPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaDrawerArea)
+    ELA_PIMPL_D(ElaDrawerArea)
 public:
     explicit ElaDrawerAreaPrivate(QObject* parent = nullptr);
     ~ElaDrawerAreaPrivate() override;

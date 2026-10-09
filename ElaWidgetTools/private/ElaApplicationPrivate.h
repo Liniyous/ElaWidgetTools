@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAAPPLICATIONPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAAPPLICATIONPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QColor>
 #include <QIcon>
 #include <QObject>
@@ -10,10 +11,10 @@ class ElaApplication;
 class ElaApplicationPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaApplication)
-    Q_PROPERTY_CREATE_D(ElaApplicationType::WindowDisplayMode, WindowDisplayMode)
-    Q_PROPERTY_CREATE_D(QString, ElaMicaImagePath)
-    Q_PROPERTY_CREATE_D(int, FontPixelSize)
+    ELA_PIMPL_D(ElaApplication)
+    ELA_PROPERTY_D(ElaApplicationType::WindowDisplayMode, WindowDisplayMode)
+    ELA_PROPERTY_D(QString, ElaMicaImagePath)
+    ELA_PROPERTY_D(int, FontPixelSize)
 
 public:
     explicit ElaApplicationPrivate(QObject* parent = nullptr);

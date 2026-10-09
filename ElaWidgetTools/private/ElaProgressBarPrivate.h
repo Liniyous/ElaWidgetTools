@@ -12,7 +12,7 @@ class ElaProgressBar;
 class ElaProgressBarPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaProgressBar)
+    ELA_PIMPL_D(ElaProgressBar)
 public:
     explicit ElaProgressBarPrivate(QObject* parent = nullptr);
     ~ElaProgressBarPrivate();

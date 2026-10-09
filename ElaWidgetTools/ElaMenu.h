@@ -11,7 +11,7 @@ class ElaMenuPrivate;
 class ELA_EXPORT ElaMenu : public QMenu
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaMenu)
+    ELA_PIMPL_Q(ElaMenu)
 
 public:
     explicit ElaMenu(QWidget* parent = nullptr);

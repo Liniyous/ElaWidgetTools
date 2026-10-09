@@ -7,7 +7,7 @@
 #include <QPainter>
 #include <QVBoxLayout>
 
-Q_PROPERTY_CREATE_Q_CPP(ElaRollerPicker, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaRollerPicker, int, BorderRadius)
 ElaRollerPicker::ElaRollerPicker(QWidget* parent)
     : QPushButton{parent}, d_ptr(new ElaRollerPickerPrivate())
 {

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAIMAGECARDPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAIMAGECARDPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QImage>
 #include <QObject>
 
@@ -10,10 +11,10 @@ class ElaImageCard;
 class ElaImageCardPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaImageCard)
-    Q_PROPERTY_CREATE_D(QImage, CardImage);
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
-    Q_PROPERTY_CREATE_D(bool, IsPreserveAspectCrop)
+    ELA_PIMPL_D(ElaImageCard)
+    ELA_PROPERTY_D(QImage, CardImage);
+    ELA_PROPERTY_D(int, BorderRadius)
+    ELA_PROPERTY_D(bool, IsPreserveAspectCrop)
 public:
     explicit ElaImageCardPrivate(QObject* parent = nullptr);
     ~ElaImageCardPrivate() override;

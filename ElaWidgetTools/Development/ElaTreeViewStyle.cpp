@@ -74,7 +74,7 @@ void ElaTreeViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
                 QRect indicatorRect = option->rect;
                 indicatorRect.adjust(0, 0, -2, 0);
                 QFont iconFont = QFont("ElaAwesome");
-                iconFont.setPixelSize(eApp->getFontPixelSize() + 4);
+                iconFont.setPixelSize(eApp->getFontPixelSize() + 1);
                 painter->setFont(iconFont);
                 painter->setPen(ElaThemeColor(_themeMode, BasicText));
                 painter->drawText(indicatorRect, Qt::AlignVCenter | Qt::AlignRight, vopt->state.testFlag(QStyle::State_Open) ? QChar(ElaIconType::AngleDown) : QChar(ElaIconType::AngleRight));
@@ -233,7 +233,7 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
             painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             if (vopt->state.testFlag(QStyle::State_Selected) && (vopt->viewItemPosition == QStyleOptionViewItem::Beginning || vopt->viewItemPosition == QStyleOptionViewItem::OnlyOne))
             {
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 1.5, 1.5);
             }
             painter->restore();
         }

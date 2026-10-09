@@ -1,12 +1,15 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELARIBBONBARPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELARIBBONBARPRIVATE_H_
 
+#include "ElaPivot.h"
+#include "ElaPropertyMacro.h"
+
 #include <QObject>
 
-#include "ElaWidgetToolsDef.h"
 #include "ElaRibbonBarDelegate.h"
 #include "ElaRibbonBarModel.h"
 #include "ElaRibbonBarView.h"
+#include "ElaWidgetToolsDef.h"
 #include <QStackedWidget>
 class ElaBaseListView;
 class ElaRibbonBar;
@@ -19,7 +22,7 @@ struct ElaRibbonMVDData {
 class ElaRibbonBarPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaRibbonBar);
+    ELA_PIMPL_D(ElaRibbonBar);
 
 public:
     explicit ElaRibbonBarPrivate(QObject* parent = nullptr);
@@ -28,14 +31,19 @@ public:
     ElaRibbonBarModel* getOrCreateMVDData(const QString& pageName);
 
     Q_SLOT void onRibbonTabBarCurrentChanged(int index);
+    Q_SLOT void onRibbonPivotClicked(int index);
 
 private:
     void _switchMainStackWidget(QWidget* targetWidget);
+    void _syncRibbonPivotTitles();
+    void _syncRibbonTabBarTabs();
     QStackedWidget* _mainStackedWidget{nullptr};
+    ElaPivot* _ribbonPivot{nullptr};
     QTabBar* _ribbonTabBar{nullptr};
     QString _currentRibbonPage{""};
     QMap<QString, ElaRibbonMVDData> _ribbonDataMap;
+
+    static constexpr int _groupBottomMargin{13};
 };
 
 #endif //ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELARIBBONBARPRIVATE_H_
-

@@ -8,7 +8,7 @@
 class ElaMaskWidget : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, MaskAlpha)
+    ELA_PROPERTY(int, MaskAlpha)
 public:
     explicit ElaMaskWidget(QWidget* parent = nullptr);
     ~ElaMaskWidget();

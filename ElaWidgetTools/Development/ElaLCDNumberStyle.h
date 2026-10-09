@@ -1,12 +1,13 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELALCDNUMBERSTYLE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELALCDNUMBERSTYLE_H_
+#include "ElaPropertyMacro.h"
 #include <QProxyStyle>
 
 #include "ElaWidgetToolsDef.h"
 class ElaLCDNumberStyle : public QProxyStyle
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsTransparent)
+    ELA_VARIABLE(bool, IsTransparent)
 public:
     explicit ElaLCDNumberStyle(QStyle* style = nullptr);
     ~ElaLCDNumberStyle();

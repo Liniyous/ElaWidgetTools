@@ -8,13 +8,13 @@
 #include "ElaMessageBar.h"
 #include "ElaTheme.h"
 #include "private/ElaMessageButtonPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, int, BorderRadius)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaMessageButton, QString, BarTitle);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaMessageButton, QString, BarText);
-Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, int, DisplayMsec);
-Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, QWidget*, MessageTargetWidget)
-Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, ElaMessageBarType::MessageMode, MessageMode);
-Q_PROPERTY_CREATE_Q_CPP(ElaMessageButton, ElaMessageBarType::PositionPolicy, PositionPolicy);
+ELA_PROPERTY_Q_CPP(ElaMessageButton, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaMessageButton, QString, BarTitle);
+ELA_PROPERTY_Q_CPP(ElaMessageButton, QString, BarText);
+ELA_PROPERTY_Q_CPP(ElaMessageButton, int, DisplayMsec);
+ELA_PROPERTY_Q_CPP(ElaMessageButton, QWidget*, MessageTargetWidget)
+ELA_PROPERTY_Q_CPP(ElaMessageButton, ElaMessageBarType::MessageMode, MessageMode);
+ELA_PROPERTY_Q_CPP(ElaMessageButton, ElaMessageBarType::PositionPolicy, PositionPolicy);
 
 ElaMessageButton::ElaMessageButton(QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaMessageButtonPrivate())

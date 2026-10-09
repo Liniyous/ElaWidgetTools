@@ -3,10 +3,10 @@
 #include <QVariant>
 
 #include "ElaEventBusPrivate.h"
-Q_SINGLETON_CREATE_CPP(ElaEventBus);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaEvent, QString, EventName);
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaEvent, QString, FunctionName);
-Q_PROPERTY_CREATE_Q_CPP(ElaEvent, Qt::ConnectionType, ConnectionType);
+ELA_SINGLETON_CPP(ElaEventBus);
+ELA_PROPERTY_Q_CPP(ElaEvent, QString, EventName);
+ELA_PROPERTY_Q_CPP(ElaEvent, QString, FunctionName);
+ELA_PROPERTY_Q_CPP(ElaEvent, Qt::ConnectionType, ConnectionType);
 ElaEvent::ElaEvent(QObject* parent)
     : QObject{parent}, d_ptr(new ElaEventPrivate())
 {

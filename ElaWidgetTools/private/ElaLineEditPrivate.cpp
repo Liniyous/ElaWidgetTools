@@ -19,6 +19,10 @@ void ElaLineEditPrivate::onWMWindowClickedEvent(const QVariantMap& data)
     ElaAppBarType::WMMouseActionType actionType = data.value("WMClickType").value<ElaAppBarType::WMMouseActionType>();
     if (actionType == ElaAppBarType::WMLBUTTONDOWN)
     {
+        if (ElaApplication::containsCursorToItem(q))
+        {
+            return;
+        }
         if (q->hasSelectedText() && q->hasFocus())
         {
             q->clearFocus();

@@ -24,11 +24,11 @@ ElaActionCommand::~ElaActionCommand()
 {
 }
 
-Q_SINGLETON_CREATE_CPP(ElaActionCommander)
-Q_PROPERTY_CREATE_Q_CPP(ElaActionCommander, int, IsMessageDisplayEnable)
-Q_PROPERTY_CREATE_Q_CPP(ElaActionCommander, int, MessageDisplayMesc)
-Q_PROPERTY_CREATE_Q_CPP(ElaActionCommander, int, MaxCommandCount)
-Q_PROPERTY_CREATE_Q_CPP(ElaActionCommander, bool, IsRunToCommandProcessEventEnable)
+ELA_SINGLETON_CPP(ElaActionCommander)
+ELA_PROPERTY_Q_CPP(ElaActionCommander, int, IsMessageDisplayEnable)
+ELA_PROPERTY_Q_CPP(ElaActionCommander, int, MessageDisplayMesc)
+ELA_PROPERTY_Q_CPP(ElaActionCommander, int, MaxCommandCount)
+ELA_PROPERTY_Q_CPP(ElaActionCommander, bool, IsRunToCommandProcessEventEnable)
 ElaActionCommander::ElaActionCommander(QObject* parent)
     : QObject{parent}, d_ptr(new ElaActionCommanderPrivate())
 {

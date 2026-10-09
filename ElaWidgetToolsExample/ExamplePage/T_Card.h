@@ -1,5 +1,5 @@
-#ifndef T_CARD_H
-#define T_CARD_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_CARD_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_CARD_H_
 
 #include "T_BasePage.h"
 
@@ -19,4 +19,5 @@ private:
     ElaPromotionView* _promotionView{nullptr};
 };
 
-#endif // T_CARD_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_CARD_H_
+

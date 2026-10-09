@@ -8,8 +8,8 @@
 
 #include "ElaTheme.h"
 #include "private/ElaToggleButtonPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaToggleButton, int, BorderRadius)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaToggleButton, QString, Text)
+ELA_PROPERTY_Q_CPP(ElaToggleButton, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaToggleButton, QString, Text)
 ElaToggleButton::ElaToggleButton(QWidget* parent)
     : QWidget(parent), d_ptr(new ElaToggleButtonPrivate())
 {

@@ -28,6 +28,83 @@ ElaTabWidgetPrivate::~ElaTabWidgetPrivate()
 {
 }
 
+void ElaTabWidgetPrivate::_addTabWidgetToList(QWidget* widget)
+{
+    if (!widget)
+    {
+        return;
+    }
+    for (const auto& listWidget: _allTabWidgetList)
+    {
+        if (listWidget == widget)
+        {
+            return;
+        }
+    }
+    _allTabWidgetList.append(QPointer<QWidget>(widget));
+    connect(widget, &QObject::destroyed, this, [=]() {
+        _removeTabWidgetFromList(widget);
+    });
+}
+
+void ElaTabWidgetPrivate::_removeTabWidgetFromList(QWidget* widget)
+{
+    for (int i = _allTabWidgetList.size() - 1; i >= 0; --i)
+    {
+        QPointer<QWidget> listWidget = _allTabWidgetList.at(i);
+        if (listWidget.isNull() || listWidget == widget)
+        {
+            _allTabWidgetList.removeAt(i);
+        }
+    }
+}
+
+void ElaTabWidgetPrivate::_registerCustomTabWidget(ElaCustomTabWidget* customTabWidget)
+{
+    if (!customTabWidget)
+    {
+        return;
+    }
+    for (const auto& listCustomTabWidget: _customTabWidgetList)
+    {
+        if (listCustomTabWidget == customTabWidget)
+        {
+            return;
+        }
+    }
+    _customTabWidgetList.append(QPointer<ElaCustomTabWidget>(customTabWidget));
+    ElaTabBar* customTabBar = customTabWidget->getCustomTabBar();
+    connect(customTabWidget, &QObject::destroyed, this, [=]() {
+        _unregisterCustomTabWidget(customTabWidget, customTabBar);
+    });
+}
+
+void ElaTabWidgetPrivate::_unregisterCustomTabWidget(ElaCustomTabWidget* customTabWidget, ElaTabBar* customTabBar)
+{
+    if (customTabBar)
+    {
+        for (auto& widget: _allTabWidgetList)
+        {
+            if (!widget)
+            {
+                continue;
+            }
+            if (widget->property("CurrentCustomBar").value<ElaTabBar*>() == customTabBar)
+            {
+                widget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
+            }
+        }
+    }
+    for (int i = _customTabWidgetList.size() - 1; i >= 0; --i)
+    {
+        QPointer<ElaCustomTabWidget> listCustomTabWidget = _customTabWidgetList.at(i);
+        if (listCustomTabWidget.isNull() || listCustomTabWidget == customTabWidget)
+        {
+            _customTabWidgetList.removeAt(i);
+        }
+    }
+}
+
 void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
 {
     Q_Q(ElaTabWidget);
@@ -43,19 +120,21 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     QWidget* dragWidget = q->widget(index);
     dragWidget->setProperty("TabIcon", q->tabIcon(index));
     dragWidget->setProperty("TabText", q->tabText(index));
-    QWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
+    ElaTabWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
+    QWidget* floatParentWidget = originTabWidget;
     if (!originTabWidget && !dragWidget->property("IsMetaWidget").toBool())
     {
         dragWidget->setProperty("ElaOriginTabWidget", QVariant::fromValue<ElaTabWidget*>(q));
         originTabWidget = q;
+        floatParentWidget = q;
     }
     mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
     ElaTabBar* tabBarObject = mimeData->property("ElaTabBarObject").value<ElaTabBar*>();
     QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
     QApplication::sendEvent(tabBarObject, &releaseEvent);
-    if (!originTabWidget)
+    if (!floatParentWidget)
     {
-        originTabWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
+        floatParentWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
     }
     bool isFloatWidget = mimeData->property("IsFloatWidget").toBool();
     QSize tabSize = mimeData->property("TabSize").toSize();
@@ -70,7 +149,11 @@ void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
     }
     else
     {
-        floatWidget = new ElaCustomTabWidget(originTabWidget);
+        floatWidget = new ElaCustomTabWidget(floatParentWidget);
+        if (originTabWidget)
+        {
+            originTabWidget->d_func()->_registerCustomTabWidget(floatWidget);
+        }
         q->removeTab(index);
         // 创建新窗口
         ElaTabBar* originCustomTabBar = tabBarObject;
@@ -183,12 +266,17 @@ void ElaTabWidgetPrivate::onTabDragLeave(QMimeData* mimeData)
     {
         _customTabBar->removeTab(index);
     }
-    QWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-    if (!originTabWidget)
+    ElaTabWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
+    QWidget* floatParentWidget = originTabWidget;
+    if (!floatParentWidget)
     {
-        originTabWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
+        floatParentWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
     }
-    ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(originTabWidget);
+    ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(floatParentWidget);
+    if (originTabWidget)
+    {
+        originTabWidget->d_func()->_registerCustomTabWidget(floatWidget);
+    }
     QSize tabSize = mimeData->property("TabSize").toSize();
     ElaTabBar* customTabBar = floatWidget->getCustomTabBar();
     customTabBar->setTabSize(tabSize);
@@ -255,8 +343,7 @@ void ElaTabWidgetPrivate::onTabCloseRequested(int index)
     ElaTabWidget* originTabWidget = closeWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
     if (originTabWidget && originTabWidget != q)
     {
-        ElaTabBar* customTabBar = closeWidget->property("CurrentCustomBar").value<ElaTabBar*>();
-        if (customTabBar)
+        if (ElaTabBar* customTabBar = closeWidget->property("CurrentCustomBar").value<ElaTabBar*>())
         {
             customTabBar->removeTab(index);
             closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
@@ -271,10 +358,7 @@ void ElaTabWidgetPrivate::onTabCloseRequested(int index)
             _customTabBar->removeTab(index);
         }
         q->removeTab(index);
-        if (_allTabWidgetList.contains(closeWidget))
-        {
-            _allTabWidgetList.removeOne(closeWidget);
-        }
+        _removeTabWidgetFromList(closeWidget);
         closeWidget->deleteLater();
     }
 }
@@ -284,6 +368,10 @@ void ElaTabWidgetPrivate::_clearAllTabWidgetList()
     Q_Q(ElaTabWidget);
     for (auto widget: _allTabWidgetList)
     {
+        if (!widget)
+        {
+            continue;
+        }
         auto originTabWidgetVariant = widget->property("ElaOriginTabWidget");
         if (originTabWidgetVariant.isValid() && originTabWidgetVariant.value<ElaTabWidget*>() == q)
         {

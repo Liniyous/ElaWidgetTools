@@ -20,8 +20,8 @@
 #include "ElaTheme.h"
 #include "private/ElaSuggestBoxPrivate.h"
 
-Q_PROPERTY_CREATE_Q_CPP(ElaSuggestBox, int, BorderRadius)
-Q_PROPERTY_CREATE_Q_CPP(ElaSuggestBox, Qt::CaseSensitivity, CaseSensitivity)
+ELA_PROPERTY_Q_CPP(ElaSuggestBox, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaSuggestBox, Qt::CaseSensitivity, CaseSensitivity)
 ElaSuggestBox::SuggestData::SuggestData()
 {
 }

@@ -10,7 +10,7 @@ class ElaScrollAreaPrivate;
 class ELA_EXPORT ElaScrollArea : public QScrollArea
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaScrollArea)
+    ELA_PIMPL_Q(ElaScrollArea)
 public:
     explicit ElaScrollArea(QWidget* parent = nullptr);
     ~ElaScrollArea();

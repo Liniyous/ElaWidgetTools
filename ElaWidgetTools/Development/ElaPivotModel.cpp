@@ -31,9 +31,26 @@ void ElaPivotModel::removePivot(const QString& pivot)
     }
 }
 
+void ElaPivotModel::clearPivot()
+{
+    beginResetModel();
+    _pivotList.clear();
+    endResetModel();
+}
+
 int ElaPivotModel::getPivotListCount() const
 {
     return _pivotList.count();
+}
+
+const QStringList& ElaPivotModel::getPivotList() const
+{
+    return _pivotList;
+}
+
+int ElaPivotModel::getPivotIndex(const QString& pivotTitle) const
+{
+    return _pivotList.indexOf(pivotTitle);
 }
 
 int ElaPivotModel::rowCount(const QModelIndex& parent) const

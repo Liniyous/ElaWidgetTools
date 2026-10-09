@@ -6,13 +6,13 @@
 
 #include "ElaTheme.h"
 #include "private/ElaPushButtonPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaPushButton, int, BorderRadius)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPushButton, QColor, LightDefaultColor)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPushButton, QColor, DarkDefaultColor)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPushButton, QColor, LightHoverColor)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPushButton, QColor, DarkHoverColor)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPushButton, QColor, LightPressColor)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPushButton, QColor, DarkPressColor)
+ELA_PROPERTY_Q_CPP(ElaPushButton, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaPushButton, QColor, LightDefaultColor)
+ELA_PROPERTY_Q_CPP(ElaPushButton, QColor, DarkDefaultColor)
+ELA_PROPERTY_Q_CPP(ElaPushButton, QColor, LightHoverColor)
+ELA_PROPERTY_Q_CPP(ElaPushButton, QColor, DarkHoverColor)
+ELA_PROPERTY_Q_CPP(ElaPushButton, QColor, LightPressColor)
+ELA_PROPERTY_Q_CPP(ElaPushButton, QColor, DarkPressColor)
 ElaPushButton::ElaPushButton(QWidget* parent)
     : QPushButton(parent), d_ptr(new ElaPushButtonPrivate())
 {
@@ -29,7 +29,7 @@ ElaPushButton::ElaPushButton(QWidget* parent)
     d->_lightTextColor = ElaThemeColor(ElaThemeType::Light, BasicText);
     d->_darkTextColor = ElaThemeColor(ElaThemeType::Dark, BasicText);
     setMouseTracking(true);
-    setFixedHeight(38);
+    setFixedHeight(30);
     QFont font = this->font();
     font.setPixelSize(eApp->getFontPixelSize() + 2);
     setFont(font);
@@ -93,12 +93,10 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     Q_D(ElaPushButton);
     QPainter painter(this);
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
-    // 高性能阴影
-    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
 
     // 背景绘制
     painter.save();
-    QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * (d->_shadowBorderWidth), height() - 2 * d->_shadowBorderWidth);
+    QRect foregroundRect = rect().adjusted(1, 1, -1, -1);
     if (d->_themeMode == ElaThemeType::Light)
     {
         painter.setPen(ElaThemeColor(ElaThemeType::Light, BasicBorder));
@@ -114,7 +112,7 @@ void ElaPushButton::paintEvent(QPaintEvent* event)
     if (!d->_isPressed)
     {
         painter.setPen(ElaThemeColor(d->_themeMode, BasicBaseLine));
-        painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - d->_shadowBorderWidth, foregroundRect.width(), height() - d->_shadowBorderWidth);
+        painter.drawLine(foregroundRect.x() + d->_pBorderRadius, height() - 1, foregroundRect.width() - d->_pBorderRadius, height() - 1);
     }
     //文字绘制
     painter.setPen(isEnabled() ? d->_themeMode == ElaThemeType::Light ? d->_lightTextColor : d->_darkTextColor : ElaThemeColor(d->_themeMode, BasicTextDisable));

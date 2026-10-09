@@ -11,7 +11,7 @@ class ElaMessageBarPrivate;
 class ELA_EXPORT ElaMessageBar : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaMessageBar)
+    ELA_PIMPL_Q(ElaMessageBar)
 
 public:
     static void success(ElaMessageBarType::PositionPolicy policy, QString title, QString text, int displayMsec, QWidget* parent = nullptr);

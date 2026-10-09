@@ -10,16 +10,16 @@ class ElaIconButtonPrivate;
 class ELA_EXPORT ElaIconButton : public QPushButton
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaIconButton)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(qreal, Opacity);
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, LightHoverColor);
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, DarkHoverColor);
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, LightIconColor);
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, DarkIconColor);
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, LightHoverIconColor);
-    Q_PROPERTY_REF_CREATE_Q_H(QColor, DarkHoverIconColor);
-    Q_PROPERTY_CREATE_Q_H(bool, IsSelected);
+    ELA_PIMPL_Q(ElaIconButton)
+    ELA_PROPERTY_Q_H(int, BorderRadius)
+    ELA_PROPERTY_Q_H(qreal, Opacity);
+    ELA_PROPERTY_Q_H(QColor, LightHoverColor);
+    ELA_PROPERTY_Q_H(QColor, DarkHoverColor);
+    ELA_PROPERTY_Q_H(QColor, LightIconColor);
+    ELA_PROPERTY_Q_H(QColor, DarkIconColor);
+    ELA_PROPERTY_Q_H(QColor, LightHoverIconColor);
+    ELA_PROPERTY_Q_H(QColor, DarkHoverIconColor);
+    ELA_PROPERTY_Q_H(bool, IsSelected);
 
 public:
     ElaIconButton(const QPixmap& pix, QWidget* parent = nullptr);

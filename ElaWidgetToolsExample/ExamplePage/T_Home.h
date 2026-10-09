@@ -1,5 +1,5 @@
-﻿#ifndef T_HOME_H
-#define T_HOME_H
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_HOME_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_HOME_H_
 
 #include "T_BasePage.h"
 class ElaMenu;
@@ -23,4 +23,6 @@ private:
     ElaMenu* _homeMenu{nullptr};
 };
 
-#endif // T_HOME_H
+#endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_HOME_H_
+
+

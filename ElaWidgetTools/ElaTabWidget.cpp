@@ -7,9 +7,9 @@
 #include <QMimeData>
 #include <QMouseEvent>
 #include <QPainter>
-Q_PROPERTY_CREATE_Q_CPP(ElaTabWidget, bool, IsTabTransparent);
-Q_PROPERTY_CREATE_Q_CPP(ElaTabWidget, bool, IsContainerAcceptDrops);
-Q_PROPERTY_CREATE_Q_CPP(ElaTabWidget, QSize, FloatWidgetSize)
+ELA_PROPERTY_Q_CPP(ElaTabWidget, bool, IsTabTransparent);
+ELA_PROPERTY_Q_CPP(ElaTabWidget, bool, IsContainerAcceptDrops);
+ELA_PROPERTY_Q_CPP(ElaTabWidget, QSize, FloatWidgetSize)
 ElaTabWidget::ElaTabWidget(QWidget* parent)
     : QTabWidget(parent), d_ptr(new ElaTabWidgetPrivate())
 {
@@ -62,6 +62,12 @@ void ElaTabWidget::setTabPosition(TabPosition position)
     }
 }
 
+void ElaTabWidget::locateCurrentTab()
+{
+    Q_D(ElaTabWidget);
+    d->_tabBar->locateCurrentTab();
+}
+
 void ElaTabWidget::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaTabWidget);
@@ -97,9 +103,9 @@ void ElaTabWidget::tabInserted(int index)
 {
     Q_D(ElaTabWidget);
     QWidget* tabWidget = widget(index);
-    if (!tabWidget->property("IsMetaWidget").toBool() && !tabWidget->property("ElaOriginTabWidget").isValid())
+    if (tabWidget && !tabWidget->property("IsMetaWidget").toBool() && !tabWidget->property("ElaOriginTabWidget").isValid())
     {
-        d->_allTabWidgetList.append(widget(index));
+        d->_addTabWidgetToList(tabWidget);
     }
     QTabWidget::tabInserted(index);
 }

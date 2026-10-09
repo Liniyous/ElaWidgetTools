@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELALINEEDITPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELALINEEDITPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include "ElaWidgetToolsDef.h"
 #include <QObject>
 #include <QVariantMap>
@@ -9,10 +10,10 @@ class ElaLineEdit;
 class ElaLineEditPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaLineEdit)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
-    Q_PROPERTY_CREATE_D(bool, IsClearButtonEnable)
-    Q_PROPERTY_CREATE(qreal, ExpandMarkWidth)
+    ELA_PIMPL_D(ElaLineEdit)
+    ELA_PROPERTY_D(int, BorderRadius)
+    ELA_PROPERTY_D(bool, IsClearButtonEnable)
+    ELA_PROPERTY(qreal, ExpandMarkWidth)
 public:
     explicit ElaLineEditPrivate(QObject* parent = nullptr);
     ~ElaLineEditPrivate() override;

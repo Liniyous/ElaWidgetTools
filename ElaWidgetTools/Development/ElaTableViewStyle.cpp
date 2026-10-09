@@ -223,7 +223,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             {
                 if (selectionBehavior == QAbstractItemView::SelectRows && vopt->index.column() == 0)
                 {
-                    painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                    painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 1.5, 1.5);
                 }
             }
             painter->restore();

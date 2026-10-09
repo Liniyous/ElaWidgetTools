@@ -15,8 +15,8 @@ class ElaThemePrivate;
 class ELA_EXPORT ElaTheme : public QObject
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaTheme)
-    Q_SINGLETON_CREATE_H(ElaTheme)
+    ELA_PIMPL_Q(ElaTheme)
+    ELA_SINGLETON_H(ElaTheme)
 private:
     explicit ElaTheme(QObject* parent = nullptr);
     ~ElaTheme();

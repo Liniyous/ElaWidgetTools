@@ -11,7 +11,7 @@ class ElaTreeViewStyle;
 class ElaTreeViewPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaTreeView)
+    ELA_PIMPL_D(ElaTreeView)
 public:
     explicit ElaTreeViewPrivate(QObject* parent = nullptr);
     ~ElaTreeViewPrivate();

@@ -1,15 +1,16 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELADRAWERHEADER_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELADRAWERHEADER_H_
 
+#include "ElaPropertyMacro.h"
 #include "ElaWidgetToolsDef.h"
 #include <QVBoxLayout>
 #include <QWidget>
 class ElaDrawerHeader : public QWidget
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(int, BorderRadius)
-    Q_PRIVATE_CREATE(bool, IsExpand)
-    Q_PROPERTY_CREATE(qreal, ExpandIconRotate)
+    ELA_VARIABLE(int, BorderRadius)
+    ELA_VARIABLE(bool, IsExpand)
+    ELA_PROPERTY(qreal, ExpandIconRotate)
 public:
     explicit ElaDrawerHeader(QWidget* parent = nullptr);
     ~ElaDrawerHeader() override;

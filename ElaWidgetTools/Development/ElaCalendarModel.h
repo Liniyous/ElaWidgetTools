@@ -37,11 +37,15 @@ Q_DECLARE_METATYPE(ElaCalendarData);
 class ElaCalendarModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE_Q_H(QDate, MinimumDate)
-    Q_PRIVATE_CREATE_Q_H(QDate, MaximumDate)
+
 public:
     explicit ElaCalendarModel(QObject* parent = nullptr);
     ~ElaCalendarModel();
+
+    void setMinimumDate(QDate minimudate);
+    Q_REQUIRED_RESULT QDate getMinimumDate() const;
+    void setMaximumDate(QDate maximumDate);
+    Q_REQUIRED_RESULT QDate getMaximumDate() const;
 
     void setDisplayMode(ElaCalendarType displayType);
     ElaCalendarType getDisplayMode() const;

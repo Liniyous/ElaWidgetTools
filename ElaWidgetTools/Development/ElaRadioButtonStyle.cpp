@@ -1,14 +1,27 @@
 #include "ElaRadioButtonStyle.h"
 
 #include <QPainter>
-#include <QPainterPath>
+#include <QPropertyAnimation>
 #include <QStyleOption>
+#include <QWidget>
 
 #include "ElaTheme.h"
 ElaRadioButtonStyle::ElaRadioButtonStyle(QStyle* style)
 {
+    _pCircleScale = 2.0 / 4.0;
+    _circleScaleAnimation = new QPropertyAnimation(this, "pCircleScale", this);
+    _circleScaleAnimation->setDuration(200);
+    _circleScaleAnimation->setEasingCurve(QEasingCurve::InOutSine);
+    connect(this, &ElaRadioButtonStyle::pCircleScaleChanged, this, [this]() {
+        if (_animationWidget)
+        {
+            _animationWidget->update();
+        }
+    });
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaRadioButtonStyle::~ElaRadioButtonStyle()
@@ -26,8 +39,11 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
         {
             break;
         }
-        QRect buttonRect = bopt->rect;
+        QRectF buttonRect = bopt->rect;
         buttonRect.adjust(1, 1, -1, -1);
+        const QPointF center = buttonRect.center();
+        const qreal radius = qMax<qreal>(0, qMin(buttonRect.width(), buttonRect.height()) / 2);
+        const_cast<ElaRadioButtonStyle*>(this)->_updateCircleScale(bopt->state, widget);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
@@ -42,34 +58,19 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
             {
                 painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
             }
-            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), 8.5, 8.5);
+            const qreal borderRadius = qMax<qreal>(0, radius - 0.75);
+            painter->drawEllipse(center, borderRadius, borderRadius);
         }
         else
         {
             painter->setPen(Qt::NoPen);
             // 外圆形
             painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-            painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 2, buttonRect.width() / 2);
+            painter->drawEllipse(center, radius, radius);
             // 内圆形
             painter->setBrush(ElaThemeColor(_themeMode, BasicTextInvert));
-            if (bopt->state & QStyle::State_Sunken)
-            {
-                if (bopt->state & QStyle::State_MouseOver)
-                {
-                    painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 4.5, buttonRect.width() / 4.5);
-                }
-            }
-            else
-            {
-                if (bopt->state & QStyle::State_MouseOver)
-                {
-                    painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 3.5, buttonRect.width() / 3.5);
-                }
-                else
-                {
-                    painter->drawEllipse(QPointF(buttonRect.center().x() + 1, buttonRect.center().y() + 1), buttonRect.width() / 4, buttonRect.width() / 4);
-                }
-            }
+            const qreal circleRadius = radius * _pCircleScale;
+            painter->drawEllipse(center, circleRadius, circleRadius);
         }
         painter->restore();
         return;
@@ -88,12 +89,9 @@ int ElaRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption* opt
     switch (metric)
     {
     case QStyle::PM_ExclusiveIndicatorWidth:
-    {
-        return 20;
-    }
     case QStyle::PM_ExclusiveIndicatorHeight:
     {
-        return 20;
+        return widget ? widget->fontMetrics().height() : QProxyStyle::pixelMetric(metric, option, widget);
     }
     default:
     {
@@ -101,4 +99,42 @@ int ElaRadioButtonStyle::pixelMetric(PixelMetric metric, const QStyleOption* opt
     }
     }
     return QProxyStyle::pixelMetric(metric, option, widget);
+}
+
+void ElaRadioButtonStyle::_updateCircleScale(QStyle::State state, const QWidget* widget)
+{
+    qreal targetScale = 2.0 / 3.8;
+    if (state.testFlag(QStyle::State_Enabled) && state.testFlag(QStyle::State_On))
+    {
+        if (state.testFlag(QStyle::State_Sunken))
+        {
+            targetScale = 2.0 / 4.5;
+        }
+        else if (state.testFlag(QStyle::State_MouseOver))
+        {
+            targetScale = 2.0 / 3.0;
+        }
+    }
+    if (!widget || !widget->isVisible() || !state.testFlag(QStyle::State_Enabled) || !state.testFlag(QStyle::State_On))
+    {
+        _circleScaleAnimation->stop();
+        _targetCircleScale = targetScale;
+        _animationWidget.clear();
+        if (!qFuzzyCompare(_pCircleScale, targetScale))
+        {
+            setCircleScale(targetScale);
+        }
+        return;
+    }
+    _animationWidget = const_cast<QWidget*>(widget);
+    if (qFuzzyCompare(_targetCircleScale, targetScale))
+    {
+        return;
+    }
+    _targetCircleScale = targetScale;
+    // 复用同一个动画，并从当前比例续接，快速切换悬停或按下状态时不会跳变。
+    _circleScaleAnimation->stop();
+    _circleScaleAnimation->setStartValue(_pCircleScale);
+    _circleScaleAnimation->setEndValue(targetScale);
+    _circleScaleAnimation->start();
 }

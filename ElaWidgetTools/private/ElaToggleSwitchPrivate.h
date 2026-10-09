@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATOGGLESWITCHPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATOGGLESWITCHPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,7 +9,7 @@ class ElaToggleSwitch;
 class ElaToggleSwitchPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaToggleSwitch);
+    ELA_PIMPL_D(ElaToggleSwitch);
 
 public:
     explicit ElaToggleSwitchPrivate(QObject* parent = nullptr);

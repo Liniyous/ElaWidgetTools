@@ -11,13 +11,13 @@
 #include "ElaPopularCardPrivate.h"
 #include "ElaPushButton.h"
 #include "ElaTheme.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaPopularCard, int, BorderRadius)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPopularCard, QPixmap, CardPixmap)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPopularCard, QString, Title)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPopularCard, QString, SubTitle)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPopularCard, QString, InteractiveTips)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPopularCard, QString, DetailedText)
-Q_PROPERTY_REF_CREATE_Q_CPP(ElaPopularCard, QPixmap, CardFloatPixmap)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, QPixmap, CardPixmap)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, QString, Title)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, QString, SubTitle)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, QString, InteractiveTips)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, QString, DetailedText)
+ELA_PROPERTY_Q_CPP(ElaPopularCard, QPixmap, CardFloatPixmap)
 ElaPopularCard::ElaPopularCard(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaPopularCardPrivate())
 {

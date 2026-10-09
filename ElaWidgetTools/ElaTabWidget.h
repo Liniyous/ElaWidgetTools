@@ -10,17 +10,23 @@ class ElaTabWidgetPrivate;
 class ELA_EXPORT ElaTabWidget : public QTabWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaTabWidget)
-    Q_PROPERTY_CREATE_Q_H(bool, IsTabTransparent);
-    Q_PROPERTY_CREATE_Q_H(bool, IsContainerAcceptDrops);
-    Q_PROPERTY_CREATE_Q_H(QSize, TabSize)
-    Q_PROPERTY_CREATE_Q_H(QSize, FloatWidgetSize)
+    ELA_PIMPL_Q(ElaTabWidget)
+    ELA_PROPERTY_Q_H(bool, IsTabTransparent);
+    ELA_PROPERTY_Q_H(bool, IsContainerAcceptDrops);
+    ELA_PROPERTY_Q_H(QSize, FloatWidgetSize)
 public:
     explicit ElaTabWidget(QWidget* parent = nullptr);
     ~ElaTabWidget() override;
+
+    void setTabSize(QSize tabSize);
+    Q_REQUIRED_RESULT QSize getTabSize() const;
+
     void setTabPosition(TabPosition position);
+    // 将TabBar内部滚动平滑定位到当前Tab最左侧
+    void locateCurrentTab();
 
 Q_SIGNALS:
+    Q_SIGNAL void pTabSizeChanged();
     Q_SIGNAL void currentWidgetChanged(QWidget* widget);
 
 protected:

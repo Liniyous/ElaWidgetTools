@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELADOCKWIDGETPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELADOCKWIDGETPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -9,7 +10,7 @@ class ElaDockWidgetTitleBar;
 class ElaDockWidgetPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaDockWidget)
+    ELA_PIMPL_D(ElaDockWidget)
 public:
     explicit ElaDockWidgetPrivate(QObject* parent = nullptr);
     ~ElaDockWidgetPrivate();

@@ -25,6 +25,7 @@ ElaRibbonBar::ElaRibbonBar(QWidget* parent)
     d->_mainStackedWidget = new QStackedWidget(this);
     auto mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
     mainLayout->addWidget(d->_mainStackedWidget);
 }
 
@@ -45,6 +46,7 @@ void ElaRibbonBar::setRibbonTabBar(QTabBar* tabBar)
         d->_ribbonTabBar->setMovable(false);
         d->_ribbonTabBar->setTabsClosable(false);
         connect(d->_ribbonTabBar, &QTabBar::currentChanged, d, &ElaRibbonBarPrivate::onRibbonTabBarCurrentChanged);
+        d->_syncRibbonTabBarTabs();
     }
 }
 
@@ -52,6 +54,27 @@ QTabBar* ElaRibbonBar::getRibbonTabBar() const
 {
     Q_D(const ElaRibbonBar);
     return d->_ribbonTabBar;
+}
+
+void ElaRibbonBar::setRibbonPivot(ElaPivot* pivot)
+{
+    Q_D(ElaRibbonBar);
+    if (d->_ribbonPivot)
+    {
+        disconnect(d->_ribbonPivot, &ElaPivot::pivotClicked, d, &ElaRibbonBarPrivate::onRibbonPivotClicked);
+    }
+    d->_ribbonPivot = pivot;
+    if (d->_ribbonPivot)
+    {
+        connect(d->_ribbonPivot, &ElaPivot::pivotClicked, d, &ElaRibbonBarPrivate::onRibbonPivotClicked);
+        d->_syncRibbonPivotTitles();
+    }
+}
+
+ElaPivot* ElaRibbonBar::getRibbonPivot() const
+{
+    Q_D(const ElaRibbonBar);
+    return d->_ribbonPivot;
 }
 
 void ElaRibbonBar::switchRibbonPage(const QString& pageName)
@@ -68,6 +91,10 @@ void ElaRibbonBar::switchRibbonPage(const QString& pageName)
     }
     d->_currentRibbonPage = pageName;
     d->_switchMainStackWidget(d->_ribbonDataMap[pageName].ribbonView);
+    if (d->_ribbonPivot)
+    {
+        d->_ribbonPivot->setCurrentTitle(pageName);
+    }
     if (d->_ribbonTabBar)
     {
         for (int i = 0; i < d->_ribbonTabBar->count(); i++)
@@ -81,6 +108,7 @@ void ElaRibbonBar::switchRibbonPage(const QString& pageName)
             }
         }
     }
+    Q_EMIT ribbonPageChanged(pageName);
 }
 
 const QString& ElaRibbonBar::getCurrentRibbonPage() const
@@ -170,7 +198,6 @@ QAction* ElaRibbonBar::addRibbonWidget(const QString& pageName, const QString& g
     auto ribbonAction = ribbonModel->addRibbonAction(groupName, "ElaRibbonWidgetAction");
     ribbonAction->setProperty("ElaRibbonPageName", pageName);
     ribbonAction->setProperty("ElaRibbonWidget", QVariant::fromValue(widget));
-    QApplication::processEvents();
     d->_ribbonDataMap[pageName].ribbonView->setIndexWidget(ribbonModel->getRibbonActionModelIndex(ribbonAction), widget);
     return ribbonAction;
 }
@@ -233,6 +260,12 @@ QList<QAction*> ElaRibbonBar::getRibbonActions(const QString& pageName, const QS
     }
     auto ribbonModel = d->_ribbonDataMap[pageName].ribbonModel;
     return ribbonModel->getRibbonActions(groupName, actionName);
+}
+
+int ElaRibbonBar::getGroupBottomMargin() const
+{
+    Q_D(const ElaRibbonBar);
+    return d->_groupBottomMargin;
 }
 
 bool ElaRibbonBar::eventFilter(QObject* obj, QEvent* event)

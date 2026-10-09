@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATOGGLEBUTTONPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATOGGLEBUTTONPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QObject>
 
 #include "ElaWidgetToolsDef.h"
@@ -8,10 +9,10 @@ class ElaToggleButton;
 class ElaToggleButtonPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaToggleButton)
-    Q_PROPERTY_CREATE_D(int, BorderRadius)
-    Q_PROPERTY_CREATE_D(QString, Text)
-    Q_PROPERTY_CREATE(int, ToggleAlpha)
+    ELA_PIMPL_D(ElaToggleButton)
+    ELA_PROPERTY_D(int, BorderRadius)
+    ELA_PROPERTY_D(QString, Text)
+    ELA_PROPERTY(int, ToggleAlpha)
 public:
     explicit ElaToggleButtonPrivate(QObject* parent = nullptr);
     ~ElaToggleButtonPrivate() override;

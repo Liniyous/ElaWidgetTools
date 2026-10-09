@@ -11,11 +11,11 @@ class ElaLogPrivate;
 class ELA_EXPORT ElaLog : public QObject
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaLog)
-    Q_PROPERTY_REF_CREATE_Q_H(QString, LogSavePath)
-    Q_PROPERTY_REF_CREATE_Q_H(QString, LogFileName)
-    Q_PROPERTY_CREATE_Q_H(bool, IsLogFileNameWithTime)
-    Q_SINGLETON_CREATE_H(ElaLog);
+    ELA_PIMPL_Q(ElaLog)
+    ELA_PROPERTY_Q_H(QString, LogSavePath)
+    ELA_PROPERTY_Q_H(QString, LogFileName)
+    ELA_PROPERTY_Q_H(bool, IsLogFileNameWithTime)
+    ELA_SINGLETON_H(ElaLog);
 
 private:
     explicit ElaLog(QObject* parent = nullptr);

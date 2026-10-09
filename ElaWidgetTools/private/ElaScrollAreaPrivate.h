@@ -11,7 +11,7 @@ class ElaScrollArea;
 class ElaScrollAreaPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaScrollArea)
+    ELA_PIMPL_D(ElaScrollArea)
 public:
     explicit ElaScrollAreaPrivate(QObject* parent = nullptr);
     ~ElaScrollAreaPrivate();

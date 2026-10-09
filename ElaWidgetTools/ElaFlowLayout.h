@@ -11,7 +11,7 @@ class ElaFlowLayoutPrivate;
 class ELA_EXPORT ElaFlowLayout : public QLayout
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaFlowLayout)
+    ELA_PIMPL_Q(ElaFlowLayout)
 public:
     explicit ElaFlowLayout(QWidget* parent, int margin = -1, int hSpacing = -1, int vSpacing = -1);
     explicit ElaFlowLayout(int margin = -1, int hSpacing = -1, int vSpacing = -1);

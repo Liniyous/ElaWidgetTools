@@ -12,9 +12,9 @@ class ElaSuggestBoxPrivate;
 class ELA_EXPORT ElaSuggestBox : public QWidget
 {
     Q_OBJECT
-    Q_Q_CREATE(ElaSuggestBox)
-    Q_PROPERTY_CREATE_Q_H(int, BorderRadius)
-    Q_PROPERTY_CREATE_Q_H(Qt::CaseSensitivity, CaseSensitivity)
+    ELA_PIMPL_Q(ElaSuggestBox)
+    ELA_PROPERTY_Q_H(int, BorderRadius)
+    ELA_PROPERTY_Q_H(Qt::CaseSensitivity, CaseSensitivity)
 public:
     explicit ElaSuggestBox(QWidget* parent = nullptr);
     ~ElaSuggestBox() override;
@@ -24,10 +24,10 @@ public:
     void setFixedHeight(int h);
 
     struct ELA_EXPORT SuggestData {
-        Q_PRIVATE_CREATE(ElaIconType::IconName, ElaIcon)
-        Q_PRIVATE_REF_CREATE(QString, SuggestText)
-        Q_PRIVATE_REF_CREATE(QString, SuggestKey)
-        Q_PRIVATE_REF_CREATE(QVariantMap, SuggestData)
+        ELA_VARIABLE(ElaIconType::IconName, ElaIcon)
+        ELA_VARIABLE(QString, SuggestText)
+        ELA_VARIABLE(QString, SuggestKey)
+        ELA_VARIABLE(QVariantMap, SuggestData)
     public:
         explicit SuggestData();
         explicit SuggestData(ElaIconType::IconName icon, const QString& suggestText, const QVariantMap& suggestData = {});

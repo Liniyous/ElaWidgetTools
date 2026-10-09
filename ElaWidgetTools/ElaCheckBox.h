@@ -8,7 +8,7 @@
 class ELA_EXPORT ElaCheckBox : public QCheckBox
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, BorderRadius)
+    ELA_PROPERTY(int, BorderRadius)
 public:
     explicit ElaCheckBox(QWidget* parent = nullptr);
     explicit ElaCheckBox(const QString& text, QWidget* parent = nullptr);

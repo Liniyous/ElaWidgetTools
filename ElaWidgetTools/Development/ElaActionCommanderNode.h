@@ -9,17 +9,17 @@
 class ElaActionCommanderNode : public QObject
 {
     Q_OBJECT
-    Q_PRIVATE_REF_CREATE(QString, NodeName)
-    Q_PRIVATE_CREATE(int, NodeIndex)
-    Q_PRIVATE_REF_CREATE(QString, NodeIndexText)
-    Q_PRIVATE_REF_CREATE(QString, NodeCreateTime)
-    Q_PRIVATE_REF_CREATE(QList<ElaActionCommanderNode*>, ChildNodes)
-    Q_PRIVATE_CREATE(ElaActionCommanderNode*, ParentNode)
-    Q_PRIVATE_REF_CREATE(QModelIndex, ModelIndex)
-    Q_PRIVATE_CREATE(bool, IsRootNode)
-    Q_PRIVATE_CREATE(bool, IsCommandNode)
-    Q_PRIVATE_CREATE(bool, IsCurrentNode)
-    Q_PRIVATE_CREATE(ElaMessageBarType::MessageMode, MessageMode)
+    ELA_VARIABLE(QString, NodeName)
+    ELA_VARIABLE(int, NodeIndex)
+    ELA_VARIABLE(QString, NodeIndexText)
+    ELA_VARIABLE(QString, NodeCreateTime)
+    ELA_VARIABLE(QList<ElaActionCommanderNode*>, ChildNodes)
+    ELA_VARIABLE(ElaActionCommanderNode*, ParentNode)
+    ELA_VARIABLE(QModelIndex, ModelIndex)
+    ELA_VARIABLE(bool, IsRootNode)
+    ELA_VARIABLE(bool, IsCommandNode)
+    ELA_VARIABLE(bool, IsCurrentNode)
+    ELA_VARIABLE(ElaMessageBarType::MessageMode, MessageMode)
 public:
     explicit ElaActionCommanderNode(ElaActionCommanderNode* parent = nullptr);
     ~ElaActionCommanderNode() override;

@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATHEMEPRIVATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELATHEMEPRIVATE_H_
 
+#include "ElaPropertyMacro.h"
 #include <QColor>
 #include <QMap>
 #include <QObject>
@@ -10,7 +11,7 @@ class ElaTheme;
 class ElaThemePrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaTheme)
+    ELA_PIMPL_D(ElaTheme)
 public:
     explicit ElaThemePrivate(QObject* parent = nullptr);
     ~ElaThemePrivate();

@@ -12,8 +12,8 @@ class ElaMenuStyle;
 class ElaMenuPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaMenu)
-    Q_PROPERTY_CREATE(int, AnimationImagePosY)
+    ELA_PIMPL_D(ElaMenu)
+    ELA_PROPERTY(int, AnimationImagePosY)
 public:
     explicit ElaMenuPrivate(QObject* parent = nullptr);
     ~ElaMenuPrivate() override;

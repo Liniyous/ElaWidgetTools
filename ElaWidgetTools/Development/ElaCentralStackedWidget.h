@@ -1,6 +1,7 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACENTRALSTACKEDWIDGET_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACENTRALSTACKEDWIDGET_H_
 
+#include "ElaPropertyMacro.h"
 #include <QStackedWidget>
 
 #include "ElaWidgetToolsDef.h"
@@ -9,12 +10,12 @@ class QGraphicsBlurEffect;
 class ELA_EXPORT ElaCentralStackedWidget : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(int, PopupAnimationYOffset)
-    Q_PROPERTY_CREATE(qreal, ScaleAnimationRatio)
-    Q_PROPERTY_CREATE(qreal, ScaleAnimationPixOpacity)
-    Q_PROPERTY_CREATE(qreal, FlipAnimationRatio)
-    Q_PROPERTY_CREATE(int, BlurAnimationRadius)
-    Q_PROPERTY_CREATE(int, LastTargetIndex)
+    ELA_PROPERTY(int, PopupAnimationYOffset)
+    ELA_PROPERTY(qreal, ScaleAnimationRatio)
+    ELA_PROPERTY(qreal, ScaleAnimationPixOpacity)
+    ELA_PROPERTY(qreal, FlipAnimationRatio)
+    ELA_PROPERTY(int, BlurAnimationRadius)
+    ELA_PROPERTY(int, LastTargetIndex)
 public:
     explicit ElaCentralStackedWidget(QWidget* parent = nullptr);
     ~ElaCentralStackedWidget() override;

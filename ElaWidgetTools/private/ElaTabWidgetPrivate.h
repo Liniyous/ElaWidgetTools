@@ -7,11 +7,14 @@
 #include <QDrag>
 #include <QObject>
 #include <QPixmap>
+#include <QPointer>
+class QWidget;
+class ElaCustomTabWidget;
 class ElaDragMonitor : public QObject
 {
     Q_OBJECT
-    Q_PRIVATE_CREATE(bool, IsInDrag)
-    Q_SINGLETON_CREATE(ElaDragMonitor)
+    ELA_VARIABLE(bool, IsInDrag)
+    ELA_SINGLETON(ElaDragMonitor)
 private:
     explicit ElaDragMonitor(QObject* parent = nullptr);
     ~ElaDragMonitor() override;
@@ -22,11 +25,11 @@ class ElaTabBar;
 class ElaTabWidgetPrivate : public QObject
 {
     Q_OBJECT
-    Q_D_CREATE(ElaTabWidget)
-    Q_PROPERTY_CREATE_D(bool, IsTabTransparent)
-    Q_PROPERTY_CREATE_D(bool, IsContainerAcceptDrops);
-    Q_PROPERTY_CREATE_D(QSize, TabSize)
-    Q_PROPERTY_CREATE_D(QSize, FloatWidgetSize)
+    ELA_PIMPL_D(ElaTabWidget)
+    ELA_PROPERTY_D(bool, IsTabTransparent)
+    ELA_PROPERTY_D(bool, IsContainerAcceptDrops);
+    ELA_PROPERTY_D(QSize, TabSize)
+    ELA_PROPERTY_D(QSize, FloatWidgetSize)
 public:
     explicit ElaTabWidgetPrivate(QObject* parent = nullptr);
     ~ElaTabWidgetPrivate() override;
@@ -40,7 +43,13 @@ private:
     friend class ElaCustomTabWidget;
     ElaTabBar* _tabBar{nullptr};
     ElaTabBar* _customTabBar{nullptr};
-    QList<QWidget*> _allTabWidgetList;
+    // 页面拖出后仍可能被 customwidget 归还，因此跟随页面生命周期而非 tab 成员关系
+    QList<QPointer<QWidget>> _allTabWidgetList;
+    QList<QPointer<ElaCustomTabWidget>> _customTabWidgetList;
+    void _addTabWidgetToList(QWidget* widget);
+    void _removeTabWidgetFromList(QWidget* widget);
+    void _registerCustomTabWidget(ElaCustomTabWidget* customTabWidget);
+    void _unregisterCustomTabWidget(ElaCustomTabWidget* customTabWidget, ElaTabBar* customTabBar);
     void _clearAllTabWidgetList();
 };
 

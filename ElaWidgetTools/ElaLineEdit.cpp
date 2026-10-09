@@ -2,6 +2,7 @@
 
 #include <QClipboard>
 #include <QContextMenuEvent>
+#include <QDebug>
 #include <QGuiApplication>
 #include <QPainter>
 #include <QPainterPath>
@@ -12,7 +13,7 @@
 #include "ElaMenu.h"
 #include "ElaTheme.h"
 #include "private/ElaLineEditPrivate.h"
-Q_PROPERTY_CREATE_Q_CPP(ElaLineEdit, int, BorderRadius)
+ELA_PROPERTY_Q_CPP(ElaLineEdit, int, BorderRadius)
 
 ElaLineEdit::ElaLineEdit(QWidget* parent)
     : QLineEdit(parent), d_ptr(new ElaLineEditPrivate())
@@ -37,7 +38,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     setStyleSheet("#ElaLineEdit{background-color:transparent;padding-left: 10px;}");
     d->onThemeChanged(eTheme->getThemeMode());
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaLineEditPrivate::onThemeChanged);
-    setVisible(true);
+    QWidget::setVisible(true);
 }
 
 ElaLineEdit::~ElaLineEdit()
@@ -63,7 +64,7 @@ void ElaLineEdit::focusInEvent(QFocusEvent* event)
 {
     Q_D(ElaLineEdit);
     Q_EMIT focusIn(this->text());
-    if (event->reason() == Qt::MouseFocusReason)
+    if (event->reason() != Qt::PopupFocusReason)
     {
         if (d->_pIsClearButtonEnable)
         {

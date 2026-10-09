@@ -2,13 +2,14 @@
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACUSTOMTABWIDGET_H_
 
 #include "ElaCustomWidget.h"
+#include "ElaPropertyMacro.h"
 
 class ElaTabBar;
 class ElaTabWidget;
 class ElaCustomTabWidget : public ElaCustomWidget
 {
     Q_OBJECT
-    Q_PROPERTY_CREATE(bool, IsFinished)
+    ELA_PROPERTY(bool, IsFinished)
 public:
     explicit ElaCustomTabWidget(QWidget* parent = nullptr);
     ~ElaCustomTabWidget() override;

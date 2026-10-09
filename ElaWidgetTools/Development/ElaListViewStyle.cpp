@@ -154,7 +154,7 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
                 int heightOffset = itemRect.height() / 4;
                 painter->setPen(Qt::NoPen);
                 painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 3, 3);
+                painter->drawRoundedRect(QRectF(itemRect.x() + 3, itemRect.y() + heightOffset, 3, itemRect.height() - 2 * heightOffset), 1.5, 1.5);
             }
             painter->restore();
         }
