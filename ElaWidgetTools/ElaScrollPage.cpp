@@ -109,7 +109,7 @@ void ElaScrollPage::addCentralWidget(QWidget* centralWidget, bool isWidgetResize
     }
     if (centralWidget->windowTitle().isEmpty())
     {
-        centralWidget->setWindowTitle(QString("Page_%1").arg(d->_centralStackedWidget->count()));
+        centralWidget->setWindowTitle(QString("页面 %1").arg(d->_centralStackedWidget->count()));
     }
     if (d->_centralStackedWidget->count() == 0)
     {

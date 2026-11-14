@@ -91,7 +91,7 @@ void MainWindow::initWindow()
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);
     setUserInfoCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
-    setUserInfoCardTitle("Ela Tool");
+    setUserInfoCardTitle("Ela 工具");
     setUserInfoCardSubTitle("Liniyous@gmail.com");
     setWindowTitle("ElaWidgetTools");
     // setIsStayTop(true);
@@ -285,12 +285,6 @@ void MainWindow::initRibbon()
         qDebug() << pageName << groupName << action->text();
     });
 
-    _ribbonBar->addRibbonAction("记录与回放", "回放控制", "开始", ElaIconType::CirclePlay);
-    _ribbonBar->addRibbonAction("记录与回放", "回放控制", "暂停", ElaIconType::CirclePause);
-    _ribbonBar->addRibbonAction("记录与回放", "回放控制", "结束", ElaIconType::CircleStop);
-    _ribbonBar->addRibbonAction("记录与回放", "回放控制", "减速", ElaIconType::CircleMinus);
-    _ribbonBar->addRibbonAction("记录与回放", "回放控制", "加速", ElaIconType::CirclePlus);
-
     // 系统与设置
     auto pluginAction = _ribbonBar->addRibbonAction("系统与设置", "插件管理", "插件管理", ElaIconType::PlugCirclePlus);
     _ribbonBar->addRibbonAction("系统与设置", "系统设置", "设置", ElaIconType::GearComplex);
@@ -355,7 +349,7 @@ void MainWindow::initEdgeLayout()
     ElaToolButton* toolButton3 = new ElaToolButton(this);
     toolButton3->setElaIcon(ElaIconType::Bluetooth);
     toolButton3->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    toolButton3->setText("Bluetooth");
+    toolButton3->setText("蓝牙");
     toolBar->addWidget(toolButton3);
     ElaToolButton* toolButton4 = new ElaToolButton(this);
     toolButton4->setElaIcon(ElaIconType::BringFront);
@@ -379,7 +373,7 @@ void MainWindow::initEdgeLayout()
     ElaToolButton* toolButton11 = new ElaToolButton(this);
     toolButton11->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolButton11->setElaIcon(ElaIconType::AlarmPlus);
-    toolButton11->setText("AlarmPlus");
+    toolButton11->setText("添加闹钟");
     toolBar->addWidget(toolButton11);
     ElaToolButton* toolButton12 = new ElaToolButton(this);
     toolButton12->setElaIcon(ElaIconType::Crown);
@@ -430,29 +424,26 @@ void MainWindow::initContent()
 
     QString testKey_1;
     QString testKey_2;
-    addPageNode("HOME", _homePage, ElaIconType::House);
-    addExpanderNode("ElaDxgi", _elaDxgiKey, ElaIconType::TvMusic);
-    QString dxgiCategoryKey;
-    addCategoryNode("Windows-DXGI", dxgiCategoryKey, _elaDxgiKey);
-    addPageNode("ElaScreen", _elaScreenPage, _elaDxgiKey, 3, ElaIconType::ObjectGroup);
+    addPageNode("首页", _homePage, ElaIconType::House);
+    addPageNode("屏幕采集", _elaScreenPage, ElaIconType::TvMusic);
     QString controlCategoryKey;
-    addCategoryNode("Controls", controlCategoryKey);
+    addCategoryNode("组件", controlCategoryKey);
     // navigation(elaScreenWidget->property("ElaPageKey").toString());
-    addPageNode("ElaBaseComponents", _baseComponentsPage, ElaIconType::CabinetFiling);
+    addPageNode("基础控件", _baseComponentsPage, ElaIconType::CabinetFiling);
 
-    addExpanderNode("ElaView", _viewKey, ElaIconType::CameraViewfinder);
+    addExpanderNode("数据视图", _viewKey, ElaIconType::CameraViewfinder);
     QString viewCategoryKey;
-    addCategoryNode("View Content", viewCategoryKey, _viewKey);
-    addPageNode("ElaListView", _listViewPage, _viewKey, 9, ElaIconType::List);
-    addPageNode("ElaTableView", _tableViewPage, _viewKey, ElaIconType::Table);
-    addPageNode("ElaTreeView", _treeViewPage, _viewKey, ElaIconType::ListTree);
+    addCategoryNode("视图内容", viewCategoryKey, _viewKey);
+    addPageNode("列表视图", _listViewPage, _viewKey, 9, ElaIconType::List);
+    addPageNode("表格视图", _tableViewPage, _viewKey, ElaIconType::Table);
+    addPageNode("树形视图", _treeViewPage, _viewKey, ElaIconType::ListTree);
     expandNavigationNode(_viewKey);
-    addPageNode("ElaCard", _cardPage, ElaIconType::Cards);
+    addPageNode("卡片展示", _cardPage, ElaIconType::Cards);
     QString customKey;
-    addCategoryNode("Custom", customKey);
-    addPageNode("ElaNavigation", _navigationPage, ElaIconType::LocationArrow);
-    addPageNode("ElaPopup", _popupPage, ElaIconType::Envelope);
-    addPageNode("ElaIcon", _iconPage, 99, ElaIconType::FontCase);
+    addCategoryNode("交互与资源", customKey);
+    addPageNode("导航与标签", _navigationPage, ElaIconType::LocationArrow);
+    addPageNode("弹出与选择", _popupPage, ElaIconType::Envelope);
+    addPageNode("图标资源", _iconPage, 99, ElaIconType::FontCase);
     addExpanderNode("工作空间", testKey_1, ElaIconType::Acorn);
     addExpanderNode("项目资源", testKey_2, testKey_1, ElaIconType::Acorn);
     addPageNode("资源概览", new QWidget(this), testKey_2, ElaIconType::Acorn);
@@ -464,7 +455,7 @@ void MainWindow::initContent()
     addExpanderNode("运行监控", testKey_1, ElaIconType::Acorn);
     addExpanderNode("开发资源", testKey_1, ElaIconType::Acorn);
 
-    addFooterNode("About", nullptr, _aboutKey, 0, ElaIconType::User);
+    addFooterNode("关于", nullptr, _aboutKey, 0, ElaIconType::User);
     _aboutPage = new T_About();
 
     _aboutPage->hide();
@@ -475,7 +466,7 @@ void MainWindow::initContent()
             _aboutPage->show();
         }
     });
-    addFooterNode("Setting", _settingPage, _settingKey, 0, ElaIconType::GearComplex);
+    addFooterNode("设置", _settingPage, _settingKey, 0, ElaIconType::GearComplex);
     connect(this, &MainWindow::userInfoCardClicked, this, [=]() {
         this->navigation(_homePage->property("ElaPageKey").toString());
     });

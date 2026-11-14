@@ -81,17 +81,29 @@ T_TableViewModel::~T_TableViewModel()
 
 int T_TableViewModel::rowCount(const QModelIndex& parent) const
 {
+    if (parent.isValid())
+    {
+        return 0;
+    }
     return 100;
 }
 
 int T_TableViewModel::columnCount(const QModelIndex& parent) const
 {
+    if (parent.isValid())
+    {
+        return 0;
+    }
     return _header.count();
 }
 
 QVariant T_TableViewModel::data(const QModelIndex& index, int role) const
 {
-    if (role == Qt::DisplayRole && index.column() != 0)
+    if (!index.isValid() || index.row() < 0 || index.row() >= rowCount() || index.column() < 0 || index.column() >= columnCount())
+    {
+        return QVariant();
+    }
+    if ((role == Qt::DisplayRole || role == Qt::ToolTipRole) && index.column() != 0)
     {
         return _dataList[index.row() % 9][index.column() - 1];
     }
@@ -117,4 +129,25 @@ QVariant T_TableViewModel::headerData(int section, Qt::Orientation orientation, 
         return _header[section];
     }
     return QAbstractTableModel::headerData(section, orientation, role);
+}
+
+T_MusicFilterModel::T_MusicFilterModel(QObject* parent)
+    : QSortFilterProxyModel(parent)
+{
+}
+
+T_MusicFilterModel::~T_MusicFilterModel() = default;
+
+bool T_MusicFilterModel::lessThan(const QModelIndex& sourceLeft, const QModelIndex& sourceRight) const
+{
+    if (QSortFilterProxyModel::lessThan(sourceLeft, sourceRight))
+    {
+        return true;
+    }
+    if (QSortFilterProxyModel::lessThan(sourceRight, sourceLeft))
+    {
+        return false;
+    }
+    // 主排序值相等或为空时按源模型行号保持稳定顺序
+    return sourceLeft.row() < sourceRight.row();
 }

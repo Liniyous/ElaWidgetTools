@@ -1,15 +1,15 @@
 #include "ElaPivot.h"
 
 #include "ElaApplication.h"
+#include "ElaPivotModel.h"
+#include "ElaPivotPrivate.h"
+#include "ElaPivotStyle.h"
+#include "ElaPivotView.h"
 
 #include <QPainter>
 #include <QScroller>
 #include <QVBoxLayout>
 
-#include "ElaPivotModel.h"
-#include "ElaPivotPrivate.h"
-#include "ElaPivotStyle.h"
-#include "ElaPivotView.h"
 ElaPivot::ElaPivot(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaPivotPrivate())
 {
@@ -30,6 +30,7 @@ ElaPivot::ElaPivot(QWidget* parent)
     d->_listModel = new ElaPivotModel(this);
     d->_listView->setModel(d->_listModel);
     d->_listStyle = new ElaPivotStyle(d->_listView->style());
+    d->_listStyle->setParent(d->_listView);
     d->_listView->setStyle(d->_listStyle);
     d->_listView->setPivotStyle(d->_listStyle);
 
@@ -61,11 +62,10 @@ ElaPivot::ElaPivot(QWidget* parent)
         }
     });
     connect(d->_listView, &ElaPivotView::clicked, this, [=](const QModelIndex& index) {
-        if (index.row() != d->_listView->currentIndex().row())
+        if (d->_listView->doCurrentIndexChangedAnimation(index))
         {
             Q_EMIT pCurrentIndexChanged();
         }
-        d->_listView->doCurrentIndexChangedAnimation(index);
         Q_EMIT pivotClicked(index.row());
     });
     connect(d->_listView, &ElaPivotView::doubleClicked, this, [=](const QModelIndex& index) {
@@ -76,11 +76,7 @@ ElaPivot::ElaPivot(QWidget* parent)
     mainLayout->addWidget(d->_listView);
 }
 
-ElaPivot::~ElaPivot()
-{
-    Q_D(ElaPivot);
-    delete d->_listStyle;
-}
+ElaPivot::~ElaPivot() = default;
 
 void ElaPivot::appendPivot(const QString& pivotTitle)
 {

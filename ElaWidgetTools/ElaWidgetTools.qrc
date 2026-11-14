@@ -5,5 +5,9 @@
         <file>Image/Moon.jpg</file>
         <file>Image/noise.png</file>
         <file>Image/MicaBase.png</file>
+        <file>Image/Fluent/caret_up_filled.svg</file>
+        <file>Image/Fluent/caret_down_filled.svg</file>
+        <file>Image/Fluent/LICENSE.txt</file>
+        <file>Image/Fluent/SOURCE.txt</file>
     </qresource>
 </RCC>

@@ -5,6 +5,7 @@
 
 #include "T_BasePage.h"
 class ElaLineEdit;
+class ElaText;
 class ElaListView;
 class T_IconModel;
 class T_IconDelegate;
@@ -19,9 +20,11 @@ public:
 private:
     QMetaEnum _metaEnum;
     ElaLineEdit* _searchEdit{nullptr};
-    ElaListView* _iconView;
-    T_IconModel* _iconModel;
-    T_IconDelegate* _iconDelegate;
+    ElaListView* _iconView{nullptr};
+    T_IconModel* _iconModel{nullptr};
+    T_IconDelegate* _iconDelegate{nullptr};
+    ElaText* _resultText{nullptr};
+    ElaText* _emptyText{nullptr};
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLSEXAMPLE_EXAMPLEPAGE_T_ICON_H_

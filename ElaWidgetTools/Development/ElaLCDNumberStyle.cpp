@@ -1,9 +1,12 @@
 #include "ElaLCDNumberStyle.h"
+
+#include "ElaColorAnimation.h"
 #include "ElaTheme.h"
 
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
+
 ElaLCDNumberStyle::ElaLCDNumberStyle(QStyle* style)
 {
     _pIsTransparent = false;
@@ -36,7 +39,7 @@ void ElaLCDNumberStyle::drawControl(QStyle::ControlElement element, const QStyle
                 painter->setBrush(Qt::NoBrush);
                 painter->drawRoundedRect(numberRect.adjusted(1, 1, -1, -1), 6, 6);
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
+                painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "Background"));
                 painter->drawRoundedRect(QRectF(numberRect.x() + 1.5, numberRect.y() + 1.5, numberRect.width() - 3, numberRect.height() - 3), 6, 6);
                 painter->restore();
             }

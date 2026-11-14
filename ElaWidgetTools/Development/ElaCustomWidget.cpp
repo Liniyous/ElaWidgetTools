@@ -1,10 +1,12 @@
 #include "ElaCustomWidget.h"
 
+#include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QVBoxLayout>
 
-#include "ElaApplication.h"
-#include "ElaTheme.h"
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaCustomWidget, _appBar);
 ElaCustomWidget::ElaCustomWidget(QWidget* parent)
     : QDialog{parent}
@@ -64,7 +66,7 @@ void ElaCustomWidget::paintEvent(QPaintEvent* event)
         painter.save();
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(_themeMode, WindowBase));
+        painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(_themeMode, WindowBase), "Background"));
         painter.drawRect(rect());
         painter.restore();
     }

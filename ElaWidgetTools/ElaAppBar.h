@@ -63,6 +63,8 @@ public:
 
     void setIsFixedSize(bool isFixedSize);
     Q_REQUIRED_RESULT bool getIsFixedSize() const;
+    void setIsIconVisible(bool isIconVisible);
+    Q_REQUIRED_RESULT bool getIsIconVisible() const;
     void setAppBarHeight(int height);
     Q_REQUIRED_RESULT int getAppBarHeight() const;
     void setRibbonHeight(int height);

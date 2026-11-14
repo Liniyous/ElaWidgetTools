@@ -1,11 +1,14 @@
 #include "ElaProgressRing.h"
 
+#include "ElaColorAnimation.h"
 #include "ElaProgressRingPrivate.h"
 #include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QtMath>
+
 ELA_PROPERTY_Q_CPP(ElaProgressRing, bool, IsTransparent)
 ELA_PROPERTY_Q_CPP(ElaProgressRing, bool, IsDisplayValue)
 ELA_PROPERTY_Q_CPP(ElaProgressRing, ElaProgressRingType::ValueDisplayMode, ValueDisplayMode)
@@ -209,11 +212,11 @@ void ElaProgressRing::paintEvent(QPaintEvent* event)
     // 底色
     if (!d->_pIsTransparent)
     {
-        painter.setBrush(ElaThemeColor(d->_themeMode, BasicBaseDeep));
+        painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, BasicBaseAlpha), "Track"));
         painter.drawEllipse(ringRect);
     }
     // 环
-    painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, PrimaryNormal), "Progress"));
     if (d->_pIsBusying)
     {
         painter.drawPie(ringRect, -d->_pBusyStartDeg * 16, d->_pBusyContentDeg * 16);

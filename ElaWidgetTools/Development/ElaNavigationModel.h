@@ -17,9 +17,6 @@ public:
     explicit ElaNavigationModel(QObject* parent = nullptr);
     ~ElaNavigationModel() override;
 
-    void setIsMaximalMode(bool isMaximal);
-    bool getIsMaximalMode();
-
     QModelIndex parent(const QModelIndex& child) const override;
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -43,10 +40,15 @@ public:
     QList<ElaNavigationNode*> getRootCategoryNodes() const;
 
 private:
-    bool _isMaximalMode{true};
+    enum class NodeType
+    {
+        Expander,
+        Page,
+        Category
+    };
+    ElaNavigationType::NodeResult _addNode(const QString& title, QString& key, ElaNavigationNode* parentNode, NodeType type, int keyPoints, ElaIconType::IconName icon);
     QMap<QString, ElaNavigationNode*> _nodesMap;
     ElaNavigationNode* _rootNode{nullptr};
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONMODEL_H_
-

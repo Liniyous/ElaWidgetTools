@@ -27,6 +27,7 @@ protected:
     void paintEvent(QPaintEvent* event) override;
 
 private:
+    QRect _getTextRect(const QModelIndex& index) const;
     void _startMarkAnimation(qreal markXStart, qreal markXEnd, int markWidthStart, int markWidthEnd);
     QModelIndex _markIndex; // mark当前附着的索引 仅用于平移动画
 };

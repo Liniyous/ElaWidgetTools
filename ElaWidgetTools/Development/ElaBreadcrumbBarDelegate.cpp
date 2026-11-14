@@ -1,8 +1,10 @@
 #include "ElaBreadcrumbBarDelegate.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 
-#include "ElaTheme.h"
 ElaBreadcrumbBarDelegate::ElaBreadcrumbBarDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
@@ -29,7 +31,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
         if (_pPressIndex == index)
         {
             //鼠标按下
-            painter->setPen(ElaThemeColor(_themeMode, BasicTextPress));
+            painter->setPen(ElaThemeColor(_themeMode, BasicTextNoFocus));
         }
         else
         {
@@ -40,6 +42,7 @@ void ElaBreadcrumbBarDelegate::paint(QPainter* painter, const QStyleOptionViewIt
             }
         }
     }
+    painter->setPen(ElaColorAnimation::getColor(option.widget, painter->pen().color(), "BreadcrumbText", index));
     if (breadcrumbDisplayData != ">")
     {
         painter->drawText(itemRect, Qt::AlignVCenter | Qt::AlignLeft, breadcrumbDisplayData);

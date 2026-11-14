@@ -1,12 +1,14 @@
 #include "ElaPromotionView.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaPromotionCard.h"
+#include "ElaPromotionViewPrivate.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QTimer>
 #include <QWheelEvent>
 
-#include "ElaPromotionCard.h"
-#include "ElaPromotionViewPrivate.h"
-#include "ElaTheme.h"
 ElaPromotionView::ElaPromotionView(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaPromotionViewPrivate())
 {
@@ -176,7 +178,7 @@ void ElaPromotionView::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, BasicIndicator));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, BasicIndicator), "Indicator"));
     //页标指示器绘制
     int promotionCardCount = d->_promotionCardList.count();
     bool isCountOdd = promotionCardCount % 2;

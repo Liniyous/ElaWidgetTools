@@ -1,10 +1,10 @@
-﻿cmake_minimum_required(VERSION 3.10)
+﻿cmake_minimum_required(VERSION 3.14)
 cmake_policy(SET CMP0087 NEW)
 project(ElaWidgetToolsExample VERSION 0.1 LANGUAGES CXX)
 
-FILE(GLOB ORIGIN *.cpp *.h)
-FILE(GLOB MODELVIEW ModelView/*.h ModelView/*.cpp)
-FILE(GLOB EAXMPLEPAGE ExamplePage/*.h ExamplePage/*.cpp)
+FILE(GLOB ORIGIN CONFIGURE_DEPENDS *.cpp *.h)
+FILE(GLOB MODELVIEW CONFIGURE_DEPENDS ModelView/*.h ModelView/*.cpp)
+FILE(GLOB EAXMPLEPAGE CONFIGURE_DEPENDS ExamplePage/*.h ExamplePage/*.cpp)
 
 source_group(ModelView FILES ${MODELVIEW})
 source_group(ExamplePage FILES ${EAXMPLEPAGE})
@@ -45,7 +45,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ExamplePage
     ModelView
 )
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Network)
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Ela::WidgetTools
@@ -69,24 +68,24 @@ endif ()
 
 include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+    LIBRARY DESTINATION ${PROJECT_NAME}
+    RUNTIME DESTINATION ${PROJECT_NAME}
 )
 
 install(TARGETS ElaWidgetTools
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+    LIBRARY DESTINATION ${PROJECT_NAME}
+    RUNTIME DESTINATION ${PROJECT_NAME}
 )
 
 find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${QT_SDK_DIR}/bin")
 if (WIN32)
     install(CODE "
-    if(EXISTS \"${WINDEPLOYQT_EXECUTABLE}\" AND NOT EXISTS \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms\")
+    if(EXISTS \"${WINDEPLOYQT_EXECUTABLE}\" AND NOT EXISTS \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/platforms\")
         execute_process(
             COMMAND \"${CMAKE_COMMAND}\" -E env PATH=\"${QT_SDK_DIR}/bin\"
                 \"${WINDEPLOYQT_EXECUTABLE}\"
-                \"$<TARGET_FILE_DIR:${PROJECT_NAME}>/$<TARGET_FILE_NAME:${PROJECT_NAME}>\"
-                --dir \"${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}\"
+                \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/$<TARGET_FILE_NAME:${PROJECT_NAME}>\"
+                --dir \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}\"
                 --no-compiler-runtime
                 --no-system-d3d-compiler
                 --no-opengl-sw

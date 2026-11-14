@@ -1,11 +1,15 @@
 #include "ElaRibbonBarDelegate.h"
+
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaRibbonBarModel.h"
 #include "ElaTheme.h"
+
 #include <QDebug>
 #include <QMenu>
 #include <QPainter>
 #include <QStyleOptionViewItem>
+
 ElaRibbonBarDelegate::ElaRibbonBarDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
@@ -50,24 +54,12 @@ void ElaRibbonBarDelegate::paint(QPainter* painter, const QStyleOptionViewItem& 
     bool isViewEnable = option.state.testFlag(QStyle::State_Enabled);
     bool isActionEnable = ribbonAction->isEnabled();
     bool isEnable = isViewEnable & isActionEnable;
-    if (isEnable)
-    {
-        if (index == _pPressIndex)
-        {
-            // 点击时颜色
-            painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-            painter->drawRoundedRect(itemRect, 5, 5);
-        }
-        else
-        {
-            if (option.state & QStyle::State_MouseOver || ribbonAction->isChecked())
-            {
-                // 覆盖时颜色
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                painter->drawRoundedRect(itemRect, 5, 5);
-            }
-        }
-    }
+    const QColor background = !isEnable                                               ? QColor(Qt::transparent)
+        : index == _pPressIndex                                                       ? ElaThemeColor(_themeMode, BasicPressAlpha)
+        : option.state.testFlag(QStyle::State_MouseOver) || ribbonAction->isChecked() ? ElaThemeColor(_themeMode, BasicHoverAlpha)
+                                                                                      : QColor(Qt::transparent);
+    painter->setBrush(ElaColorAnimation::getColor(option.widget, background, "ItemBackground", index));
+    painter->drawRoundedRect(itemRect, 5, 5);
     QFont textFont = painter->font();
     textFont.setPixelSize(fontPixelSize - 1);
     painter->setFont(textFont);
@@ -96,6 +88,10 @@ void ElaRibbonBarDelegate::paint(QPainter* painter, const QStyleOptionViewItem& 
         {
             // 绘制图标
             painter->save();
+            if (isEnable && ribbonAction->isChecked())
+            {
+                painter->setPen(ElaThemeColor(_themeMode, PrimaryNormal));
+            }
             QFont iconFont = QFont("ElaAwesome");
             if (groupName.isEmpty())
             {

@@ -1,95 +1,56 @@
 #include "ElaCustomTabWidget.h"
 
-#include "ElaAppBar.h"
+#include "ElaScrollBar.h"
 #include "ElaTabBar.h"
 #include "ElaTabWidget.h"
-#include "ElaTabWidgetPrivate.h"
-#include <QDebug>
-#include <QEvent>
-#include <QMimeData>
-#include <QMouseEvent>
+
+#include <QCloseEvent>
+#include <QCursor>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <QVariant>
+
 ElaCustomTabWidget::ElaCustomTabWidget(QWidget* parent)
-    : ElaCustomWidget(parent)
+    : ElaCustomWidget(parent ? parent->window() : nullptr)
 {
-    _pIsFinished = false;
-    resize(700, 500);
-    setWindowTitle("");
-#ifndef Q_OS_WIN
-    setAttribute(Qt::WA_Hover);
-#endif
-    setMouseTracking(true);
-    setWindowIcon(QIcon());
     _customTabWidget = new ElaTabWidget(this);
+    _customTabWidget->setReturnTabWidget(qobject_cast<ElaTabWidget*>(parent));
     _customTabWidget->setIsTabTransparent(true);
-    _customTabWidget->setObjectName("ElaCustomTabWidget");
-    QTabBar* originTabBar = _customTabWidget->tabBar();
-    originTabBar->hide();
-    setAcceptDrops(true);
-    _customTabBar = new ElaTabBar(this);
-    _customTabBar->setObjectName("ElaCustomTabBar");
-    connect(_customTabBar, &ElaTabBar::tabMoved, this, [=](int from, int to) {
-        _customTabWidget->tabBar()->moveTab(from, to);
-    });
-    connect(_customTabBar, &ElaTabBar::currentChanged, this, [=](int index) {
-        _customTabWidget->setCurrentIndex(index);
-    });
-    connect(_customTabWidget, &ElaTabWidget::currentChanged, this, [=](int index) {
-        if (index == -1)
+    _mainLayout->setSpacing(0);
+    _appBar->setIsIconVisible(false);
+    setWindowTitle({});
+    _tabBarWidget = new QWidget(this);
+    auto* tabBarLayout = new QVBoxLayout(_tabBarWidget);
+    tabBarLayout->setContentsMargins(6, 8, 6, 0);
+    tabBarLayout->setSpacing(0);
+    tabBarLayout->addWidget(_customTabWidget->getTabBar(true));
+    tabBarLayout->addWidget(_customTabWidget->getTabBar());
+    _appBar->setCustomWidget(ElaAppBarType::LeftArea, _tabBarWidget, this, "_getIsTitleBarDraggable");
+    _tabBarWidget->setMaximumHeight(QWIDGETSIZE_MAX);
+    _tabBarWidget->installEventFilter(this);
+    setCentralWidget(_customTabWidget);
+    connect(_customTabWidget, &ElaTabWidget::currentChanged, this, [this](int index) {
+        if (index < 0)
         {
-            _pIsFinished = true;
-            hide();
+            QTimer::singleShot(0, this, [this]() {
+                if (_customTabWidget->count() == 0)
+                {
+                    close();
+                }
+            });
         }
     });
-    connect(_customTabBar, &ElaTabBar::tabCloseRequested, originTabBar, &QTabBar::tabCloseRequested);
-    connect(_customTabBar, &ElaTabBar::tabBarTextChanged, originTabBar, [=](int tabIndex, const QString& tabText) {
-        originTabBar->setTabText(tabIndex, tabText);
-    });
-    
-    _customTabWidget->d_ptr->_customTabBar = _customTabBar;
-    connect(_customTabBar, &ElaTabBar::tabDragCreate, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragCreate);
-    connect(_customTabBar, &ElaTabBar::tabDragDrop, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragDrop);
-    connect(_customTabBar, &ElaTabBar::tabDragEnter, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragEnter);
-    connect(_customTabBar, &ElaTabBar::tabDragLeave, _customTabWidget->d_func(), &ElaTabWidgetPrivate::onTabDragLeave);
-    QWidget* customWidget = new QWidget(this);
-    QVBoxLayout* customLayout = new QVBoxLayout(customWidget);
-    customLayout->setContentsMargins(10, 0, 10, 0);
-    customLayout->addStretch();
-    customLayout->addWidget(_customTabBar);
-    _appBar->setCustomWidget(ElaAppBarType::LeftArea, customWidget, this, "processHitTest");
-    setCentralWidget(_customTabWidget);
-}
-
-ElaCustomTabWidget::~ElaCustomTabWidget()
-{
-    while (_customTabWidget->count() > 0)
-    {
-        QWidget* closeWidget = _customTabWidget->widget(0);
-        ElaTabWidget* originTabWidget = closeWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-        closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
-        if (originTabWidget && originTabWidget != _customTabWidget)
+    connect(_customTabWidget, &ElaTabWidget::tabCloseRequested, this, [this](int index) {
+        if (auto* returnGroup = _customTabWidget->getReturnTabWidget())
         {
-            originTabWidget->addTab(closeWidget, _customTabWidget->tabIcon(0), _customTabWidget->tabText(0));
-            originTabWidget->setCurrentWidget(closeWidget);
+            returnGroup->transferTab(_customTabWidget, _customTabWidget->widget(index), returnGroup->count(), _customTabWidget->getIsTabPinned(index));
         }
         else
         {
-            _customTabWidget->removeTab(0);
+            auto* page = _customTabWidget->widget(index);
+            _customTabWidget->removeTab(index);
+            page->deleteLater();
         }
-    }
-}
-
-void ElaCustomTabWidget::addTab(QWidget* widget, QIcon tabIcon, const QString& tabTitle)
-{
-    _customTabBar->addTab(tabIcon, tabTitle);
-    _customTabWidget->addTab(widget, tabIcon, tabTitle);
-}
-
-ElaTabBar* ElaCustomTabWidget::getCustomTabBar() const
-{
-    return _customTabBar;
+    });
 }
 
 ElaTabWidget* ElaCustomTabWidget::getCustomTabWidget() const
@@ -97,8 +58,48 @@ ElaTabWidget* ElaCustomTabWidget::getCustomTabWidget() const
     return _customTabWidget;
 }
 
-bool ElaCustomTabWidget::processHitTest()
+void ElaCustomTabWidget::reject()
 {
-    auto point = _customTabBar->mapFromGlobal(QCursor::pos());
-    return _customTabBar->tabAt(point) < 0;
+    close();
+}
+
+void ElaCustomTabWidget::closeEvent(QCloseEvent* event)
+{
+    if (auto* returnGroup = _customTabWidget->getReturnTabWidget())
+    {
+        while (_customTabWidget->count() > 0)
+        {
+            returnGroup->transferTab(_customTabWidget, _customTabWidget->widget(0), returnGroup->count(), _customTabWidget->getIsTabPinned(0));
+        }
+    }
+    event->accept();
+}
+
+bool ElaCustomTabWidget::eventFilter(QObject* watched, QEvent* event)
+{
+    if (watched == _tabBarWidget && event->type() == QEvent::LayoutRequest)
+    {
+        const int height = _tabBarWidget->layout()->sizeHint().height();
+        if (_appBar->getAppBarHeight() != height)
+        {
+            _appBar->setAppBarHeight(height);
+        }
+    }
+    return ElaCustomWidget::eventFilter(watched, event);
+}
+
+bool ElaCustomTabWidget::_getIsTitleBarDraggable() const
+{
+    const auto position = QCursor::pos();
+    for (auto* bar: {_customTabWidget->getTabBar(), _customTabWidget->getTabBar(true)})
+    {
+        if (!bar->isVisible() || !bar->rect().contains(bar->mapFromGlobal(position)))
+        {
+            continue;
+        }
+        auto* scrollBar = bar->getScrollBar();
+        return bar->tabAt(bar->mapFromGlobal(position)) < 0
+            && !(scrollBar->isVisible() && scrollBar->rect().contains(scrollBar->mapFromGlobal(position)));
+    }
+    return true;
 }

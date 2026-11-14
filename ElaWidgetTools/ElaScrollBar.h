@@ -4,8 +4,8 @@
 #include <QAbstractScrollArea>
 #include <QScrollBar>
 
-#include "ElaWidgetToolsExport.h"
 #include "ElaPropertyMacro.h"
+#include "ElaWidgetToolsExport.h"
 
 class ElaScrollBarPrivate;
 class ELA_EXPORT ElaScrollBar : public QScrollBar
@@ -20,7 +20,16 @@ public:
     explicit ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* parent = nullptr);
     ~ElaScrollBar() override;
 
+    // 滚动条厚度 纵向为宽度 横向为高度 单位为逻辑像素 最小为6
+    void setScrollBarWidth(int scrollBarWidth);
+    int getScrollBarWidth() const;
+    void setIsSmoothScroll(bool isSmoothScroll);
+    bool getIsSmoothScroll() const;
+    void scrollTo(int position);
+    void stopSmoothScroll();
+
 Q_SIGNALS:
+    Q_SIGNAL void pScrollBarWidthChanged();
     Q_SIGNAL void rangeAnimationFinished();
 
 protected:

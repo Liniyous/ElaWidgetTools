@@ -1,14 +1,17 @@
 #include "ElaWidget.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaTheme.h"
 #include "private/ElaWidgetPrivate.h"
+
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QScreen>
 #include <QTimer>
 #include <QVBoxLayout>
+
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaWidget, d_func()->_appBar);
 ElaWidget::ElaWidget(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaWidgetPrivate())
@@ -16,7 +19,7 @@ ElaWidget::ElaWidget(QWidget* parent)
     Q_D(ElaWidget);
     d->q_ptr = this;
     resize(500, 500); // 默认宽高
-    setWindowTitle("ElaWidget");
+    setWindowTitle("窗口");
     setObjectName("ElaWidget");
 #if (QT_VERSION < QT_VERSION_CHECK(6, 5, 3) || QT_VERSION > QT_VERSION_CHECK(6, 6, 1))
     setStyleSheet("#ElaWidget{background-color:transparent;}");
@@ -142,7 +145,7 @@ void ElaWidget::paintEvent(QPaintEvent* event)
         painter.save();
         painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
+        painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, WindowBase), "Background"));
         painter.drawRect(rect());
         painter.restore();
     }

@@ -1,0 +1,15 @@
+Microsoft Fluent UI System Icons
+Source: https://github.com/microsoft/fluentui-system-icons
+License: MIT
+
+caret_up_filled.svg
+https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Caret%20Up/SVG/ic_fluent_caret_up_12_filled.svg
+SHA-256: dac4e88817ae4c4b63e0e25c47d5234926ab41e63a973fa6fc8db02ea42af7ee
+
+caret_down_filled.svg
+https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Caret%20Down/SVG/ic_fluent_caret_down_12_filled.svg
+SHA-256: f1829f0979a59e3edc5bcc113657f54772febe7a2f48409fd6c27ff5ebb47fe2
+
+LICENSE.txt
+https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/LICENSE
+SHA-256: 69bc45dc42b9acb96a69823adbc6ae538374e3c0bde169b855b32c48eaaef52f

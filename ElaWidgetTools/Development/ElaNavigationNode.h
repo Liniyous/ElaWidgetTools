@@ -45,9 +45,6 @@ public:
     bool getIsChildNode(ElaNavigationNode* node);
 
     int getRow() const;
-    int getRowExceptCategoryNodes() const;
-
-    QList<ElaNavigationNode*> getExceptCategoryNodes();
 
 private:
     QString _nodeKey = "";
@@ -55,4 +52,3 @@ private:
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELANAVIGATIONNODE_H_
-

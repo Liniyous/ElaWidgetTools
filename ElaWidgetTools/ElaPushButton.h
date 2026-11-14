@@ -3,8 +3,8 @@
 
 #include <QPushButton>
 
-#include "ElaWidgetToolsExport.h"
 #include "ElaPropertyMacro.h"
+#include "ElaWidgetToolsExport.h"
 class ElaPushButtonPrivate;
 class ELA_EXPORT ElaPushButton : public QPushButton
 {
@@ -22,15 +22,19 @@ public:
     explicit ElaPushButton(const QString& text, QWidget* parent = nullptr);
     ~ElaPushButton();
 
+    void setIsAccent(bool isAccent);
+    bool getIsAccent() const;
+
     void setLightTextColor(const QColor& color);
     const QColor& getLightTextColor() const;
 
     void setDarkTextColor(const QColor& color);
     const QColor& getDarkTextColor() const;
 
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
+
 protected:
-    virtual void mousePressEvent(QMouseEvent* event) override;
-    virtual void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };
 

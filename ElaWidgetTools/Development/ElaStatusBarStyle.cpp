@@ -1,10 +1,13 @@
 #include "ElaStatusBarStyle.h"
 
+#include "ElaColorAnimation.h"
 #include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QStatusBar>
 #include <QStyleOption>
+
 ElaStatusBarStyle::ElaStatusBarStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
@@ -28,7 +31,7 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "Background"));
         painter->drawRect(statusBarRect);
         painter->restore();
         return;
@@ -43,7 +46,7 @@ void ElaStatusBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
             painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+            painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBorder), "Indicator"));
             painter->drawRoundedRect(QRectF(statusBarItemRect.right() - 3, statusBarItemRect.y() + statusBarItemRect.height() * 0.1, 3, statusBarItemRect.height() - statusBarItemRect.height() * 0.2), 2, 2);
             painter->restore();
         }

@@ -46,7 +46,9 @@ void ElaLineEditPrivate::onThemeChanged(ElaThemeType::ThemeMode themeMode)
     Q_Q(ElaLineEdit);
     _themeMode = themeMode;
     QPalette palette = q->palette();
-    palette.setColor(QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    palette.setColor(QPalette::Active, QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    palette.setColor(QPalette::Inactive, QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    palette.setColor(QPalette::Disabled, QPalette::Text, ElaThemeColor(_themeMode, BasicTextDisable));
     palette.setColor(QPalette::PlaceholderText, _themeMode == ElaThemeType::Light ? QColor(0x00, 0x00, 0x00, 128) : QColor(0xBA, 0xBA, 0xBA));
     q->setPalette(palette);
 }

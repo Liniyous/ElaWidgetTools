@@ -1,7 +1,9 @@
 #include "ElaWindow.h"
+
 #include "ElaActionCommander.h"
 #include "ElaApplication.h"
 #include "ElaCentralStackedWidget.h"
+#include "ElaColorAnimation.h"
 #include "ElaEventBus.h"
 #include "ElaMenu.h"
 #include "ElaNavigationBar.h"
@@ -11,6 +13,7 @@
 #include "private/ElaAppBarPrivate.h"
 #include "private/ElaNavigationBarPrivate.h"
 #include "private/ElaWindowPrivate.h"
+
 #include <QApplication>
 #include <QDockWidget>
 #include <QHBoxLayout>
@@ -23,6 +26,7 @@
 #include <QStyleOption>
 #include <QToolBar>
 #include <QtMath>
+
 ELA_PROPERTY_Q_CPP(ElaWindow, int, ThemeChangeTime)
 ELA_PROPERTY_Q_CPP(ElaWindow, ElaWindowType::StackSwitchMode, StackSwitchMode)
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaWindow, d_func()->_appBar);
@@ -99,7 +103,9 @@ ElaWindow::ElaWindow(QWidget* parent)
     setCentralWidget(d->_centerStackedWidget);
     setObjectName("ElaWindow");
     setStyleSheet("#ElaWindow{background-color:transparent;}");
-    setStyle(new ElaWindowStyle(style()));
+    auto* windowStyle = new ElaWindowStyle(style());
+    windowStyle->setParent(this);
+    setStyle(windowStyle);
 
     eApp->syncWindowDisplayMode(this);
     d->_windowDisplayMode = eApp->getWindowDisplayMode();
@@ -119,7 +125,6 @@ ElaWindow::~ElaWindow()
 {
     Q_D(ElaWindow);
     eApp->syncWindowDisplayMode(this, false);
-    delete this->style();
     delete d->_lightWindowPix;
     delete d->_darkWindowPix;
 }
@@ -782,7 +787,7 @@ void ElaWindow::paintEvent(QPaintEvent* event)
         case ElaWindowType::Normal:
         {
             painter.setPen(Qt::NoPen);
-            painter.setBrush(ElaThemeColor(d->_themeMode, WindowBase));
+            painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, WindowBase), "Background"));
             painter.drawRect(rect());
             break;
         }

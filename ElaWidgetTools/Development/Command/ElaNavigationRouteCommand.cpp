@@ -13,7 +13,7 @@ ElaNavigationRouteCommand::~ElaNavigationRouteCommand()
 
 void ElaNavigationRouteCommand::undo()
 {
-    _pNavigationBar->navigation(_pUndoPageKey, false, false);
+    _pNavigationBar->navigation(_pUndoPageKey, false, true);
     setCommandDesc("撤销路由跳转操作");
 }
 

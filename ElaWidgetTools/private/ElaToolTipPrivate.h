@@ -31,7 +31,6 @@ private:
     ElaText* _toolTipText{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
     ElaThemeType::ThemeMode _themeMode;
-    int _shadowBorderWidth{6};
     void _doShowAnimation();
     void _updatePos();
 };

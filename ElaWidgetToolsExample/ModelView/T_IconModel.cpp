@@ -40,6 +40,14 @@ QStringList T_IconModel::getSearchKeyList()
 
 QVariant T_IconModel::data(const QModelIndex& index, int role) const
 {
+    if (!index.isValid() || index.row() < 0 || index.row() >= _rowCount)
+    {
+        return {};
+    }
+    if (role == Qt::ToolTipRole)
+    {
+        return getIconNameFromModelIndex(index);
+    }
     if (role == Qt::UserRole)
     {
         if (!_pIsSearchMode)

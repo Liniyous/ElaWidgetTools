@@ -1,92 +1,185 @@
 #include "ElaMultiSelectComboBoxPrivate.h"
 
-#include <QPropertyAnimation>
-
 #include "ElaComboBoxView.h"
 #include "ElaMultiSelectComboBox.h"
-ElaMultiSelectComboBoxPrivate::ElaMultiSelectComboBoxPrivate(QObject* parent)
-    : QObject{parent}
-{
-}
 
-ElaMultiSelectComboBoxPrivate::~ElaMultiSelectComboBoxPrivate()
+#include <QAbstractItemModel>
+#include <QFontMetrics>
+#include <QItemSelectionModel>
+#include <QStyle>
+#include <algorithm>
+
+ElaMultiSelectComboBoxPrivate::ElaMultiSelectComboBoxPrivate(QObject* parent)
+    : QObject(parent)
 {
 }
 
 void ElaMultiSelectComboBoxPrivate::onItemPressed(const QModelIndex& index)
 {
+    if (!index.isValid() || !index.flags().testFlag(Qt::ItemIsEnabled) || !index.flags().testFlag(Qt::ItemIsSelectable))
+    {
+        return;
+    }
+    _isSelectionInitialized = true;
+    _comboView->selectionModel()->select(index, QItemSelectionModel::Toggle);
+}
+
+void ElaMultiSelectComboBoxPrivate::onModelChanged()
+{
+    for (const QMetaObject::Connection& connection: _modelConnections)
+    {
+        disconnect(connection);
+    }
+    _modelConnections.clear();
+    QAbstractItemModel* model = _comboView->model();
+    QItemSelectionModel* selectionModel = _comboView->selectionModel();
+    if (model && selectionModel)
+    {
+        _modelConnections.append(connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &ElaMultiSelectComboBoxPrivate::_refreshSelection));
+        _modelConnections.append(connect(model, &QAbstractItemModel::dataChanged, this, &ElaMultiSelectComboBoxPrivate::_refreshSelection));
+        _modelConnections.append(connect(model, &QAbstractItemModel::rowsInserted, this, &ElaMultiSelectComboBoxPrivate::_refreshSelection));
+        _modelConnections.append(connect(model, &QAbstractItemModel::rowsRemoved, this, &ElaMultiSelectComboBoxPrivate::_refreshSelection));
+        _modelConnections.append(connect(model, &QAbstractItemModel::rowsMoved, this, &ElaMultiSelectComboBoxPrivate::_refreshSelection));
+        _modelConnections.append(connect(model, &QAbstractItemModel::layoutChanged, this, &ElaMultiSelectComboBoxPrivate::_refreshSelection));
+        _modelConnections.append(connect(model, &QAbstractItemModel::modelReset, this, [this]() {
+            _isSelectionInitialized = false;
+            _refreshSelection();
+        }));
+    }
+    _refreshSelection();
+}
+
+void ElaMultiSelectComboBoxPrivate::onCurrentIndexChanged(int index)
+{
+    if (!_isUpdatingSelection && !_isSelectionInitialized && index >= 0)
+    {
+        _setSelection(QList<int>{index});
+    }
+}
+
+void ElaMultiSelectComboBoxPrivate::_setSelection(const QList<int>& rows)
+{
     Q_Q(ElaMultiSelectComboBox);
-    if (!_comboView->selectionModel()->isSelected(index))
+    _isSelectionInitialized = true;
+    QItemSelection selection;
+    for (int row: rows)
     {
-        _itemSelection[index.row()] = true;
+        const QModelIndex index = q->model()->index(row, q->modelColumn(), q->rootModelIndex());
+        if (row >= 0 && row < q->count() && index.isValid() && index.flags().testFlag(Qt::ItemIsEnabled) && index.flags().testFlag(Qt::ItemIsSelectable))
+        {
+            selection.merge(QItemSelection(index, index), QItemSelectionModel::Select);
+        }
     }
-    else
+    _comboView->selectionModel()->select(selection, QItemSelectionModel::ClearAndSelect);
+    _refreshSelection();
+}
+
+void ElaMultiSelectComboBoxPrivate::_refreshSelection()
+{
+    Q_Q(ElaMultiSelectComboBox);
+    if (_isUpdatingSelection || !_comboView->selectionModel())
     {
-        _itemSelection[index.row()] = false;
+        return;
     }
-    _refreshCurrentIndexs();
-    QPropertyAnimation* markAnimation = new QPropertyAnimation(this, "pExpandMarkWidth");
-    connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        q->update();
+    _isUpdatingSelection = true;
+    const QModelIndexList indexes = _getSelectedIndexes();
+    QStringList selectedTextList;
+    QVector<bool> selectedRows(q->count(), false);
+    for (const QModelIndex& index: indexes)
+    {
+        selectedRows[index.row()] = true;
+        selectedTextList.append(index.data(Qt::DisplayRole).toString());
+    }
+    const bool isSelectionChanged = selectedRows != _lastSelection;
+    const bool isTextChanged = selectedTextList != _selectedTextList;
+    _lastSelection = selectedRows;
+    _selectedTextList = selectedTextList;
+    q->setCurrentIndex(-1);
+    _isUpdatingSelection = false;
+    q->update();
+    if (isSelectionChanged)
+    {
+        Q_EMIT q->itemSelectionChanged(selectedRows);
+    }
+    if (isTextChanged)
+    {
+        Q_EMIT q->currentTextListChanged(selectedTextList);
+    }
+}
+
+QModelIndexList ElaMultiSelectComboBoxPrivate::_getSelectedIndexes() const
+{
+    Q_Q(const ElaMultiSelectComboBox);
+    QModelIndexList indexes;
+    if (!_comboView->selectionModel())
+    {
+        return indexes;
+    }
+    for (const QModelIndex& index: _comboView->selectionModel()->selectedIndexes())
+    {
+        if (index.parent() == q->rootModelIndex() && index.column() == q->modelColumn())
+        {
+            indexes.append(index);
+        }
+    }
+    std::sort(indexes.begin(), indexes.end(), [](const QModelIndex& left, const QModelIndex& right) {
+        return left.row() < right.row();
     });
-    markAnimation->setDuration(300);
-    markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    markAnimation->setStartValue(_pExpandMarkWidth);
-    qreal step = (q->width() / 2 - _pBorderRadius) / q->count();
-    markAnimation->setEndValue(step * _selectedTextList.count());
-    markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    return indexes;
 }
 
-void ElaMultiSelectComboBoxPrivate::_refreshCurrentIndexs()
+QVector<ElaMultiSelectComboBoxPrivate::SelectionTag> ElaMultiSelectComboBoxPrivate::_getSelectionTags() const
 {
-    Q_Q(ElaMultiSelectComboBox);
-    QString str;
-    _adjustSelectedVector();
-    QVector<bool> selectedIndexVector;
-    for (int i = 0; i < q->count(); i++)
+    Q_Q(const ElaMultiSelectComboBox);
+    QVector<SelectionTag> tags;
+    const QModelIndexList indexes = _getSelectedIndexes();
+    const QFontMetrics metrics(q->font());
+    const QRect contentRect = q->rect().adjusted(8, 4, -32, -4);
+    const int gap = 4;
+    const int closeWidth = 20;
+    int left = contentRect.left();
+    for (int position = 0; position < indexes.size(); ++position)
     {
-        // 该位选中
-        QModelIndex index = q->model()->index(i, 0);
-        if (_itemSelection[i])
+        const int remaining = indexes.size() - position - 1;
+        const int countWidth = remaining > 0 ? metrics.horizontalAdvance(QString("+%1").arg(remaining)) + 16 + gap : 0;
+        const QString text = _getSingleLineText(indexes[position].data().toString());
+        const int availableWidth = contentRect.right() - left + 1;
+        const int tagWidth = qMin(qMin(metrics.horizontalAdvance(text) + closeWidth + 16, 160), availableWidth - countWidth);
+        if (tagWidth < closeWidth + 16 + metrics.horizontalAdvance("…"))
         {
-            _comboView->selectionModel()->select(index, QItemSelectionModel::Select | QItemSelectionModel::Rows);
-            if (!str.isEmpty())
+            SelectionTag tag;
+            tag.hiddenCount = indexes.size() - position;
+            tag.text = QString("+%1").arg(tag.hiddenCount);
+            tag.rect = QRect(left, contentRect.top(), qMin(availableWidth, metrics.horizontalAdvance(tag.text) + 16), contentRect.height());
+            tag.rect = QStyle::visualRect(q->layoutDirection(), q->rect(), tag.rect);
+            QStringList hiddenText;
+            for (int hidden = position; hidden < indexes.size(); ++hidden)
             {
-                str.append(",");
+                hiddenText.append(_getSingleLineText(indexes[hidden].data().toString()));
             }
-            str.append(q->itemText(i));
-            selectedIndexVector.append(true);
+            tag.toolTip = hiddenText.join("\n");
+            if (tag.rect.width() > 0)
+            {
+                tags.append(tag);
+            }
+            break;
         }
-        else
-        {
-            _comboView->selectionModel()->select(index, QItemSelectionModel::Deselect);
-            selectedIndexVector.append(false);
-        }
+        SelectionTag tag;
+        tag.index = indexes[position];
+        tag.rect = QRect(left, contentRect.top(), tagWidth, contentRect.height());
+        tag.closeRect = QRect(tag.rect.right() - closeWidth + 1, tag.rect.top(), closeWidth, tag.rect.height());
+        tag.rect = QStyle::visualRect(q->layoutDirection(), q->rect(), tag.rect);
+        tag.closeRect = QStyle::visualRect(q->layoutDirection(), q->rect(), tag.closeRect);
+        tag.text = metrics.elidedText(text, Qt::ElideRight, tagWidth - closeWidth - 12);
+        tag.toolTip = text;
+        tags.append(tag);
+        left += tagWidth + gap;
     }
-    if (str != _currentText)
-    {
-        q->update();
-        _currentText = str;
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-        _selectedTextList = _currentText.split(",", Qt::SkipEmptyParts);
-#else
-        _selectedTextList = _currentText.split(",");
-        if (_selectedTextList.count() == 1 && _selectedTextList[0].isEmpty())
-        {
-            _selectedTextList.clear();
-        }
-#endif
-        q->setCurrentIndex(-1);
-        Q_EMIT q->itemSelectionChanged(selectedIndexVector);
-        Q_EMIT q->currentTextListChanged(_selectedTextList);
-    }
+    return tags;
 }
 
-void ElaMultiSelectComboBoxPrivate::_adjustSelectedVector()
+QString ElaMultiSelectComboBoxPrivate::_getSingleLineText(QString text)
 {
-    Q_Q(ElaMultiSelectComboBox);
-    while (_itemSelection.count() < q->count())
-    {
-        _itemSelection.append(false);
-    }
+    text.replace('\r', ' ').replace('\n', ' ');
+    return text;
 }

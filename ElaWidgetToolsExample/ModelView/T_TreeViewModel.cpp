@@ -9,16 +9,16 @@ T_TreeViewModel::T_TreeViewModel(QObject* parent)
     _rootItem = new T_TreeItem("root");
     for (int i = 0; i < 20; i++)
     {
-        T_TreeItem* level1Item = new T_TreeItem(QString("Lv1--TreeItem%1").arg(i + 1), _rootItem);
+        T_TreeItem* level1Item = new T_TreeItem(QString("项目 %1").arg(i + 1), _rootItem);
         for (int j = 0; j < 6; j++)
         {
-            T_TreeItem* level2Item = new T_TreeItem(QString("Lv2--TreeItem%1").arg(j + 1), level1Item);
+            T_TreeItem* level2Item = new T_TreeItem(QString("资源分组 %1").arg(j + 1), level1Item);
             for (int k = 0; k < 6; k++)
             {
-                T_TreeItem* level3Item = new T_TreeItem(QString("Lv3--TreeItem%1").arg(k + 1), level2Item);
+                T_TreeItem* level3Item = new T_TreeItem(QString("文档目录 %1").arg(k + 1), level2Item);
                 for (int l = 0; l < 6; l++)
                 {
-                    T_TreeItem* level4Item = new T_TreeItem(QString("Lv4--TreeItem%1").arg(l + 1), level3Item);
+                    T_TreeItem* level4Item = new T_TreeItem(QString("示例文件 %1").arg(l + 1), level3Item);
                     level3Item->appendChildItem(level4Item);
                     _itemsMap.insert(level4Item->getItemKey(), level4Item);
                 }
@@ -158,7 +158,7 @@ QVariant T_TreeViewModel::headerData(int section, Qt::Orientation orientation, i
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
     {
-        return QString("ElaTreeView-Example-4Level");
+        return QString("项目资源");
     }
     return QAbstractItemModel::headerData(section, orientation, role);
 }

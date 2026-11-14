@@ -1,29 +1,28 @@
-#ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACUSTOMTABWIDGET_H_
-#define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACUSTOMTABWIDGET_H_
+#ifndef ELAWORKSPACE_ELAWIDGETTOOLS_ELACUSTOMTABWIDGET_H_
+#define ELAWORKSPACE_ELAWIDGETTOOLS_ELACUSTOMTABWIDGET_H_
 
 #include "ElaCustomWidget.h"
-#include "ElaPropertyMacro.h"
 
-class ElaTabBar;
 class ElaTabWidget;
+
+// 可归还页面的临时标签浮窗
 class ElaCustomTabWidget : public ElaCustomWidget
 {
     Q_OBJECT
-    ELA_PROPERTY(bool, IsFinished)
 public:
     explicit ElaCustomTabWidget(QWidget* parent = nullptr);
-    ~ElaCustomTabWidget() override;
-    void addTab(QWidget* widget, QIcon tabIcon, const QString& tabTitle);
-    ElaTabBar* getCustomTabBar() const;
     ElaTabWidget* getCustomTabWidget() const;
+    void reject() override;
 
-    Q_INVOKABLE bool processHitTest();
+protected:
+    void closeEvent(QCloseEvent* event) override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
 
 private:
-    bool _isAllowLeave{false};
-    ElaTabBar* _customTabBar{nullptr};
-    ElaTabWidget* _customTabWidget{nullptr};
+    Q_INVOKABLE bool _getIsTitleBarDraggable() const;
+
+    ElaTabWidget* _customTabWidget{nullptr}; // 与主窗口共用的标签容器
+    QWidget* _tabBarWidget{nullptr};         // 标题栏中的固定和普通标签行
 };
 
-#endif // ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACUSTOMTABWIDGET_H_
-
+#endif //ELAWORKSPACE_ELAWIDGETTOOLS_ELACUSTOMTABWIDGET_H_

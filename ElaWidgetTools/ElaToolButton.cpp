@@ -1,15 +1,18 @@
 #include "ElaToolButton.h"
 
-#include <QApplication>
-#include <QDebug>
-#include <QEvent>
-#include <QMouseEvent>
-#include <QPropertyAnimation>
-
+#include "ElaControlAnimation.h"
 #include "ElaIcon.h"
 #include "ElaMenu.h"
 #include "ElaToolButtonPrivate.h"
 #include "ElaToolButtonStyle.h"
+
+#include <QEvent>
+#include <QFocusEvent>
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QStyleOptionToolButton>
+#include <QTimer>
+
 ElaToolButton::ElaToolButton(QWidget* parent)
     : QToolButton(parent), d_ptr(new ElaToolButtonPrivate())
 {
@@ -20,19 +23,24 @@ ElaToolButton::ElaToolButton(QWidget* parent)
     setIconSize(QSize(22, 22));
     setPopupMode(QToolButton::InstantPopup);
     d->_toolButtonStyle = new ElaToolButtonStyle(style());
+    d->_toolButtonStyle->setParent(this);
     setStyle(d->_toolButtonStyle);
+    d->_controlAnimation = new ElaControlAnimation(this);
+    d->_toolButtonStyle->setControlAnimation(d->_controlAnimation);
+    d->_menuDelayTimer = new QTimer(d);
+    d->_menuDelayTimer->setSingleShot(true);
+    d->_menuDelayTimer->setTimerType(Qt::PreciseTimer);
+    d->_menuDelayTimer->setInterval(83);
+    connect(d->_menuDelayTimer, &QTimer::timeout, d, &ElaToolButtonPrivate::onMenuDelayTimeout);
 }
 
-ElaToolButton::~ElaToolButton()
-{
-    Q_D(ElaToolButton);
-    delete d->_toolButtonStyle;
-}
+ElaToolButton::~ElaToolButton() = default;
 
 void ElaToolButton::setBorderRadius(int borderRadius)
 {
     Q_D(ElaToolButton);
     d->_toolButtonStyle->setBorderRadius(borderRadius);
+    update();
     Q_EMIT pBorderRadiusChanged();
 }
 
@@ -46,6 +54,7 @@ void ElaToolButton::setIsSelected(bool isSelected)
 {
     Q_D(ElaToolButton);
     d->_toolButtonStyle->setIsSelected(isSelected);
+    update();
     Q_EMIT pIsSelectedChanged();
 }
 
@@ -70,13 +79,24 @@ bool ElaToolButton::getIsTransparent() const
 
 void ElaToolButton::setMenu(ElaMenu* menu)
 {
-    if (!menu || menu == this->menu())
+    if (menu == this->menu())
     {
         return;
     }
-    menu->setMenuItemHeight(27);
+    if (this->menu())
+    {
+        this->menu()->removeEventFilter(this);
+    }
+    d_ptr->_cancelMenu();
     QToolButton::setMenu(menu);
-    menu->installEventFilter(this);
+    if (menu)
+    {
+        menu->setMenuItemHeight(32);
+        menu->installEventFilter(this);
+    }
+    d_ptr->_controlAnimation->release();
+    updateGeometry();
+    update();
 }
 
 void ElaToolButton::setElaIcon(ElaIconType::IconName icon)
@@ -91,48 +111,115 @@ void ElaToolButton::setElaIcon(ElaIconType::IconName icon, int rotate)
     setProperty("ElaIconRotate", rotate);
 }
 
+bool ElaToolButton::event(QEvent* event)
+{
+    Q_D(ElaToolButton);
+    if (d->_menuDelayTimer && (event->type() == QEvent::Hide || event->type() == QEvent::WindowDeactivate || (event->type() == QEvent::EnabledChange && !isEnabled()) || (event->type() == QEvent::FocusOut && static_cast<QFocusEvent*>(event)->reason() != Qt::PopupFocusReason)))
+    {
+        d->_cancelMenu();
+    }
+    return QToolButton::event(event);
+}
+
+void ElaToolButton::mousePressEvent(QMouseEvent* event)
+{
+    Q_D(ElaToolButton);
+    if (event->button() == Qt::LeftButton && d->_getIsMenuButtonHit(event->pos()))
+    {
+        d->_menuDelayTimer->stop();
+        d->_isMenuPress = true;
+        setDown(true);
+        event->accept();
+        return;
+    }
+    QToolButton::mousePressEvent(event);
+}
+
+void ElaToolButton::mouseMoveEvent(QMouseEvent* event)
+{
+    Q_D(ElaToolButton);
+    if (d->_isMenuPress)
+    {
+        setDown(d->_getIsMenuButtonHit(event->pos()));
+        event->accept();
+        return;
+    }
+    QToolButton::mouseMoveEvent(event);
+}
+
+void ElaToolButton::mouseReleaseEvent(QMouseEvent* event)
+{
+    Q_D(ElaToolButton);
+    if (event->button() == Qt::LeftButton && d->_isMenuPress)
+    {
+        d->_isMenuPress = false;
+        setDown(false);
+        if (d->_getIsMenuButtonHit(event->pos()))
+        {
+            d->_queueMenu();
+        }
+        event->accept();
+        return;
+    }
+    QToolButton::mouseReleaseEvent(event);
+}
+
+void ElaToolButton::keyPressEvent(QKeyEvent* event)
+{
+    Q_D(ElaToolButton);
+    if (event->key() == Qt::Key_Escape && (d->_menuDelayTimer->isActive() || d->_isMenuPress || d->_menuPressKey))
+    {
+        d->_cancelMenu();
+        event->accept();
+        return;
+    }
+    if (menu() && isEnabled() && popupMode() == QToolButton::InstantPopup
+        && (event->key() == Qt::Key_Space || event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter || event->key() == Qt::Key_Down || event->key() == Qt::Key_F4))
+    {
+        if (!event->isAutoRepeat())
+        {
+            d->_menuPressKey = event->key();
+            setDown(true);
+        }
+        event->accept();
+        return;
+    }
+    QToolButton::keyPressEvent(event);
+}
+
+void ElaToolButton::keyReleaseEvent(QKeyEvent* event)
+{
+    Q_D(ElaToolButton);
+    if (d->_menuPressKey && event->key() == d->_menuPressKey)
+    {
+        if (!event->isAutoRepeat())
+        {
+            d->_menuPressKey = 0;
+            setDown(false);
+            d->_queueMenu();
+        }
+        event->accept();
+        return;
+    }
+    QToolButton::keyReleaseEvent(event);
+}
+
 bool ElaToolButton::eventFilter(QObject* watched, QEvent* event)
 {
     Q_D(ElaToolButton);
-    if (watched == menu())
+    if (watched == menu() && event->type() == QEvent::Show)
     {
-        switch (event->type())
+        QStyleOptionToolButton option;
+        initStyleOption(&option);
+        if (option.state.testFlag(QStyle::State_Sunken))
         {
-        case QEvent::Show:
-        {
-            //指示器动画
-            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
-            connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                update();
-            });
-            rotateAnimation->setDuration(300);
-            rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-            rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());
-            rotateAnimation->setEndValue(-180);
-            rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-            break;
-        }
-        case QEvent::Hide:
-        {
-            //指示器动画
-            QPropertyAnimation* rotateAnimation = new QPropertyAnimation(d->_toolButtonStyle, "pExpandIconRotate");
-            connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-                update();
-            });
-            rotateAnimation->setDuration(300);
-            rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-            rotateAnimation->setStartValue(d->_toolButtonStyle->getExpandIconRotate());
-            rotateAnimation->setEndValue(0);
-            rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-            QMouseEvent focusEvent(QEvent::MouseButtonPress, QPoint(-1, -1), QPoint(-1, -1), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-            QApplication::sendEvent(parentWidget(), &focusEvent);
-            break;
-        }
-        default:
-        {
-            break;
-        }
+            d->_positionMenu();
         }
     }
-    return QObject::eventFilter(watched, event);
+    if (watched == menu() && (event->type() == QEvent::Hide || event->type() == QEvent::MouseButtonRelease))
+    {
+        d->_controlAnimation->release();
+        update();
+    }
+    return QToolButton::eventFilter(watched, event);
 }

@@ -9,6 +9,8 @@
 class QLineEdit;
 class ElaComboBox;
 class ElaComboBoxStyle;
+class ElaComboBoxPopup;
+class ElaControlAnimation;
 class ElaComboBoxPrivate : public QObject
 {
     Q_OBJECT
@@ -22,7 +24,9 @@ public:
     Q_SLOT void onThemeChanged(ElaThemeType::ThemeMode themeMode);
 
 private:
-    bool _isAllowHidePopup{false};
+    ElaComboBoxPopup* _popup{nullptr};
+    ElaControlAnimation* _controlAnimation{nullptr};
+    bool _isPopupPressed{false};
     ElaComboBoxStyle* _comboBoxStyle{nullptr};
     ElaThemeType::ThemeMode _themeMode;
 };

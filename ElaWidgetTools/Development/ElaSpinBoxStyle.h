@@ -8,6 +8,7 @@
 class ElaSpinBoxStyle : public QProxyStyle
 {
     Q_OBJECT
+    ELA_PROPERTY(qreal, ExpandMarkProgress)
     ELA_VARIABLE(ElaSpinBoxType::ButtonMode, ButtonMode)
 public:
     explicit ElaSpinBoxStyle(QStyle* style = nullptr);

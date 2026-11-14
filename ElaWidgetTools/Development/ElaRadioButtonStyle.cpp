@@ -1,11 +1,14 @@
 #include "ElaRadioButtonStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QStyleOption>
 #include <QWidget>
 
-#include "ElaTheme.h"
 ElaRadioButtonStyle::ElaRadioButtonStyle(QStyle* style)
 {
     _pCircleScale = 2.0 / 4.0;
@@ -47,17 +50,11 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
+        const QColor background = ElaControlStyle::getIndicatorBackgroundColor(_themeMode, bopt->state, bopt->state.testFlag(QStyle::State_On));
+        painter->setBrush(ElaColorAnimation::getColor(widget, background));
         if (bopt->state & QStyle::State_Off)
         {
-            painter->setPen(QPen(ElaThemeColor(_themeMode, BasicBorder), 1.5));
-            if (bopt->state & QStyle::State_MouseOver)
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
-            }
-            else
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
-            }
+            painter->setPen(QPen(ElaThemeColor(_themeMode, BasicBorderDeep), 1.5));
             const qreal borderRadius = qMax<qreal>(0, radius - 0.75);
             painter->drawEllipse(center, borderRadius, borderRadius);
         }
@@ -65,10 +62,9 @@ void ElaRadioButtonStyle::drawPrimitive(PrimitiveElement element, const QStyleOp
         {
             painter->setPen(Qt::NoPen);
             // 外圆形
-            painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
             painter->drawEllipse(center, radius, radius);
             // 内圆形
-            painter->setBrush(ElaThemeColor(_themeMode, BasicTextInvert));
+            painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicTextInvert), "RadioCenter"));
             const qreal circleRadius = radius * _pCircleScale;
             painter->drawEllipse(center, circleRadius, circleRadius);
         }
@@ -115,7 +111,7 @@ void ElaRadioButtonStyle::_updateCircleScale(QStyle::State state, const QWidget*
             targetScale = 2.0 / 3.0;
         }
     }
-    if (!widget || !widget->isVisible() || !state.testFlag(QStyle::State_Enabled) || !state.testFlag(QStyle::State_On))
+    if (!widget || !widget->isVisible() || !state.testFlag(QStyle::State_Enabled) || !state.testFlag(QStyle::State_On) || !ElaColorAnimation::getIsAnimationEnabled(widget))
     {
         _circleScaleAnimation->stop();
         _targetCircleScale = targetScale;

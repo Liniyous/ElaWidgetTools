@@ -52,7 +52,9 @@ public:
 
     QModelIndex getIndexFromDate(QDate date);
     QDate getDateFromIndex(const QModelIndex& index) const;
+    bool ensureDateVisible(QDate date, bool isAlignToPage = false);
     virtual QVariant data(const QModelIndex& index, int role) const override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 Q_SIGNALS:
     Q_SIGNAL void currentYearMonthChanged(QString date);
@@ -62,13 +64,13 @@ protected:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
 private:
-    int _offset{0};
     QDate _pMinimumDate;
     QDate _pMaximumDate;
+    QDate _windowStartDate; // 视图窗口起点 可选日期范围独立保存
     ElaCalendarType _displayMode{ElaCalendarType::DayMode};
-    int _dayRowCount{0};
-    void _initRowCount();
-    int _getCurrentDay(int row) const;
+    int _rowCount{0};
+    QDate _getWindowStartDate(QDate date) const;
+    void _updateRowCount();
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACALENDARMODEL_H_

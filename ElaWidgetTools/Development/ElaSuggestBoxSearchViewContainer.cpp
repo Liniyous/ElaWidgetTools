@@ -1,12 +1,14 @@
 #include "ElaSuggestBoxSearchViewContainer.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 
-#include "ElaTheme.h"
 ElaSuggestBoxSearchViewContainer::ElaSuggestBoxSearchViewContainer(QWidget* parent)
     : QWidget{parent}
 {
-    setContentsMargins(8, 8, 8, 8);
+    setContentsMargins(eTheme->getShadowMargins() + QMargins(2, 8, 2, 2));
     setObjectName("ElaSuggestBoxSearchViewBaseWidget");
     setStyleSheet("#ElaSuggestBoxSearchViewBaseWidget{background-color:transparent}");
     _themeMode = eTheme->getThemeMode();
@@ -22,10 +24,11 @@ void ElaSuggestBoxSearchViewContainer::paintEvent(QPaintEvent* event)
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing);
-    eTheme->drawEffectShadow(&painter, rect(), 6, 8);
-    painter.setPen(ElaThemeColor(_themeMode, PopupBorder));
-    painter.setBrush(ElaThemeColor(_themeMode, PopupBase));
-    QRect foregroundRect(6, 0, rect().width() - 2 * 6, rect().height() - 6);
+    const QMargins margins = eTheme->getShadowMargins();
+    eTheme->drawEffectShadow(&painter, rect(), margins, 8);
+    painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(_themeMode, PopupBase), "Background"));
+    const QRect foregroundRect = rect().marginsRemoved(margins);
     painter.drawRoundedRect(foregroundRect, 8, 8);
     painter.restore();
 }

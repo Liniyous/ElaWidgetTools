@@ -19,8 +19,6 @@ public:
     Q_REQUIRED_RESULT ElaSpinBoxType::ButtonMode getButtonMode() const;
 
 protected:
-    void focusInEvent(QFocusEvent* event) override;
-    void focusOutEvent(QFocusEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
     void contextMenuEvent(QContextMenuEvent* event) override;
 

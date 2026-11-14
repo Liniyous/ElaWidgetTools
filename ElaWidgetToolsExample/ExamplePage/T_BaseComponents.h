@@ -21,9 +21,6 @@ public:
     Q_INVOKABLE explicit T_BaseComponents(QWidget* parent = nullptr);
     ~T_BaseComponents() override;
 
-protected:
-    virtual void mouseReleaseEvent(QMouseEvent* event);
-
 private:
     ElaToggleSwitch* _toggleSwitch{nullptr};
     ElaToggleButton* _toggleButton{nullptr};

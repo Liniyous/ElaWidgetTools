@@ -52,21 +52,27 @@ private:
     QScreen* _lastScreen{nullptr};
     ElaText* _titleLabel{nullptr};
     QLabel* _iconLabel{nullptr};
+    bool _isIconVisible{true}; // 标题栏是否显示窗口图标
     qint64 _currentWinID{0};
     int _lastMinTrackWidth{0};
-    quint64 _clickTimer{0};
     int _edges{0};
     int _margins{8};
-    bool _isHoverMaxButton{false};
+    bool _isHoverMaxButton{false};         // 由非客户区消息维持的按钮悬停状态
+    bool _isTrackingNonClientMouse{false}; // 是否已登记非客户区离开通知
+    bool _isCloseRequestPending{false};    // 原生关闭请求正在等待或执行确认流程
+    QPoint _maxButtonHoverPos{0, 0};       // 最大化按钮内的逻辑像素坐标
     int _win7Margins{0};
     void _changeMaxButtonAwesome(bool isMaximized);
     void _showAppBarMenu(QPoint point);
     void _updateCursor(int edges);
-    bool _containsCursorToItem(QWidget* item);
+    bool _containsPointToItem(QWidget* item, const QPoint& globalPos);
+    void _setMaxButtonHover(bool isHovered, const QPoint& globalPos = QPoint());
+#ifdef Q_OS_WIN
+    QPoint _getNativeGlobalPos(qint64 nativePosition) const;
+#endif
     void _onThemeModeChange(ElaThemeType::ThemeMode themeMode);
     int _calculateMinimumWidth();
     QVBoxLayout* _createVLayout(QWidget* widget);
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAAPPBARPRIVATE_H_
-

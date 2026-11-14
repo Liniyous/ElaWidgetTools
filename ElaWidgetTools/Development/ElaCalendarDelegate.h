@@ -3,6 +3,7 @@
 
 #include "ElaPropertyMacro.h"
 #include <QDate>
+#include <QPersistentModelIndex>
 #include <QStyledItemDelegate>
 
 #include "ElaCalendarModel.h"
@@ -12,7 +13,8 @@ class ElaCalendarDelegate : public QStyledItemDelegate
     Q_OBJECT
     ELA_VARIABLE(int, ItemWidth)
     ELA_VARIABLE(int, ItemHeight)
-    ELA_VARIABLE(bool, IsTransparent)
+    ELA_VARIABLE(QDate, DisplayDate)
+    ELA_VARIABLE(QPersistentModelIndex, PressIndex)
 public:
     explicit ElaCalendarDelegate(ElaCalendarModel* calendarModel, QObject* parent = nullptr);
     ~ElaCalendarDelegate();
@@ -26,8 +28,6 @@ private:
     ElaCalendarModel* _calendarModel{nullptr};
     ElaThemeType::ThemeMode _themeMode;
     QDate _nowDate;
-    void _drawYearOrMonth(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-    void _drawDays(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACALENDARDELEGATE_H_

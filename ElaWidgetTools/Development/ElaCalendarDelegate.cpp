@@ -1,21 +1,22 @@
 #include "ElaCalendarDelegate.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
-#include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaTheme.h"
 ElaCalendarDelegate::ElaCalendarDelegate(ElaCalendarModel* calendarModel, QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    _pIsTransparent = false;
     _calendarModel = calendarModel;
     _pItemWidth = 42;
     _pItemHeight = 42;
     _nowDate = QDate::currentDate();
+    _pDisplayDate = _nowDate;
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [this](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
     });
     connect(_calendarModel, &ElaCalendarModel::displayModeChanged, this, &ElaCalendarDelegate::onCalendarModelDisplayModeChanged);
@@ -27,162 +28,73 @@ ElaCalendarDelegate::~ElaCalendarDelegate()
 
 void ElaCalendarDelegate::onCalendarModelDisplayModeChanged()
 {
-    switch (_calendarModel->getDisplayMode())
-    {
-    case YearMode:
-    case MonthMode:
-    {
-        _pItemWidth = 53;
-        _pItemHeight = 60;
-        break;
-    }
-    case DayMode:
-    {
-        _pItemWidth = 42;
-        _pItemHeight = 42;
-        break;
-    }
-    }
+    const bool isDay = _calendarModel->getDisplayMode() == DayMode;
+    _pItemWidth = isDay ? 42 : 74;
+    _pItemHeight = isDay ? 42 : 73;
 }
 
 void ElaCalendarDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    if (_pIsTransparent)
+    const QVariant value = index.data(Qt::UserRole);
+    if (!value.isValid())
     {
         return;
     }
+    const auto data = value.value<ElaCalendarData>();
+    const auto mode = _calendarModel->getDisplayMode();
+    const bool isDay = mode == DayMode;
+    const bool isEnabled = option.state.testFlag(QStyle::State_Enabled);
+    const bool isHovered = isEnabled && option.state.testFlag(QStyle::State_MouseOver);
+    const bool isPressed = isEnabled && index == _pPressIndex;
+    const bool isSelected = isEnabled && option.state.testFlag(QStyle::State_Selected);
+    const bool isToday = data.year == _nowDate.year() && (mode == YearMode || (data.month == _nowDate.month() && (mode == MonthMode || data.day == _nowDate.day())));
+    const bool isOutOfScope = isDay ? data.year != _pDisplayDate.year() || data.month != _pDisplayDate.month() : mode == MonthMode ? data.year != _pDisplayDate.year()
+                                                                                                                                   : data.year / 10 != _pDisplayDate.year() / 10;
+    const qreal diameter = qMin(option.rect.width(), option.rect.height()) - (isDay ? 6 : 12);
+    const qreal radius = diameter / 2.0;
+    // 使用浮点矩形几何中心定位圆圈与文字 避免整数 QRect::center 向左上截断导致视觉偏心
+    const QPointF center = QRectF(option.rect).center();
+    const QRectF cell(center.x() - radius, center.y() - radius, diameter, diameter);
+    const QColor accent = ElaThemeColor(_themeMode, PrimaryNormal);
+    QColor background = isPressed ? ElaThemeColor(_themeMode, BasicPressAlpha) : isHovered ? ElaThemeColor(_themeMode, BasicHoverAlpha)
+                                                                                           : QColor(Qt::transparent);
+    if (isToday)
+    {
+        background = !isEnabled ? ElaThemeColor(_themeMode, PrimaryDisabled) : isPressed ? ElaThemeColor(_themeMode, PrimaryPress)
+            : isHovered                                                                  ? ElaThemeColor(_themeMode, PrimaryHover)
+                                                                                         : accent;
+    }
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-    ElaCalendarType displayModel = _calendarModel->getDisplayMode();
-    switch (displayModel)
+    painter->setPen(isSelected ? QPen(accent, 1.5) : QPen(Qt::NoPen));
+    painter->setBrush(ElaColorAnimation::getColor(option.widget, background, "CalendarBackground", index));
+    painter->drawEllipse(cell);
+    if (isToday && isSelected)
     {
-    case YearMode:
-    case MonthMode:
-    {
-        _drawYearOrMonth(painter, option, index);
-        break;
+        painter->setPen(QPen(ElaThemeColor(_themeMode, BasicTextInvert), 1.5));
+        painter->setBrush(Qt::NoBrush);
+        painter->drawEllipse(cell.adjusted(3, 3, -3, -3));
     }
-    case DayMode:
+    painter->setPen(!isEnabled ? ElaThemeColor(_themeMode, BasicTextDisable) : isToday ? ElaThemeColor(_themeMode, BasicTextInvert)
+                        : isSelected                                                   ? accent
+                        : isOutOfScope || isPressed                                    ? ElaThemeColor(_themeMode, BasicTextNoFocus)
+                                                                                       : ElaThemeColor(_themeMode, BasicText));
+    const QString text = mode == YearMode ? QString::number(data.year) : mode == MonthMode ? QString("%1月").arg(data.month)
+                                                                                           : QString::number(data.day);
+    painter->drawText(cell, Qt::AlignCenter, text);
+    if (!data.desText.isEmpty())
     {
-        _drawDays(painter, option, index);
-        break;
-    }
+        QFont labelFont = painter->font();
+        labelFont.setPixelSize(qMax(8, eApp->getFontPixelSize() - 5));
+        painter->setFont(labelFont);
+        painter->drawText(QRectF(cell.x(), cell.y() + 1, cell.width(), 12), Qt::AlignTop | Qt::AlignHCenter, data.desText);
     }
     painter->restore();
-    QStyledItemDelegate::paint(painter, option, index);
 }
 
 QSize ElaCalendarDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
+    Q_UNUSED(option)
+    Q_UNUSED(index)
     return QSize(_pItemWidth, _pItemHeight);
-}
-
-void ElaCalendarDelegate::_drawYearOrMonth(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    QRectF itemRect = option.rect;
-    bool isNow = false;
-    ElaCalendarData data = index.data(Qt::UserRole).value<ElaCalendarData>();
-    qreal baseRadius = _pItemWidth * 0.5;
-    // 当前日期绘制
-    ElaCalendarType displayMode = _calendarModel->getDisplayMode();
-    if ((displayMode == ElaCalendarType::YearMode && data.year == _nowDate.year()) || (displayMode == ElaCalendarType::MonthMode && data.month == _nowDate.month() && data.year == _nowDate.year()))
-    {
-        isNow = true;
-        QColor drawColor = option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, PrimaryHover) : ElaThemeColor(_themeMode, PrimaryNormal);
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(drawColor);
-        painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
-    }
-    else
-    {
-        // 覆盖和选中效果绘制
-        if (option.state.testFlag(QStyle::State_MouseOver))
-        {
-            painter->setPen(Qt::NoPen);
-            painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
-            painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
-        }
-    }
-
-    // 文字绘制
-    painter->setPen(isNow ? ElaThemeColor(_themeMode, BasicTextInvert) : ElaThemeColor(_themeMode, BasicText));
-    painter->drawText(itemRect, Qt::AlignCenter, displayMode == ElaCalendarType::YearMode ? QString::number(data.year) : QString::number(data.month));
-    QString desText = data.desText;
-    if (!desText.isEmpty())
-    {
-        itemRect.adjust(0, 10, 0, 0);
-        QFont font = painter->font();
-        font.setPixelSize(eApp->getFontPixelSize() - 4);
-        painter->setFont(font);
-        painter->drawText(itemRect, Qt::AlignTop | Qt::AlignHCenter, desText);
-    }
-}
-
-void ElaCalendarDelegate::_drawDays(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
-    qreal penWidth = 1.5;
-    qreal baseRadius = _pItemWidth * 0.5 - penWidth;
-    QVariant variant = index.data(Qt::UserRole);
-    if (variant.isValid())
-    {
-        QRectF itemRect = option.rect;
-        bool isNow = false;
-        ElaCalendarData data = variant.value<ElaCalendarData>();
-        // 当前日期绘制
-        if (data.year == _nowDate.year() && data.month == _nowDate.month() && data.day == _nowDate.day())
-        {
-            isNow = true;
-            QColor drawColor = option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, PrimaryHover) : ElaThemeColor(_themeMode, PrimaryNormal);
-            if (option.state.testFlag(QStyle::State_Selected))
-            {
-                painter->setPen(QPen(drawColor, penWidth));
-                painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
-                painter->setBrush(drawColor);
-                painter->setPen(Qt::NoPen);
-                painter->drawEllipse(itemRect.center(), baseRadius - 2 * penWidth, baseRadius - 2 * penWidth);
-            }
-            else
-            {
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(drawColor);
-                painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
-            }
-        }
-        else
-        {
-            // 覆盖和选中效果绘制
-            if (option.state.testFlag(QStyle::State_Selected))
-            {
-                painter->setPen(QPen(option.state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, PrimaryHover) : ElaThemeColor(_themeMode, PrimaryNormal), penWidth));
-                painter->setBrush(Qt::NoBrush);
-                painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
-            }
-            if (option.state.testFlag(QStyle::State_MouseOver))
-            {
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
-                if (option.state.testFlag(QStyle::State_Selected))
-                {
-                    painter->drawEllipse(itemRect.center(), baseRadius - penWidth, baseRadius - penWidth);
-                }
-                else
-                {
-                    painter->drawEllipse(itemRect.center(), baseRadius, baseRadius);
-                }
-            }
-        }
-
-        // 文字绘制
-        painter->setPen(isNow ? ElaThemeColor(_themeMode, BasicTextInvert) : ElaThemeColor(_themeMode, BasicText));
-        painter->drawText(itemRect, Qt::AlignCenter, QString::number(data.day));
-        QString desText = data.desText;
-        if (!desText.isEmpty())
-        {
-            itemRect.adjust(0, 2 * penWidth, 0, 0);
-            QFont font = painter->font();
-            font.setPixelSize(eApp->getFontPixelSize() - 4);
-            painter->setFont(font);
-            painter->drawText(itemRect, Qt::AlignTop | Qt::AlignHCenter, desText);
-        }
-    }
 }

@@ -5,6 +5,8 @@
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestModel.h"
+#include "ElaTheme.h"
+
 #include <QLayout>
 #include <QPropertyAnimation>
 #include <QUuid>
@@ -62,19 +64,28 @@ void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
         {
             rowCount = 4;
         }
+        const QMargins margins = eTheme->getShadowMargins();
+        const QSize size(q->width() + margins.left() + margins.right(), 40 * rowCount + 10 + margins.top() + margins.bottom());
+        const QRect available = _searchViewBaseWidget->parentWidget()->rect();
+        QPoint position = q->mapTo(_searchViewBaseWidget->parentWidget(), QPoint(-margins.left(), q->height() - margins.top()));
+        if (position.y() + size.height() > available.bottom() + 1)
+        {
+            position.setY(q->mapTo(_searchViewBaseWidget->parentWidget(), QPoint()).y() - size.height() + margins.bottom());
+        }
+        position.setX(qBound(available.left(), position.x(), qMax(available.left(), available.right() - size.width() + 1)));
+        position.setY(qBound(available.top(), position.y(), qMax(available.top(), available.bottom() - size.height() + 1)));
+        _searchViewBaseWidget->move(position);
         if (!_searchViewBaseWidget->isVisible())
         {
             q->raise();
             _searchViewBaseWidget->show();
             _searchViewBaseWidget->raise();
-            QPoint cyclePoint = q->mapTo(q->window(), QPoint(-5, q->height()));
-            _searchViewBaseWidget->move(cyclePoint);
-            _startSizeAnimation(QSize(q->width() + 10, 0), QSize(q->width() + 10, 40 * rowCount + 16));
-            _searchView->move(_searchView->x(), -(40 * rowCount + 16));
+            _startSizeAnimation(QSize(size.width(), 0), size);
+            _searchView->move(_searchViewBaseWidget->contentsRect().left(), -40 * rowCount);
         }
         else
         {
-            _startSizeAnimation(_searchViewBaseWidget->size(), QSize(q->width() + 12, 40 * rowCount + 16));
+            _startSizeAnimation(_searchViewBaseWidget->size(), size);
         }
         _startExpandAnimation();
     }
@@ -109,7 +120,7 @@ void ElaSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
     _shadowLayout->removeWidget(_searchView);
     QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
     connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-        _searchView->resize(_searchViewBaseWidget->size());
+        _searchView->resize(_searchViewBaseWidget->contentsRect().size().expandedTo(QSize(0, 0)));
     });
     connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
         _shadowLayout->addWidget(_searchView);
@@ -138,7 +149,7 @@ void ElaSuggestBoxPrivate::_startExpandAnimation()
     expandAnimation->setDuration(300);
     expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
     expandAnimation->setStartValue(_searchView->pos());
-    expandAnimation->setEndValue(QPoint(8, 8));
+    expandAnimation->setEndValue(_searchViewBaseWidget->contentsRect().topLeft());
     expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 

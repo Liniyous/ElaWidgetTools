@@ -1,71 +1,44 @@
 #include "ElaMicaBaseInitObject.h"
 
-#include <QImage>
+#include "ElaExponentialBlurPrivate.h"
 
-#include "ElaApplicationPrivate.h"
-#include "ElaExponentialBlur.h"
-ElaMicaBaseInitObject::ElaMicaBaseInitObject(ElaApplicationPrivate* appPrivate, QObject* parent)
+#include <QColor>
+
+ElaMicaBaseInitObject::ElaMicaBaseInitObject(QObject* parent)
     : QObject{parent}
 {
-    _appPrivate = appPrivate;
 }
 
 ElaMicaBaseInitObject::~ElaMicaBaseInitObject()
 {
 }
 
-void ElaMicaBaseInitObject::onInitMicaBase(QImage img)
+void ElaMicaBaseInitObject::onInitMicaBase(QImage image, quint64 revision)
 {
-    // QColorDialog
-    // 统一处理为1920*1080以节省空间
-    img = img.scaled(QSize(1920, 1080), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-    QImage blurImage = ElaExponentialBlur::doExponentialBlur(img, 500).toImage();
-    QImage lightImage = blurImage;
-    QImage darkImage = blurImage;
-    QColor lightMixColor = QColor(0xF3, 0xF3, 0xF3);
-    lightMixColor = lightMixColor.toHsv();
-    QColor darkMixColor = QColor(0x20, 0x20, 0x20);
-    darkMixColor = darkMixColor.toHsv();
-    QColor originColor;
-    QColor lightColor;
-    QColor darkColor;
-    int h, s, v;
-    for (int y = 0; y < blurImage.height(); y++)
+    // 后台只操作局部图像 通过队列信号交回主线程发布缓存
+    image = image.scaled(QSize(1920, 1080), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    ElaExponentialBlurPrivate::_drawExponentialBlur(image, 500);
+    QImage lightImage(image.size(), QImage::Format_RGB32);
+    QImage darkImage(image.size(), QImage::Format_RGB32);
+    if (lightImage.isNull() || darkImage.isNull())
     {
-        QRgb* line = (QRgb*)blurImage.scanLine(y);
-        for (int x = 0; x < blurImage.width(); x++)
+        Q_EMIT initFinished(QImage(), QImage(), revision);
+        return;
+    }
+    for (int y = 0; y < image.height(); ++y)
+    {
+        const auto* sourceLine = reinterpret_cast<const QRgb*>(image.constScanLine(y));
+        auto* lightLine = reinterpret_cast<QRgb*>(lightImage.scanLine(y));
+        auto* darkLine = reinterpret_cast<QRgb*>(darkImage.scanLine(y));
+        for (int x = 0; x < image.width(); ++x)
         {
-            originColor = QColor(line[x]);
-            originColor = originColor.toHsv();
-            h = originColor.hsvHue();
-            s = originColor.hsvSaturation();
-            v = originColor.value();
-            if (s / 20 > 11)
-            {
-                lightColor.setHsv(h, (s / 20 + 11) / 2, 250);
-            }
-            else
-            {
-                lightColor.setHsv(h, 11, 250);
-            }
-            lightColor = lightColor.toRgb();
-            if (v / 1.1 > 40)
-            {
-                darkColor.setHsv(h, s / 2, (v / 1.1 + 40) / 2);
-            }
-            else
-            {
-                darkColor.setHsv(h, s / 2, 40);
-            }
-            darkColor = darkColor.toRgb();
-            lightImage.setPixel(x, y, qRgb(lightColor.red(), lightColor.green(), lightColor.blue()));
-            darkImage.setPixel(x, y, qRgb(darkColor.red(), darkColor.green(), darkColor.blue()));
+            const QColor color = QColor::fromRgb(sourceLine[x]).toHsv();
+            const int hue = color.hsvHue();
+            const int saturation = color.hsvSaturation();
+            const int value = color.value();
+            lightLine[x] = QColor::fromHsv(hue, saturation / 20 > 11 ? (saturation / 20 + 11) / 2 : 11, 250).rgb();
+            darkLine[x] = QColor::fromHsv(hue, saturation / 2, value / 1.1 > 40 ? static_cast<int>((value / 1.1 + 40) / 2) : 40).rgb();
         }
     }
-    _appPrivate->_lightBaseImage = lightImage.copy();
-    _appPrivate->_darkBaseImage = darkImage.copy();
-    // _appPrivate->_lightBaseImage.save("light.png", "PNG");
-    // _appPrivate->_darkBaseImage.save("dark.png", "PNG");
-    Q_EMIT initFinished();
+    Q_EMIT initFinished(lightImage, darkImage, revision);
 }

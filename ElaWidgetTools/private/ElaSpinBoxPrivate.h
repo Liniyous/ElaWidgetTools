@@ -13,7 +13,6 @@ class ElaSpinBoxPrivate : public QObject
 {
     Q_OBJECT
     ELA_PIMPL_D(ElaSpinBox)
-    ELA_PROPERTY(qreal, ExpandMarkWidth)
 public:
     explicit ElaSpinBoxPrivate(QObject* parent = nullptr);
     ~ElaSpinBoxPrivate() override;

@@ -1,11 +1,14 @@
 #include "ElaTableViewStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaTableView.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOptionViewItem>
 
-#include "ElaTableView.h"
-#include "ElaTheme.h"
 ElaTableViewStyle::ElaTableViewStyle(QStyle* style)
 {
     _pHeaderMargin = 6;
@@ -27,7 +30,7 @@ void ElaTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
     {
     case QStyle::PE_PanelItemViewItem:
     {
-        // 行覆盖绘制
+        // 统一在有效索引处绘制选中 悬停与交替行背景 避免行级无效索引冲突
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
             const ElaTableView* tabView = dynamic_cast<const ElaTableView*>(widget);
@@ -37,55 +40,21 @@ void ElaTableViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOpti
             }
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
-            QAbstractItemView::SelectionBehavior selectionBehavior = tabView->selectionBehavior();
-            if (selectionBehavior == QAbstractItemView::SelectRows)
+            QStyle::State itemState = vopt->state;
+            if (tabView->selectionBehavior() == QAbstractItemView::SelectRows)
             {
-                if (vopt->index.row() == _pCurrentHoverRow)
-                {
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                    painter->drawRect(vopt->rect);
-                }
+                itemState.setFlag(QStyle::State_MouseOver, vopt->index.isValid() && vopt->index.row() == _pCurrentHoverRow);
             }
-            else
-            {
-                if (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver))
-                {
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                    painter->drawRect(vopt->rect);
-                }
-            }
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, itemState, false, vopt->features.testFlag(QStyleOptionViewItem::Alternate));
+            painter->setPen(Qt::NoPen);
+            painter->setBrush(ElaColorAnimation::getColor(widget, background, "CellBackground", vopt->index));
+            painter->drawRect(vopt->rect);
             painter->restore();
         }
         return;
     }
     case QStyle::PE_PanelItemViewRow:
     {
-        if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
-        {
-            painter->save();
-            painter->setRenderHint(QPainter::Antialiasing);
-            QRect itemRect = vopt->rect;
-            painter->setPen(Qt::NoPen);
-            if (vopt->state & QStyle::State_Selected)
-            {
-                // 选中
-                painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
-                painter->drawRect(itemRect);
-            }
-            else
-            {
-                if (vopt->features.testFlag(QStyleOptionViewItem::Alternate))
-                {
-                    // Item背景隔行变色
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicAlternating));
-                    painter->drawRect(vopt->rect);
-                }
-            }
-            painter->restore();
-        }
         return;
     }
     case QStyle::PE_Widget:
@@ -112,8 +81,8 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "ViewBackground"));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;
@@ -141,19 +110,14 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeepAlpha));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "HeaderBackground"));
         painter->drawRect(option->rect);
-        if (option->state.testFlag(QStyle::State_Sunken))
-        {
-            painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-        }
-        else
-        {
-            if (option->state.testFlag(QStyle::State_MouseOver))
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-            }
-        }
+        const auto* headerOption = qstyleoption_cast<const QStyleOptionHeader*>(option);
+        const QByteArray role = "HeaderHover" + QByteArray::number(headerOption ? headerOption->section : -1);
+        const QColor background = option->state.testFlag(QStyle::State_Sunken) ? ElaThemeColor(_themeMode, BasicPressAlpha)
+            : option->state.testFlag(QStyle::State_MouseOver)                  ? ElaThemeColor(_themeMode, BasicHoverAlpha)
+                                                                               : QColor(Qt::transparent);
+        painter->setBrush(ElaColorAnimation::getColor(widget, background, role));
         painter->drawRect(option->rect);
         painter->restore();
         return;
@@ -165,7 +129,7 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeep));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "HeaderEmptyBackground"));
         painter->drawRect(frameRect);
         painter->restore();
         return;
@@ -213,7 +177,11 @@ void ElaTableViewStyle::drawControl(ControlElement element, const QStyleOption* 
             if (!vopt->text.isEmpty())
             {
                 painter->setPen(ElaThemeColor(_themeMode, BasicText));
-                painter->drawText(textRect, vopt->displayAlignment, vopt->text);
+                textRect = textRect.intersected(itemRect).adjusted(6, 0, -6, 0);
+                QString text = vopt->text;
+                text.replace('\n', ' ').replace('\r', ' ');
+                painter->setFont(vopt->font);
+                painter->drawText(textRect, vopt->displayAlignment | Qt::TextSingleLine, vopt->fontMetrics.elidedText(text, vopt->textElideMode, qMax(0, textRect.width())));
             }
             // 选中特效
             int heightOffset = itemRect.height() / 4;

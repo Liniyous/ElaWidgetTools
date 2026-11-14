@@ -1,7 +1,10 @@
 #include "ElaRoller.h"
+
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaRollerPrivate.h"
 #include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
@@ -9,6 +12,7 @@
 #include <QWheelEvent>
 #include <QtMath>
 #include <utility>
+
 ELA_PROPERTY_Q_CPP(ElaRoller, int, BorderRadius)
 ELA_PROPERTY_Q_CPP(ElaRoller, bool, IsContainer)
 ELA_PROPERTY_Q_CPP(ElaRoller, bool, IsEnableLoop)
@@ -269,13 +273,13 @@ void ElaRoller::paintEvent(QPaintEvent* event)
     if (!d->_pIsContainer)
     {
         painter.setPen(QPen(ElaThemeColor(d->_themeMode, BasicBorder), d->_penBorderWidth));
-        painter.setBrush(isEnabled() ? ElaThemeColor(d->_themeMode, BasicBase) : ElaThemeColor(d->_themeMode, BasicDisable));
+        painter.setBrush(ElaColorAnimation::getColor(this, isEnabled() ? ElaThemeColor(d->_themeMode, BasicBase) : ElaThemeColor(d->_themeMode, BasicDisable), "Background"));
         painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     }
     painter.setClipRect(foregroundRect);
     // 中心指示区域绘制
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, PrimaryNormal), "Indicator"));
     bool isEven = d->_pMaxVisibleItems % 2 == 0;
     if (isEven)
     {
@@ -318,16 +322,11 @@ void ElaRoller::paintEvent(QPaintEvent* event)
             }
             else
             {
-                // 覆盖效果绘制
-                if (!d->_mousePoint.isNull() && d->_scrollAnimation->state() == QPropertyAnimation::State::Stopped)
-                {
-                    QRectF itemRect = QRectF(0, y, width(), d->_pItemHeight);
-                    if (itemRect.contains(d->_mousePoint))
-                    {
-                        painter.setBrush(ElaThemeColor(d->_themeMode, BasicHover));
-                        painter.drawRoundedRect(QRect(d->_indicatorMargin, d->_indicatorMargin, width() - 2 * d->_indicatorMargin, d->_pItemHeight - 2 * d->_indicatorMargin), d->_pBorderRadius, d->_pBorderRadius);
-                    }
-                }
+                const QRectF itemRect(0, y, width(), d->_pItemHeight);
+                const bool isHovered = !d->_mousePoint.isNull() && d->_scrollAnimation->state() == QPropertyAnimation::Stopped && itemRect.contains(d->_mousePoint);
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(ElaColorAnimation::getColor(this, isHovered ? ElaThemeColor(d->_themeMode, BasicHoverAlpha) : QColor(Qt::transparent), "RollerItem" + QByteArray::number(i)));
+                painter.drawRoundedRect(QRect(d->_indicatorMargin, d->_indicatorMargin, width() - 2 * d->_indicatorMargin, d->_pItemHeight - 2 * d->_indicatorMargin), d->_pBorderRadius, d->_pBorderRadius);
                 painter.setPen(ElaThemeColor(d->_themeMode, BasicText));
             }
             painter.drawText(QRect(0, 0, width(), d->_pItemHeight), Qt::AlignCenter | Qt::TextSingleLine, d->_pItemList[i]);
@@ -335,16 +334,16 @@ void ElaRoller::paintEvent(QPaintEvent* event)
         }
     }
     // Container模式指示器绘制
-    if (d->_pIsContainer && d->_pMaxVisibleItems >= 5 && underMouse())
+    if (d->_pIsContainer && d->_pMaxVisibleItems >= 5)
     {
         painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(d->_themeMode, PopupBase));
+        painter.setBrush(ElaColorAnimation::getColor(this, underMouse() ? ElaThemeColor(d->_themeMode, PopupBase) : QColor(Qt::transparent), "ArrowBackground"));
         // 覆盖文字
         d->_upArrowRect = QRect(foregroundRect.x(), foregroundRect.y(), foregroundRect.width(), d->_pItemHeight);
         d->_downArrowRect = QRect(foregroundRect.x(), foregroundRect.bottom() - d->_pItemHeight + 2, foregroundRect.width(), d->_pItemHeight);
         painter.drawRect(d->_upArrowRect);
         painter.drawRect(d->_downArrowRect);
-        painter.setBrush(ElaThemeColor(d->_themeMode, BasicText));
+        painter.setBrush(ElaColorAnimation::getColor(this, underMouse() ? ElaThemeColor(d->_themeMode, BasicText) : QColor(Qt::transparent), "ArrowForeground"));
         // 上箭头
         int upArrowWidth = d->_isUpArrowPress ? 8 : 10; // 边长
         qreal upAdjacentEdge = upArrowWidth * qCos(30 * M_PI / 180.0);

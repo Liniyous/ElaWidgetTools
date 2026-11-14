@@ -1,74 +1,72 @@
 #include "ElaTabBar.h"
 
-#include <QApplication>
-#include <QDrag>
-#include <QMimeData>
-#include <QMouseEvent>
-
+#include "ElaScrollBar.h"
 #include "ElaTabBarPrivate.h"
 #include "ElaTabBarStyle.h"
-#include "private/qtabbar_p.h"
+#include "ElaTabDragData.h"
+#include "ElaTheme.h"
+
+#include <QCoreApplication>
+#include <QDragEnterEvent>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QTimer>
+#include <private/qtabbar_p.h>
+
 ElaTabBar::ElaTabBar(QWidget* parent)
     : QTabBar(parent), d_ptr(new ElaTabBarPrivate())
 {
     Q_D(ElaTabBar);
     d->q_ptr = this;
+    d->_tabBarPrivate = static_cast<QTabBarPrivate*>(QTabBar::d_ptr.data());
+    d->_style = new ElaTabBarStyle(style());
+    d->_style->setParent(this);
+    d->_scrollBar = new ElaScrollBar(Qt::Horizontal, this);
+    d->_scrollBar->setAccessibleName("标签滚动条");
+    d->_scrollBar->setScrollBarWidth(8);
+    d->_scrollBar->setFixedHeight(d->_scrollBar->sizeHint().height());
+    d->_scrollBar->setIsAnimation(false);
+    d->_scrollBar->hide();
     setObjectName("ElaTabBar");
-    setMouseTracking(true);
     setStyleSheet("#ElaTabBar{background-color:transparent;}");
+    setStyle(d->_style);
+    setMouseTracking(true);
     setTabsClosable(true);
     setMovable(true);
-    setAcceptDrops(true);
-    d->_style = new ElaTabBarStyle(style());
-    setStyle(d->_style);
-
-    d->_pTargetScrollOffset = 0;
-    d->_tabBarPrivate = dynamic_cast<QTabBarPrivate*>(this->QTabBar::d_ptr.data());
-    // 关闭自带滚动按钮，避免 layoutTabs 在 tab 溢出时重置 scrollOffset
+    setExpanding(false);
     setUsesScrollButtons(false);
-    connect(d, &ElaTabBarPrivate::pScrollOffsetChanged, this, [=]() {
-        // 动画每帧将偏移应用到 QTabBar 官方滚动机制
-        d->_tabBarPrivate->scrollOffset = qRound(d->getScrollOffset());
-        update();
+    setAcceptDrops(true);
+    connect(d->_scrollBar, &QScrollBar::valueChanged, d, &ElaTabBarPrivate::onScrollBarValueChanged);
+    connect(d->_scrollBar, &ElaScrollBar::pScrollBarWidthChanged, this, [this, d]() {
+        d->_scrollBar->setFixedHeight(d->_scrollBar->sizeHint().height());
+        d->updateScrollRange();
+        setMinimumHeight(minimumSizeHint().height());
+        updateGeometry();
     });
-    // Qt 内部(refresh/makeVisible 等)修改 scrollOffset 时同步动画状态
-    connect(this, &QTabBar::currentChanged, this, [=]() {
-        d->setTargetScrollOffset(d->_tabBarPrivate->scrollOffset);
-        d->setScrollOffset(d->_tabBarPrivate->scrollOffset);
+    connect(this, &QTabBar::currentChanged, d, &ElaTabBarPrivate::ensureTabVisible);
+    d->_dragScrollTimer = new QTimer(d);
+    d->_dragScrollTimer->setInterval(30);
+    connect(d->_dragScrollTimer, &QTimer::timeout, d, [d]() {
+        if (d->_dragScrollDirection != 0)
+        {
+            d->setScrollPosition(d->_scrollBar->value() + d->_dragScrollDirection * 12, false);
+            d->updateDropPosition(d->_dropPosition);
+        }
     });
 }
 
-ElaTabBar::~ElaTabBar()
-{
-    Q_D(ElaTabBar);
-    delete d->_style;
-}
-
-void ElaTabBar::setTabText(int index, const QString& text)
-{
-    QTabBar::setTabText(index, text);
-    Q_EMIT tabBarTextChanged(index, text);
-}
-
-void ElaTabBar::locateCurrentTab()
-{
-    Q_D(ElaTabBar);
-    const int index = currentIndex();
-    if (index < 0)
-    {
-        return;
-    }
-    const int tabWidth = d->_style->getTabSize().width();
-    const int maxOffset = qMax(0, d->_tabBarPrivate->tabList.size() * tabWidth - width());
-    d->setTargetScrollOffset(qBound(0.0, static_cast<qreal>(index * tabWidth), static_cast<qreal>(maxOffset)));
-    d->startScrollAnimation();
-}
+ElaTabBar::~ElaTabBar() = default;
 
 void ElaTabBar::setTabSize(QSize tabSize)
 {
     Q_D(ElaTabBar);
     d->_style->setTabSize(tabSize);
+    setMinimumHeight(minimumSizeHint().height());
+    updateGeometry();
+    // 字体变化事件让 Qt 按新的标签尺寸重新布局
+    QEvent event(QEvent::FontChange);
+    QTabBar::changeEvent(&event);
+    Q_EMIT pTabSizeChanged();
 }
 
 QSize ElaTabBar::getTabSize() const
@@ -77,211 +75,175 @@ QSize ElaTabBar::getTabSize() const
     return d->_style->getTabSize();
 }
 
+void ElaTabBar::setIsTabWidthAdaptive(bool isAdaptive)
+{
+    Q_D(ElaTabBar);
+    if (getIsTabWidthAdaptive() == isAdaptive)
+    {
+        return;
+    }
+    d->_style->setIsTabWidthAdaptive(isAdaptive);
+    QEvent event(QEvent::FontChange);
+    QTabBar::changeEvent(&event);
+    updateGeometry();
+    Q_EMIT pIsTabWidthAdaptiveChanged();
+}
+
+bool ElaTabBar::getIsTabWidthAdaptive() const
+{
+    Q_D(const ElaTabBar);
+    return d->_style->getIsTabWidthAdaptive();
+}
+
+void ElaTabBar::setTabText(int index, const QString& text)
+{
+    QTabBar::setTabText(index, text);
+    Q_EMIT tabBarTextChanged(index, text);
+}
+
+void ElaTabBar::setIsActive(bool isActive)
+{
+    Q_D(ElaTabBar);
+    d->_style->setIsActive(isActive);
+    update();
+}
+
+void ElaTabBar::setIsPinned(bool isPinned)
+{
+    Q_D(ElaTabBar);
+    d->_style->setIsPinned(isPinned);
+    update();
+}
+
+void ElaTabBar::setIsDragEnabled(bool isEnabled)
+{
+    Q_D(ElaTabBar);
+    d->_isDragEnabled = isEnabled;
+}
+
+ElaScrollBar* ElaTabBar::getScrollBar() const
+{
+    Q_D(const ElaTabBar);
+    return d->_scrollBar;
+}
+
+void ElaTabBar::locateCurrentTab()
+{
+    Q_D(ElaTabBar);
+    d->ensureTabVisible(currentIndex());
+}
+
 QSize ElaTabBar::sizeHint() const
 {
-    QSize oldSize = QTabBar::sizeHint();
-    QSize newSize = oldSize;
-    newSize.setWidth(parentWidget()->maximumWidth());
-    return oldSize.expandedTo(newSize);
+    int width = 0;
+    for (int index = 0; index < count(); ++index)
+    {
+        width += tabSizeHint(index).width();
+    }
+    return {width, minimumSizeHint().height()};
 }
 
 QSize ElaTabBar::minimumSizeHint() const
 {
-    // useScrollButtons=false 时基类会返回全部 tab 宽度总和，会撑大窗口，宽度最小设为 0 由布局分配
-    return {0, QTabBar::minimumSizeHint().height()};
+    Q_D(const ElaTabBar);
+    return {0, getTabSize().height() + d->_scrollBar->height()};
 }
 
-void ElaTabBar::tabInserted(int index)
+QSize ElaTabBar::tabSizeHint(int index) const
 {
-    Q_D(ElaTabBar);
-    // 基类 addTab 内部先执行 refresh/makeVisible 再调用本虚函数，
-    // _tabBarPrivate->scrollOffset 已被重置，动画状态仍是插入前的值
-    qreal preScrollOffset = d->getScrollOffset();
-    QTabBar::tabInserted(index);
-    d->restoreScrollOffset(preScrollOffset);
+    return getIsTabWidthAdaptive() ? QTabBar::tabSizeHint(index) : getTabSize();
 }
 
-void ElaTabBar::tabRemoved(int index)
+QSize ElaTabBar::minimumTabSizeHint(int index) const
+{
+    return tabSizeHint(index);
+}
+
+void ElaTabBar::tabLayoutChange()
+{
+    QTabBar::tabLayoutChange();
+    Q_D(ElaTabBar);
+    d->updateScrollRange();
+}
+
+void ElaTabBar::mousePressEvent(QMouseEvent* event)
 {
     Q_D(ElaTabBar);
-    // 记录移除前的偏移，基类 removeTab 的 refresh/makeVisible 会把偏移重置回最左
-    qreal preScrollOffset = d->getScrollOffset();
-    QTabBar::tabRemoved(index);
-    // 保留拖出前的偏移，但不超过移除后的最大偏移
-    d->restoreScrollOffset(preScrollOffset);
+    d->setScrollPosition(d->_scrollBar->value(), false);
+    QTabBar::mousePressEvent(event);
 }
 
 void ElaTabBar::mouseMoveEvent(QMouseEvent* event)
 {
-    QTabBar::mouseMoveEvent(event);
     Q_D(ElaTabBar);
-    if (d->_tabBarPrivate->pressedIndex >= 0)
+    const int index = d->_tabBarPrivate->pressedIndex;
+    if (d->_isDragEnabled && index >= 0 && event->buttons().testFlag(Qt::LeftButton) && !rect().adjusted(-12, -12, 12, 12).contains(event->pos()))
     {
-        QPoint currentPos = event->pos();
-        if (objectName() == "ElaCustomTabBar" && count() == 1)
-        {
-            if (!d->_mimeData)
-            {
-                d->_mimeData = new QMimeData();
-                d->_mimeData->setProperty("DragType", "ElaTabBarDrag");
-                d->_mimeData->setProperty("ElaTabBarObject", QVariant::fromValue(this));
-                d->_mimeData->setProperty("TabSize", d->_style->getTabSize());
-                d->_mimeData->setProperty("IsFloatWidget", true);
-                QRect currentTabRect = tabRect(currentIndex());
-                d->_mimeData->setProperty("DragPos", QPoint(currentPos.x() - currentTabRect.x(), currentPos.y() - currentTabRect.y()));
-                Q_EMIT tabDragCreate(d->_mimeData);
-                d->_mimeData = nullptr;
-            }
-        }
-        else
-        {
-            if (d->_tabBarPrivate->dragInProgress)
-            {
-                auto& pressTabData = d->_tabBarPrivate->tabList[d->_tabBarPrivate->pressedIndex];
-                QRect firstTabRect = tabRect(0);
-                const int leftBound = -firstTabRect.x();
-                const int rightBound = width() - firstTabRect.x();
-#if (QT_VERSION > QT_VERSION_CHECK(6, 0, 0))
-                QRect pressTabRect = pressTabData->rect;
-                if (pressTabData->dragOffset > 0 && pressTabRect.right() + pressTabData->dragOffset > rightBound)
-                {
-                    pressTabData->dragOffset = qMax(0, rightBound - pressTabRect.right());
-                }
-                if (pressTabData->dragOffset < 0 && pressTabRect.x() + pressTabData->dragOffset < leftBound)
-                {
-                    pressTabData->dragOffset = qMin(0, leftBound - pressTabRect.x());
-                }
-#else
-                QRect pressTabRect = pressTabData.rect;
-                if (pressTabData.dragOffset > 0 && pressTabRect.right() + pressTabData.dragOffset > rightBound)
-                {
-                    pressTabData.dragOffset = qMax(0, rightBound - pressTabRect.right());
-                }
-                if (pressTabData.dragOffset < 0 && pressTabRect.x() + pressTabData.dragOffset < leftBound)
-                {
-                    pressTabData.dragOffset = qMin(0, leftBound - pressTabRect.x());
-                }
-#endif
-            }
-
-            QRect moveRect = rect();
-            moveRect.adjust(0, -height(), 0, height());
-            if (currentPos.x() < 0 || currentPos.x() > width() || currentPos.y() > moveRect.bottom() || currentPos.y() < moveRect.y())
-            {
-                if (!d->_mimeData)
-                {
-                    d->_mimeData = new QMimeData();
-                    d->_mimeData->setProperty("DragType", "ElaTabBarDrag");
-                    d->_mimeData->setProperty("ElaTabBarObject", QVariant::fromValue(this));
-                    d->_mimeData->setProperty("TabSize", d->_style->getTabSize());
-                    Q_EMIT tabDragCreate(d->_mimeData);
-                    d->_mimeData = nullptr;
-                }
-            }
-        }
+        QMouseEvent release(QEvent::MouseButtonRelease, event->pos(), event->globalPos(), Qt::LeftButton, Qt::NoButton, Qt::NoModifier);
+        QTabBar::mouseReleaseEvent(&release);
+        Q_EMIT tabDragRequested(index);
+        return;
     }
+    QTabBar::mouseMoveEvent(event);
 }
 
 void ElaTabBar::dragEnterEvent(QDragEnterEvent* event)
 {
-    Q_D(ElaTabBar);
-    if (event->mimeData()->property("DragType").toString() == "ElaTabBarDrag")
+    if (qobject_cast<const ElaTabDragData*>(event->mimeData()))
     {
+        Q_D(ElaTabBar);
         event->acceptProposedAction();
-        auto mimeData = const_cast<QMimeData*>(event->mimeData());
-        d->_mimeData = mimeData;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        mimeData->setProperty("TabDropIndex", tabAt(event->position().toPoint()));
-#else
-        mimeData->setProperty("TabDropIndex", tabAt(event->pos()));
-#endif
-        Q_EMIT tabDragEnter(mimeData);
-        qApp->processEvents();
-        QMouseEvent pressEvent(QEvent::MouseButtonPress, QPoint(tabRect(currentIndex()).x() + d->_style->getTabSize().width() / 2, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-        QApplication::sendEvent(this, &pressEvent);
-        QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-        QApplication::sendEvent(this, &moveEvent);
+        d->updateDropPosition(event->pos());
+        d->_dragScrollTimer->start();
     }
-    QTabBar::dragEnterEvent(event);
 }
 
 void ElaTabBar::dragMoveEvent(QDragMoveEvent* event)
 {
     Q_D(ElaTabBar);
-    if (event->mimeData()->property("DragType").toString() == "ElaTabBarDrag")
-    {
-        QMouseEvent moveEvent(QEvent::MouseMove, QPoint(event->pos().x(), 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-        QApplication::sendEvent(this, &moveEvent);
-    }
-    QWidget::dragMoveEvent(event);
+    d->updateDropPosition(event->pos());
+    event->acceptProposedAction();
 }
 
 void ElaTabBar::dragLeaveEvent(QDragLeaveEvent* event)
 {
     Q_D(ElaTabBar);
-    if (d->_mimeData)
-    {
-        Q_EMIT tabDragLeave(d->_mimeData);
-        d->_mimeData = nullptr;
-    }
-    QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-    QApplication::sendEvent(this, &releaseEvent);
-    QTabBar::dragLeaveEvent(event);
+    d->_dragScrollTimer->stop();
+    d->clearDropPosition();
+    event->accept();
 }
 
 void ElaTabBar::dropEvent(QDropEvent* event)
 {
     Q_D(ElaTabBar);
-    d->_mimeData = nullptr;
-    QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-    QApplication::sendEvent(this, &releaseEvent);
-    if (objectName() != "ElaCustomTabBar")
-    {
-        QMimeData* data = const_cast<QMimeData*>(event->mimeData());
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-        data->setProperty("TabDropIndex", tabAt(event->position().toPoint()));
-#else
-        data->setProperty("TabDropIndex", tabAt(event->pos()));
-#endif
-        Q_EMIT tabDragDrop(data);
-    }
-    QTabBar::dropEvent(event);
+    const int index = d->getDropIndex(event->pos());
+    d->_dragScrollTimer->stop();
+    d->clearDropPosition();
+    Q_EMIT tabDropRequested(event->mimeData(), index, event->proposedAction());
+    event->acceptProposedAction();
 }
 
 void ElaTabBar::wheelEvent(QWheelEvent* event)
 {
     Q_D(ElaTabBar);
-    // 滚轮平滑横向滚动，不切换 tab
-    int maxOffset = qMax(0, d->_tabBarPrivate->tabList.size() * d->_style->getTabSize().width() - width());
-    int step = qMax(1, d->_style->getTabSize().width() / 4);
-    d->setTargetScrollOffset(qBound(0.0, d->getTargetScrollOffset() - event->angleDelta().y() / 120.0 * step, static_cast<qreal>(maxOffset)));
-    d->startScrollAnimation();
-    event->accept();
+    QCoreApplication::sendEvent(d->_scrollBar, event);
 }
 
 void ElaTabBar::resizeEvent(QResizeEvent* event)
 {
     QTabBar::resizeEvent(event);
     Q_D(ElaTabBar);
-    // 窗口变宽时收敛超出的滚动偏移
-    int maxOffset = qMax(0, d->_tabBarPrivate->tabList.size() * d->_style->getTabSize().width() - width());
-    d->setTargetScrollOffset(qMin(d->getTargetScrollOffset(), qreal(maxOffset)));
-    d->setScrollOffset(qMin(d->getScrollOffset(), qreal(maxOffset)));
-    d->_tabBarPrivate->scrollOffset = qRound(d->getScrollOffset());
+    d->updateScrollRange();
 }
 
 void ElaTabBar::paintEvent(QPaintEvent* event)
 {
-    Q_D(ElaTabBar);
-    QSize tabSize = d->_style->getTabSize();
-    for (int i = 0; i < d->_tabBarPrivate->tabList.size(); i++)
-    {
-#if (QT_VERSION > QT_VERSION_CHECK(6, 0, 0))
-        d->_tabBarPrivate->tabList[i]->rect = QRect(tabSize.width() * i, d->_tabBarPrivate->tabList[i]->rect.y(), tabSize.width(), tabSize.height());
-#else
-        d->_tabBarPrivate->tabList[i].rect = QRect(tabSize.width() * i, d->_tabBarPrivate->tabList[i].rect.y(), tabSize.width(), tabSize.height());
-#endif
-    }
-    d->_tabBarPrivate->layoutWidgets();
     QTabBar::paintEvent(event);
+    Q_D(ElaTabBar);
+    if (d->_dropIndex >= 0)
+    {
+        const int x = d->_dropIndex < count() ? tabRect(d->_dropIndex).left() : (count() > 0 ? tabRect(count() - 1).right() + 1 : 0);
+        QPainter painter(this);
+        painter.fillRect(QRect(qBound(0, x, width() - 3), d->_scrollBar->height(), 3, getTabSize().height()), ElaThemeColor(eTheme->getThemeMode(), PrimaryNormal));
+    }
 }

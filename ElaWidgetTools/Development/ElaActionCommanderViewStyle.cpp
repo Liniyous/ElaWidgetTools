@@ -2,6 +2,9 @@
 
 #include "ElaActionCommanderNode.h"
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaTheme.h"
 #include "ElaWidgetToolsDef.h"
 
 #include <QDebug>
@@ -9,7 +12,6 @@
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaTheme.h"
 ElaActionCommanderViewStyle::ElaActionCommanderViewStyle(QStyle* style)
 {
     _pItemHeight = 40;
@@ -38,28 +40,8 @@ void ElaActionCommanderViewStyle::drawPrimitive(PrimitiveElement element, const 
             QRect itemRect = vopt->rect;
             itemRect.adjust(0, 2, 0, -2);
             painter->setPen(Qt::NoPen);
-            bool isEnable = vopt->state.testFlag(QStyle::State_Enabled);
-            if (vopt->state & QStyle::State_Selected)
-            {
-                if (vopt->state & QStyle::State_MouseOver && isEnable)
-                {
-                    // 选中时覆盖
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
-                }
-                else
-                {
-                    // 选中
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
-                }
-            }
-            else
-            {
-                if (vopt->state & QStyle::State_MouseOver && isEnable)
-                {
-                    // 覆盖时颜色
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                }
-            }
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, vopt->state);
+            painter->setBrush(ElaColorAnimation::getColor(widget, background, "ItemBackground", vopt->index));
             painter->drawRoundedRect(itemRect, 4, 4);
             painter->restore();
         }
@@ -135,8 +117,8 @@ void ElaActionCommanderViewStyle::drawControl(ControlElement element, const QSty
         frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "ViewBackground"));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;
@@ -164,7 +146,7 @@ void ElaActionCommanderViewStyle::drawControl(ControlElement element, const QSty
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeepAlpha));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "HeaderBackground"));
         painter->drawRect(option->rect);
         painter->restore();
         return;
@@ -227,71 +209,12 @@ void ElaActionCommanderViewStyle::drawControl(ControlElement element, const QSty
             const auto indexNode = static_cast<ElaActionCommanderNode*>(modelIndex.internalPointer());
             if (indexNode && indexNode->getIsCommandNode())
             {
-                painter->save();
-                switch (indexNode->getMessageMode())
-                {
-                case ElaMessageBarType::Success:
-                {
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(QColor(0x01, 0xE5, 0x7B));
-                    painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
-                    QFont iconFont = QFont("ElaAwesome");
-                    iconFont.setPixelSize(fontPixelSize - 1);
-                    painter->setFont(iconFont);
-                    painter->setPen(Qt::black);
-                    painter->drawText(textRect.x() - 5, textRect.y(), textRect.width(), textRect.height(), Qt::AlignVCenter | Qt::AlignLeft, QChar(ElaIconType::Check));
-                    break;
-                }
-                case ElaMessageBarType::Information:
-                {
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(QColor(0xF4, 0xF4, 0xF4));
-                    painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
-                    QFont iconFont = painter->font();
-                    iconFont.setPixelSize(fontPixelSize);
-                    iconFont.setBold(true);
-                    painter->setFont(iconFont);
-                    painter->setPen(Qt::black);
-                    painter->drawText(textRect.x() - 2, textRect.y(), textRect.width(), textRect.height(), Qt::AlignVCenter | Qt::AlignLeft, "i");
-                    break;
-                }
-                case ElaMessageBarType::Warning:
-                {
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(QColor(0xFA, 0xB6, 0x00));
-                    painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
-                    QFont iconFont = painter->font();
-                    iconFont.setPixelSize(fontPixelSize);
-                    iconFont.setBold(true);
-                    painter->setFont(iconFont);
-                    painter->setPen(Qt::black);
-                    painter->drawText(textRect.x() - 3, textRect.y(), textRect.width(), textRect.height(), Qt::AlignVCenter | Qt::AlignLeft, "!");
-                    break;
-                }
-                case ElaMessageBarType::Error:
-                {
-                    painter->setPen(Qt::NoPen);
-                    painter->setBrush(ElaThemeColor(_themeMode, StatusDanger));
-                    painter->drawEllipse(QPoint(textRect.x(), textRect.y() + textRect.height() / 2), 10, 10);
-                    QFont iconFont = QFont("ElaAwesome");
-                    iconFont.setPixelSize(fontPixelSize);
-                    painter->setFont(iconFont);
-                    painter->setPen(Qt::white);
-                    painter->drawText(textRect.x() - 5, textRect.y(), textRect.width(), textRect.height(), Qt::AlignVCenter | Qt::AlignLeft, QChar(ElaIconType::Xmark));
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-                }
-                painter->restore();
+                ElaControlStyle::drawStatusIcon(painter, QRectF(textRect.x() - 10, textRect.center().y() - 10, 20, 20), _themeMode, indexNode->getMessageMode());
             }
             // 文字绘制
-            bool isEnable = vopt->state.testFlag(QStyle::State_Enabled);
             if (!vopt->text.isEmpty())
             {
-                painter->setPen(isEnable ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
+                painter->setPen(vopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
                 painter->drawText(textRect, vopt->displayAlignment, vopt->text);
             }
             // 选中特效

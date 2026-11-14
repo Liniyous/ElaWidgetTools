@@ -1,11 +1,13 @@
 #include "ElaPivotView.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaPivotStyle.h"
+#include "ElaScrollBar.h"
+
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
 
-#include "ElaPivotStyle.h"
-#include "ElaScrollBar.h"
 ElaPivotView::ElaPivotView(QWidget* parent)
     : QListView(parent)
 {
@@ -18,6 +20,7 @@ ElaPivotView::ElaPivotView(QWidget* parent)
     setObjectName("ElaPivotView");
     setStyleSheet("#ElaPivotView{background-color:transparent;}");
     setMouseTracking(true);
+    setFrameShape(QFrame::NoFrame);
     setVerticalScrollBar(new ElaScrollBar(this));
     setHorizontalScrollBar(new ElaScrollBar(this));
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -42,12 +45,12 @@ bool ElaPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     int markWidthEnd = 0;
     if (index.row() >= 0)
     {
-        _pCurrentIndexRect = visualRect(index);
+        _pCurrentIndexRect = _getTextRect(index);
         markXEnd = _pCurrentIndexRect.center().x() - _pMarkWidth / 2;
         if (previousIndex.isValid())
         {
             // 以mark上一帧记录的矩形为基准补偿布局位移 静止状态offset为0 不会叠加目标位移
-            markXStart = _pMarkX + visualRect(previousIndex).center().x() - previousIndexRect.center().x();
+            markXStart = _pMarkX + visualRect(previousIndex).x() - previousIndexRect.x();
         }
         else
         {
@@ -61,7 +64,7 @@ bool ElaPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
         {
             return false;
         }
-        _pCurrentIndexRect = visualRect(previousIndex);
+        // 页签已移除，消失动画沿用之前记录的文字位置
         markXStart = _pCurrentIndexRect.center().x() - _pMarkWidth / 2;
         markXEnd = _pCurrentIndexRect.center().x();
         markWidthEnd = 0;
@@ -71,6 +74,15 @@ bool ElaPivotView::doCurrentIndexChangedAnimation(const QModelIndex& index)
     setCurrentIndex(index);
     _startMarkAnimation(markXStart, markXEnd, _pMarkAnimationWidth, markWidthEnd);
     return true;
+}
+
+QRect ElaPivotView::_getTextRect(const QModelIndex& index) const
+{
+    QRect textRect = visualRect(index);
+    QFont textFont = font();
+    textFont.setBold(true);
+    textRect.setWidth(QFontMetrics(textFont).horizontalAdvance(index.data().toString()));
+    return textRect;
 }
 
 void ElaPivotView::_startMarkAnimation(qreal markXStart, qreal markXEnd, int markWidthStart, int markWidthEnd)
@@ -130,8 +142,8 @@ void ElaPivotView::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(_pPivotStyle->getMarkColor());
-    QRect currentIndexRect = visualRect(_markIndex);
+    painter.setBrush(ElaColorAnimation::getColor(this, _pPivotStyle->getMarkColor(), "PivotMark"));
+    QRect currentIndexRect = _getTextRect(_markIndex);
     const qreal markX = _pIsAnimationFinished ? currentIndexRect.center().x() - _pMarkWidth / 2
                                               : _pMarkX + currentIndexRect.x() - _pCurrentIndexRect.x();
     painter.drawRoundedRect(QRectF(markX, viewPortRect.bottom() - 4, _pMarkAnimationWidth, 3), 3, 3);

@@ -1,17 +1,17 @@
 #include "ElaPlainTextEdit.h"
 
-#include <QClipboard>
-#include <QGuiApplication>
-#include <QMimeData>
-#include <QPainter>
-#include <QPropertyAnimation>
-
 #include "ElaEventBus.h"
+#include "ElaInputFocusAnimation.h"
 #include "ElaMenu.h"
 #include "ElaPlainTextEditPrivate.h"
 #include "ElaPlainTextEditStyle.h"
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
+
+#include <QClipboard>
+#include <QGuiApplication>
+#include <QMimeData>
+
 ElaPlainTextEdit::ElaPlainTextEdit(QWidget* parent)
     : QPlainTextEdit(parent), d_ptr(new ElaPlainTextEditPrivate())
 {
@@ -28,7 +28,9 @@ ElaPlainTextEdit::ElaPlainTextEdit(QWidget* parent)
     d->_focusEvent->registerAndInit();
 
     d->_style = new ElaPlainTextEditStyle(style());
+    d->_style->setParent(this);
     setStyle(d->_style);
+    new ElaInputFocusAnimation(d->_style, this);
     d->onThemeChanged(eTheme->getThemeMode());
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaPlainTextEditPrivate::onThemeChanged);
 }
@@ -39,47 +41,7 @@ ElaPlainTextEdit::ElaPlainTextEdit(const QString& text, QWidget* parent)
     setPlainText(text);
 }
 
-ElaPlainTextEdit::~ElaPlainTextEdit()
-{
-    Q_D(ElaPlainTextEdit);
-    delete d->_style;
-}
-
-void ElaPlainTextEdit::focusInEvent(QFocusEvent* event)
-{
-    Q_D(ElaPlainTextEdit);
-    if (event->reason() == Qt::MouseFocusReason)
-    {
-        QPropertyAnimation* markAnimation = new QPropertyAnimation(d->_style, "pExpandMarkWidth");
-        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            update();
-        });
-        markAnimation->setDuration(300);
-        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        markAnimation->setStartValue(d->_style->getExpandMarkWidth());
-        markAnimation->setEndValue(width() / 2 - 3);
-        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-    QPlainTextEdit::focusInEvent(event);
-}
-
-void ElaPlainTextEdit::focusOutEvent(QFocusEvent* event)
-{
-    Q_D(ElaPlainTextEdit);
-    if (event->reason() != Qt::PopupFocusReason)
-    {
-        QPropertyAnimation* markAnimation = new QPropertyAnimation(d->_style, "pExpandMarkWidth");
-        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            update();
-        });
-        markAnimation->setDuration(300);
-        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        markAnimation->setStartValue(d->_style->getExpandMarkWidth());
-        markAnimation->setEndValue(0);
-        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-    QPlainTextEdit::focusOutEvent(event);
-}
+ElaPlainTextEdit::~ElaPlainTextEdit() = default;
 
 void ElaPlainTextEdit::contextMenuEvent(QContextMenuEvent* event)
 {
@@ -143,7 +105,7 @@ void ElaPlainTextEdit::contextMenuEvent(QContextMenuEvent* event)
 void ElaPlainTextEdit::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaPlainTextEdit);
-    if (palette().color(QPalette::Text) != ElaThemeColor(d->_themeMode, BasicText))
+    if (palette().color(QPalette::Active, QPalette::Text) != ElaThemeColor(d->_themeMode, BasicText))
     {
         d->onThemeChanged(d->_themeMode);
     }

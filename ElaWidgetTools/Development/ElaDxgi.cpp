@@ -36,7 +36,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
                                    D3D11_SDK_VERSION, &d3dDevice, &feat, &d3dContext);
     if (FAILED(hr))
     {
-        _pLastError = "Failed to D3D11CreateDevice ErrorCode = " + QString::number(uint(hr), 16);
+        _pLastError = "创建 D3D11 设备失败，错误码：" + QString::number(uint(hr), 16);
         qDebug() << _pLastError;
         if (d3dDevice)
         {
@@ -82,7 +82,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
 
     if (!dxgiAdapter)
     {
-        _pLastError = "Failed to found gpu";
+        _pLastError = "未找到显卡";
         qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
@@ -119,7 +119,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
 
     if (!dxgiOutput)
     {
-        _pLastError = "Failed to found screen!";
+        _pLastError = "未找到显示器";
         qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
@@ -137,7 +137,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     }
     if (FAILED(hr))
     {
-        _pLastError = "Failed to QueryInterface IDXGIOutput6 ErrorCode = " + QString::number(uint(hr), 16);
+        _pLastError = "获取 IDXGIOutput6 接口失败，错误码：" + QString::number(uint(hr), 16);
         qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();
@@ -149,7 +149,7 @@ bool ElaDxgi::initialize(int dxID, int outputID)
     dxgiOutput6->Release();
     if (FAILED(hr))
     {
-        _pLastError = "Failed to DuplicateOutput ErrorCode = " + QString::number(uint(hr), 16);
+        _pLastError = "创建屏幕复制接口失败，错误码：" + QString::number(uint(hr), 16);
         qDebug() << _pLastError;
         d3dDevice->Release();
         d3dContext->Release();

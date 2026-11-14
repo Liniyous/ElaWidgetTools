@@ -1,11 +1,12 @@
 #include "ElaTableView.h"
 
+#include "ElaScrollBar.h"
+#include "ElaTableViewPrivate.h"
+#include "ElaTableViewStyle.h"
+
 #include <QHeaderView>
 #include <QMouseEvent>
 
-#include "ElaTableViewStyle.h"
-#include "ElaScrollBar.h"
-#include "ElaTableViewPrivate.h"
 ElaTableView::ElaTableView(QWidget* parent)
     : QTableView(parent), d_ptr(new ElaTableViewPrivate())
 {
@@ -24,14 +25,11 @@ ElaTableView::ElaTableView(QWidget* parent)
     setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
     setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     d->_tableViewStyle = new ElaTableViewStyle(style());
+    d->_tableViewStyle->setParent(this);
     setStyle(d->_tableViewStyle);
 }
 
-ElaTableView::~ElaTableView()
-{
-    Q_D(ElaTableView);
-    delete d->_tableViewStyle;
-}
+ElaTableView::~ElaTableView() = default;
 
 void ElaTableView::setHeaderMargin(int headerMargin)
 {

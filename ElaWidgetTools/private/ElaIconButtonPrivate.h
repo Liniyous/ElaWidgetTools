@@ -22,14 +22,13 @@ class ElaIconButtonPrivate : public QObject
     ELA_PROPERTY_D(QColor, LightHoverIconColor);
     ELA_PROPERTY_D(QColor, DarkHoverIconColor);
     ELA_PROPERTY_D(bool, IsSelected);
-    ELA_PROPERTY(int, HoverAlpha)
+
 public:
     explicit ElaIconButtonPrivate(QObject* parent = nullptr);
     ~ElaIconButtonPrivate();
 
 private:
     QPixmap _iconPix;
-    bool _isAlphaAnimationFinished{true};
     ElaThemeType::ThemeMode _themeMode;
 };
 

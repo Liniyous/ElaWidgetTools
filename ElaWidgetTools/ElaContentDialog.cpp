@@ -1,20 +1,22 @@
 ﻿#include "ElaContentDialog.h"
 
-#include <ElaPushButton.h>
-
+#include "ElaColorAnimation.h"
 #include "ElaMaskWidget.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaWinShadowHelper.h"
 #include "private/ElaContentDialogPrivate.h"
+
+#include <ElaPushButton.h>
 #include <QApplication>
 #include <QGuiApplication>
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QPointer>
 #include <QScreen>
-#include <QTimer>
 #include <QVBoxLayout>
+
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaContentDialog, d_func()->_appBar);
 ElaContentDialog::ElaContentDialog(QWidget* parent)
     : QDialog{parent}, d_ptr(new ElaContentDialogPrivate())
@@ -38,45 +40,52 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     // 防止意外拉伸
     createWinId();
 #endif
-    d->_leftButton = new ElaPushButton("cancel", this);
+    d->_leftButton = new ElaPushButton(d->_leftButtonText, this);
     connect(d->_leftButton, &ElaPushButton::clicked, this, [=]() {
+        const QPointer<ElaContentDialog> guard(this);
         onLeftButtonClicked();
+        if (!guard)
+        {
+            return;
+        }
         d->_doCloseAnimation(false);
-        QTimer::singleShot(0, nullptr, [=]() {
+        if (guard)
+        {
             Q_EMIT leftButtonClicked();
-        });
+        }
     });
     d->_leftButton->setMinimumSize(0, 0);
     d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     d->_leftButton->setFixedHeight(38);
     d->_leftButton->setBorderRadius(6);
-    d->_middleButton = new ElaPushButton("minimum", this);
+    d->_middleButton = new ElaPushButton(d->_middleButtonText, this);
     connect(d->_middleButton, &ElaPushButton::clicked, this, [=]() {
+        const QPointer<ElaContentDialog> guard(this);
         onMiddleButtonClicked();
-        QTimer::singleShot(0, nullptr, [=]() {
+        if (guard)
+        {
             Q_EMIT middleButtonClicked();
-        });
+        }
     });
     d->_middleButton->setMinimumSize(0, 0);
     d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     d->_middleButton->setFixedHeight(38);
     d->_middleButton->setBorderRadius(6);
-    d->_rightButton = new ElaPushButton("exit", this);
+    d->_rightButton = new ElaPushButton(d->_rightButtonText, this);
     connect(d->_rightButton, &ElaPushButton::clicked, this, [=]() {
+        const QPointer<ElaContentDialog> guard(this);
         onRightButtonClicked();
+        if (!guard)
+        {
+            return;
+        }
         d->_doCloseAnimation(true);
-        QTimer::singleShot(0, nullptr, [=]() {
+        if (guard)
+        {
             Q_EMIT rightButtonClicked();
-        });
+        }
     });
-    d->_rightButton->setLightDefaultColor(ElaThemeColor(ElaThemeType::Light, PrimaryNormal));
-    d->_rightButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, PrimaryHover));
-    d->_rightButton->setLightPressColor(ElaThemeColor(ElaThemeType::Light, PrimaryPress));
-    d->_rightButton->setLightTextColor(Qt::white);
-    d->_rightButton->setDarkDefaultColor(ElaThemeColor(ElaThemeType::Dark, PrimaryNormal));
-    d->_rightButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, PrimaryHover));
-    d->_rightButton->setDarkPressColor(ElaThemeColor(ElaThemeType::Dark, PrimaryPress));
-    d->_rightButton->setDarkTextColor(Qt::black);
+    d->_rightButton->setIsAccent(true);
     d->_rightButton->setMinimumSize(0, 0);
     d->_rightButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
     d->_rightButton->setFixedHeight(38);
@@ -84,7 +93,7 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 
     d->_centralWidget = new QWidget(this);
     QVBoxLayout* centralVLayout = new QVBoxLayout(d->_centralWidget);
-    centralVLayout->setContentsMargins(15, 25, 15, 10);
+    centralVLayout->setContentsMargins(24, 24, 24, 24);
     ElaText* title = new ElaText("退出", this);
     title->setTextStyle(ElaTextType::Title);
     ElaText* subTitle = new ElaText("确定要退出程序吗", this);
@@ -96,9 +105,12 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
 
     d->_mainLayout = new QVBoxLayout(this);
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
+    d->_mainLayout->setSpacing(0);
     d->_buttonWidget = new QWidget(this);
-    d->_buttonWidget->setFixedHeight(60);
+    d->_buttonWidget->setFixedHeight(70);
     QHBoxLayout* buttonLayout = new QHBoxLayout(d->_buttonWidget);
+    buttonLayout->setContentsMargins(24, 16, 24, 16);
+    buttonLayout->setSpacing(8);
     buttonLayout->addWidget(d->_leftButton);
     buttonLayout->addWidget(d->_middleButton);
     buttonLayout->addWidget(d->_rightButton);
@@ -182,12 +194,12 @@ void ElaContentDialog::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, PopupBase), "Background"));
     // 背景绘制
     painter.drawRect(rect());
     // 按钮栏背景绘制
-    painter.setBrush(ElaThemeColor(d->_themeMode, DialogLayoutArea));
-    painter.drawRoundedRect(QRectF(0, height() - 60, width(), 60), 8, 8);
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, WindowBase), "LayoutArea"));
+    painter.drawRoundedRect(d->_buttonWidget->geometry(), 8, 8);
     painter.restore();
 }
 

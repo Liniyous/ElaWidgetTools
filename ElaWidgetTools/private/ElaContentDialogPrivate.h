@@ -26,9 +26,9 @@ private:
     QWidget* _centralWidget{nullptr};
     QWidget* _buttonWidget{nullptr};
     QVBoxLayout* _mainLayout{nullptr};
-    QString _leftButtonText{"cancel"};
-    QString _middleButtonText{"minimum"};
-    QString _rightButtonText{"exit"};
+    QString _leftButtonText{"取消"};
+    QString _middleButtonText{"最小化"};
+    QString _rightButtonText{"退出"};
     ElaPushButton* _leftButton{nullptr};
     ElaPushButton* _middleButton{nullptr};
     ElaPushButton* _rightButton{nullptr};

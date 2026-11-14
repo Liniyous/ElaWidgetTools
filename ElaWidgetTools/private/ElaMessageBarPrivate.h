@@ -70,11 +70,7 @@ private:
     bool _judgeCreateOrder(ElaMessageBar* otherMessageBar);
     void _updateActiveMap(bool isActive);
 
-    // 绘制函数
-    void _drawSuccess(QPainter* painter);
-    void _drawWarning(QPainter* painter);
-    void _drawInformation(QPainter* painter);
-    void _drawError(QPainter* painter);
+    void _drawBackground(QPainter* painter);
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELAMESSAGEBARPRIVATE_H_

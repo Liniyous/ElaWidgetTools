@@ -1,16 +1,14 @@
 #include "ElaAppBarPrivate.h"
 
-#include "ElaToolButton.h"
-#ifdef Q_OS_WIN
-#include <Windows.h>
-#endif
 #include "ElaAppBar.h"
 #include "ElaIconButton.h"
 #include "ElaNavigationBar.h"
 #include "ElaText.h"
+#include "ElaToolButton.h"
 
 #include <QApplication>
 #include <QDebug>
+#include <QEnterEvent>
 #include <QGuiApplication>
 #include <QLabel>
 #include <QMenu>
@@ -20,6 +18,10 @@
 #include <QWidget>
 #include <QWindow>
 #include <QtMath>
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#include <windowsx.h>
+#endif
 
 ElaAppBarPrivate::ElaAppBarPrivate(QObject* parent)
     : QObject{parent}
@@ -192,7 +194,7 @@ void ElaAppBarPrivate::_updateCursor(int edges)
     }
 }
 
-bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
+bool ElaAppBarPrivate::_containsPointToItem(QWidget* item, const QPoint& globalPos)
 {
     Q_Q(const ElaAppBar);
     if (!item || !item->isVisible())
@@ -204,7 +206,7 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
     {
         for (int i = 0; i < _clientWidgetList.count(); i++)
         {
-            if (_containsCursorToItem(_clientWidgetList[i]))
+            if (_containsPointToItem(_clientWidgetList[i], globalPos))
             {
                 return false;
             }
@@ -212,7 +214,7 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
         for (int i = 0; i < _customAreaWidgetList.count(); i++)
         {
             QWidget* customAreaWidget = _customAreaWidgetList[i];
-            if (_containsCursorToItem(customAreaWidget))
+            if (_containsPointToItem(customAreaWidget, globalPos))
             {
                 QObject* customAreaHitTestObject = _customAreaHitTestObjectList[i];
                 if (customAreaHitTestObject)
@@ -229,12 +231,58 @@ bool ElaAppBarPrivate::_containsCursorToItem(QWidget* item)
     {
         itemRect.adjust(0, 8, 0, 0);
     }
-    if (itemRect.contains(QCursor::pos()))
+    if (itemRect.contains(globalPos))
     {
         return true;
     }
     return false;
 }
+
+void ElaAppBarPrivate::_setMaxButtonHover(bool isHovered, const QPoint& globalPos)
+{
+    if (!_maxButton)
+    {
+        return;
+    }
+    _isHoverMaxButton = isHovered;
+    if (isHovered)
+    {
+        _maxButtonHoverPos = _maxButton->mapFromGlobal(globalPos);
+    }
+    if (_maxButton->underMouse() == isHovered)
+    {
+        return;
+    }
+    if (isHovered)
+    {
+        QEnterEvent enterEvent(_maxButtonHoverPos, _maxButton->window()->mapFromGlobal(globalPos), globalPos);
+        QApplication::sendEvent(_maxButton, &enterEvent);
+    }
+    else
+    {
+        QEvent leaveEvent(QEvent::Leave);
+        QApplication::sendEvent(_maxButton, &leaveEvent);
+    }
+    if (_maxButton->testAttribute(Qt::WA_Hover))
+    {
+        const QPoint outside(-1, -1);
+        QHoverEvent hoverEvent(isHovered ? QEvent::HoverEnter : QEvent::HoverLeave,
+                               isHovered ? _maxButtonHoverPos : outside, isHovered ? outside : _maxButtonHoverPos);
+        QApplication::sendEvent(_maxButton, &hoverEvent);
+    }
+    _maxButton->update();
+}
+
+#ifdef Q_OS_WIN
+QPoint ElaAppBarPrivate::_getNativeGlobalPos(qint64 nativePosition) const
+{
+    Q_Q(const ElaAppBar);
+    POINT position{GET_X_LPARAM(nativePosition), GET_Y_LPARAM(nativePosition)};
+    ::ScreenToClient(reinterpret_cast<HWND>(_currentWinID), &position);
+    const qreal scale = q->window()->devicePixelRatioF();
+    return q->window()->mapToGlobal(QPoint(qRound(position.x / scale), qRound(position.y / scale)));
+}
+#endif
 
 void ElaAppBarPrivate::_onThemeModeChange(ElaThemeType::ThemeMode themeMode)
 {

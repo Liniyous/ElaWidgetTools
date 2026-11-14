@@ -1,10 +1,11 @@
 #include "ElaScrollPageArea.h"
 
-#include <QGraphicsDropShadowEffect>
-#include <QPainter>
-
+#include "ElaColorAnimation.h"
 #include "ElaTheme.h"
 #include "private/ElaScrollPageAreaPrivate.h"
+
+#include <QGraphicsDropShadowEffect>
+#include <QPainter>
 
 ELA_PROPERTY_Q_CPP(ElaScrollPageArea, int, BorderRadius)
 ElaScrollPageArea::ElaScrollPageArea(QWidget* parent)
@@ -31,7 +32,7 @@ void ElaScrollPageArea::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
-    painter.setBrush(ElaThemeColor(d->_themeMode, BasicBaseAlpha));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, BasicBaseAlpha), "Background"));
     QRect foregroundRect(1, 1, width() - 2, height() - 2);
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     painter.restore();

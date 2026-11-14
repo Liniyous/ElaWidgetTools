@@ -1,15 +1,18 @@
 #include "ElaScrollBar.h"
 
+#include "ElaMenu.h"
+#include "ElaScrollAnimation.h"
+#include "ElaScrollBarStyle.h"
+#include "private/ElaScrollBarPrivate.h"
+
+#include <QApplication>
 #include <QDebug>
 #include <QPainter>
 #include <QPointer>
-#include <QPropertyAnimation>
+#include <QScopedValueRollback>
 #include <QTimer>
 #include <QWheelEvent>
 
-#include "ElaMenu.h"
-#include "ElaScrollBarStyle.h"
-#include "private/ElaScrollBarPrivate.h"
 ELA_PROPERTY_Q_CPP(ElaScrollBar, bool, IsAnimation)
 ELA_PROPERTY_Q_CPP(ElaScrollBar, qreal, SpeedLimit)
 ElaScrollBar::ElaScrollBar(QWidget* parent)
@@ -23,21 +26,37 @@ ElaScrollBar::ElaScrollBar(QWidget* parent)
     d->_pSpeedLimit = 20;
     d->_pTargetMaximum = 0;
     d->_pIsAnimation = false;
+    d->_scrollAnimation = new ElaScrollAnimation(this);
     connect(this, &ElaScrollBar::rangeChanged, d, &ElaScrollBarPrivate::onRangeChanged);
     ElaScrollBarStyle* scrollBarStyle = new ElaScrollBarStyle(style());
+    d->_scrollBarStyle = scrollBarStyle;
+    scrollBarStyle->setParent(this);
     scrollBarStyle->setScrollBar(this);
     setStyle(scrollBarStyle);
-    d->_slideSmoothAnimation = new QPropertyAnimation(this, "value");
-    d->_slideSmoothAnimation->setEasingCurve(QEasingCurve::OutSine);
-    d->_slideSmoothAnimation->setDuration(300);
-    connect(d->_slideSmoothAnimation, &QPropertyAnimation::finished, this, [=]() {
-        d->_scrollValue = value();
+    connect(d->_scrollAnimation, &ElaScrollAnimation::positionChanged, this, [this, d](const QPointF& position) {
+        const QScopedValueRollback<bool> updating(d->_isUpdatingScroll, true);
+        setValue(qRound(position.x() / d->_scrollScale));
+    });
+    connect(this, &QScrollBar::valueChanged, this, [d]() {
+        if (!d->_isUpdatingScroll)
+        {
+            d->_scrollAnimation->stop();
+            d->_pixelRemainder = 0;
+        }
+    });
+    connect(this, &QScrollBar::actionTriggered, this, [this, d](int action) {
+        if (d->_isSmoothScroll && action >= QAbstractSlider::SliderSingleStepAdd && action <= QAbstractSlider::SliderPageStepSub)
+        {
+            const int movement = sliderPosition() - value();
+            setSliderPosition(value());
+            d->_scroll(movement);
+        }
     });
 
     d->_expandTimer = new QTimer(this);
+    d->_expandTimer->setSingleShot(true);
     connect(d->_expandTimer, &QTimer::timeout, this, [=]() {
-        d->_expandTimer->stop();
-        d->_isExpand = underMouse();
+        d->_isExpand = underMouse() || isSliderDown();
         scrollBarStyle->startExpandAnimation(d->_isExpand);
     });
 }
@@ -54,7 +73,7 @@ ElaScrollBar::ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* par
     Q_D(ElaScrollBar);
     if (!originScrollBar || !parent)
     {
-        qCritical() << "Invalid origin or parent!";
+        qCritical() << "原始滚动条或父控件无效";
         return;
     }
     d->_originScrollArea = parent;
@@ -77,9 +96,68 @@ ElaScrollBar::ElaScrollBar(QScrollBar* originScrollBar, QAbstractScrollArea* par
     });
 }
 
-ElaScrollBar::~ElaScrollBar()
+ElaScrollBar::~ElaScrollBar() = default;
+
+void ElaScrollBar::setScrollBarWidth(int scrollBarWidth)
 {
-    delete this->style();
+    Q_D(ElaScrollBar);
+    scrollBarWidth = qMax(6, scrollBarWidth);
+    if (d->_pScrollBarWidth == scrollBarWidth)
+    {
+        return;
+    }
+    d->_pScrollBarWidth = scrollBarWidth;
+    d->_scrollBarStyle->startExpandAnimation(d->_isExpand);
+    updateGeometry();
+    if (d->_originScrollArea)
+    {
+        d->_handleScrollBarGeometry();
+    }
+    update();
+    Q_EMIT pScrollBarWidthChanged();
+}
+
+int ElaScrollBar::getScrollBarWidth() const
+{
+    Q_D(const ElaScrollBar);
+    return d->_pScrollBarWidth;
+}
+
+void ElaScrollBar::setIsSmoothScroll(bool isSmoothScroll)
+{
+    Q_D(ElaScrollBar);
+    d->_isSmoothScroll = isSmoothScroll;
+    if (!isSmoothScroll)
+    {
+        stopSmoothScroll();
+    }
+}
+
+bool ElaScrollBar::getIsSmoothScroll() const
+{
+    Q_D(const ElaScrollBar);
+    return d->_isSmoothScroll;
+}
+
+void ElaScrollBar::scrollTo(int position)
+{
+    Q_D(ElaScrollBar);
+    stopSmoothScroll();
+    if (d->_isSmoothScroll)
+    {
+        d->_scroll(static_cast<qreal>(position) - value());
+    }
+    else
+    {
+        setValue(position);
+    }
+}
+
+void ElaScrollBar::stopSmoothScroll()
+{
+    Q_D(ElaScrollBar);
+    d->_scrollAnimation->stop();
+    d->_pixelRemainder = 0;
 }
 
 bool ElaScrollBar::event(QEvent* event)
@@ -92,16 +170,16 @@ bool ElaScrollBar::event(QEvent* event)
         d->_expandTimer->stop();
         if (!d->_isExpand)
         {
-            d->_expandTimer->start(350);
+            d->_expandTimer->start(400);
         }
         break;
     }
     case QEvent::Leave:
     {
         d->_expandTimer->stop();
-        if (d->_isExpand)
+        if (d->_isExpand && !isSliderDown())
         {
-            d->_expandTimer->start(350);
+            d->_expandTimer->start(500);
         }
         break;
     }
@@ -136,60 +214,73 @@ bool ElaScrollBar::eventFilter(QObject* watched, QEvent* event)
 void ElaScrollBar::mousePressEvent(QMouseEvent* event)
 {
     Q_D(ElaScrollBar);
-    d->_slideSmoothAnimation->stop();
+    d->_scrollAnimation->stop();
+    d->_expandTimer->stop();
+    d->_isExpand = true;
+    d->_scrollBarStyle->startExpandAnimation(true);
     QScrollBar::mousePressEvent(event);
-    d->_scrollValue = value();
 }
 
 void ElaScrollBar::mouseReleaseEvent(QMouseEvent* event)
 {
     Q_D(ElaScrollBar);
-    d->_slideSmoothAnimation->stop();
     QScrollBar::mouseReleaseEvent(event);
-    d->_scrollValue = value();
+    if (!underMouse())
+    {
+        d->_expandTimer->start(500);
+    }
 }
 
 void ElaScrollBar::mouseMoveEvent(QMouseEvent* event)
 {
     Q_D(ElaScrollBar);
-    d->_slideSmoothAnimation->stop();
+    if (isSliderDown())
+    {
+        d->_scrollAnimation->stop();
+    }
     QScrollBar::mouseMoveEvent(event);
-    d->_scrollValue = value();
 }
 
 void ElaScrollBar::wheelEvent(QWheelEvent* event)
 {
     Q_D(ElaScrollBar);
-    int verticalDelta = event->angleDelta().y();
-    if (d->_slideSmoothAnimation->state() == QAbstractAnimation::Stopped)
+    if (!d->_isSmoothScroll)
     {
-        d->_scrollValue = value();
+        QScrollBar::wheelEvent(event);
+        return;
     }
-    if (verticalDelta != 0)
+    const bool pixelInput = !event->pixelDelta().isNull();
+    const auto delta = pixelInput ? event->pixelDelta() : event->angleDelta();
+    const int movement = orientation() == Qt::Horizontal && delta.x() != 0 ? delta.x() : delta.y();
+    if (movement == 0)
     {
-        if ((value() == minimum() && verticalDelta > 0) || (value() == maximum() && verticalDelta < 0))
-        {
-            QScrollBar::wheelEvent(event);
-            return;
-        }
-        d->_scroll(event->modifiers(), verticalDelta);
+        event->ignore();
+        return;
+    }
+    if (pixelInput)
+    {
+        d->_scrollAnimation->stop();
+        const QScopedValueRollback<bool> updating(d->_isUpdatingScroll, true);
+        d->_pixelRemainder -= movement / d->_getScrollScale();
+        const int steps = static_cast<int>(d->_pixelRemainder);
+        d->_pixelRemainder -= steps;
+        const int previous = value();
+        setValue(previous + steps);
+        event->setAccepted(value() != previous || (movement < 0 ? value() < maximum() : value() > minimum()));
     }
     else
     {
-        int horizontalDelta = event->angleDelta().x();
-        if ((value() == minimum() && horizontalDelta > 0) || (value() == maximum() && horizontalDelta < 0))
-        {
-            QScrollBar::wheelEvent(event);
-            return;
-        }
-        d->_scroll(event->modifiers(), horizontalDelta);
+        const qreal steps = -movement / 120.0;
+        const bool pageScroll = event->modifiers().testFlag(Qt::ControlModifier) || event->modifiers().testFlag(Qt::ShiftModifier);
+        const qreal distance = pageScroll ? qBound(-1.0, steps, 1.0) * pageStep() : steps * QApplication::wheelScrollLines() * singleStep();
+        event->setAccepted(d->_scroll(distance));
     }
-    event->accept();
 }
 
 void ElaScrollBar::contextMenuEvent(QContextMenuEvent* event)
 {
     Q_D(ElaScrollBar);
+    d->_scrollAnimation->stop();
     bool horiz = this->orientation() == Qt::Horizontal;
     QPointer<ElaMenu> menu = new ElaMenu(this);
     menu->setMenuItemHeight(27);

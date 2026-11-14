@@ -1,7 +1,9 @@
 ﻿#include "ElaNavigationBarPrivate.h"
+
 #include "ElaActionCommander.h"
 #include "ElaApplication.h"
 #include "ElaBaseListView.h"
+#include "ElaColorAnimation.h"
 #include "ElaCustomTabWidget.h"
 #include "ElaCustomWidget.h"
 #include "ElaFooterDelegate.h"
@@ -14,17 +16,28 @@
 #include "ElaNavigationNode.h"
 #include "ElaNavigationRouteCommand.h"
 #include "ElaNavigationView.h"
+#include "ElaTabWidget.h"
 #include "ElaToolButton.h"
+
 #include <QApplication>
 #include <QDebug>
 #include <QEvent>
 #include <QLayout>
 #include <QPropertyAnimation>
 #include <QScrollBar>
+#include <QSignalBlocker>
 #include <QTimer>
+#include <QVariantAnimation>
+
 ElaNavigationBarPrivate::ElaNavigationBarPrivate(QObject* parent)
     : QObject{parent}
 {
+    _scrollTimer = new QTimer(this);
+    _scrollTimer->setSingleShot(true);
+    _scrollTimer->setInterval(200);
+    connect(_scrollTimer, &QTimer::timeout, this, [this]() {
+        _scrollToPendingNode();
+    });
 }
 
 ElaNavigationBarPrivate::~ElaNavigationBarPrivate()
@@ -47,177 +60,159 @@ void ElaNavigationBarPrivate::onNavigationOpenNewWindow(const QString& nodeKey)
         widget->setProperty("ElaFloatParentWidget", QVariant::fromValue(q));
         widget->installEventFilter(this);
         ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(q);
-        floatWidget->addTab(widget, widget->windowIcon(), widget->windowTitle());
+        floatWidget->getCustomTabWidget()->addTab(widget, widget->windowIcon(), widget->windowTitle());
         floatWidget->show();
         Q_EMIT q->pageOpenInNewWindow(nodeKey);
     }
 }
 
-void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
+void ElaNavigationBarPrivate::onTreeViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack, bool isScrollToNode)
 {
     Q_Q(ElaNavigationBar);
-    if (index.isValid())
+    if (!index.isValid())
     {
-        ElaNavigationNode* node = static_cast<ElaNavigationNode*>(index.internalPointer());
-        if (!node)
-        {
-            return;
-        }
-        if (node->getIsCategoryNode())
-        {
-            Q_EMIT q->navigationNodeClicked(ElaNavigationType::CategoryNode, node->getNodeKey(), isRouteBack);
-            return;
-        }
-        if (node->getIsExpanderNode())
-        {
-            _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index));
-        }
-        else
-        {
-            if (node->getKeyPoints())
-            {
-                node->setKeyPoints(0);
-                _navigationView->update();
-            }
-            ElaNavigationNode* selectedNode = _navigationModel->getSelectedNode();
-            if (selectedNode != node)
-            {
-                // 记录跳转
-                if (isLogRoute)
-                {
-                    QString backPageKey;
-                    if (selectedNode)
-                    {
-                        backPageKey = selectedNode->getNodeKey();
-                    }
-                    else
-                    {
-                        if (_footerModel->getSelectedNode())
-                        {
-                            backPageKey = _footerModel->getSelectedNode()->getNodeKey();
-                        }
-                    }
-                    ElaNavigationRouteCommand* command = new ElaNavigationRouteCommand(this);
-                    command->setNavigationBar(q);
-                    command->setUndoPageKey(backPageKey);
-                    command->setRedoPageKey(node->getNodeKey());
-                    ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command, false);
-                }
-                Q_EMIT q->navigationNodeClicked(ElaNavigationType::PageNode, node->getNodeKey(), isRouteBack);
-
-                if (_footerModel->getSelectedNode())
-                {
-                    _footerView->clearSelection();
-                    QVariantMap footerPostData = QVariantMap();
-                    footerPostData.insert("SelectMarkChanged", true);
-                    footerPostData.insert("LastSelectedNode", QVariant::fromValue(_footerModel->getSelectedNode()));
-                    footerPostData.insert("SelectedNode", QVariant::fromValue(nullptr));
-                    _footerModel->setSelectedNode(nullptr);
-                    _footerDelegate->navigationNodeStateChange(footerPostData);
-                }
-                QVariantMap postData = QVariantMap();
-                postData.insert("SelectMarkChanged", true);
-                if (_navigationModel->getSelectedExpandedNode())
-                {
-                    postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
-                }
-                else
-                {
-                    postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedNode()));
-                }
-                if (_currentDisplayMode == ElaNavigationType::Compact)
-                {
-                    ElaNavigationNode* originNode = node->getOriginalNode();
-                    if (originNode == node)
-                    {
-                        postData.insert("SelectedNode", QVariant::fromValue(node));
-                    }
-                    else
-                    {
-                        if (originNode == _navigationModel->getSelectedExpandedNode())
-                        {
-                            _navigationModel->setSelectedNode(node);
-                            _resetNodeSelected();
-                            return;
-                        }
-                        _navigationModel->setSelectedExpandedNode(originNode);
-                        postData.insert("SelectedNode", QVariant::fromValue(originNode));
-                    }
-                }
-                else
-                {
-                    postData.insert("SelectedNode", QVariant::fromValue(node));
-                }
-                _navigationModel->setSelectedNode(node);
-                _navigationView->navigationNodeStateChange(postData);
-                if (!node->getIsVisible() && _currentDisplayMode != ElaNavigationType::Compact)
-                {
-                    _expandSelectedNodeParent();
-                }
-            }
-        }
+        return;
+    }
+    ElaNavigationNode* node = static_cast<ElaNavigationNode*>(index.internalPointer());
+    if (node->getIsCategoryNode())
+    {
+        Q_EMIT q->navigationNodeClicked(ElaNavigationType::CategoryNode, node->getNodeKey(), isRouteBack);
+    }
+    else if (node->getIsExpanderNode())
+    {
+        _expandOrCollapseExpanderNode(node, !_navigationView->isExpanded(index));
         _resetNodeSelected();
+    }
+    else
+    {
+        _activatePage(node, isLogRoute, isRouteBack, isScrollToNode);
     }
 }
 
 void ElaNavigationBarPrivate::onFooterViewClicked(const QModelIndex& index, bool isLogRoute, bool isRouteBack)
 {
+    if (index.isValid())
+    {
+        _activatePage(index.data(Qt::UserRole).value<ElaNavigationNode*>(), isLogRoute, isRouteBack, false);
+    }
+}
+
+void ElaNavigationBarPrivate::_activatePage(ElaNavigationNode* node, bool isLogRoute, bool isRouteBack, bool isScrollToNode)
+{
     Q_Q(ElaNavigationBar);
-    ElaNavigationNode* node = index.data(Qt::UserRole).value<ElaNavigationNode*>();
+    if (!node)
+    {
+        return;
+    }
+    const bool isFooter = node->getIsFooterNode();
+    const bool hasPage = !isFooter || node->getIsHasFooterPage();
     if (node->getKeyPoints())
     {
         node->setKeyPoints(0);
-        _navigationView->update();
+        (isFooter ? _footerView->viewport() : _navigationView->viewport())->update();
     }
-    ElaNavigationNode* selectedNode = _footerModel->getSelectedNode();
-
-    if (selectedNode != node)
+    ElaNavigationNode* previousNode = _getSelectedNode();
+    if (hasPage && previousNode != node)
     {
-        // 记录跳转
-        if (isLogRoute && node->getIsHasFooterPage())
-        {
-            QVariantMap routeData = QVariantMap();
-            QString backPageKey;
-            if (selectedNode)
-            {
-                backPageKey = selectedNode->getNodeKey();
-            }
-            else
-            {
-                if (_navigationModel->getSelectedNode())
-                {
-                    backPageKey = _navigationModel->getSelectedNode()->getNodeKey();
-                }
-            }
-            ElaNavigationRouteCommand* command = new ElaNavigationRouteCommand(this);
-            command->setNavigationBar(q);
-            command->setUndoPageKey(backPageKey);
-            command->setRedoPageKey(node->getNodeKey());
-            ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command, false);
-        }
-        Q_EMIT q->navigationNodeClicked(ElaNavigationType::FooterNode, node->getNodeKey(), isRouteBack);
+        _smoothScrollNavigationView(QModelIndex());
+    }
+    if (!isFooter)
+    {
+        _ensureNodeVisible(node);
+    }
+    if (hasPage)
+    {
+        _setSelectedNode(node);
+    }
+    if (isScrollToNode)
+    {
+        _smoothScrollNavigationView(node->getModelIndex());
+    }
+    if (previousNode == node)
+    {
+        return;
+    }
+    const QString nodeKey = node->getNodeKey();
+    if (isLogRoute && hasPage)
+    {
+        auto command = new ElaNavigationRouteCommand(this);
+        command->setNavigationBar(q);
+        command->setUndoPageKey(previousNode ? previousNode->getNodeKey() : QString());
+        command->setRedoPageKey(nodeKey);
+        ElaActionCommander::getInstance()->recordCommand("ElaWidgetToolsAction", command, false);
+    }
+    // 命令状态通知也可能触发新导航，外层请求只在仍为当前页面时继续通知
+    if (!hasPage || _getSelectedNode() == node)
+    {
+        Q_EMIT q->navigationNodeClicked(isFooter ? ElaNavigationType::FooterNode : ElaNavigationType::PageNode, nodeKey, isRouteBack);
+    }
+}
 
-        if (node->getIsHasFooterPage())
+ElaNavigationNode* ElaNavigationBarPrivate::_getSelectedNode() const
+{
+    return _navigationModel->getSelectedNode() ? _navigationModel->getSelectedNode() : _footerModel->getSelectedNode();
+}
+
+ElaNavigationNode* ElaNavigationBarPrivate::_getVisibleNode(ElaNavigationNode* node) const
+{
+    if (!node || node->getIsFooterNode())
+    {
+        return node;
+    }
+    if (_currentDisplayMode == ElaNavigationType::Compact)
+    {
+        return node->getOriginalNode();
+    }
+    while (!node->getIsVisible() && !node->getParentNode()->getIsRootNode())
+    {
+        node = node->getParentNode();
+    }
+    return node;
+}
+
+void ElaNavigationBarPrivate::_setSelectedNode(ElaNavigationNode* node)
+{
+    ElaNavigationNode* previousMainNode = _navigationModel->getSelectedExpandedNode() ? _navigationModel->getSelectedExpandedNode() : _navigationModel->getSelectedNode();
+    ElaNavigationNode* previousFooterNode = _footerModel->getSelectedNode();
+    ElaNavigationNode* mainNode = node && !node->getIsFooterNode() ? node : nullptr;
+    ElaNavigationNode* footerNode = node && node->getIsFooterNode() ? node : nullptr;
+    ElaNavigationNode* visibleNode = _getVisibleNode(mainNode);
+    _navigationModel->setSelectedNode(mainNode);
+    _navigationModel->setSelectedExpandedNode(visibleNode != mainNode ? visibleNode : nullptr);
+    _footerModel->setSelectedNode(footerNode);
+    _updateSelection(_navigationView, visibleNode);
+    _updateSelection(_footerView, footerNode);
+    _startSelectionAnimation(previousMainNode, visibleNode, false);
+    _startSelectionAnimation(previousFooterNode, footerNode, true);
+}
+
+void ElaNavigationBarPrivate::_updateSelection(QAbstractItemView* view, ElaNavigationNode* node)
+{
+    const QModelIndex index = node ? node->getModelIndex() : QModelIndex();
+    if (index.isValid())
+    {
+        if (!view->selectionModel()->isSelected(index))
         {
-            if (_navigationModel->getSelectedNode() || _navigationModel->getSelectedExpandedNode())
-            {
-                QVariantMap mainPostData = QVariantMap();
-                mainPostData.insert("SelectMarkChanged", true);
-                mainPostData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode() ? _navigationModel->getSelectedExpandedNode() : _navigationModel->getSelectedNode()));
-                mainPostData.insert("SelectedNode", QVariant::fromValue(nullptr));
-                _navigationView->clearSelection();
-                _navigationView->navigationNodeStateChange(mainPostData);
-                _navigationModel->setSelectedExpandedNode(nullptr);
-                _navigationModel->setSelectedNode(nullptr);
-            }
-            _footerView->clearSelection();
-            _footerView->selectionModel()->select(index, QItemSelectionModel::Select);
-            QVariantMap postData = QVariantMap();
-            postData.insert("SelectMarkChanged", true);
-            postData.insert("LastSelectedNode", QVariant::fromValue(_footerModel->getSelectedNode()));
-            postData.insert("SelectedNode", QVariant::fromValue(node));
-            _footerDelegate->navigationNodeStateChange(postData);
-            _footerModel->setSelectedNode(node);
+            view->selectionModel()->select(index, QItemSelectionModel::ClearAndSelect);
+        }
+    }
+    else
+    {
+        view->clearSelection();
+    }
+}
+
+void ElaNavigationBarPrivate::_startSelectionAnimation(ElaNavigationNode* previousNode, ElaNavigationNode* selectedNode, bool isFooter)
+{
+    if (previousNode != selectedNode)
+    {
+        if (isFooter)
+        {
+            _footerDelegate->startSelectionAnimation(previousNode, selectedNode);
+        }
+        else
+        {
+            _navigationView->startSelectionAnimation(previousNode, selectedNode);
         }
     }
 }
@@ -260,6 +255,10 @@ void ElaNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex
         QModelIndex index = _navigationModel->index(row, 0, parentIndex);
         ElaNavigationNode* childNode = static_cast<ElaNavigationNode*>(index.internalPointer());
         childNode->setModelIndex(index);
+        if (!parentIndex.isValid() && childNode->getIsCategoryNode())
+        {
+            _navigationView->setRowHidden(row, parentIndex, _currentDisplayMode != ElaNavigationType::Maximal);
+        }
         if (_navigationModel->hasChildren(index))
         {
             _initNodeModelIndex(index);
@@ -269,78 +268,34 @@ void ElaNavigationBarPrivate::_initNodeModelIndex(const QModelIndex& parentIndex
 
 void ElaNavigationBarPrivate::_resetNodeSelected()
 {
-    _navigationView->clearSelection();
-    ElaNavigationNode* selectedNode = _navigationModel->getSelectedNode();
-    if (!selectedNode || !selectedNode->getModelIndex().isValid())
+    _setSelectedNode(_getSelectedNode());
+}
+
+void ElaNavigationBarPrivate::_ensureNodeVisible(ElaNavigationNode* node)
+{
+    if (_currentDisplayMode == ElaNavigationType::Compact)
     {
         return;
     }
-    if (selectedNode->getParentNode()->getIsRootNode() || selectedNode->getIsVisible())
+    QList<ElaNavigationNode*> ancestors;
+    for (ElaNavigationNode* parent = node->getParentNode(); parent && !parent->getIsRootNode(); parent = parent->getParentNode())
     {
-        _navigationView->selectionModel()->select(selectedNode->getModelIndex(), QItemSelectionModel::Select);
-        if (_navigationModel->getSelectedExpandedNode())
-        {
-            QVariantMap postData = QVariantMap();
-            postData.insert("SelectMarkChanged", true);
-            postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
-            postData.insert("SelectedNode", QVariant::fromValue(selectedNode));
-            _navigationView->navigationNodeStateChange(postData);
-        }
-        _navigationModel->setSelectedExpandedNode(nullptr);
+        ancestors.prepend(parent);
     }
-    else
+    for (auto ancestor: ancestors)
     {
-        ElaNavigationNode* parentNode = selectedNode->getParentNode();
-        while (parentNode && !parentNode->getParentNode()->getIsRootNode() && !parentNode->getIsVisible())
-        {
-            parentNode = parentNode->getParentNode();
-        }
-        if (!parentNode)
-        {
-            return;
-        }
-        // 单级节点展开/收起时Mark变化
-        if (!_navigationModel->getSelectedExpandedNode())
-        {
-            QVariantMap postData = QVariantMap();
-            postData.insert("SelectMarkChanged", true);
-            postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedNode()));
-            postData.insert("SelectedNode", QVariant::fromValue(parentNode));
-            _navigationView->navigationNodeStateChange(postData);
-        }
-        else
-        {
-            // 多级节点
-            if (_navigationModel->getSelectedExpandedNode() != parentNode)
-            {
-                // 同一起源节点展开/收起时的Mark变化
-                if (_navigationModel->getSelectedExpandedNode()->getOriginalNode() == parentNode->getOriginalNode())
-                {
-                    QVariantMap postData = QVariantMap();
-                    postData.insert("SelectMarkChanged", true);
-                    postData.insert("LastSelectedNode", QVariant::fromValue(_navigationModel->getSelectedExpandedNode()));
-                    postData.insert("SelectedNode", QVariant::fromValue(parentNode));
-                    _navigationView->navigationNodeStateChange(postData);
-                }
-            }
-        }
-        _navigationModel->setSelectedExpandedNode(parentNode);
-        _navigationView->selectionModel()->select(parentNode->getModelIndex(), QItemSelectionModel::Select);
+        _setNodeExpanded(ancestor, true);
     }
 }
 
-void ElaNavigationBarPrivate::_expandSelectedNodeParent()
+void ElaNavigationBarPrivate::_setNodeExpanded(ElaNavigationNode* node, bool isExpanded)
 {
-    ElaNavigationNode* parentNode = _navigationModel->getSelectedNode()->getParentNode();
-    while (parentNode && !parentNode->getIsRootNode())
+    if (!node || !node->getIsHasChild() || _navigationView->isExpanded(node->getModelIndex()) == isExpanded)
     {
-        QVariantMap data;
-        data.insert("Expand", QVariant::fromValue(parentNode));
-        _navigationView->navigationNodeStateChange(data);
-        parentNode->setIsExpanded(true);
-        _navigationView->expand(parentNode->getModelIndex());
-        parentNode = parentNode->getParentNode();
+        return;
     }
+    node->setIsExpanded(isExpanded);
+    _navigationView->setNodeExpanded(node, isExpanded);
 }
 
 void ElaNavigationBarPrivate::_expandOrCollapseExpanderNode(ElaNavigationNode* node, bool isExpand)
@@ -360,37 +315,37 @@ void ElaNavigationBarPrivate::_expandOrCollapseExpanderNode(ElaNavigationNode* n
     }
     else
     {
-        QModelIndex index = node->getModelIndex();
-        bool isExpanded = _navigationView->isExpanded(index);
-        if (node->getIsHasChild() && isExpand != isExpanded)
-        {
-            QVariantMap data;
-            if (isExpanded)
-            {
-                // 收起
-                data.insert("Collapse", QVariant::fromValue(node));
-                node->setIsExpanded(isExpand);
-                _navigationView->navigationNodeStateChange(data);
-                _navigationView->collapse(index);
-            }
-            else
-            {
-                // 展开
-                data.insert("Expand", QVariant::fromValue(node));
-                node->setIsExpanded(true);
-                _navigationView->navigationNodeStateChange(data);
-                _navigationView->expand(index);
-            }
-        }
+        _setNodeExpanded(node, isExpand);
     }
 }
 
 void ElaNavigationBarPrivate::_addStackedPage(QWidget* page, QString pageKey)
 {
     Q_Q(ElaNavigationBar);
+    if (_footerModel->getSelectedNode())
+    {
+        _navigationModel->setSelectedNode(nullptr);
+    }
     page->setProperty("ElaPageKey", pageKey);
     Q_EMIT q->navigationNodeAdded(ElaNavigationType::PageNode, pageKey, page);
     ElaNavigationNode* node = _navigationModel->getNavigationNode(pageKey);
+    if (!node->getParentNode()->getIsRootNode())
+    {
+        ElaNavigationNode* originalNode = node->getOriginalNode();
+        ElaMenu*& menu = _compactMenuMap[originalNode];
+        if (!menu)
+        {
+            menu = new ElaMenu(q);
+        }
+        QAction* action = menu->addElaIconAction(node->getAwesome(), node->getNodeTitle());
+        action->setData(pageKey);
+        connect(action, &QAction::triggered, this, [this, pageKey]() {
+            if (auto targetNode = _navigationModel->getNavigationNode(pageKey))
+            {
+                onTreeViewClicked(targetNode->getModelIndex());
+            }
+        });
+    }
     QVariantMap suggestData;
     suggestData.insert("ElaPageKey", pageKey);
     _suggestDataList.append(ElaSuggestBox::SuggestData(node->getAwesome(), node->getNodeTitle(), suggestData));
@@ -419,209 +374,137 @@ void ElaNavigationBarPrivate::_raiseNavigationBar()
 
 void ElaNavigationBarPrivate::_smoothScrollNavigationView(const QModelIndex& index)
 {
-    QTimer::singleShot(200, this, [=]() {
-        if (_currentDisplayMode == ElaNavigationType::Compact)
-        {
-            return;
-        }
-        auto vScrollBar = _navigationView->verticalScrollBar();
-        int startValue = vScrollBar->value();
+    _scrollTimer->stop();
+    if (_scrollAnimation)
+    {
+        _scrollAnimation->stop();
+    }
+    _pendingScrollIndex = index;
+    if (index.isValid() && _currentDisplayMode != ElaNavigationType::Compact)
+    {
+        _scrollTimer->start();
+    }
+}
+
+void ElaNavigationBarPrivate::_scrollToPendingNode()
+{
+    const QModelIndex index = _pendingScrollIndex;
+    _pendingScrollIndex = QModelIndex();
+    ElaNavigationNode* selectedNode = _navigationModel->getSelectedNode();
+    if (!index.isValid() || _currentDisplayMode == ElaNavigationType::Compact || !selectedNode || selectedNode->getModelIndex() != index)
+    {
+        return;
+    }
+    auto scrollBar = _navigationView->verticalScrollBar();
+    const int startValue = scrollBar->value();
+    int endValue = startValue;
+    {
+        // 用 Qt 计算居中位置，测量期间不发送中间滚动位置
+        QSignalBlocker blocker(scrollBar);
         _navigationView->scrollTo(index, QAbstractItemView::PositionAtCenter);
-        int endValue = vScrollBar->value();
-        QPropertyAnimation* scrollAnimation = new QPropertyAnimation(vScrollBar, "value");
-        scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
-        scrollAnimation->setDuration(255);
-        scrollAnimation->setStartValue(startValue);
-        scrollAnimation->setEndValue(endValue);
-        scrollAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    });
+        endValue = scrollBar->value();
+        scrollBar->setValue(startValue);
+    }
+    if (startValue == endValue)
+    {
+        return;
+    }
+    if (!_scrollAnimation)
+    {
+        _scrollAnimation = new QPropertyAnimation(scrollBar, "value", this);
+        _scrollAnimation->setEasingCurve(QEasingCurve::OutSine);
+        _scrollAnimation->setDuration(255);
+    }
+    _scrollAnimation->setStartValue(startValue);
+    _scrollAnimation->setEndValue(endValue);
+    _scrollAnimation->start();
 }
 
 void ElaNavigationBarPrivate::_doComponentAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation)
 {
-    switch (displayMode)
+    const bool wasMaximal = _currentDisplayMode == ElaNavigationType::Maximal;
+    const bool isMaximal = displayMode == ElaNavigationType::Maximal;
+    _currentDisplayMode = displayMode;
+    _updateCategoryVisibility();
+    _updateDisplayLayout();
+    if (!isMaximal)
     {
-    case ElaNavigationType::Minimal:
+        _smoothScrollNavigationView(QModelIndex());
+    }
+    if (wasMaximal != isMaximal)
     {
-        _doNavigationBarWidthAnimation(displayMode, isAnimation);
-        if (_currentDisplayMode == ElaNavigationType::Maximal)
-        {
-            _userCard->setVisible(false);
-            _doUserButtonAnimation(true, isAnimation);
-            _handleNavigationExpandState(true);
-        }
-        _currentDisplayMode = displayMode;
-        break;
+        _handleNavigationExpandState(!isMaximal, isAnimation);
     }
-    case ElaNavigationType::Compact:
-    {
-        _doNavigationBarWidthAnimation(displayMode, isAnimation);
-        _doNavigationViewWidthAnimation(isAnimation);
-        if (_currentDisplayMode != ElaNavigationType::Minimal)
-        {
-            _doUserButtonAnimation(true, isAnimation);
-            _handleNavigationExpandState(true);
-        }
-        _currentDisplayMode = displayMode;
-        break;
-    }
-    case ElaNavigationType::Maximal:
-    {
-        _doNavigationBarWidthAnimation(displayMode, isAnimation);
-        _doUserButtonAnimation(false, isAnimation);
-        _currentDisplayMode = displayMode;
-        _handleNavigationExpandState(false);
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    }
+    _doNavigationBarWidthAnimation(displayMode, isAnimation);
 }
 
-void ElaNavigationBarPrivate::_handleNavigationExpandState(bool isSave)
+void ElaNavigationBarPrivate::_handleNavigationExpandState(bool isSave, bool isAnimation)
 {
+    const bool isAnimated = _navigationView->isAnimated();
+    _navigationView->setAnimated(isAnimated && !isSave && isAnimation);
     if (isSave)
     {
-        // 保存展开状态 收起根节点所有子树
-        _lastExpandedNodesList = _navigationModel->getRootExpandedNodes();
-        for (auto node: _lastExpandedNodesList)
+        _lastExpandedNodeKeys.clear();
+        for (auto node: _navigationModel->getRootExpandedNodes())
         {
-            onTreeViewClicked(node->getModelIndex(), false);
+            _lastExpandedNodeKeys.append(node->getNodeKey());
+            _setNodeExpanded(node, false);
         }
     }
     else
     {
-        // 修正动画覆盖
-        _navigationView->resize(_pNavigationBarWidth - 5, _navigationView->height());
-        for (auto node: _lastExpandedNodesList)
+        for (const auto& nodeKey: _lastExpandedNodeKeys)
         {
-            onTreeViewClicked(node->getModelIndex(), false);
+            _setNodeExpanded(_navigationModel->getNavigationNode(nodeKey), true);
         }
+        _lastExpandedNodeKeys.clear();
+    }
+    _navigationView->setAnimated(isAnimated);
+    _resetNodeSelected();
+}
+
+void ElaNavigationBarPrivate::_updateCategoryVisibility()
+{
+    for (auto node: _navigationModel->getRootCategoryNodes())
+    {
+        _navigationView->setRowHidden(node->getRow(), QModelIndex(), _currentDisplayMode != ElaNavigationType::Maximal);
     }
 }
 
-void ElaNavigationBarPrivate::_resetLayout()
+void ElaNavigationBarPrivate::_updateDisplayLayout()
 {
-    while (_userButtonLayout->count())
-    {
-        _userButtonLayout->takeAt(0);
-    }
-    _userButtonLayout->addWidget(_userButton);
+    Q_Q(ElaNavigationBar);
+    const bool isMaximal = _currentDisplayMode == ElaNavigationType::Maximal;
+    const int contentWidth = isMaximal ? _pNavigationBarWidth : 42;
+    _navigationView->setFixedWidth(contentWidth);
+    _navigationView->setColumnWidth(0, contentWidth - 2 * _navigationView->frameWidth());
+    _footerView->setFixedWidth(contentWidth);
+    _userCard->setFixedWidth(_pNavigationBarWidth - 3);
+    _userCard->setVisible(_isShowUserCard && isMaximal);
+    _userButton->setVisible(_isShowUserCard && !isMaximal);
+    _userCardLayout->setContentsMargins(_isShowUserCard ? QMargins(3, 10, 0, 5) : QMargins());
+    q->layout()->activate();
 }
 
 void ElaNavigationBarPrivate::_doNavigationBarWidthAnimation(ElaNavigationType::NavigationDisplayMode displayMode, bool isAnimation)
 {
     Q_Q(ElaNavigationBar);
-    QPropertyAnimation* navigationBarWidthAnimation = new QPropertyAnimation(q, "maximumWidth");
-    navigationBarWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    navigationBarWidthAnimation->setStartValue(q->width());
-    navigationBarWidthAnimation->setDuration(isAnimation ? 255 : 0);
-    switch (displayMode)
+    if (!_navigationBarWidthAnimation)
     {
-    case ElaNavigationType::Minimal:
-    {
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            q->setFixedWidth(value.toUInt());
-        });
-        navigationBarWidthAnimation->setEndValue(0);
-        break;
-    }
-    case ElaNavigationType::Compact:
-    {
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            q->setFixedWidth(value.toUInt());
-        });
-        navigationBarWidthAnimation->setEndValue(42);
-        break;
-    }
-    case ElaNavigationType::Maximal:
-    {
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _resetLayout();
-        });
-        connect(navigationBarWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            q->setFixedWidth(value.toUInt());
-        });
-        navigationBarWidthAnimation->setEndValue(_pNavigationBarWidth);
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    }
-    navigationBarWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
-void ElaNavigationBarPrivate::_doNavigationViewWidthAnimation(bool isAnimation)
-{
-    QPropertyAnimation* navigationViewWidthAnimation = new QPropertyAnimation(this, "pNavigationViewWidth");
-    connect(navigationViewWidthAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        _navigationView->setColumnWidth(0, value.toUInt());
-    });
-    navigationViewWidthAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    navigationViewWidthAnimation->setStartValue(_navigationView->columnWidth(0));
-    navigationViewWidthAnimation->setEndValue(40);
-    navigationViewWidthAnimation->setDuration(isAnimation ? 255 : 0);
-    navigationViewWidthAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
-void ElaNavigationBarPrivate::_doUserButtonAnimation(bool isCompact, bool isAnimation)
-{
-    QPropertyAnimation* userButtonAnimation = new QPropertyAnimation(_userButton, "geometry");
-    connect(userButtonAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        _userButton->setFixedSize(value.toRect().size());
-    });
-    userButtonAnimation->setEasingCurve(isCompact ? QEasingCurve::OutCubic : QEasingCurve::InOutSine);
-    QRect maximumRect = QRect(13, 18, 64, 64);
-    QRect compactRect = QRect(3, 10, 36, 36);
-    userButtonAnimation->setStartValue(isCompact ? maximumRect : compactRect);
-    userButtonAnimation->setEndValue(isCompact ? compactRect : maximumRect);
-
-    QPropertyAnimation* spacingAnimation = new QPropertyAnimation(this, "pUserButtonSpacing");
-    connect(spacingAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-        while (_userButtonLayout->count())
-        {
-            _userButtonLayout->takeAt(0);
-        }
-        if (_isShowUserCard)
-        {
-            _userButtonLayout->addSpacing(value.toInt());
-        }
-    });
-    spacingAnimation->setEasingCurve(isCompact ? QEasingCurve::OutCubic : QEasingCurve::InOutSine);
-    spacingAnimation->setStartValue(isCompact ? 80 : 36);
-    spacingAnimation->setEndValue(isCompact ? 36 : 80);
-    if (isCompact)
-    {
-        _userCard->setVisible(false);
-        if (_isShowUserCard)
-        {
-            _userButton->setVisible(true);
-        }
-        userButtonAnimation->setDuration(isAnimation ? 255 : 0);
-        spacingAnimation->setDuration(isAnimation ? 255 : 0);
-        connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _resetLayout();
+        _navigationBarWidthAnimation = new QVariantAnimation(this);
+        // 对齐 WinUI SplitView 的紧凑内联过渡
+        QEasingCurve easing(QEasingCurve::BezierSpline);
+        easing.addCubicBezierSegment(QPointF(0, 0.35), QPointF(0.15, 1), QPointF(1, 1));
+        _navigationBarWidthAnimation->setEasingCurve(easing);
+        connect(_navigationBarWidthAnimation, &QVariantAnimation::valueChanged, this, [q](const QVariant& value) {
+            q->setFixedWidth(value.toInt());
         });
     }
-    else
-    {
-        connect(spacingAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _userButton->setFixedSize(64, 64);
-            _userButton->setGeometry(QRect(13, 18, 64, 64));
-            _userButton->setVisible(false);
-            _resetLayout();
-            if (_isShowUserCard)
-            {
-                _userCard->setVisible(true);
-            }
-        });
-        userButtonAnimation->setDuration(isAnimation ? 135 : 0);
-        spacingAnimation->setDuration(isAnimation ? 135 : 0);
-    }
-    userButtonAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    spacingAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    const int targetWidth = displayMode == ElaNavigationType::Minimal ? 0 : displayMode == ElaNavigationType::Compact ? 42
+                                                                                                                      : _pNavigationBarWidth;
+    _navigationBarWidthAnimation->stop();
+    _navigationBarWidthAnimation->setStartValue(q->width());
+    _navigationBarWidthAnimation->setEndValue(targetWidth);
+    _navigationBarWidthAnimation->setDuration(isAnimation && ElaColorAnimation::getIsAnimationEnabled(q) ? 200 : 0);
+    _navigationBarWidthAnimation->start();
 }

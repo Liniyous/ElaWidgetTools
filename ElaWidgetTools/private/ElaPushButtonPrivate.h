@@ -25,7 +25,7 @@ public:
 private:
     QColor _lightTextColor;
     QColor _darkTextColor;
-    bool _isPressed{false};
+    bool _isAccent{false};
     ElaThemeType::ThemeMode _themeMode;
 };
 

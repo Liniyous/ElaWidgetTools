@@ -1,12 +1,16 @@
 #include "ElaKeyBinder.h"
+
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaContentDialog.h"
 #include "ElaKeyBinderContainer.h"
 #include "ElaKeyBinderPrivate.h"
 #include "ElaTheme.h"
+
 #include <QMouseEvent>
 #include <QPainter>
 #include <utility>
+
 ELA_PROPERTY_Q_CPP(ElaKeyBinder, int, BorderRadius)
 ElaKeyBinder::ElaKeyBinder(QWidget* parent)
     : QLabel(parent), d_ptr(new ElaKeyBinderPrivate())
@@ -16,6 +20,7 @@ ElaKeyBinder::ElaKeyBinder(QWidget* parent)
     d->_pBorderRadius = 5;
     setFixedHeight(35);
     setMouseTracking(true);
+    setObjectName("ElaKeyBinder");
     setStyleSheet("#ElaKeyBinder{background-color:transparent;}");
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
@@ -67,24 +72,6 @@ quint32 ElaKeyBinder::getNativeVirtualBinderKey() const
     return d->_binderContainer->getNativeVirtualBinderKey();
 }
 
-bool ElaKeyBinder::event(QEvent* event)
-{
-    switch (event->type())
-    {
-    case QEvent::Enter:
-    case QEvent::Leave:
-    {
-        update();
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    }
-    return QLabel::event(event);
-}
-
 void ElaKeyBinder::mouseReleaseEvent(QMouseEvent* event)
 {
     Q_D(ElaKeyBinder);
@@ -108,7 +95,7 @@ void ElaKeyBinder::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
-    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase));
+    painter.setBrush(ElaColorAnimation::getColor(this, underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase), "Background"));
     QRect borderRect = rect();
     borderRect.adjust(1, 1, -1, -1);
     painter.drawRoundedRect(borderRect, d->_pBorderRadius, d->_pBorderRadius);

@@ -1,13 +1,15 @@
 #include "ElaAcrylicUrlCard.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+#include "private/ElaAcrylicUrlCardPrivate.h"
+
 #include <QDesktopServices>
 #include <QPainter>
 #include <QPainterPath>
 #include <QUrl>
 
-#include "ElaTheme.h"
-#include "private/ElaAcrylicUrlCardPrivate.h"
 ELA_PROPERTY_Q_CPP(ElaAcrylicUrlCard, int, BorderRadius)
 ELA_PROPERTY_Q_CPP(ElaAcrylicUrlCard, qreal, MainOpacity)
 ELA_PROPERTY_Q_CPP(ElaAcrylicUrlCard, qreal, NoiseOpacity)
@@ -64,11 +66,16 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 亚克力绘制
     painter.save();
-    painter.setPen(QPen(underMouse() ? ElaThemeColor(d->_themeMode, BasicBorderHover) : ElaThemeColor(d->_themeMode, BasicBorder), d->_borderWidth));
-    QColor brushColor;
-    brushColor = underMouse() ? ElaThemeColor(d->_themeMode, BasicHover) : ElaThemeColor(d->_themeMode, BasicBase);
-    brushColor.setAlpha(d->_pBrushAlpha);
-    painter.setBrush(brushColor);
+    painter.setPen(QPen(ElaThemeColor(d->_themeMode, BasicBorder), d->_borderWidth));
+    // 材质底色与透明控件填充分开 BrushAlpha 决定卡片的透光程度
+    QColor brushColor = ElaThemeColor(d->_themeMode, PopupBase);
+    const QColor hoverColor = ElaThemeColor(d->_themeMode, BasicHoverAlpha);
+    const qreal hoverAlpha = isEnabled() && underMouse() ? hoverColor.alphaF() : 0;
+    brushColor.setRgbF(brushColor.redF() * (1 - hoverAlpha) + hoverColor.redF() * hoverAlpha,
+                       brushColor.greenF() * (1 - hoverAlpha) + hoverColor.greenF() * hoverAlpha,
+                       brushColor.blueF() * (1 - hoverAlpha) + hoverColor.blueF() * hoverAlpha,
+                       qBound(0, d->_pBrushAlpha, 255) / 255.0);
+    painter.setBrush(ElaColorAnimation::getColor(this, brushColor, "Background"));
     QRect foregroundRect = rect();
     foregroundRect.adjust(d->_borderWidth, d->_borderWidth, -d->_borderWidth, -d->_borderWidth);
     int width = foregroundRect.width();
@@ -114,7 +121,7 @@ void ElaAcrylicUrlCard::paintEvent(QPaintEvent* event)
     font.setWeight(QFont::Normal);
     font.setPixelSize(d->_pSubTitlePixelSize);
     painter.setFont(font);
-    painter.setPen(ElaThemeColor(d->_themeMode, BasicDetailsText));
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicTextNoFocus));
     int titleHeight = painter.fontMetrics().boundingRect(d->_pTitle).height() * 1.1;
     painter.drawText(QRect(pixRect.x(), d->_pSubTitleSpacing + titleHeight + pixRect.bottom() + d->_pTitleSpacing, width - width / 7, height() / 3), Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, d->_pSubTitle);
     painter.restore();

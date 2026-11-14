@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 #endif
     QApplication a(argc, argv);
     eApp->init();
-    //ElaLog::getInstance()->initMessageLog(true);
+    ElaLog::getInstance()->initMessageLog(false);
     MainWindow w;
     w.show();
 #ifdef Q_OS_WIN

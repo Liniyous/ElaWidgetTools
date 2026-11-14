@@ -4,9 +4,9 @@
 #include <QMenu>
 #include <QWidget>
 
+#include "ElaPropertyMacro.h"
 #include "ElaWidgetToolsDef.h"
 #include "ElaWidgetToolsExport.h"
-#include "ElaPropertyMacro.h"
 class ElaMenuPrivate;
 class ELA_EXPORT ElaMenu : public QMenu
 {
@@ -35,6 +35,7 @@ Q_SIGNALS:
 
 protected:
     virtual void showEvent(QShowEvent* event) override;
+    virtual void hideEvent(QHideEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };
 

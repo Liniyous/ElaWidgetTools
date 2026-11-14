@@ -3,6 +3,7 @@
 #include "ElaTheme.h"
 #include "ElaWinShadowHelper.h"
 #include "private/ElaApplicationPrivate.h"
+
 #include <QApplication>
 #include <QCursor>
 #include <QFontDatabase>
@@ -46,7 +47,15 @@ void ElaApplication::setWindowDisplayMode(ElaApplicationType::WindowDisplayMode 
     case ElaApplicationType::ElaMica:
     {
         d->_pWindowDisplayMode = windowDisplayType;
-        d->_initMicaBaseImage(QImage(d->_pElaMicaImagePath));
+        if (d->_lightBaseImage.isNull() && !d->_isMicaInitializing)
+        {
+            d->_initMicaBaseImage(QImage(d->_pElaMicaImagePath));
+        }
+        if (!d->_lightBaseImage.isNull() || !d->_isMicaInitializing)
+        {
+            Q_EMIT pWindowDisplayModeChanged();
+            d->_updateAllMicaWidget();
+        }
         break;
     }
     default:
@@ -57,8 +66,11 @@ void ElaApplication::setWindowDisplayMode(ElaApplicationType::WindowDisplayMode 
 #ifdef Q_OS_WIN
     for (auto widget: d->_micaWidgetList)
     {
-        ElaWinShadowHelper::getInstance()->setWindowDisplayMode(widget, windowDisplayType, lastDisplayMode);
-        ElaWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), d->_themeMode == ElaThemeType::Light);
+        if (widget)
+        {
+            ElaWinShadowHelper::getInstance()->setWindowDisplayMode(widget, windowDisplayType, lastDisplayMode);
+            ElaWinShadowHelper::getInstance()->setWindowThemeMode(widget->winId(), d->_themeMode == ElaThemeType::Light);
+        }
     }
 #endif
     if (windowDisplayType != ElaApplicationType::ElaMica)
@@ -130,13 +142,18 @@ void ElaApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
     }
     if (isSync)
     {
-        d->_micaWidgetList.append(widget);
-        widget->installEventFilter(d);
+        d->_micaWidgetList.removeAll(nullptr);
+        if (!d->_micaWidgetList.contains(widget))
+        {
+            d->_micaWidgetList.append(widget);
+            widget->installEventFilter(d);
+        }
     }
     else
     {
-        d->_micaWidgetList.removeOne(widget);
+        d->_micaWidgetList.removeAll(widget);
         widget->removeEventFilter(d);
+        widget->update();
     }
     switch (d->_pWindowDisplayMode)
     {
@@ -147,7 +164,7 @@ void ElaApplication::syncWindowDisplayMode(QWidget* widget, bool isSync)
         {
             if (d->_pWindowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica)
             {
-                d->_updateMica(widget, false);
+                d->_updateMica(widget);
             }
         }
         break;

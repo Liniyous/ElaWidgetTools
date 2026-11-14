@@ -1,12 +1,14 @@
 #include "ElaMenuBarStyle.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaMenuBar.h"
+#include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
 
-#include "ElaMenuBar.h"
-#include "ElaTheme.h"
 ElaMenuBarStyle::ElaMenuBarStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
@@ -46,11 +48,9 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
             painter->setPen(Qt::NoPen);
-            if (topt->state.testFlag(QStyle::State_Enabled) && topt->state.testFlag(QStyle::State_MouseOver))
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                painter->drawRect(topt->rect);
-            }
+            const QColor background = topt->state.testFlag(QStyle::State_Enabled) && topt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, BasicHoverAlpha) : QColor(Qt::transparent);
+            painter->setBrush(ElaColorAnimation::getColor(widget, background));
+            painter->drawRect(topt->rect);
             //展开图标
             painter->setPen(!topt->state.testFlag(QStyle::State_Enabled) ? Qt::gray : ElaThemeColor(_themeMode, BasicText));
             QFont iconFont = QFont("ElaAwesome");
@@ -79,18 +79,14 @@ void ElaMenuBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
             //背景绘制
             painter->setPen(Qt::NoPen);
-            if (mopt->state.testFlag(QStyle::State_Enabled))
-            {
-                if (mopt->state.testFlag(QStyle::State_Sunken))
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-                }
-                else if (mopt->state.testFlag(QStyle::State_Selected))
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
-                }
-                painter->drawRoundedRect(menuItemRect, 3, 3);
-            }
+            const auto* backgroundMenuBar = qobject_cast<const QMenuBar*>(widget);
+            const QAction* backgroundAction = backgroundMenuBar ? backgroundMenuBar->actionAt(menuItemRect.center()) : nullptr;
+            const QColor background = !mopt->state.testFlag(QStyle::State_Enabled) ? QColor(Qt::transparent)
+                : mopt->state.testFlag(QStyle::State_Sunken)                       ? ElaThemeColor(_themeMode, BasicPressAlpha)
+                : mopt->state.testFlag(QStyle::State_Selected)                     ? ElaThemeColor(_themeMode, BasicHoverAlpha)
+                                                                                   : QColor(Qt::transparent);
+            painter->setBrush(ElaColorAnimation::getColor(widget, background, "MenuItem", {}, backgroundAction));
+            painter->drawRoundedRect(menuItemRect, 3, 3);
             //图标和文字绘制
             QIcon icon = mopt->icon;
             QString menuText = mopt->text;

@@ -1,8 +1,10 @@
 #include "ElaLog.h"
 
-#include <QDir>
-
 #include "ElaLogPrivate.h"
+#include "ElaLogWriter.h"
+
+#include <QCoreApplication>
+#include <QDir>
 
 ELA_SINGLETON_CPP(ElaLog)
 ELA_PROPERTY_Q_CPP(ElaLog, QString, LogSavePath)
@@ -16,18 +18,53 @@ ElaLog::ElaLog(QObject* parent)
     d->_pLogFileName = "ElaLog";
     d->_pLogSavePath = QDir::currentPath();
     d->_pIsLogFileNameWithTime = false;
-    d->_clearLogFile();
-    connect(this, &ElaLog::pLogSavePathChanged, d, &ElaLogPrivate::_clearLogFile);
-    connect(this, &ElaLog::pLogFileNameChanged, d, &ElaLogPrivate::_clearLogFile);
-    connect(this, &ElaLog::pIsLogFileNameWithTimeChanged, d, &ElaLogPrivate::_clearLogFile);
+    d->_configureLogFile();
+    connect(this, &ElaLog::pLogSavePathChanged, d, &ElaLogPrivate::_configureLogFile);
+    connect(this, &ElaLog::pLogFileNameChanged, d, &ElaLogPrivate::_configureLogFile);
+    connect(this, &ElaLog::pIsLogFileNameWithTimeChanged, d, &ElaLogPrivate::_configureLogFile);
+    const auto shutdown = []() {
+        ElaLog::getInstance()->initMessageLog(false);
+    };
+    if (QCoreApplication::instance())
+    {
+        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, shutdown, Qt::DirectConnection);
+    }
+    // 也覆盖未进入事件循环、直接销毁 QCoreApplication 的程序
+    qAddPostRoutine(shutdown);
 }
 
 ElaLog::~ElaLog()
 {
+    initMessageLog(false);
 }
 
 void ElaLog::initMessageLog(bool isEnable)
 {
     Q_D(ElaLog);
-    qInstallMessageHandler(isEnable ? d->_messageLogHander : 0);
+    QMutexLocker locker(&d->_controlMutex);
+    if (d->_isEnabled == isEnable)
+    {
+        return;
+    }
+    if (isEnable)
+    {
+        d->_writer->startLogging();
+        d->_previousHandler = qInstallMessageHandler(ElaLogPrivate::_messageLogHandler);
+    }
+    else
+    {
+        const QtMessageHandler currentHandler = qInstallMessageHandler(d->_previousHandler);
+        if (currentHandler != ElaLogPrivate::_messageLogHandler)
+        {
+            qInstallMessageHandler(currentHandler);
+        }
+        d->_writer->stopLogging();
+    }
+    d->_isEnabled = isEnable;
+}
+
+bool ElaLog::flush()
+{
+    Q_D(ElaLog);
+    return d->_writer->flush();
 }

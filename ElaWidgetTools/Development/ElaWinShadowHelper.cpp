@@ -48,13 +48,13 @@ bool ElaWinShadowHelper::initWinAPI()
         }
         if (!(_dwmExtendFrameIntoClientArea && _dwmSetWindowAttribute && _dwmIsCompositionEnabled && _dwmEnableBlurBehindWindow))
         {
-            qCritical() << "Dwm Func Init Incomplete!";
+            qCritical() << "DWM 函数初始化不完整";
             return false;
         }
     }
     else
     {
-        qCritical() << "dwmapi.dll Load Fail!";
+        qCritical() << "加载 dwmapi.dll 失败";
         return false;
     }
     HMODULE user32Module = LoadLibraryW(L"user32.dll");
@@ -74,13 +74,13 @@ bool ElaWinShadowHelper::initWinAPI()
         }
         if (!(_setWindowCompositionAttribute && _getDpiForWindow && _getSystemMetricsForDpi))
         {
-            qCritical() << "User32 Func Init Incomplete!";
+            qCritical() << "User32 函数初始化不完整";
             return false;
         }
     }
     else
     {
-        qCritical() << "user32.dll Load Fail!";
+        qCritical() << "加载 user32.dll 失败";
         return false;
     }
 
@@ -93,13 +93,13 @@ bool ElaWinShadowHelper::initWinAPI()
         }
         if (!(_getDpiForMonitor))
         {
-            qCritical() << "SHCore Func Init Incomplete!";
+            qCritical() << "SHCore 函数初始化不完整";
             return false;
         }
     }
     else
     {
-        qCritical() << "SHCore.dll Load Fail!";
+        qCritical() << "加载 SHCore.dll 失败";
         return false;
     }
     return true;

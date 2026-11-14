@@ -1,60 +1,68 @@
 ﻿#include "T_Icon.h"
 
-#include <QApplication>
-#include <QClipboard>
-#include <QHeaderView>
-#include <QStandardItemModel>
-#include <QVBoxLayout>
-
 #include "ElaLineEdit.h"
 #include "ElaListView.h"
-#include "ElaMessageBar.h"
+#include "ElaText.h"
 #include "T_IconDelegate.h"
 #include "T_IconModel.h"
+
+#include <QApplication>
+#include <QClipboard>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
 T_Icon::T_Icon(QWidget* parent)
     : T_BasePage(parent)
 {
-    // 预览窗口标题
-    setWindowTitle("ElaIcon");
-    // 顶部元素
-    createCustomWidget("一堆常用图标被放置于此，左键单击以复制其枚举");
-
+    setWindowTitle("图标资源");
+    createCustomWidget("按英文名称搜索图标，点击图标复制对应的 ElaIconType 枚举。", "图标资源");
+    auto* mainLayout = createPageLayout();
+    auto* section = addExampleSection(mainLayout, "图标浏览器", "悬停可查看完整名称，支持大小写不敏感的关键字搜索。");
     _metaEnum = QMetaEnum::fromType<ElaIconType::IconName>();
-    QWidget* centralWidget = new QWidget(this);
-    QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
-    centerVLayout->setContentsMargins(0, 0, 5, 0);
-    centralWidget->setWindowTitle("ElaIcon");
-    // ListView
+    _iconModel = new T_IconModel(this);
+    _iconDelegate = new T_IconDelegate(this);
+    _searchEdit = new ElaLineEdit(this);
+    _searchEdit->setPlaceholderText("搜索图标，例如 Search、Folder、Arrow");
+    _searchEdit->setClearButtonEnabled(true);
+    _searchEdit->setMinimumWidth(120);
+    _searchEdit->setMaximumWidth(360);
+    _resultText = new ElaText(QString("%1 个图标").arg(_iconModel->rowCount()), this);
+    _resultText->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    auto* searchLayout = new QHBoxLayout();
+    searchLayout->setSpacing(16);
+    searchLayout->addWidget(_searchEdit, 1);
+    searchLayout->addWidget(_resultText);
     _iconView = new ElaListView(this);
     _iconView->setIsTransparent(true);
     _iconView->setFlow(QListView::LeftToRight);
     _iconView->setViewMode(QListView::IconMode);
     _iconView->setResizeMode(QListView::Adjust);
-    connect(_iconView, &ElaListView::clicked, this, [=](const QModelIndex& index) {
-        QString iconName = _iconModel->getIconNameFromModelIndex(index);
-        if (iconName.isEmpty())
-        {
-            return;
-        }
-        qApp->clipboard()->setText(iconName);
-        ElaMessageBar::success(ElaMessageBarType::Top, "复制完成", iconName + "已被复制到剪贴板", 1000, this);
-    });
-    _iconModel = new T_IconModel(this);
-    _iconDelegate = new T_IconDelegate(this);
+    _iconView->setUniformItemSizes(true);
+    _iconView->setSpacing(4);
+    _iconView->setFixedHeight(420);
     _iconView->setModel(_iconModel);
     _iconView->setItemDelegate(_iconDelegate);
     _iconView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    _searchEdit = new ElaLineEdit(this);
-    _searchEdit->setPlaceholderText("搜索图标");
-    _searchEdit->setFixedSize(300, 35);
-    connect(_searchEdit, &ElaLineEdit::textEdited, this, &T_Icon::onSearchEditTextEdit);
-    connect(_searchEdit, &ElaLineEdit::focusIn, this, &T_Icon::onSearchEditTextEdit);
-
-    centerVLayout->addSpacing(13);
-    centerVLayout->addWidget(_searchEdit);
-    centerVLayout->addWidget(_iconView);
-    this->addCentralWidget(centralWidget, true, true, 0);
+    _emptyText = new ElaText("没有找到匹配的图标，请尝试其他关键字。", this);
+    _emptyText->setAlignment(Qt::AlignCenter);
+    _emptyText->setMinimumHeight(140);
+    _emptyText->hide();
+    auto* selectedText = new ElaText("点击一个图标即可复制枚举名称", this);
+    selectedText->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    selectedText->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+    connect(_iconView, &ElaListView::clicked, this, [this, selectedText](const QModelIndex& index) {
+        const QString iconName = _iconModel->getIconNameFromModelIndex(index);
+        if (!iconName.isEmpty())
+        {
+            qApp->clipboard()->setText(iconName);
+            selectedText->setText("已复制：" + iconName);
+        }
+    });
+    connect(_searchEdit, &ElaLineEdit::textChanged, this, &T_Icon::onSearchEditTextEdit);
+    section->addLayout(searchLayout);
+    section->addWidget(_iconView);
+    section->addWidget(_emptyText);
+    section->addWidget(selectedText);
 }
 
 T_Icon::~T_Icon()
@@ -63,26 +71,25 @@ T_Icon::~T_Icon()
 
 void T_Icon::onSearchEditTextEdit(const QString& searchText)
 {
-    if (searchText.isEmpty())
+    const QString query = searchText.trimmed();
+    QStringList names;
+    if (!query.isEmpty())
     {
-        _iconModel->setIsSearchMode(false);
-        _iconModel->setSearchKeyList(QStringList());
-        _iconView->clearSelection();
-        _iconView->viewport()->update();
-        return;
-    }
-    QStringList searchKeyList;
-    for (int i = 1; i < _metaEnum.keyCount(); i++)
-    {
-        QString key = QString(_metaEnum.key(i));
-        if (key.contains(searchText, Qt::CaseInsensitive))
+        for (int index = 1; index < _metaEnum.keyCount(); ++index)
         {
-            searchKeyList.append(key);
+            const QString name = _metaEnum.key(index);
+            if (name.contains(query, Qt::CaseInsensitive))
+            {
+                names.append(name);
+            }
         }
     }
-    _iconModel->setIsSearchMode(true);
-    _iconModel->setSearchKeyList(searchKeyList);
+    _iconModel->setIsSearchMode(!query.isEmpty());
+    _iconModel->setSearchKeyList(names);
     _iconView->clearSelection();
-    _iconView->scrollTo(_iconModel->index(0, 0));
-    _iconView->viewport()->update();
+    _iconView->scrollToTop();
+    const int count = _iconModel->rowCount();
+    _resultText->setText(QString("%1 个图标").arg(count));
+    _emptyText->setVisible(count == 0);
+    _iconView->setVisible(count > 0);
 }

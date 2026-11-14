@@ -1,18 +1,21 @@
 #include "ElaMenuBar.h"
 
+#include "ElaIcon.h"
+#include "ElaMenu.h"
+#include "ElaMenuBarStyle.h"
+
 #include <QEvent>
 #include <QPainter>
 #include <QToolButton>
 
-#include "ElaIcon.h"
-#include "ElaMenu.h"
-#include "ElaMenuBarStyle.h"
 ElaMenuBar::ElaMenuBar(QWidget* parent)
     : QMenuBar(parent)
 {
     setMouseTracking(true);
     setObjectName("ElaMenuBar");
-    setStyle(new ElaMenuBarStyle(style()));
+    auto* menuBarStyle = new ElaMenuBarStyle(style());
+    menuBarStyle->setParent(this);
+    setStyle(menuBarStyle);
     QToolButton* tool = this->findChild<QToolButton*>();
     if (tool->objectName() == "qt_menubar_ext_button")
     {
@@ -28,10 +31,7 @@ ElaMenuBar::ElaMenuBar(QWidget* parent)
     }
 }
 
-ElaMenuBar::~ElaMenuBar()
-{
-    delete this->style();
-}
+ElaMenuBar::~ElaMenuBar() = default;
 
 QAction* ElaMenuBar::addMenu(QMenu* menu)
 {

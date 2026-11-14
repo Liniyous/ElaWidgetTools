@@ -1,5 +1,9 @@
 #include "ElaPromotionCard.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaPromotionCardPrivate.h"
+#include "ElaTheme.h"
+
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPainterPath>
@@ -7,8 +11,6 @@
 #include <QRadialGradient>
 #include <QtMath>
 
-#include "ElaPromotionCardPrivate.h"
-#include "ElaTheme.h"
 ELA_PROPERTY_Q_CPP(ElaPromotionCard, int, BorderRadius)
 ELA_PROPERTY_Q_CPP(ElaPromotionCard, QPixmap, CardPixmap)
 ELA_PROPERTY_Q_CPP(ElaPromotionCard, QString, CardTitle)
@@ -226,7 +228,7 @@ void ElaPromotionCard::paintEvent(QPaintEvent* event)
         QRect promotionTitleTextRect(32, titleRect.top() - promotionTitleTextHeight - 5, foregroundRect.width() / 2 - 25, promotionTitleTextHeight);
         //背景绘制
         painter.setPen(Qt::NoPen);
-        painter.setBrush(d->_pPromotionTitleBaseColor);
+        painter.setBrush(ElaColorAnimation::getColor(this, d->_pPromotionTitleBaseColor, "PromotionTitle"));
         painter.drawRoundedRect(QRect(25, promotionTitleTextRect.top() - 2, promotionTitleTextWidth + 14, promotionTitleTextHeight + 4), 8, 8);
         //文字绘制
         painter.setPen(d->_pPromotionTitleColor);

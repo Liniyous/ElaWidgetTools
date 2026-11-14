@@ -1,15 +1,18 @@
 #include "ElaSpinBoxStyle.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
 #include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
-#include <QPainterPath>
 #include <QStyleOptionSpinBox>
-#include <cmath>
+
 ElaSpinBoxStyle::ElaSpinBoxStyle(QStyle* style)
 {
     _pButtonMode = ElaSpinBoxType::Inline;
+    _pExpandMarkProgress = 0;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
@@ -33,79 +36,19 @@ void ElaSpinBoxStyle::drawComplexControl(ComplexControl control, const QStyleOpt
         }
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-        //背景
-        QRect spinBoxRect = sopt->rect.adjusted(1, 1, -1, -1);
-        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
         bool isEnable = sopt->state.testFlag(QStyle::State_Enabled);
-        if (isEnable)
-        {
-            if (sopt->state & QStyle::State_MouseOver)
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
-            }
-            else
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
-            }
-        }
-        else
-        {
-            painter->setBrush(ElaThemeColor(_themeMode, BasicDisable));
-        }
-        painter->drawRoundedRect(spinBoxRect, 4, 4);
+        ElaControlStyle::drawInputFrame(painter, sopt->rect, 4, _themeMode, sopt->state, widget, _pExpandMarkProgress);
         //添加按钮
         QRect addLineRect = subControlRect(control, sopt, SC_ScrollBarAddLine, widget);
         //减少按钮
         QRect subLineRect = subControlRect(control, sopt, SC_ScrollBarSubLine, widget);
-        if (isEnable)
-        {
-            //添加按钮
-            if (sopt->activeSubControls == SC_ScrollBarAddLine)
-            {
-                painter->setPen(Qt::NoPen);
-                if (sopt->state & QStyle::State_Sunken && sopt->state & QStyle::State_MouseOver)
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-                }
-                else
-                {
-                    if (sopt->state & QStyle::State_MouseOver)
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                    }
-                }
-                painter->drawRoundedRect(addLineRect, 4, 4);
-            }
-            //减少按钮
-            if (sopt->activeSubControls == SC_ScrollBarSubLine)
-            {
-                painter->setPen(Qt::NoPen);
-                if (sopt->state & QStyle::State_Sunken && sopt->state & QStyle::State_MouseOver)
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-                }
-                else
-                {
-                    if (sopt->state & QStyle::State_MouseOver)
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                    }
-                }
-                painter->drawRoundedRect(subLineRect, 4, 4);
-            }
-        }
-        //底边线
+        const QColor hoverColor = sopt->state.testFlag(QStyle::State_Sunken) ? ElaThemeColor(_themeMode, BasicPressAlpha) : ElaThemeColor(_themeMode, BasicHoverAlpha);
+        const bool isHovered = isEnable && sopt->state.testFlag(QStyle::State_MouseOver);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, BasicHemline));
-        QPainterPath path;
-        path.moveTo(4, spinBoxRect.y() + spinBoxRect.height());
-        path.lineTo(spinBoxRect.width() - 4, spinBoxRect.y() + spinBoxRect.height());
-        path.arcTo(QRectF(spinBoxRect.width() - 8, spinBoxRect.y() + spinBoxRect.height() - 8, 8, 8), -90, 45);
-        path.lineTo(4 - 2 * std::sqrt(2), spinBoxRect.y() + spinBoxRect.height() - (4 - 2 * std::sqrt(2)));
-        path.arcTo(QRectF(0, spinBoxRect.y() + spinBoxRect.height() - 8, 8, 8), 225, 45);
-        path.closeSubpath();
-        painter->drawPath(path);
-
+        painter->setBrush(ElaColorAnimation::getColor(widget, isHovered && sopt->activeSubControls.testFlag(SC_ScrollBarAddLine) ? hoverColor : QColor(Qt::transparent), "Increment"));
+        painter->drawRoundedRect(addLineRect, 4, 4);
+        painter->setBrush(ElaColorAnimation::getColor(widget, isHovered && sopt->activeSubControls.testFlag(SC_ScrollBarSubLine) ? hoverColor : QColor(Qt::transparent), "Decrement"));
+        painter->drawRoundedRect(subLineRect, 4, 4);
         //添加图标
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(eApp->getFontPixelSize() + 4);

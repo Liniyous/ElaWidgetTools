@@ -1,72 +1,64 @@
 #include "T_About.h"
 
+#include "ElaImageCard.h"
+#include "ElaPushButton.h"
+#include "ElaText.h"
+
+#include <QDesktopServices>
 #include <QHBoxLayout>
-#include <QIcon>
+#include <QSysInfo>
+#include <QUrl>
 #include <QVBoxLayout>
 
-#include "ElaImageCard.h"
-#include "ElaText.h"
 T_About::T_About(QWidget* parent)
     : ElaDialog(parent)
 {
-    setFixedSize(400, 400);
-    setWindowTitle("关于..");
+    setFixedSize(460, 440);
+    setWindowTitle("关于 ElaWidgetTools");
     setWindowIcon(QIcon(":/include/Image/Moon.jpg"));
-    this->setIsFixedSize(true);
+    setIsFixedSize(true);
     setWindowModality(Qt::ApplicationModal);
     setWindowButtonFlags(ElaAppBarType::CloseButtonHint);
-    ElaImageCard* pixCard = new ElaImageCard(this);
-    pixCard->setFixedSize(60, 60);
-    pixCard->setIsPreserveAspectCrop(false);
-    pixCard->setCardImage(QImage(":/include/Image/Moon.jpg"));
-
-    QVBoxLayout* pixCardLayout = new QVBoxLayout();
-    pixCardLayout->addWidget(pixCard);
-    pixCardLayout->addStretch();
-
-    ElaText* versionText = new ElaText("ElaWidgetTools-LK-2024", this);
-    QFont versionTextFont = versionText->font();
-    versionTextFont.setWeight(QFont::Bold);
-    versionText->setFont(versionTextFont);
-    versionText->setWordWrap(false);
-    versionText->setTextPixelSize(18);
-
-    ElaText* licenseText = new ElaText("MIT授权协议", this);
-    licenseText->setWordWrap(false);
-    licenseText->setTextPixelSize(14);
-    ElaText* supportText = new ElaText("Windows支持版本: QT5.12以上\nLinux支持版本: Qt5.14以上", this);
-    supportText->setWordWrap(false);
-    supportText->setTextPixelSize(14);
-    ElaText* contactText = new ElaText("作者: 80985@qq.com\n交流群: 850243692(QQ)", this);
-    contactText->setWordWrap(false);
+    auto* imageCard = new ElaImageCard(this);
+    imageCard->setFixedSize(64, 64);
+    imageCard->setIsPreserveAspectCrop(false);
+    imageCard->setCardImage(QImage(":/include/Image/Moon.jpg"));
+    auto* titleText = new ElaText("ElaWidgetTools", this);
+    titleText->setTextPixelSize(24);
+    titleText->setIsBold(true);
+    auto* subtitleText = new ElaText("Fluent 风格的 Qt Widgets 通用组件库", this);
+    auto* titleLayout = new QVBoxLayout();
+    titleLayout->setSpacing(6);
+    titleLayout->addWidget(titleText);
+    titleLayout->addWidget(subtitleText);
+    auto* identityLayout = new QHBoxLayout();
+    identityLayout->setSpacing(20);
+    identityLayout->addWidget(imageCard);
+    identityLayout->addLayout(titleLayout, 1);
+    auto* runtimeText = new ElaText(QString("当前运行环境\nQt %1 · %2").arg(qVersion(), QSysInfo::buildCpuArchitecture()), this);
+    auto* licenseText = new ElaText("开源许可 · MIT\n可在项目中使用、修改和分发，具体条款请参阅项目许可证。", this);
+    auto* contactText = new ElaText("联系作者 · 80985@qq.com\n交流社区 · 850243692（QQ）", this);
     contactText->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    contactText->setTextPixelSize(14);
-    ElaText* helperText = new ElaText("用户手册及API文档免费提供\n提供额外的专业技术支持", this);
-    helperText->setWordWrap(false);
-    helperText->setTextPixelSize(14);
-    ElaText* copyrightText = new ElaText("版权所有 © 2026 Liniyous", this);
-    copyrightText->setWordWrap(false);
-    copyrightText->setTextPixelSize(14);
-
-    QVBoxLayout* textLayout = new QVBoxLayout();
-    textLayout->setSpacing(15);
-    textLayout->addWidget(versionText);
-    textLayout->addWidget(licenseText);
-    textLayout->addWidget(supportText);
-    textLayout->addWidget(contactText);
-    textLayout->addWidget(helperText);
-    textLayout->addWidget(copyrightText);
-    textLayout->addStretch();
-
-    QHBoxLayout* contentLayout = new QHBoxLayout();
-    contentLayout->addSpacing(30);
-    contentLayout->addLayout(pixCardLayout);
-    contentLayout->addSpacing(30);
-    contentLayout->addLayout(textLayout);
-
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(0, 25, 0, 0);
-    mainLayout->addLayout(contentLayout);
+    auto* repositoryButton = new ElaPushButton("打开项目主页", this);
+    repositoryButton->setIsAccent(true);
+    connect(repositoryButton, &ElaPushButton::clicked, this, []() {
+        QDesktopServices::openUrl(QUrl("https://github.com/Liniyous/ElaWidgetTools"));
+    });
+    auto* copyrightText = new ElaText("© 2026 Liniyous", this);
+    copyrightText->setTextPixelSize(12);
+    auto* mainLayout = new QVBoxLayout(this);
+    mainLayout->setContentsMargins(28, 52, 28, 24);
+    mainLayout->setSpacing(20);
+    mainLayout->addLayout(identityLayout);
+    mainLayout->addWidget(runtimeText);
+    mainLayout->addWidget(licenseText);
+    mainLayout->addWidget(contactText);
+    mainLayout->addStretch();
+    auto* actionLayout = new QHBoxLayout();
+    actionLayout->addWidget(copyrightText);
+    actionLayout->addStretch();
+    actionLayout->addWidget(repositoryButton);
+    mainLayout->addLayout(actionLayout);
 }
 
 T_About::~T_About()

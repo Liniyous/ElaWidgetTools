@@ -1,16 +1,19 @@
 #include "ElaColorValueSliderStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
 
-#include "ElaTheme.h"
 ElaColorValueSliderStyle::ElaColorValueSliderStyle(QStyle* style)
 {
-    _baseGradient = new QLinearGradient(0, 0, 100, 100);
     setProperty("circleRadius", 0.01);
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
 }
 
 ElaColorValueSliderStyle::~ElaColorValueSliderStyle()
@@ -28,13 +31,13 @@ void ElaColorValueSliderStyle::drawComplexControl(ComplexControl control, const 
         {
             break;
         }
-        _baseGradient->setFinalStop(widget->rect().bottomRight());
+        _baseGradient.setFinalStop(widget->rect().bottomRight());
         QColor highValueColor = _pBaseColor.toHsv();
         highValueColor.setHsv(highValueColor.hue(), highValueColor.saturation(), 255);
         QColor lowValueColor = _pBaseColor.toHsv();
         lowValueColor.setHsv(lowValueColor.hue(), lowValueColor.saturation(), 0);
-        _baseGradient->setColorAt(0, highValueColor);
-        _baseGradient->setColorAt(1, lowValueColor);
+        _baseGradient.setColorAt(0, highValueColor);
+        _baseGradient.setColorAt(1, lowValueColor);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
         QRectF sliderRect = sopt->rect;
@@ -43,18 +46,18 @@ void ElaColorValueSliderStyle::drawComplexControl(ComplexControl control, const 
         sliderHandleRect.adjust(1, 1, -1, -1);
         // 滑槽
         painter->setPen(Qt::NoPen);
-        painter->setBrush(*_baseGradient);
+        painter->setBrush(_baseGradient);
         // 渐变背景
         painter->drawRoundedRect(QRectF(sliderRect.x(), sliderRect.y() + sliderRect.width() / 8, sliderRect.width(), sliderRect.height() - sliderRect.width() / 4), sliderRect.width() / 2, sliderRect.width() / 2);
 
         // 滑块
         // 外圆形
         painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicSolid), "Thumb"));
         painter->drawEllipse(QPointF(sliderHandleRect.center().x() + 1, sliderHandleRect.center().y() + 1), sliderHandleRect.width() / 2, sliderHandleRect.width() / 2);
         // 内圆形
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, PrimaryNormal), "ThumbCenter"));
         if (_lastState == 0)
         {
             _lastState = sopt->state;
@@ -148,10 +151,11 @@ int ElaColorValueSliderStyle::styleHint(StyleHint hint, const QStyleOption* opti
 void ElaColorValueSliderStyle::_startRadiusAnimation(qreal startRadius, qreal endRadius, QWidget* widget) const
 {
     ElaColorValueSliderStyle* style = const_cast<ElaColorValueSliderStyle*>(this);
-    QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius");
+    QPropertyAnimation* circleRadiusAnimation = new QPropertyAnimation(style, "circleRadius", style);
     connect(circleRadiusAnimation, &QPropertyAnimation::valueChanged, style, [=](const QVariant& value) {
         this->_circleRadius = value.toReal();
-        widget->update(); });
+        widget->update();
+    });
     circleRadiusAnimation->setEasingCurve(QEasingCurve::InOutSine);
     circleRadiusAnimation->setStartValue(startRadius);
     circleRadiusAnimation->setEndValue(endRadius);

@@ -1,10 +1,14 @@
 #include "ElaToolTipPrivate.h"
 
+#include "ElaTheme.h"
+#include "ElaToolTip.h"
+
 #include <QEvent>
+#include <QGuiApplication>
 #include <QPropertyAnimation>
+#include <QScreen>
 #include <QTimer>
 
-#include "ElaToolTip.h"
 ElaToolTipPrivate::ElaToolTipPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -57,9 +61,9 @@ bool ElaToolTipPrivate::eventFilter(QObject* watched, QEvent* event)
 void ElaToolTipPrivate::_doShowAnimation()
 {
     Q_Q(ElaToolTip);
-    QPoint cursorPoint = QCursor::pos();
-    q->move(cursorPoint.x() + 10, cursorPoint.y());
+    q->adjustSize();
     q->show();
+    _updatePos();
     QPropertyAnimation* showAnimation = new QPropertyAnimation(q, "windowOpacity");
     showAnimation->setEasingCurve(QEasingCurve::InOutSine);
     showAnimation->setDuration(250);
@@ -74,6 +78,15 @@ void ElaToolTipPrivate::_updatePos()
     if (q->isVisible())
     {
         QPoint cursorPoint = QCursor::pos();
-        q->move(cursorPoint.x() + 10, cursorPoint.y());
+        const QMargins margins = eTheme->getShadowMargins();
+        QPoint position = cursorPoint + QPoint(16 - margins.left(), 6 - margins.top());
+        QScreen* screen = QGuiApplication::screenAt(cursorPoint);
+        if (screen)
+        {
+            const QRect available = screen->availableGeometry();
+            position.setX(qBound(available.left(), position.x(), qMax(available.left(), available.right() - q->width() + 1)));
+            position.setY(qBound(available.top(), position.y(), qMax(available.top(), available.bottom() - q->height() + 1)));
+        }
+        q->move(position);
     }
 }

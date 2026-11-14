@@ -1,9 +1,13 @@
 #include "ElaRollerPickerContainer.h"
+
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaRoller.h"
 #include "ElaTheme.h"
+
 #include <QMouseEvent>
 #include <QPainter>
+
 ElaRollerPickerContainer::ElaRollerPickerContainer(QWidget* parent)
     : QWidget{parent}
 {
@@ -12,7 +16,7 @@ ElaRollerPickerContainer::ElaRollerPickerContainer(QWidget* parent)
     setMouseTracking(true);
     setWindowFlags(Qt::FramelessWindowHint | Qt::Popup | Qt::NoDropShadowWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
-    setContentsMargins(8, 8, 8, 6 + _pButtonAreaHeight);
+    setContentsMargins(eTheme->getShadowMargins() + QMargins(2, 2, 2, _pButtonAreaHeight));
     setObjectName("ElaCalendarPickerContainer");
     setStyleSheet("#ElaCalendarPickerContainer{background-color:transparent}");
 
@@ -128,14 +132,15 @@ void ElaRollerPickerContainer::paintEvent(QPaintEvent* event)
     }
     else
     {
-        eTheme->drawEffectShadow(&painter, rect(), 6, 5);
-        painter.setPen(ElaThemeColor(_themeMode, PopupBorder));
-        painter.setBrush(ElaThemeColor(_themeMode, PopupBase));
-        QRect foregroundRect(6, 6, rect().width() - 2 * 6, rect().height() - 2 * 6);
+        const QMargins margins = eTheme->getShadowMargins();
+        eTheme->drawEffectShadow(&painter, rect(), margins, 8);
+        painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(_themeMode, PopupBase), "Background"));
+        const QRect foregroundRect = rect().marginsRemoved(margins);
         painter.drawRoundedRect(foregroundRect, 8, 8);
         // 纵向分割线
         painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
-        int rollerXOffset = 8;
+        int rollerXOffset = margins.left() + 2;
         for (int i = 0; i < _rollerList.count(); i++)
         {
             rollerXOffset += _rollerList[i]->width();
@@ -152,15 +157,10 @@ void ElaRollerPickerContainer::paintEvent(QPaintEvent* event)
         _cancelButtonRect = QRect(_overButtonRect.right() + _buttonSpacing, _overButtonRect.y(), _overButtonRect.width(), _overButtonRect.height());
         // 按钮覆盖绘制
         painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(_themeMode, BasicHover));
-        if (_isOverButtonHover)
-        {
-            painter.drawRoundedRect(_overButtonRect, 5, 5);
-        }
-        else if (_isCancelButtonHover)
-        {
-            painter.drawRoundedRect(_cancelButtonRect, 5, 5);
-        }
+        painter.setBrush(ElaColorAnimation::getColor(this, _isOverButtonHover ? ElaThemeColor(_themeMode, BasicHoverAlpha) : QColor(Qt::transparent), "Confirm"));
+        painter.drawRoundedRect(_overButtonRect, 5, 5);
+        painter.setBrush(ElaColorAnimation::getColor(this, _isCancelButtonHover ? ElaThemeColor(_themeMode, BasicHoverAlpha) : QColor(Qt::transparent), "Cancel"));
+        painter.drawRoundedRect(_cancelButtonRect, 5, 5);
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(eApp->getFontPixelSize() + 4);
         painter.setFont(iconFont);

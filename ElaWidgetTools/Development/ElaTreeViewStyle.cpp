@@ -1,12 +1,15 @@
 #include "ElaTreeViewStyle.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaTheme.h"
 ElaTreeViewStyle::ElaTreeViewStyle(QStyle* style)
 {
     _pItemHeight = 35;
@@ -37,27 +40,8 @@ void ElaTreeViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             QPainterPath path;
             path.addRoundedRect(itemRect, 4, 4);
             bool isEnable = vopt->state.testFlag(QStyle::State_Enabled);
-            if (vopt->state & QStyle::State_Selected)
-            {
-                if (vopt->state & QStyle::State_MouseOver && isEnable)
-                {
-                    // 选中时覆盖
-                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
-                }
-                else
-                {
-                    // 选中
-                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
-                }
-            }
-            else
-            {
-                if (vopt->state & QStyle::State_MouseOver && isEnable)
-                {
-                    // 覆盖时颜色
-                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
-                }
-            }
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, vopt->state, false, vopt->features.testFlag(QStyleOptionViewItem::Alternate));
+            painter->fillPath(path, ElaColorAnimation::getColor(widget, background, "ItemBackground", vopt->index));
             painter->restore();
         }
         return;
@@ -127,13 +111,18 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
     {
     case QStyle::CE_ShapedFrame:
     {
+        const auto* frameOption = qstyleoption_cast<const QStyleOptionFrame*>(option);
+        if (frameOption && frameOption->frameShape == QFrame::NoFrame)
+        {
+            return;
+        }
         // viewport视口外的其他区域背景
         QRect frameRect = option->rect;
         frameRect.adjust(1, 1, -1, -1);
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "ViewBackground"));
         painter->drawRoundedRect(frameRect, 3, 3);
         painter->restore();
         return;
@@ -161,7 +150,7 @@ void ElaTreeViewStyle::drawControl(ControlElement element, const QStyleOption* o
         painter->save();
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, BasicBaseDeepAlpha));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "HeaderBackground"));
         painter->drawRect(option->rect);
         painter->restore();
         return;

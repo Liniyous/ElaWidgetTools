@@ -1,382 +1,268 @@
 #include "ElaTabWidgetPrivate.h"
 
-#include "ElaCustomTabWidget.h"
 #include "ElaTabBar.h"
+#include "ElaTabDragData.h"
+#include "ElaTabDropIndicator.h"
 #include "ElaTabWidget.h"
-#include <QApplication>
-#include <QDebug>
-#include <QMimeData>
-#include <QMouseEvent>
-#include <QTimer>
-#include <QWindow>
-ElaDragMonitor::ElaDragMonitor(QObject* parent)
-    : QObject(parent)
-{
-    _pIsInDrag = false;
-}
+#include "ElaTheme.h"
 
-ElaDragMonitor::~ElaDragMonitor()
-{
-}
+#include <QApplication>
+#include <QCursor>
+#include <QDrag>
+#include <QDropEvent>
+#include <QFontMetricsF>
+#include <QKeyEvent>
+#include <QPainter>
+#include <QPixmap>
+#include <QStackedWidget>
+#include <QTimer>
+#include <QtMath>
+
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
 
 ElaTabWidgetPrivate::ElaTabWidgetPrivate(QObject* parent)
-    : QObject{parent}
+    : QObject(parent)
 {
 }
 
-ElaTabWidgetPrivate::~ElaTabWidgetPrivate()
+ElaTabBar* ElaTabWidgetPrivate::getTabBar(int index) const
 {
+    return index >= 0 && index < _pinnedTabBar->count() ? _pinnedTabBar : _tabBar;
 }
 
-void ElaTabWidgetPrivate::_addTabWidgetToList(QWidget* widget)
+int ElaTabWidgetPrivate::getBarIndex(int index) const
 {
-    if (!widget)
-    {
-        return;
-    }
-    for (const auto& listWidget: _allTabWidgetList)
-    {
-        if (listWidget == widget)
-        {
-            return;
-        }
-    }
-    _allTabWidgetList.append(QPointer<QWidget>(widget));
-    connect(widget, &QObject::destroyed, this, [=]() {
-        _removeTabWidgetFromList(widget);
-    });
+    return getTabBar(index) == _pinnedTabBar ? index : index - _pinnedTabBar->count();
 }
 
-void ElaTabWidgetPrivate::_removeTabWidgetFromList(QWidget* widget)
+void ElaTabWidgetPrivate::updateTabRows()
 {
-    for (int i = _allTabWidgetList.size() - 1; i >= 0; --i)
-    {
-        QPointer<QWidget> listWidget = _allTabWidgetList.at(i);
-        if (listWidget.isNull() || listWidget == widget)
-        {
-            _allTabWidgetList.removeAt(i);
-        }
-    }
+    _pinnedTabBar->setVisible(_pinnedTabBar->count() > 0);
+    _tabBar->setVisible(_tabBar->count() > 0 || _pinnedTabBar->count() == 0);
+    Q_Q(ElaTabWidget);
+    const bool pinned = q->getIsTabPinned(q->currentIndex());
+    _pinnedTabBar->setIsActive(pinned);
+    _tabBar->setIsActive(!pinned);
 }
 
-void ElaTabWidgetPrivate::_registerCustomTabWidget(ElaCustomTabWidget* customTabWidget)
-{
-    if (!customTabWidget)
-    {
-        return;
-    }
-    for (const auto& listCustomTabWidget: _customTabWidgetList)
-    {
-        if (listCustomTabWidget == customTabWidget)
-        {
-            return;
-        }
-    }
-    _customTabWidgetList.append(QPointer<ElaCustomTabWidget>(customTabWidget));
-    ElaTabBar* customTabBar = customTabWidget->getCustomTabBar();
-    connect(customTabWidget, &QObject::destroyed, this, [=]() {
-        _unregisterCustomTabWidget(customTabWidget, customTabBar);
-    });
-}
-
-void ElaTabWidgetPrivate::_unregisterCustomTabWidget(ElaCustomTabWidget* customTabWidget, ElaTabBar* customTabBar)
-{
-    if (customTabBar)
-    {
-        for (auto& widget: _allTabWidgetList)
-        {
-            if (!widget)
-            {
-                continue;
-            }
-            if (widget->property("CurrentCustomBar").value<ElaTabBar*>() == customTabBar)
-            {
-                widget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
-            }
-        }
-    }
-    for (int i = _customTabWidgetList.size() - 1; i >= 0; --i)
-    {
-        QPointer<ElaCustomTabWidget> listCustomTabWidget = _customTabWidgetList.at(i);
-        if (listCustomTabWidget.isNull() || listCustomTabWidget == customTabWidget)
-        {
-            _customTabWidgetList.removeAt(i);
-        }
-    }
-}
-
-void ElaTabWidgetPrivate::onTabDragCreate(QMimeData* mimeData)
+void ElaTabWidgetPrivate::startTabDrag(int index)
 {
     Q_Q(ElaTabWidget);
-    if (ElaDragMonitor::getInstance()->getIsInDrag())
+    auto* page = q->widget(index);
+    if (!page)
     {
         return;
     }
-    ElaDragMonitor::getInstance()->setIsInDrag(true);
-    mimeData->setProperty("ElaTabWidgetObject", QVariant::fromValue(q));
-    int index = q->currentIndex();
-    QString tabText = q->tabText(index);
-    QIcon tabIcon = q->tabIcon(index);
-    QWidget* dragWidget = q->widget(index);
-    dragWidget->setProperty("TabIcon", q->tabIcon(index));
-    dragWidget->setProperty("TabText", q->tabText(index));
-    ElaTabWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-    QWidget* floatParentWidget = originTabWidget;
-    if (!originTabWidget && !dragWidget->property("IsMetaWidget").toBool())
+    auto* data = new ElaTabDragData();
+    data->_source = q;
+    data->_page = page;
+    const QPointer<ElaTabWidget> source(q);
+    const QPointer<QWidget> draggedPage(page);
+    data->setData("application/x-ela-tab", {});
+    auto* drag = new QDrag(q);
+    // 拖放对象必须存活到原生拖放循环退出
+    drag->setParent(qApp);
+    const auto cancelConnection = connect(q, &QObject::destroyed, drag, []() {
+        QDrag::cancel();
+    });
+    drag->setMimeData(data);
+    const auto preview = _getTabDragPixmap(index);
+    drag->setPixmap(preview);
+    const auto previewSize = preview.size() / preview.devicePixelRatio();
+    drag->setHotSpot(QPoint(qMin(previewSize.width() / 2, 100), previewSize.height() / 2));
+    _isDragCanceled = false;
+    const auto result = drag->exec(Qt::MoveAction | Qt::CopyAction, Qt::MoveAction);
+    disconnect(cancelConnection);
+    // 原生拖放循环中浮窗和空组可能已经销毁
+    if (!source || result != Qt::IgnoreAction)
     {
-        dragWidget->setProperty("ElaOriginTabWidget", QVariant::fromValue<ElaTabWidget*>(q));
-        originTabWidget = q;
-        floatParentWidget = q;
+        return;
     }
-    mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
-    ElaTabBar* tabBarObject = mimeData->property("ElaTabBarObject").value<ElaTabBar*>();
-    QMouseEvent releaseEvent(QEvent::MouseButtonRelease, QPoint(-1, -1), QPoint(-1, -1), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
-    QApplication::sendEvent(tabBarObject, &releaseEvent);
-    if (!floatParentWidget)
+    bool isReleased = !QApplication::mouseButtons().testFlag(Qt::LeftButton);
+#ifdef Q_OS_WIN
+    // OLE 拖放期间 Qt 缓存的鼠标状态不能区分释放和取消
+    isReleased = (GetAsyncKeyState(VK_LBUTTON) & 0x8000) == 0;
+#endif
+    if (!_isDragCanceled && isReleased)
     {
-        floatParentWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
-    }
-    bool isFloatWidget = mimeData->property("IsFloatWidget").toBool();
-    QSize tabSize = mimeData->property("TabSize").toSize();
-    ElaCustomTabWidget* floatWidget = nullptr;
-    if (isFloatWidget)
-    {
-        floatWidget = dynamic_cast<ElaCustomTabWidget*>(q->window());
-        if (floatWidget->windowHandle())
-        {
-            floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
-        }
-    }
-    else
-    {
-        floatWidget = new ElaCustomTabWidget(floatParentWidget);
-        if (originTabWidget)
-        {
-            originTabWidget->d_func()->_registerCustomTabWidget(floatWidget);
-        }
-        q->removeTab(index);
-        // 创建新窗口
-        ElaTabBar* originCustomTabBar = tabBarObject;
-        if (originCustomTabBar && originCustomTabBar->objectName() == "ElaCustomTabBar")
-        {
-            originCustomTabBar->removeTab(index);
-        }
-        ElaTabBar* customTabBar = floatWidget->getCustomTabBar();
-        customTabBar->setTabSize(tabSize);
-        floatWidget->getCustomTabWidget()->setFloatWidgetSize(_pFloatWidgetSize);
-        dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(customTabBar));
-        floatWidget->addTab(dragWidget, tabIcon, tabText);
-        connect(customTabBar, &ElaTabBar::currentChanged, this, [=](int currentIndex) {
-            if (currentIndex < 0)
+        const auto position = QCursor::pos() - QPoint(100, 16);
+        // 原生拖放返回后先处理 Qt 排队的鼠标释放事件
+        QTimer::singleShot(0, q, [q, draggedPage, position]() {
+            if (draggedPage && q->indexOf(draggedPage) >= 0)
             {
-                return;
+                q->detachTab(q->indexOf(draggedPage), position);
             }
-            Q_EMIT q->currentWidgetChanged(floatWidget->getCustomTabWidget()->widget(currentIndex));
         });
     }
-    QPoint dragPos = mimeData->property("DragPos").toPoint();
-    QTimer* dragTimer = new QTimer(this);
-    dragTimer->start(10);
-    connect(dragTimer, &QTimer::timeout, floatWidget, [=]() {
-        if (floatWidget->getIsFinished() && !isFloatWidget)
-        {
-            dragTimer->stop();
-        }
-        else
-        {
-            QPoint cursorPoint = QCursor::pos();
-            if (isFloatWidget)
-            {
-                floatWidget->move(cursorPoint.x() - dragPos.x() - 10, cursorPoint.y() - dragPos.y() - 10);
-            }
-            else
-            {
-                floatWidget->move(cursorPoint.x() - tabSize.width() / 2 - 10, cursorPoint.y() - tabSize.height() / 2 - 10);
-            }
-        }
-    });
-    QDrag* drag = new QDrag(this);
-    QPixmap pix(1, 1);
-    pix.fill(Qt::transparent);
-    drag->setPixmap(pix);
-    drag->setMimeData(mimeData);
-    connect(drag, &QDrag::destroyed, this, [=]() {
-        dragTimer->deleteLater();
-    });
-    drag->setHotSpot(QPoint(tabSize.width() / 2, 0));
-    QTimer::singleShot(1, this, [=]() {
-        floatWidget->show();
-        if (floatWidget->windowHandle())
-        {
-            floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
-        }
-        if (!isFloatWidget)
-        {
-            floatWidget->resize(_pFloatWidgetSize);
-        }
-    });
-    auto ret = drag->exec();
-    ElaDragMonitor::getInstance()->setIsInDrag(false);
-    ElaCustomTabWidget* tempFloatWidget = mimeData->property("TempFloatWidget").value<ElaCustomTabWidget*>();
-    if (tempFloatWidget)
+}
+
+bool ElaTabWidgetPrivate::eventFilter(QObject* watched, QEvent* event)
+{
+    Q_Q(ElaTabWidget);
+    if (event->type() == QEvent::KeyPress && static_cast<QKeyEvent*>(event)->key() == Qt::Key_Escape)
     {
-        if (tempFloatWidget->windowHandle())
+        _isDragCanceled = true;
+        _showDropIndicator(ElaTabWidgetType::NoArea);
+    }
+    if (watched == q && event->type() == QEvent::Hide && _dropIndicator)
+    {
+        _dropIndicator->hideTarget(false);
+    }
+    if (!q->isVisible() || (event->type() != QEvent::DragEnter && event->type() != QEvent::DragMove && event->type() != QEvent::Drop && event->type() != QEvent::DragLeave))
+    {
+        return QObject::eventFilter(watched, event);
+    }
+    auto* widget = qobject_cast<QWidget*>(watched);
+    if (!widget)
+    {
+        return false;
+    }
+    const bool isTabBar = widget == _tabBar || widget == _pinnedTabBar || _tabBar->isAncestorOf(widget) || _pinnedTabBar->isAncestorOf(widget);
+    if (!isTabBar && widget != q && !q->isAncestorOf(widget))
+    {
+        return false;
+    }
+    if (event->type() == QEvent::DragLeave)
+    {
+        _showDropIndicator(ElaTabWidgetType::NoArea);
+        return false;
+    }
+    auto* drop = static_cast<QDropEvent*>(event);
+    auto* source = ElaTabWidget::getDragSource(drop->mimeData());
+    auto* page = ElaTabWidget::getDragPage(drop->mimeData());
+    if (!source || !page || source->getDragScope() != q->getDragScope() || (!isTabBar && !_pIsContainerAcceptDrops))
+    {
+        return false;
+    }
+    auto area = ElaTabWidgetType::Center;
+    if (!isTabBar && _isSplitDropEnabled)
+    {
+        const auto position = widget->mapTo(q, drop->pos());
+        const auto bounds = _getContentRect();
+        const qreal horizontalEdge = qMax(1, qMin(90, bounds.width() / 4));
+        const qreal verticalEdge = qMax(1, qMin(90, bounds.height() / 4));
+        qreal nearest = 1;
+        for (const auto& candidate: {qMakePair(ElaTabWidgetType::Left, (position.x() - bounds.left()) / horizontalEdge),
+                                     qMakePair(ElaTabWidgetType::Right, (bounds.right() - position.x()) / horizontalEdge),
+                                     qMakePair(ElaTabWidgetType::Top, (position.y() - bounds.top()) / verticalEdge),
+                                     qMakePair(ElaTabWidgetType::Bottom, (bounds.bottom() - position.y()) / verticalEdge)})
         {
-            tempFloatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
+            if (candidate.second < nearest)
+            {
+                nearest = candidate.second;
+                area = candidate.first;
+            }
         }
-        floatWidget->deleteLater();
+    }
+    if (event->type() == QEvent::Drop)
+    {
+        _showDropIndicator(ElaTabWidgetType::NoArea);
+        if (!isTabBar)
+        {
+            const bool pinned = source->getIsTabPinned(source->indexOf(page));
+            if (area != ElaTabWidgetType::Center)
+            {
+                Q_EMIT q->tabTransferRequested(source, page, q->count(), pinned, drop->proposedAction(), area);
+            }
+            else if (source != q)
+            {
+                q->transferTab(source, page, q->count(), pinned, drop->proposedAction());
+            }
+        }
     }
     else
     {
-        if (floatWidget->isVisible())
-        {
-            if (floatWidget->windowHandle())
-            {
-                floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, false);
-            }
-        }
-        else
-        {
-            floatWidget->deleteLater();
-        }
+        _showDropIndicator(source != q || area != ElaTabWidgetType::Center ? area : ElaTabWidgetType::NoArea);
     }
+    if (!isTabBar)
+    {
+        drop->acceptProposedAction();
+        return true;
+    }
+    return QObject::eventFilter(watched, event);
 }
 
-void ElaTabWidgetPrivate::onTabDragEnter(QMimeData* mimeData)
+QPixmap ElaTabWidgetPrivate::_getTabDragPixmap(int index) const
 {
-    Q_Q(ElaTabWidget);
-    mimeData->setProperty("ElaTabBarObject", QVariant::fromValue<ElaTabBar*>(dynamic_cast<ElaTabBar*>(q->tabBar())));
-    onTabDragDrop(mimeData);
+    Q_Q(const ElaTabWidget);
+    const auto* bar = getTabBar(index);
+    const auto icon = q->tabIcon(index);
+    const auto iconSize = icon.isNull() ? QSize(0, 0) : bar->iconSize();
+    const int iconSpace = icon.isNull() ? 0 : iconSize.width() + 6;
+    const QFontMetrics metrics = bar->fontMetrics();
+    const auto title = metrics.elidedText(q->tabText(index).simplified(), Qt::ElideRight, 420 - 24 - iconSpace);
+    const int titleWidth = qCeil(QFontMetricsF(metrics).horizontalAdvance(title));
+    const QSize size(titleWidth + iconSpace + 24, qMax(metrics.height(), iconSize.height()) + 16);
+    const qreal ratio = bar->devicePixelRatioF();
+    QPixmap preview(qRound(size.width() * ratio), qRound(size.height() * ratio));
+    preview.setDevicePixelRatio(ratio);
+    preview.fill(Qt::transparent);
+    QPainter painter(&preview);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    const auto theme = eTheme->getThemeMode();
+    painter.setPen(ElaThemeColor(theme, BasicBorder));
+    painter.setBrush(ElaThemeColor(theme, PopupBase));
+    painter.drawRoundedRect(QRectF(0.5, 0.5, size.width() - 1, size.height() - 1), 7, 7);
+    if (!icon.isNull())
+    {
+        icon.paint(&painter, QRect(12, (size.height() - iconSize.height()) / 2, iconSize.width(), iconSize.height()));
+    }
+    painter.setFont(bar->font());
+    painter.setPen(ElaThemeColor(theme, BasicText));
+    painter.drawText(QRect(12 + iconSpace, 0, size.width() - 24 - iconSpace, size.height()), Qt::AlignLeft | Qt::AlignVCenter | Qt::TextSingleLine, title);
+    return preview;
 }
 
-void ElaTabWidgetPrivate::onTabDragLeave(QMimeData* mimeData)
+QRect ElaTabWidgetPrivate::_getContentRect() const
 {
-    Q_Q(ElaTabWidget);
-    QWidget* dragWidget = mimeData->property("DragWidget").value<QWidget*>();
-    int index = q->indexOf(dragWidget);
-    mimeData->setProperty("ElaTabWidgetObject", QVariant::fromValue(q));
-    QString tabText = q->tabText(index);
-    QIcon tabIcon = q->tabIcon(index);
-
-    ElaTabBar* tabBarObject = mimeData->property("ElaTabBarObject").value<ElaTabBar*>();
-    mimeData->setProperty("DragWidget", QVariant::fromValue(dragWidget));
-    q->removeTab(index);
-    // 创建新窗口
-    if (_customTabBar && _customTabBar != tabBarObject)
+    Q_Q(const ElaTabWidget);
+    if (auto* page = q->currentWidget())
     {
-        _customTabBar->removeTab(index);
+        return QRect(page->mapTo(q, QPoint()), page->size());
     }
-    ElaTabWidget* originTabWidget = dragWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-    QWidget* floatParentWidget = originTabWidget;
-    if (!floatParentWidget)
-    {
-        floatParentWidget = dragWidget->property("ElaFloatParentWidget").value<QWidget*>();
-    }
-    ElaCustomTabWidget* floatWidget = new ElaCustomTabWidget(floatParentWidget);
-    if (originTabWidget)
-    {
-        originTabWidget->d_func()->_registerCustomTabWidget(floatWidget);
-    }
-    QSize tabSize = mimeData->property("TabSize").toSize();
-    ElaTabBar* customTabBar = floatWidget->getCustomTabBar();
-    customTabBar->setTabSize(tabSize);
-    floatWidget->getCustomTabWidget()->setFloatWidgetSize(_pFloatWidgetSize);
-    dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(customTabBar));
-    floatWidget->addTab(dragWidget, tabIcon, tabText);
-    connect(customTabBar, &ElaTabBar::currentChanged, this, [=](int currentIndex) {
-        if (currentIndex < 0)
-        {
-            return;
-        }
-        Q_EMIT q->currentWidgetChanged(floatWidget->getCustomTabWidget()->widget(currentIndex));
-    });
-    floatWidget->show();
-    floatWidget->resize(_pFloatWidgetSize);
-    if (floatWidget->windowHandle())
-    {
-        floatWidget->windowHandle()->setFlag(Qt::WindowTransparentForInput, true);
-    }
-    QPoint cursorPoint = QCursor::pos();
-    floatWidget->move(cursorPoint.x() - tabSize.width() / 2, cursorPoint.y() - tabSize.height() / 2);
-    QTimer* dragTimer = new QTimer(this);
-    dragTimer->start(10);
-    connect(dragTimer, &QTimer::timeout, floatWidget, [=]() {
-        QPoint cursorPoint = QCursor::pos();
-        floatWidget->move(cursorPoint.x() - tabSize.width() / 2 - 10, cursorPoint.y() - tabSize.height() / 2 - 10);
-    });
-    connect(mimeData, &QMimeData::destroyed, this, [=]() {
-        dragTimer->deleteLater();
-    });
-    mimeData->setProperty("TempFloatWidget", QVariant::fromValue<ElaCustomTabWidget*>(floatWidget));
+    return q->rect();
 }
 
-void ElaTabWidgetPrivate::onTabDragDrop(QMimeData* mimeData)
+void ElaTabWidgetPrivate::_showDropIndicator(ElaTabWidgetType::DropArea area)
 {
-    Q_Q(ElaTabWidget);
-    QWidget* dragWidget = mimeData->property("DragWidget").value<QWidget*>();
-    QString tabText = dragWidget->property("TabText").toString();
-    QIcon tabIcon = dragWidget->property("TabIcon").value<QIcon>();
-    int dropIndex = mimeData->property("TabDropIndex").toInt();
-    if (dropIndex < 0)
+    if (!_isDropIndicatorEnabled)
     {
-        dropIndex = q->count();
+        return;
     }
-    q->insertTab(dropIndex, dragWidget, tabIcon, tabText);
-    q->setCurrentWidget(dragWidget);
-    if (_customTabBar)
+    if (area == ElaTabWidgetType::NoArea)
     {
-        dragWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(_customTabBar));
-        _customTabBar->insertTab(dropIndex, tabIcon, tabText);
-        _customTabBar->setCurrentIndex(dropIndex);
+        _dropIndicator->hideTarget();
+        return;
     }
-    if (const auto tempFloatWidget = mimeData->property("TempFloatWidget").value<ElaCustomTabWidget*>())
+    auto bounds = _getContentRect();
+    switch (area)
     {
-        tempFloatWidget->deleteLater();
-        mimeData->setProperty("TempFloatWidget", {});
-    }
-}
-
-void ElaTabWidgetPrivate::onTabCloseRequested(int index)
-{
-    Q_Q(ElaTabWidget);
-    QWidget* closeWidget = q->widget(index);
-    ElaTabWidget* originTabWidget = closeWidget->property("ElaOriginTabWidget").value<ElaTabWidget*>();
-    if (originTabWidget && originTabWidget != q)
+    case ElaTabWidgetType::Left:
     {
-        if (ElaTabBar* customTabBar = closeWidget->property("CurrentCustomBar").value<ElaTabBar*>())
-        {
-            customTabBar->removeTab(index);
-            closeWidget->setProperty("CurrentCustomBar", QVariant::fromValue<ElaTabBar*>(nullptr));
-        }
-        originTabWidget->addTab(closeWidget, q->tabIcon(index), q->tabText(index));
-        originTabWidget->setCurrentWidget(closeWidget);
+        bounds.setWidth(bounds.width() / 2);
+        break;
     }
-    else
+    case ElaTabWidgetType::Right:
     {
-        if (!originTabWidget && q->objectName() == "ElaCustomTabWidget")
-        {
-            _customTabBar->removeTab(index);
-        }
-        q->removeTab(index);
-        _removeTabWidgetFromList(closeWidget);
-        closeWidget->deleteLater();
+        bounds.setLeft(bounds.left() + bounds.width() / 2);
+        break;
     }
-}
-
-void ElaTabWidgetPrivate::_clearAllTabWidgetList()
-{
-    Q_Q(ElaTabWidget);
-    for (auto widget: _allTabWidgetList)
+    case ElaTabWidgetType::Top:
     {
-        if (!widget)
-        {
-            continue;
-        }
-        auto originTabWidgetVariant = widget->property("ElaOriginTabWidget");
-        if (originTabWidgetVariant.isValid() && originTabWidgetVariant.value<ElaTabWidget*>() == q)
-        {
-            widget->setProperty("ElaOriginTabWidget", QVariant());
-        }
+        bounds.setHeight(bounds.height() / 2);
+        break;
     }
-    _allTabWidgetList.clear();
+    case ElaTabWidgetType::Bottom:
+    {
+        bounds.setTop(bounds.top() + bounds.height() / 2);
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+    _dropIndicator->showTarget(bounds);
 }

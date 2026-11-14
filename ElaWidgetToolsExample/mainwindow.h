@@ -50,7 +50,6 @@ private:
     T_TreeView* _treeViewPage{nullptr};
     T_About* _aboutPage{nullptr};
     T_Setting* _settingPage{nullptr};
-    QString _elaDxgiKey{""};
     QString _viewKey{""};
     QString _aboutKey{""};
     QString _settingKey{""};

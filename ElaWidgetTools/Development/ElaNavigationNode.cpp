@@ -114,13 +114,13 @@ void ElaNavigationNode::removeChildNode(ElaNavigationNode* childNode)
 
 bool ElaNavigationNode::getIsChildHasKeyPoints() const
 {
-    for (auto childNnode: _pChildrenNodes)
+    for (const auto childNode: _pChildrenNodes)
     {
-        if (childNnode->getKeyPoints())
+        if (childNode->getKeyPoints())
         {
             return true;
         }
-        if (childNnode->getIsChildHasKeyPoints())
+        if (childNode->getIsChildHasKeyPoints())
         {
             return true;
         }
@@ -153,9 +153,9 @@ bool ElaNavigationNode::getIsChildNode(ElaNavigationNode* node)
         {
             return true;
         }
-        for (auto childNnode: _pChildrenNodes)
+        for (auto childNode: _pChildrenNodes)
         {
-            if (childNnode->getIsChildNode(node))
+            if (childNode->getIsChildNode(node))
             {
                 return true;
             }
@@ -171,26 +171,4 @@ int ElaNavigationNode::getRow() const
         return _pParentNode->getChildrenNodes().indexOf(const_cast<ElaNavigationNode*>(this));
     }
     return 0;
-}
-
-int ElaNavigationNode::getRowExceptCategoryNodes() const
-{
-    if (_pParentNode)
-    {
-        return _pParentNode->getExceptCategoryNodes().indexOf(const_cast<ElaNavigationNode*>(this));
-    }
-    return 0;
-}
-
-QList<ElaNavigationNode*> ElaNavigationNode::getExceptCategoryNodes()
-{
-    QList<ElaNavigationNode*> exceptCategoryNodeList;
-    for (auto node: _pChildrenNodes)
-    {
-        if (!node->getIsCategoryNode())
-        {
-            exceptCategoryNodeList.append(node);
-        }
-    }
-    return exceptCategoryNodeList;
 }

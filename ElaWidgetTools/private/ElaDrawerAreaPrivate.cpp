@@ -1,4 +1,5 @@
 #include "ElaDrawerAreaPrivate.h"
+
 #include "ElaDrawerArea.h"
 
 ElaDrawerAreaPrivate::ElaDrawerAreaPrivate(QObject* parent)
@@ -13,6 +14,10 @@ ElaDrawerAreaPrivate::~ElaDrawerAreaPrivate()
 void ElaDrawerAreaPrivate::onDrawerHeaderClicked(bool isExpand)
 {
     Q_Q(ElaDrawerArea);
+    if (isExpand && _drawerContainer->getHasWidgets())
+    {
+        _drawerHeader->setIsBottomAttached(true);
+    }
     _drawerContainer->doDrawerAnimation(isExpand);
     Q_EMIT q->expandStateChanged(isExpand);
 }

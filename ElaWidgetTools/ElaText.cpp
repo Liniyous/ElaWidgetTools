@@ -1,10 +1,12 @@
 #include "ElaText.h"
 
+#include "ElaApplication.h"
+#include "ElaTheme.h"
+#include "private/ElaTextPrivate.h"
+
 #include <QContextMenuEvent>
 #include <QPainter>
 
-#include "ElaTheme.h"
-#include "private/ElaTextPrivate.h"
 ElaText::ElaText(QWidget* parent)
     : QLabel(parent), d_ptr(new ElaTextPrivate())
 {
@@ -16,7 +18,7 @@ ElaText::ElaText(QWidget* parent)
     setStyleSheet("#ElaText{background-color:transparent;}");
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, d->_textSpacing);
-    textFont.setPixelSize(28);
+    textFont.setPixelSize(eApp->getFontPixelSize());
     textFont.setBold(false);
     setFont(textFont);
     setWordWrap(true);

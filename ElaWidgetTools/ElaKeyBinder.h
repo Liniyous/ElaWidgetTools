@@ -27,7 +27,6 @@ Q_SIGNALS:
     Q_SIGNAL void nativeVirtualBinderKeyChanged(quint32 binderKey);
 
 protected:
-    virtual bool event(QEvent* event) override;
     virtual void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };

@@ -1,10 +1,12 @@
 #include "ElaPivotStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaTheme.h"
 ElaPivotStyle::ElaPivotStyle(QStyle* style)
 {
     _pPivotSpacing = 5;
@@ -54,12 +56,12 @@ void ElaPivotStyle::drawControl(ControlElement element, const QStyleOption* opti
             // 内容绘制
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
-            QRect textRect = proxy()->subElementRect(SE_ItemViewItemText, vopt, widget);
+            QRect textRect = vopt->rect;
             textRect.adjust(0, 0, 0, -5);
             // 文字绘制
             if (!vopt->text.isEmpty())
             {
-                painter->setPen(ElaThemeColor(_themeMode, BasicText));
+                painter->setPen(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicText), "PivotText", vopt->index));
                 if (_pPressIndex != vopt->index)
                 {
                     if (vopt->state.testFlag(QStyle::State_Selected) || vopt->state.testFlag(QStyle::State_MouseOver))
@@ -69,7 +71,7 @@ void ElaPivotStyle::drawControl(ControlElement element, const QStyleOption* opti
                         painter->setFont(textFont);
                     }
                 }
-                painter->drawText(textRect, Qt::AlignCenter, vopt->text);
+                painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, vopt->text);
             }
             painter->restore();
         }

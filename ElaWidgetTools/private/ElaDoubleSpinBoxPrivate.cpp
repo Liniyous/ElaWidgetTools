@@ -100,6 +100,8 @@ void ElaDoubleSpinBoxPrivate::_changeTheme()
     Q_Q(ElaDoubleSpinBox);
     QPalette palette;
     palette.setColor(QPalette::Base, Qt::transparent);
-    palette.setColor(QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    palette.setColor(QPalette::Active, QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    palette.setColor(QPalette::Inactive, QPalette::Text, ElaThemeColor(_themeMode, BasicText));
+    palette.setColor(QPalette::Disabled, QPalette::Text, ElaThemeColor(_themeMode, BasicTextDisable));
     q->lineEdit()->setPalette(palette);
 }

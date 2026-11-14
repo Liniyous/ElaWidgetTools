@@ -33,7 +33,6 @@ public:
     void setPixmap(const QPixmap& pix);
 
 protected:
-    virtual bool event(QEvent* event) override;
     virtual void paintEvent(QPaintEvent* event) override;
 };
 

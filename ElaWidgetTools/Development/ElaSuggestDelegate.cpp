@@ -1,12 +1,16 @@
 #include "ElaSuggestDelegate.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxPrivate.h"
 #include "ElaSuggestModel.h"
 #include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPainterPath>
+
 ElaSuggestDelegate::ElaSuggestDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
@@ -38,27 +42,8 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     QRect optionRect = option.rect;
     optionRect.adjust(margin * 2, margin, -margin * 2, -margin);
     path.addRoundedRect(optionRect, 8, 8);
-    if (option.state & QStyle::State_Selected)
-    {
-        if (option.state & QStyle::State_MouseOver)
-        {
-            //选中时覆盖
-            painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
-        }
-        else
-        {
-            //选中
-            painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
-        }
-    }
-    else
-    {
-        if (option.state & QStyle::State_MouseOver)
-        {
-            //覆盖时颜色
-            painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
-        }
-    }
+    const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, option.state);
+    painter->fillPath(path, ElaColorAnimation::getColor(option.widget, background, "ItemBackground", index));
     //文字绘制
     painter->setPen(ElaThemeColor(_themeMode, BasicText));
     painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());

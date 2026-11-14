@@ -1,15 +1,14 @@
 #include "ElaColorDisplayDelegate.h"
 
+#include "ElaTheme.h"
+
 #include <QColor>
 #include <QPainter>
-#include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaTheme.h"
 ElaColorDisplayDelegate::ElaColorDisplayDelegate(QObject* parent)
     : QStyledItemDelegate{parent}
 {
-    _pThemeMode = eTheme->getThemeMode();
 }
 
 ElaColorDisplayDelegate::~ElaColorDisplayDelegate()
@@ -21,30 +20,32 @@ void ElaColorDisplayDelegate::paint(QPainter* painter, const QStyleOptionViewIte
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing);
     QRectF itemRect = option.rect;
+    const auto themeMode = eTheme->getThemeMode();
     // 颜色球绘制
-    QColor displayColor = index.data(Qt::UserRole).value<QColor>();
+    const QColor displayColor = index.data(Qt::UserRole).value<QColor>();
+    QPen outlinePen(ElaThemeColor(themeMode, BasicBorderDeep));
+    painter->setBrush(Qt::NoBrush);
     if (displayColor.isValid())
     {
-        painter->setPen(ElaThemeColor(_pThemeMode, PopupBorderHover));
-        painter->setBrush(index.data(Qt::UserRole).value<QColor>());
+        painter->setBrush(displayColor);
     }
     else
     {
-        QPen pen(ElaThemeColor(_pThemeMode, PopupBorderHover));
-        pen.setStyle(Qt::DashLine);
-        painter->setPen(pen);
+        outlinePen.setStyle(Qt::DashLine);
     }
+    painter->setPen(outlinePen);
     painter->drawEllipse(itemRect.center(), 10, 10);
 
     // 覆盖效果绘制
     if (option.state.testFlag(QStyle::State_MouseOver) || option.state.testFlag(QStyle::State_Selected))
     {
         painter->setBrush(Qt::NoBrush);
+        const bool isSelected = option.state.testFlag(QStyle::State_Selected);
+        painter->setPen(QPen(isSelected ? ElaThemeColor(themeMode, PrimaryNormal) : ElaThemeColor(themeMode, BasicTextNoFocus), isSelected ? 2 : 1));
         painter->drawEllipse(itemRect.center(), 13, 13);
     }
 
     painter->restore();
-    QStyledItemDelegate::paint(painter, option, index);
 }
 
 QSize ElaColorDisplayDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const

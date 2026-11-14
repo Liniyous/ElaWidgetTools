@@ -28,6 +28,12 @@ public:
     void setElaIcon(ElaIconType::IconName icon, int rotate);
 
 protected:
+    bool event(QEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
     virtual bool eventFilter(QObject* watched, QEvent* event) override;
 
 Q_SIGNALS:

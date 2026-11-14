@@ -1,109 +1,94 @@
 #include "T_Navigation.h"
 
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QVBoxLayout>
-
 #include "ElaBreadcrumbBar.h"
+#include "ElaFlowLayout.h"
+#include "ElaMenu.h"
 #include "ElaPivot.h"
 #include "ElaPushButton.h"
-#include "ElaScrollPageArea.h"
 #include "ElaTabWidget.h"
 #include "ElaText.h"
+
+#include <QVBoxLayout>
+
 T_Navigation::T_Navigation(QWidget* parent)
     : T_BasePage(parent)
 {
-    // 预览窗口标题
-    setWindowTitle("ElaNavigation");
-
-    // 顶部元素
-    createCustomWidget("一些导航组件被放置于此，可在此界面体验其效果并按需添加进项目中");
-
-    //ElaBreadcrumbBar
-    ElaText* breadcrumbBarText = new ElaText("ElaBreadcrumbBar", this);
-    breadcrumbBarText->setTextPixelSize(18);
+    setWindowTitle("导航与标签");
+    createCustomWidget("通过路径、分类与标签组织内容，点击控件查看当前导航位置。", "导航与标签");
+    auto* mainLayout = createPageLayout();
+    auto* breadcrumbSection = addExampleSection(mainLayout, "路径导航 · ElaBreadcrumbBar", "点击上级路径返回，使用还原按钮重新展示完整路径。");
+    const QStringList path{"工作空间", "设计系统", "组件库", "导航组件"};
     _breadcrumbBar = new ElaBreadcrumbBar(this);
-    QStringList breadcrumbBarList;
-    for (int i = 0; i < 20; i++)
-    {
-        breadcrumbBarList << QString("Item%1").arg(i + 1);
-    }
-    _breadcrumbBar->setBreadcrumbList(breadcrumbBarList);
-
-    ElaPushButton* resetButton = new ElaPushButton("还原", this);
-    resetButton->setFixedSize(60, 32);
-    connect(resetButton, &ElaPushButton::clicked, this, [=]() {
-        _breadcrumbBar->setBreadcrumbList(breadcrumbBarList);
+    _breadcrumbBar->setBreadcrumbList(path);
+    auto* resetButton = new ElaPushButton("还原路径", this);
+    resetButton->setFixedWidth(100);
+    auto* breadcrumbResultText = new ElaText("当前位置：导航组件", this);
+    connect(resetButton, &ElaPushButton::clicked, this, [this, path, breadcrumbResultText]() {
+        _breadcrumbBar->setBreadcrumbList(path);
+        breadcrumbResultText->setText("当前位置：导航组件");
     });
+    connect(_breadcrumbBar, &ElaBreadcrumbBar::breadcrumbClicked, this, [breadcrumbResultText](const QString& value, const QStringList&) {
+        breadcrumbResultText->setText("当前位置：" + value);
+    });
+    breadcrumbSection->addWidget(_breadcrumbBar);
+    auto* breadcrumbActionLayout = new QHBoxLayout();
+    breadcrumbActionLayout->addWidget(breadcrumbResultText, 1);
+    breadcrumbActionLayout->addWidget(resetButton);
+    breadcrumbSection->addLayout(breadcrumbActionLayout);
 
-    QHBoxLayout* breadcrumbBarTextLayout = new QHBoxLayout();
-    breadcrumbBarTextLayout->addWidget(breadcrumbBarText);
-    breadcrumbBarTextLayout->addSpacing(15);
-    breadcrumbBarTextLayout->addWidget(resetButton);
-    breadcrumbBarTextLayout->addStretch();
-
-    ElaScrollPageArea* breadcrumbBarArea = new ElaScrollPageArea(this);
-    QVBoxLayout* breadcrumbBarLayout = new QVBoxLayout(breadcrumbBarArea);
-    breadcrumbBarLayout->addWidget(_breadcrumbBar);
-
-    // ElaPivot
-    ElaText* pivotText = new ElaText("ElaPivot", this);
-    pivotText->setTextPixelSize(18);
+    auto* pivotSection = addExampleSection(mainLayout, "分类切换 · ElaPivot", "点击分类，观察选中标记和内容的联动。");
     _pivot = new ElaPivot(this);
-    _pivot->setPivotSpacing(8);
-    _pivot->setMarkWidth(75);
-    _pivot->appendPivot("本地歌曲");
-    _pivot->appendPivot("下载歌曲");
-    _pivot->appendPivot("下载视频");
-    _pivot->appendPivot("正在下载");
-    _pivot->appendPivot("本地歌曲");
-    _pivot->appendPivot("下载歌曲");
-    _pivot->appendPivot("下载视频");
-    _pivot->appendPivot("正在下载");
-    _pivot->appendPivot("本地歌曲");
-    _pivot->appendPivot("下载歌曲");
-    _pivot->appendPivot("下载视频");
-    _pivot->appendPivot("正在下载");
-    _pivot->setCurrentIndex(0);
-
-    ElaScrollPageArea* pivotArea = new ElaScrollPageArea(this);
-    QVBoxLayout* pivotLayout = new QVBoxLayout(pivotArea);
-    pivotLayout->addWidget(_pivot);
-
-    // ElaTabWidget
-    ElaText* tabWidgetText = new ElaText("ElaTabWidget", this);
-    tabWidgetText->setTextPixelSize(18);
-    _tabWidget = new ElaTabWidget(this);
-    _tabWidget->setFixedHeight(600);
-    _tabWidget->setIsTabTransparent(true);
-    ElaText* page1 = new ElaText("新标签页", this);
-    page1->setTextPixelSize(32);
-    page1->setAlignment(Qt::AlignCenter);
-    _tabWidget->addTab(page1, QIcon(":/Resource/Image/Cirno.jpg"), "新标签页");
-    for (int i = 0; i < 5; i++)
+    _pivot->setPivotSpacing(18);
+    _pivot->setMarkWidth(28);
+    const QStringList categories{"概览", "设计", "开发", "发布"};
+    for (const QString& title: categories)
     {
-        ElaText* page = new ElaText(QString("新标签页%1").arg(i), this);
-        page->setTextPixelSize(32);
-        page->setAlignment(Qt::AlignCenter);
-        _tabWidget->addTab(page, QString("新标签页%1").arg(i));
+        _pivot->appendPivot(title);
     }
-    QWidget* centralWidget = new QWidget(this);
-    centralWidget->setWindowTitle("ElaNavigation");
-    QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
-    centerVLayout->setContentsMargins(0, 0, 0, 0);
-    centerVLayout->addLayout(breadcrumbBarTextLayout);
-    centerVLayout->addSpacing(10);
-    centerVLayout->addWidget(breadcrumbBarArea);
-    centerVLayout->addSpacing(15);
-    centerVLayout->addWidget(pivotText);
-    centerVLayout->addSpacing(10);
-    centerVLayout->addWidget(pivotArea);
-    centerVLayout->addSpacing(15);
-    centerVLayout->addWidget(tabWidgetText);
-    centerVLayout->addSpacing(10);
-    centerVLayout->addWidget(_tabWidget);
-    centerVLayout->addStretch();
-    addCentralWidget(centralWidget, true, false, 0);
+    _pivot->setCurrentIndex(0);
+    auto* pivotResultText = new ElaText("概览：查看项目进度与最近活动。", this);
+    const QStringList descriptions{"概览：查看项目进度与最近活动。", "设计：整理视觉规范和交互说明。", "开发：浏览组件实现与接口。", "发布：检查版本信息与交付清单。"};
+    connect(_pivot, &ElaPivot::pivotClicked, this, [pivotResultText, descriptions](int index) {
+        pivotResultText->setText(descriptions.value(index));
+    });
+    pivotSection->addWidget(_pivot);
+    pivotSection->addWidget(pivotResultText);
+
+    auto* tabSection = addExampleSection(mainLayout, "多文档标签 · ElaTabWidget", "切换、拖动或关闭标签；右键可固定标签，也可以新增一个页面。");
+    auto* addButton = new ElaPushButton("新增标签", this);
+    _tabWidget = new ElaTabWidget(this);
+    _tabWidget->setFixedHeight(280);
+    _tabWidget->setIsTabTransparent(true);
+    _tabWidget->setIsTabWidthAdaptive(true);
+    for (const QString& title: {QString("项目概览"), QString("界面设计"), QString("开发记录")})
+    {
+        auto* pageText = new ElaText(title + "\n\n这是一个可以独立切换的文档页面", this);
+        pageText->setTextPixelSize(18);
+        pageText->setAlignment(Qt::AlignCenter);
+        _tabWidget->addTab(pageText, title);
+    }
+    connect(addButton, &ElaPushButton::clicked, this, [this]() {
+        const QString title = QString("新文档 %1").arg(_tabWidget->count() + 1);
+        auto* pageText = new ElaText(title, this);
+        pageText->setTextPixelSize(18);
+        pageText->setAlignment(Qt::AlignCenter);
+        _tabWidget->setCurrentIndex(_tabWidget->addTab(pageText, title));
+    });
+    connect(_tabWidget, &ElaTabWidget::tabCloseRequested, this, [this](int index) {
+        QWidget* page = _tabWidget->widget(index);
+        _tabWidget->removeTab(index);
+        page->deleteLater();
+    });
+    connect(_tabWidget, &ElaTabWidget::tabContextMenuRequested, this, [this](int index, const QPoint& position) {
+        ElaMenu menu(this);
+        const bool isPinned = _tabWidget->getIsTabPinned(index);
+        connect(menu.addAction(isPinned ? "取消固定" : "固定标签"), &QAction::triggered, this, [this, index, isPinned]() {
+            _tabWidget->setIsTabPinned(index, !isPinned);
+        });
+        menu.exec(position);
+    });
+    tabSection->addWidget(addButton, 0, Qt::AlignLeft);
+    tabSection->addWidget(_tabWidget);
 }
 
 T_Navigation::~T_Navigation()

@@ -57,3 +57,7 @@ compile_commands.json
 /.idea
 *.clang-format
 /install
+
+# Local build and install outputs
+/build/
+/Install/

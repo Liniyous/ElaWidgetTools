@@ -1,10 +1,18 @@
 #include "ElaDrawerHeader.h"
+
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
 #include "ElaTheme.h"
+
+#include <QEasingCurve>
 #include <QEvent>
+#include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include <QPropertyAnimation>
+
 ElaDrawerHeader::ElaDrawerHeader(QWidget* parent)
     : QWidget(parent)
 {
@@ -20,9 +28,15 @@ ElaDrawerHeader::ElaDrawerHeader(QWidget* parent)
     _mainLayout->setContentsMargins(0, 0, 0, 0);
     setContentsMargins(0, 0, 30, 0);
 
+    _rotateAnimation = new QPropertyAnimation(this, "pExpandIconRotate", this);
+    connect(_rotateAnimation, &QPropertyAnimation::valueChanged, this, [this]() {
+        update();
+    });
+
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [this](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;
+        update();
     });
 }
 
@@ -45,105 +59,190 @@ void ElaDrawerHeader::setHeaderWidget(QWidget* widget)
     _headerWidget = widget;
 }
 
+void ElaDrawerHeader::setIsBottomAttached(bool isAttached)
+{
+    if (_isBottomAttached == isAttached)
+    {
+        return;
+    }
+    _isBottomAttached = isAttached;
+    update();
+}
+
+bool ElaDrawerHeader::getIsBottomAttached() const
+{
+    return _isBottomAttached;
+}
+
 void ElaDrawerHeader::doExpandOrCollapseAnimation()
 {
-    QPropertyAnimation* rotateAnimation = new QPropertyAnimation(this, "pExpandIconRotate");
-    connect(rotateAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
+    _rotateAnimation->stop();
+    const qreal targetAngle = _pIsExpand ? -180.0 : 0.0;
+    if (!isVisible() || !ElaColorAnimation::getIsAnimationEnabled(this))
+    {
+        _pExpandIconRotate = targetAngle;
         update();
-    });
-    rotateAnimation->setDuration(300);
-    rotateAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    rotateAnimation->setStartValue(_pExpandIconRotate);
-    rotateAnimation->setEndValue(_pIsExpand ? -180 : 0);
-    rotateAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+        return;
+    }
+    QEasingCurve easing(QEasingCurve::BezierSpline);
+    easing.addCubicBezierSegment(QPointF(0.0, 0.0), QPointF(0.0, 1.0), QPointF(1.0, 1.0));
+    _rotateAnimation->setEasingCurve(easing);
+    _rotateAnimation->setDuration(_pIsExpand ? 250 : 200);
+    _rotateAnimation->setStartValue(_pExpandIconRotate);
+    _rotateAnimation->setEndValue(targetAngle);
+    _rotateAnimation->start();
 }
 
 bool ElaDrawerHeader::event(QEvent* event)
 {
-    switch (event->type())
-    {
-    case QEvent::Enter:
-    case QEvent::Leave:
+    if (event->type() == QEvent::Enter || event->type() == QEvent::Leave)
     {
         update();
-        break;
-    }
-    default:
-    {
-        break;
-    }
     }
     return QWidget::event(event);
 }
 
 void ElaDrawerHeader::mousePressEvent(QMouseEvent* event)
 {
-    QWidget* posWidget = childAt(event->pos());
-    if (!posWidget || (posWidget && posWidget->objectName().isEmpty()))
+    if (event->button() == Qt::LeftButton && _getIsHeaderClickable(childAt(event->pos())))
     {
         _isPressed = true;
         update();
+        event->accept();
+        return;
     }
     QWidget::mousePressEvent(event);
 }
 
 void ElaDrawerHeader::mouseReleaseEvent(QMouseEvent* event)
 {
-    QWidget* posWidget = childAt(event->pos());
-    if (!posWidget || (posWidget && posWidget->objectName().isEmpty()))
+    const bool wasPressed = _isPressed;
+    if (_isPressed)
     {
         _isPressed = false;
-        _pIsExpand = !_pIsExpand;
-        //指示器动画
-        doExpandOrCollapseAnimation();
-        Q_EMIT drawerHeaderClicked(_pIsExpand);
+        update();
+    }
+    if (wasPressed && event->button() == Qt::LeftButton)
+    {
+        if (rect().contains(event->pos()) && _getIsHeaderClickable(childAt(event->pos())))
+        {
+            _pIsExpand = !_pIsExpand;
+            doExpandOrCollapseAnimation();
+            Q_EMIT drawerHeaderClicked(_pIsExpand);
+        }
+        event->accept();
+        return;
     }
     QWidget::mouseReleaseEvent(event);
 }
 
 void ElaDrawerHeader::mouseMoveEvent(QMouseEvent* event)
 {
-    update();
     QWidget::mouseMoveEvent(event);
 }
 
 void ElaDrawerHeader::paintEvent(QPaintEvent* event)
 {
-    bool isUnderMouse = underMouse();
+    Q_UNUSED(event)
     QPainter painter(this);
     painter.save();
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
-    painter.setBrush(_isPressed ? ElaThemeColor(_themeMode, BasicSelectedAlpha) : isUnderMouse ? ElaThemeColor(_themeMode, BasicPressAlpha)
-                                                                                               : ElaThemeColor(_themeMode, BasicBaseAlpha));
-    QRect foregroundRect(1, 1, width() - 2, _pIsExpand ? height() + _pBorderRadius : height() - 2);
-    painter.drawRoundedRect(foregroundRect, _pBorderRadius, _pBorderRadius);
-    // 底边线绘制
-    if (isUnderMouse)
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+    QStyle::State state = QStyle::State_None;
+    if (isEnabled())
     {
-        painter.setPen(ElaThemeColor(_themeMode, BasicBorderDeep));
+        state |= QStyle::State_Enabled;
     }
-    if (_pIsExpand)
+    if (_isPressed)
     {
-        painter.drawLine(0, height() - 1, width(), height() - 1);
+        state |= QStyle::State_Sunken;
+    }
+    else if (underMouse())
+    {
+        state |= QStyle::State_MouseOver;
+    }
+    const QColor bgColor = ElaColorAnimation::getColor(this, ElaControlStyle::getControlBackgroundColor(_themeMode, state), "DrawerHeaderBackground");
+    const qreal radius = qBound(0.0, static_cast<qreal>(_pBorderRadius), qMin(width(), height()) / 2.0 - 0.5);
+
+    if (!_isBottomAttached)
+    {
+        const QRectF headerRect(0.5, 0.5, qMax(0.0, width() - 1.0), qMax(0.0, height() - 1.0));
+        painter.setPen(QPen(ElaControlStyle::getControlBorder(headerRect, _themeMode, !_isPressed), 1.0));
+        painter.setBrush(bgColor);
+        painter.drawRoundedRect(headerRect, radius, radius);
     }
     else
     {
-        painter.drawLine(_pBorderRadius, height() - 1, width() - _pBorderRadius, height() - 1);
-        painter.drawArc(QRectF(1, height() - 1 - 2 * _pBorderRadius, 2 * _pBorderRadius, 2 * _pBorderRadius), 240 * 16, 30 * 16);
-        painter.drawArc(QRectF(width() - 2 * _pBorderRadius, height() - 1 - 2 * _pBorderRadius, 2 * _pBorderRadius, 2 * _pBorderRadius), -90 * 16, 30 * 16);
+        // 展开期间保持底部直角与下方容器拼接 统一作为单张卡片表面过渡
+        const QRectF headerRect(0.5, 0.5, qMax(0.0, width() - 1.0), qMax(0.0, height() - 0.5));
+        QPainterPath fillPath;
+        fillPath.moveTo(headerRect.left(), height());
+        fillPath.lineTo(headerRect.left(), headerRect.top() + radius);
+        if (radius > 0.0)
+        {
+            fillPath.arcTo(QRectF(headerRect.left(), headerRect.top(), 2.0 * radius, 2.0 * radius), 180.0, -90.0);
+            fillPath.lineTo(headerRect.right() - radius, headerRect.top());
+            fillPath.arcTo(QRectF(headerRect.right() - 2.0 * radius, headerRect.top(), 2.0 * radius, 2.0 * radius), 90.0, -90.0);
+        }
+        else
+        {
+            fillPath.lineTo(headerRect.left(), headerRect.top());
+            fillPath.lineTo(headerRect.right(), headerRect.top());
+        }
+        fillPath.lineTo(headerRect.right(), height());
+        fillPath.closeSubpath();
+
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(bgColor);
+        painter.drawPath(fillPath);
+
+        QPainterPath borderPath;
+        borderPath.moveTo(headerRect.left(), height());
+        borderPath.lineTo(headerRect.left(), headerRect.top() + radius);
+        if (radius > 0.0)
+        {
+            borderPath.arcTo(QRectF(headerRect.left(), headerRect.top(), 2.0 * radius, 2.0 * radius), 180.0, -90.0);
+            borderPath.lineTo(headerRect.right() - radius, headerRect.top());
+            borderPath.arcTo(QRectF(headerRect.right() - 2.0 * radius, headerRect.top(), 2.0 * radius, 2.0 * radius), 90.0, -90.0);
+        }
+        else
+        {
+            borderPath.lineTo(headerRect.left(), headerRect.top());
+            borderPath.lineTo(headerRect.right(), headerRect.top());
+        }
+        borderPath.lineTo(headerRect.right(), height());
+        const bool isTopSheen = _themeMode == ElaThemeType::Dark && !_isPressed;
+        painter.setPen(QPen(ElaControlStyle::getControlBorder(headerRect, _themeMode, isTopSheen), 1.0));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawPath(borderPath);
+
+        painter.setPen(QPen(ElaThemeColor(_themeMode, BasicBorder), 1.0));
+        painter.drawLine(QLineF(1.0, height() - 0.5, width() - 1.0, height() - 0.5));
     }
 
-    // 展开图标绘制
-    QFont iconFont = QFont("ElaAwesome");
-    iconFont.setPixelSize(eApp->getFontPixelSize() + 4);
+    // 围绕图标几何中心旋转展开箭头
+    QFont iconFont("ElaAwesome");
+    iconFont.setPixelSize(eApp->getFontPixelSize() + 3);
     painter.setFont(iconFont);
     painter.setPen(isEnabled() ? ElaThemeColor(_themeMode, BasicText) : ElaThemeColor(_themeMode, BasicTextDisable));
-    QRectF expandIconRect(width() - 25, 0, 20, height());
-    painter.translate(expandIconRect.x() + (qreal)expandIconRect.width() / 2 - 2, expandIconRect.y() + (qreal)expandIconRect.height() / 2);
+    const QPointF iconCenter(width() - 24.0, height() / 2.0 + (_isPressed ? 1.0 : 0.0));
+    painter.translate(iconCenter);
     painter.rotate(_pExpandIconRotate);
-    painter.translate(-expandIconRect.x() - (qreal)expandIconRect.width() / 2 + 2, -expandIconRect.y() - (qreal)expandIconRect.height() / 2);
-    painter.drawText(expandIconRect, Qt::AlignVCenter, QChar(ElaIconType::AngleDown));
+    painter.drawText(QRectF(-12.0, -12.0, 24.0, 24.0), Qt::AlignCenter, QChar(ElaIconType::AngleDown));
 
     painter.restore();
+}
+
+bool ElaDrawerHeader::_getIsHeaderClickable(const QWidget* posWidget)
+{
+    if (!posWidget)
+    {
+        return true;
+    }
+    if (const auto* label = qobject_cast<const QLabel*>(posWidget))
+    {
+        return !label->textInteractionFlags().testFlag(Qt::TextEditable)
+            && !label->textInteractionFlags().testFlag(Qt::TextSelectableByMouse);
+    }
+    return posWidget->objectName().isEmpty();
 }

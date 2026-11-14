@@ -1,6 +1,10 @@
 #include "ElaToolBarStyle.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+#include "ElaToolBar.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
@@ -8,8 +12,6 @@
 #include <QToolButton>
 #include <QtMath>
 
-#include "ElaTheme.h"
-#include "ElaToolBar.h"
 ElaToolBarStyle::ElaToolBarStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
@@ -34,8 +36,8 @@ void ElaToolBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
     {
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
-        painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-        painter->setBrush(ElaThemeColor(_themeMode, DialogBase));
+        painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, PopupBase)));
         painter->drawRect(option->rect);
         painter->restore();
         return;
@@ -47,7 +49,7 @@ void ElaToolBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         QPen handlePen(Qt::DotLine);
-        handlePen.setColor(ElaThemeColor(_themeMode, PrimaryNormal));
+        handlePen.setColor(ElaThemeColor(_themeMode, BasicIndicator));
         handlePen.setWidthF(1.8);
         painter->setPen(handlePen);
         const ElaToolBar* toolBar = dynamic_cast<const ElaToolBar*>(widget);
@@ -69,7 +71,7 @@ void ElaToolBarStyle::drawPrimitive(PrimitiveElement element, const QStyleOption
         painter->save();
         painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+        painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBorder), "Separator"));
         const ElaToolBar* toolBar = dynamic_cast<const ElaToolBar*>(widget);
         if (toolBar->orientation() == Qt::Vertical)
         {
@@ -104,11 +106,9 @@ void ElaToolBarStyle::drawControl(ControlElement element, const QStyleOption* op
             painter->setPen(Qt::NoPen);
             if (widget->objectName() == "qt_toolbar_ext_button")
             {
-                if (bopt->state.testFlag(QStyle::State_Enabled) && bopt->state.testFlag(QStyle::State_MouseOver))
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                    painter->drawRect(bopt->rect);
-                }
+                const QColor background = bopt->state.testFlag(QStyle::State_Enabled) && bopt->state.testFlag(QStyle::State_MouseOver) ? ElaThemeColor(_themeMode, BasicHoverAlpha) : QColor(Qt::transparent);
+                painter->setBrush(ElaColorAnimation::getColor(widget, background));
+                painter->drawRect(bopt->rect);
                 //展开图标
                 painter->setPen(!bopt->state.testFlag(QStyle::State_Enabled) ? ElaThemeColor(_themeMode, BasicTextDisable) : ElaThemeColor(_themeMode, BasicText));
                 QFont iconFont = QFont("ElaAwesome");
@@ -123,22 +123,12 @@ void ElaToolBarStyle::drawControl(ControlElement element, const QStyleOption* op
                     break;
                 }
                 //背景绘制
-                if (bopt->state.testFlag(QStyle::State_Enabled))
-                {
-                    if (bopt->state.testFlag(QStyle::State_Sunken))
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-                        painter->drawRoundedRect(bopt->rect, 4, 4);
-                    }
-                    else
-                    {
-                        if (bopt->state.testFlag(QStyle::State_MouseOver) || bopt->state.testFlag(QStyle::State_On))
-                        {
-                            painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                            painter->drawRoundedRect(bopt->rect, 4, 4);
-                        }
-                    }
-                }
+                const QColor background = !bopt->state.testFlag(QStyle::State_Enabled)                        ? QColor(Qt::transparent)
+                    : bopt->state.testFlag(QStyle::State_Sunken)                                              ? ElaThemeColor(_themeMode, BasicPressAlpha)
+                    : bopt->state.testFlag(QStyle::State_MouseOver) || bopt->state.testFlag(QStyle::State_On) ? ElaThemeColor(_themeMode, BasicHoverAlpha)
+                                                                                                              : QColor(Qt::transparent);
+                painter->setBrush(ElaColorAnimation::getColor(widget, background));
+                painter->drawRoundedRect(bopt->rect, 4, 4);
                 //指示器绘制
                 _drawIndicator(painter, bopt, widget);
 

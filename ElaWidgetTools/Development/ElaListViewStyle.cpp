@@ -1,11 +1,14 @@
 #include "ElaListViewStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaListView.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
 
-#include "ElaListView.h"
-#include "ElaTheme.h"
 ElaListViewStyle::ElaListViewStyle(QStyle* style)
 {
     _pItemHeight = 35;
@@ -35,46 +38,14 @@ void ElaListViewStyle::drawPrimitive(PrimitiveElement element, const QStyleOptio
             itemRect.adjust(0, 2, 0, -2);
             QPainterPath path;
             path.addRoundedRect(itemRect, 4, 4);
-            if (vopt->state & QStyle::State_Selected)
-            {
-                if (vopt->state & QStyle::State_MouseOver)
-                {
-                    // 选中时覆盖
-                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
-                }
-                else
-                {
-                    // 选中
-                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicSelectedAlpha));
-                }
-            }
-            else
-            {
-                if (vopt->state & QStyle::State_MouseOver)
-                {
-                    // 覆盖时颜色
-                    painter->fillPath(path, ElaThemeColor(_themeMode, BasicHoverAlpha));
-                }
-            }
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, vopt->state, false, vopt->features.testFlag(QStyleOptionViewItem::Alternate));
+            painter->fillPath(path, ElaColorAnimation::getColor(widget, background, "ItemBackground", vopt->index));
             painter->restore();
         }
         return;
     }
     case QStyle::PE_PanelItemViewRow:
     {
-        // Item背景隔行变色
-        if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
-        {
-            if (vopt->features == QStyleOptionViewItem::Alternate)
-            {
-                painter->save();
-                painter->setRenderHint(QPainter::Antialiasing);
-                painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, BasicAlternating));
-                painter->drawRect(vopt->rect);
-                painter->restore();
-            }
-        }
         return;
     }
     case QStyle::PE_Widget:
@@ -102,8 +73,8 @@ void ElaListViewStyle::drawControl(ControlElement element, const QStyleOption* o
             frameRect.adjust(1, 1, -1, -1);
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing);
-            painter->setPen(ElaThemeColor(_themeMode, PopupBorder));
-            painter->setBrush(ElaThemeColor(_themeMode, BasicBaseAlpha));
+            painter->setPen(ElaThemeColor(_themeMode, BasicBorder));
+            painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBaseAlpha), "ViewBackground"));
             painter->drawRoundedRect(frameRect, 3, 3);
             painter->restore();
         }

@@ -1,66 +1,53 @@
 ﻿#include "T_ElaScreen.h"
 
-#ifdef Q_OS_WIN
 #include "ElaComboBox.h"
-#include "ElaDxgiManager.h"
+#include "ElaFlowLayout.h"
 #include "ElaImageCard.h"
-#include "ElaLineEdit.h"
-#include "ElaScrollPageArea.h"
 #include "ElaText.h"
 #include "ElaToggleButton.h"
-#include <QThread>
-#include <QTimer>
+#ifdef Q_OS_WIN
+#include "ElaDxgiManager.h"
+#endif
+
+#include <QSignalBlocker>
 #include <QVBoxLayout>
+
 T_ElaScreen::T_ElaScreen(QWidget* parent)
     : T_BasePage(parent)
 {
-    // 预览窗口标题
-    setWindowTitle("ElaScreen");
-
-    // 顶部元素
-    createCustomWidget("DXGI录制组件被放置于此，可在此界面预览录制效果");
-
-    ElaDxgiManager* dxgiManager = ElaDxgiManager::getInstance();
-    dxgiManager->setGrabArea(1920, 1080);
-
-    ElaScrollPageArea* dxgiScreenArea = new ElaScrollPageArea(this);
-    dxgiScreenArea->setFixedHeight(700);
-    QHBoxLayout* dxgiScreenLayout = new QHBoxLayout(dxgiScreenArea);
-    _dxgiScreen = new ElaImageCard(this);
-    _dxgiScreen->setFixedHeight(678);
-    dxgiScreenLayout->addWidget(_dxgiScreen);
-    connect(dxgiManager, &ElaDxgiManager::grabImageUpdate, this, [=](const QImage& img) {
-        _dxgiScreen->setCardImage(img);
-    });
-
-    ElaText* dxText = new ElaText("显卡选择", this);
-    dxText->setTextPixelSize(15);
-    _dxComboBox = new ElaComboBox(this);
-    _dxComboBox->addItems(dxgiManager->getDxDeviceList());
-    _dxComboBox->setCurrentIndex(dxgiManager->getDxDeviceID());
-
-    ElaText* outputText = new ElaText("屏幕选择", this);
-    outputText->setTextPixelSize(15);
+    setWindowTitle("屏幕采集");
+    createCustomWidget("选择显卡和显示器，使用 DXGI 预览本机屏幕画面。");
+    auto* mainLayout = createPageLayout();
+#ifdef Q_OS_WIN
+    auto* captureLayout = addExampleSection(mainLayout, "屏幕捕获", "选择捕获源后开启采集，画面仅在本地预览。");
+    auto* dxgiManager = ElaDxgiManager::getInstance();
+    _graphicsComboBox = new ElaComboBox(this);
+    _graphicsComboBox->setFixedWidth(240);
+    _graphicsComboBox->addItems(dxgiManager->getDxDeviceList());
+    _graphicsComboBox->setCurrentIndex(dxgiManager->getDxDeviceID());
     _outputComboBox = new ElaComboBox(this);
+    _outputComboBox->setFixedWidth(200);
     _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
     _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());
+    _captureToggleButton = new ElaToggleButton("捕获", this);
+    _captureToggleButton->setEnabled(_outputComboBox->count() > 0);
+    _captureImageCard = new ElaImageCard(this);
+    setPreviewPlaceholder(_captureImageCard, "尚未开始捕获\n选择屏幕后点击捕获");
 
-    connect(_dxComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [=](int index) {
+    connect(_graphicsComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [this, dxgiManager](int index) {
         dxgiManager->setDxDeviceID(index);
-        _outputComboBox->blockSignals(true);
+        const QSignalBlocker blocker(_outputComboBox);
         _outputComboBox->clear();
         _outputComboBox->addItems(dxgiManager->getOutputDeviceList());
         _outputComboBox->setCurrentIndex(dxgiManager->getOutputDeviceID());
-        _outputComboBox->blockSignals(false);
-        _dxgiScreen->update();
+        _captureToggleButton->setEnabled(_outputComboBox->count() > 0);
+        _captureImageCard->setCardImage(QImage());
     });
-    connect(_outputComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [=](int index) {
+    connect(_outputComboBox, QOverload<int>::of(&ElaComboBox::currentIndexChanged), this, [this, dxgiManager](int index) {
         dxgiManager->setOutputDeviceID(index);
-        _dxgiScreen->update();
+        _captureImageCard->setCardImage(QImage());
     });
-
-    ElaToggleButton* startButton = new ElaToggleButton("捕获", this);
-    connect(startButton, &ElaToggleButton::toggled, this, [=](bool isToggled) {
+    connect(_captureToggleButton, &ElaToggleButton::toggled, this, [this, dxgiManager](bool isToggled) {
         if (isToggled)
         {
             dxgiManager->startGrabScreen();
@@ -68,30 +55,35 @@ T_ElaScreen::T_ElaScreen(QWidget* parent)
         else
         {
             dxgiManager->stopGrabScreen();
-            _dxgiScreen->setCardImage({});
-            _dxgiScreen->update();
+            _captureImageCard->setCardImage(QImage());
+        }
+    });
+    connect(dxgiManager, &ElaDxgiManager::grabImageUpdate, this, [this, dxgiManager](const QImage& image) {
+        if (dxgiManager->getIsGrabScreen())
+        {
+            _captureImageCard->setCardImage(image);
         }
     });
 
-    QHBoxLayout* comboBoxLayout = new QHBoxLayout();
-    comboBoxLayout->addWidget(dxText);
-    comboBoxLayout->addWidget(_dxComboBox);
-    comboBoxLayout->addSpacing(10);
-    comboBoxLayout->addWidget(outputText);
-    comboBoxLayout->addWidget(_outputComboBox);
-    comboBoxLayout->addWidget(startButton);
-    comboBoxLayout->addStretch();
-
-    QWidget* centralWidget = new QWidget(this);
-    centralWidget->setWindowTitle("ElaScreen");
-    QVBoxLayout* centerLayout = new QVBoxLayout(centralWidget);
-    centerLayout->setContentsMargins(0, 0, 0, 0);
-    centerLayout->addLayout(comboBoxLayout);
-    centerLayout->addWidget(dxgiScreenArea);
-    addCentralWidget(centralWidget, false, true);
+    auto* sourceLayout = new ElaFlowLayout(0, 16, 16);
+    sourceLayout->addWidget(createLabeledControl("显卡", _graphicsComboBox));
+    sourceLayout->addWidget(createLabeledControl("屏幕", _outputComboBox));
+    sourceLayout->addWidget(createLabeledControl("操作", _captureToggleButton));
+    captureLayout->addLayout(sourceLayout);
+    captureLayout->addWidget(_captureImageCard);
+#else
+    auto* descriptionText = new ElaText("DXGI 屏幕采集仅支持 Windows，其他控件示例可正常使用。", 15, this);
+    descriptionText->setWordWrap(true);
+    mainLayout->addWidget(descriptionText);
+#endif
 }
 
 T_ElaScreen::~T_ElaScreen()
 {
-}
+#ifdef Q_OS_WIN
+    if (_captureToggleButton && _captureToggleButton->getIsToggled())
+    {
+        ElaDxgiManager::getInstance()->stopGrabScreen();
+    }
 #endif
+}

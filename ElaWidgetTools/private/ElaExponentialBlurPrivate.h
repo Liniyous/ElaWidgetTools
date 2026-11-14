@@ -16,6 +16,7 @@ public:
     ~ElaExponentialBlurPrivate();
 
 private:
+    friend class ElaMicaBaseInitObject;
     static int _aprec;
     static int _zprec;
     static void _drawExponentialBlur(QImage& image, const quint16& qRadius);

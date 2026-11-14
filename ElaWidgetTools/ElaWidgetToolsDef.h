@@ -54,49 +54,39 @@ Q_ENUM_CREATE(ThemeMode)
 
 enum ThemeColor
 {
-    ScrollBarHandle,
-    ToggleSwitchNoToggledCenter,
-    WindowBase,
-    WindowCentralStackBase,
-    PrimaryNormal,
-    PrimaryHover,
-    PrimaryPress,
-    PopupBorder,
-    PopupBorderHover,
-    PopupBase,
-    PopupHover,
-    DialogBase,
-    DialogLayoutArea,
-    BasicText,
-    BasicTextInvert,
-    BasicDetailsText,
-    BasicTextNoFocus,
-    BasicTextDisable,
-    BasicTextPress,
-    BasicTextCategory,
-    BasicBorder,
-    BasicBorderDeep,
-    BasicBorderHover,
-    BasicBase,
-    BasicBaseDeep,
-    BasicDisable,
-    BasicHover,
-    BasicPress,
-    BasicSelectedHover,
-    BasicBaseLine,
-    BasicHemline,
-    BasicIndicator,
-    BasicChute,
-    BasicAlternating,
-    BasicBaseAlpha,
-    BasicBaseDeepAlpha,
-    BasicHoverAlpha,
-    BasicPressAlpha,
-    BasicSelectedAlpha,
-    BasicSelectedHoverAlpha,
-    StatusDanger,
-    Win10BorderActive,
-    Win10BorderInactive
+    WindowBase,              // 窗口底色
+    PopupBase,               // 浮层与对话框底色
+    BasicBaseAlpha,          // 卡片与内容层
+    BasicText,               // 正文与图标
+    BasicTextNoFocus,        // 次要与按压文字
+    BasicTextDisable,        // 禁用文字
+    BasicTextInvert,         // 强调色上的文字
+    BasicBase,               // 普通控件填充
+    BasicHover,              // 普通控件悬停填充
+    BasicPress,              // 普通控件按压填充
+    BasicDisable,            // 普通控件禁用填充
+    InputActive,             // 输入控件获得焦点时的填充
+    BasicHoverAlpha,         // 透明控件悬停与选中填充
+    BasicPressAlpha,         // 透明控件按压与选中悬停填充
+    BasicBorder,             // 普通轮廓
+    BasicBaseLine,           // 控件次级轮廓与分隔线
+    BasicBorderDeep,         // 输入底线与强轮廓
+    BasicIndicator,          // 滚动条与滑轨等中性指示器
+    PrimaryNormal,           // 统一强调色
+    PrimaryHover,            // 强调色悬停
+    PrimaryPress,            // 强调色按压
+    StatusSuccess,           // 成功状态
+    StatusSuccessBackground, // 成功提示底色
+    StatusWarning,           // 警告状态
+    StatusWarningBackground, // 警告提示底色
+    StatusDanger,            // 错误状态
+    StatusDangerBackground,  // 错误提示底色
+    PrimaryDisabled,         // 强调控件禁用填充
+    BasicAltBase,            // 未选中的选择指示器填充
+    BasicAltHover,           // 选择指示器悬停填充
+    BasicAltPress,           // 选择指示器按压填充
+    BasicSolid,              // 滑块等需要遮盖轨道的实心填充
+    ThemeColorCount
 };
 Q_ENUM_CREATE(ThemeColor)
 Q_END_ENUM_CREATE(ElaThemeType)
@@ -138,6 +128,19 @@ Q_END_ENUM_CREATE(ElaAppBarType)
 Q_DECLARE_OPERATORS_FOR_FLAGS(ElaAppBarType::ButtonFlags)
 Q_DECLARE_OPERATORS_FOR_FLAGS(ElaAppBarType::WMMouseActionTypes)
 
+Q_BEGIN_ENUM_CREATE(ElaTabWidgetType)
+enum DropArea
+{
+    NoArea = 0x0000,
+    Center = 0x0001,
+    Left = 0x0002,
+    Right = 0x0003,
+    Top = 0x0004,
+    Bottom = 0x0005,
+};
+Q_ENUM_CREATE(DropArea)
+Q_END_ENUM_CREATE(ElaTabWidgetType)
+
 Q_BEGIN_ENUM_CREATE(ElaTextType)
 enum TextStyle
 {
@@ -152,6 +155,27 @@ enum TextStyle
 };
 Q_ENUM_CREATE(TextStyle)
 Q_END_ENUM_CREATE(ElaTextType)
+
+Q_BEGIN_ENUM_CREATE(ElaTeachingTipType)
+enum PlacementMode
+{
+    Auto = 0x0000,
+    Top = 0x0001,
+    Bottom = 0x0002,
+    Left = 0x0003,
+    Right = 0x0004,
+    TopLeft = 0x0005,
+    TopRight = 0x0006,
+    BottomLeft = 0x0007,
+    BottomRight = 0x0008,
+    LeftTop = 0x0009,
+    LeftBottom = 0x000A,
+    RightTop = 0x000B,
+    RightBottom = 0x000C,
+    Center = 0x000D,
+};
+Q_ENUM_CREATE(PlacementMode)
+Q_END_ENUM_CREATE(ElaTeachingTipType)
 
 Q_BEGIN_ENUM_CREATE(ElaNavigationType)
 enum NodeResult

@@ -1,103 +1,89 @@
 #include "ElaLogPrivate.h"
 
-#include <QDateTime>
-#include <QDebug>
-#include <QFile>
-#include <QMutex>
-#ifndef QT_NO_DEBUG
-#include <iostream>
-#endif
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QTextStream>
-#endif
 #include "ElaLog.h"
-Q_GLOBAL_STATIC(QMutex, messageLogMutex)
-Q_GLOBAL_STATIC(QString, logFileNameTime)
+#include "ElaLogWriter.h"
+
+#include <QDateTime>
+#include <QDir>
+#include <cstdio>
+
 ElaLogPrivate::ElaLogPrivate(QObject* parent)
     : QObject{parent}
 {
+    _writer = new ElaLogWriter(this);
 }
 
-ElaLogPrivate::~ElaLogPrivate()
+void ElaLogPrivate::_messageLogHandler(QtMsgType type, const QMessageLogContext& ctx, const QString& msg)
 {
-}
-
-void ElaLogPrivate::_messageLogHander(QtMsgType type, const QMessageLogContext& ctx, const QString& msg)
-{
-    if (type > QtCriticalMsg)
+    ElaLog* log = ElaLog::getInstance();
+    ElaLogPrivate* d = log->d_func();
+    if (QThread::currentThread() == d->_writer)
+    {
+        // 文件系统自身的诊断直接输出，避免写入线程等待自己的队列
+        const QByteArray message = msg.toLocal8Bit();
+        std::fprintf(stderr, "%s\n", message.constData());
+        return;
+    }
+    const QString logInfo = _formatMessage(type, ctx, msg);
+    if (!d->_writer->append(logInfo))
     {
         return;
     }
-    QString logInfo;
-    QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    // Qt 可将警告和错误升级为进程终止，此时也要在处理器返回前排空
+    if (type == QtFatalMsg
+        || ((type == QtWarningMsg || type == QtCriticalMsg) && !qgetenv("QT_FATAL_WARNINGS").isEmpty())
+        || (type == QtCriticalMsg && !qgetenv("QT_FATAL_CRITICALS").isEmpty()))
+    {
+        d->_writer->flush();
+    }
+    Q_EMIT log->logMessage(logInfo);
+}
+
+QString ElaLogPrivate::_formatMessage(QtMsgType type, const QMessageLogContext& ctx, const QString& msg)
+{
+    // 原有时间格式精确到秒，同一线程在秒内复用格式化结果
+    thread_local qint64 cachedSecond = -1;
+    thread_local QString cachedTime;
+    const qint64 second = QDateTime::currentMSecsSinceEpoch() / 1000;
+    if (cachedSecond != second)
+    {
+        cachedSecond = second;
+        cachedTime = QDateTime::fromMSecsSinceEpoch(second * 1000).toString("yyyy-MM-dd hh:mm:ss");
+    }
+    const char* level = "信息";
     switch (type)
     {
     case QtDebugMsg:
+    case QtInfoMsg:
     {
-        logInfo = QString("[信息-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
         break;
     }
     case QtWarningMsg:
     {
-        logInfo = QString("[警告-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
+        level = "警告";
         break;
     }
     case QtCriticalMsg:
     {
-        logInfo = QString("[错误-%1](函数: %2 , 行数: %3) -> %4").arg(logTime, ctx.function, QString::number(ctx.line), msg);
+        level = "错误";
         break;
     }
-    default:
+    case QtFatalMsg:
     {
-        qCritical("发生致命错误！");
+        level = "致命";
         break;
     }
     }
-    qDebug() << logInfo;
-    ElaLog* log = ElaLog::getInstance();
-    Q_EMIT log->logMessage(logInfo);
-    messageLogMutex->lock();
-    QFile logfile;
-    if (log->getIsLogFileNameWithTime())
-    {
-        logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + *logFileNameTime + ".txt");
-    }
-    else
-    {
-        logfile.setFileName(log->getLogSavePath() + "\\" + log->getLogFileName() + ".txt");
-    }
-    if (logfile.open(QIODevice::WriteOnly | QIODevice::Append))
-    {
-        QTextStream logFileStream(&logfile);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-        logFileStream << logInfo << Qt::endl;
-#else
-        logFileStream << logInfo << endl;
-#endif
-        logfile.close();
-    }
-    messageLogMutex->unlock();
+    return QString("[%1-%2](函数: %3 , 行数: %4) -> %5")
+        .arg(level, cachedTime, QString::fromUtf8(ctx.function ? ctx.function : ""), QString::number(ctx.line), msg);
 }
 
-void ElaLogPrivate::_clearLogFile()
+void ElaLogPrivate::_configureLogFile()
 {
+    QString fileName = _pLogFileName;
     if (_pIsLogFileNameWithTime)
     {
-        QString logTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh-mm-ss");
-        logTime.prepend("_");
-        logTime.replace(" ", "_");
-        logFileNameTime->clear();
-        logFileNameTime->append(logTime);
+        fileName += QDateTime::currentDateTime().toString("_yyyy-MM-dd_hh-mm-ss");
     }
-    else
-    {
-        QFile file(_pLogSavePath + "\\" + _pLogFileName + ".txt");
-        if (file.exists())
-        {
-            if (file.open(QIODevice::WriteOnly | QIODevice::Text | QFile::Truncate))
-            {
-                file.close();
-            }
-        }
-    }
+    _writer->setFilePath(QDir(_pLogSavePath).filePath(fileName + ".txt"), !_pIsLogFileNameWithTime);
 }

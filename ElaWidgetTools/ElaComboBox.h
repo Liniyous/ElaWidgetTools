@@ -19,6 +19,8 @@ public:
     void setEditable(bool editable);
 
 protected:
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
     virtual void showPopup() override;
     virtual void hidePopup() override;
     virtual void paintEvent(QPaintEvent* event) override;

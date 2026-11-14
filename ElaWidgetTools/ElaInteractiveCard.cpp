@@ -1,10 +1,12 @@
 #include "ElaInteractiveCard.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaTheme.h"
+#include "private/ElaInteractiveCardPrivate.h"
+
 #include <QPainter>
 #include <QPainterPath>
 
-#include "ElaTheme.h"
-#include "private/ElaInteractiveCardPrivate.h"
 ELA_PROPERTY_Q_CPP(ElaInteractiveCard, int, BorderRadius)
 ELA_PROPERTY_Q_CPP(ElaInteractiveCard, QString, Title);
 ELA_PROPERTY_Q_CPP(ElaInteractiveCard, QString, SubTitle);
@@ -51,7 +53,7 @@ void ElaInteractiveCard::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing | QPainter::TextAntialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(underMouse() ? ElaThemeColor(d->_themeMode, BasicHoverAlpha) : Qt::transparent);
+    painter.setBrush(ElaColorAnimation::getColor(this, underMouse() ? ElaThemeColor(d->_themeMode, BasicHoverAlpha) : Qt::transparent, "Background"));
     painter.drawRoundedRect(rect(), d->_pBorderRadius, d->_pBorderRadius);
     // 图片绘制
     if (!d->_pCardPixmap.isNull())

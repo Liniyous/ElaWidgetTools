@@ -1,9 +1,10 @@
 #include "ElaStatusBar.h"
 
+#include "ElaStatusBarStyle.h"
+
 #include <QPainter>
 #include <QTimer>
 
-#include "ElaStatusBarStyle.h"
 ElaStatusBar::ElaStatusBar(QWidget* parent)
     : QStatusBar(parent)
 {
@@ -11,9 +12,9 @@ ElaStatusBar::ElaStatusBar(QWidget* parent)
     setStyleSheet("#ElaStatusBar{background-color:transparent;}");
     setFixedHeight(28);
     setContentsMargins(20, 0, 0, 0);
-    setStyle(new ElaStatusBarStyle(style()));
+    auto* statusBarStyle = new ElaStatusBarStyle(style());
+    statusBarStyle->setParent(this);
+    setStyle(statusBarStyle);
 }
 
-ElaStatusBar::~ElaStatusBar()
-{
-}
+ElaStatusBar::~ElaStatusBar() = default;

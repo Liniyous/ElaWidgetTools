@@ -1,12 +1,14 @@
 #include "ElaDockWidgetTitleBar.h"
 
-#include <QHBoxLayout>
-#include <QPainter>
-
+#include "ElaColorAnimation.h"
 #include "ElaDockWidget.h"
 #include "ElaIconButton.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
+
+#include <QHBoxLayout>
+#include <QPainter>
+
 ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     : QWidget{parent}
 {
@@ -23,7 +25,9 @@ ElaDockWidgetTitleBar::ElaDockWidgetTitleBar(QWidget* parent)
     connect(_floatButton, &ElaIconButton::clicked, this, &ElaDockWidgetTitleBar::onFloatButtonClicked);
     _closeButton = new ElaIconButton(ElaIconType::Xmark, 17, 32, 26, this);
     _closeButton->setLightHoverColor(ElaThemeColor(ElaThemeType::Light, StatusDanger));
-    _closeButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Dark, StatusDanger));
+    _closeButton->setDarkHoverColor(ElaThemeColor(ElaThemeType::Light, StatusDanger));
+    _closeButton->setLightHoverIconColor(Qt::white);
+    _closeButton->setDarkHoverIconColor(Qt::white);
     connect(_closeButton, &ElaIconButton::clicked, this, &ElaDockWidgetTitleBar::onCloseButtonClicked);
 
     _setVisibleFromFeatures(_dockWidget->features());
@@ -76,7 +80,7 @@ void ElaDockWidgetTitleBar::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setPen(Qt::NoPen);
-    painter.setBrush(_dockWidget->isFloating() ? Qt::transparent : ElaThemeColor(_themeMode, BasicBaseAlpha));
+    painter.setBrush(ElaColorAnimation::getColor(this, _dockWidget->isFloating() ? Qt::transparent : ElaThemeColor(_themeMode, BasicBaseAlpha), "Background"));
     painter.drawRect(rect());
     painter.restore();
 }

@@ -12,13 +12,11 @@ class ElaToggleButtonPrivate : public QObject
     ELA_PIMPL_D(ElaToggleButton)
     ELA_PROPERTY_D(int, BorderRadius)
     ELA_PROPERTY_D(QString, Text)
-    ELA_PROPERTY(int, ToggleAlpha)
 public:
     explicit ElaToggleButtonPrivate(QObject* parent = nullptr);
     ~ElaToggleButtonPrivate() override;
 
 private:
-    bool _isAlphaAnimationFinished{true};
     bool _isToggled{false};
     bool _isPressed{false};
     ElaThemeType::ThemeMode _themeMode;

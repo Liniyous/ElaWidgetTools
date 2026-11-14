@@ -1,22 +1,22 @@
 #include "ElaSlider.h"
 
+#include "ElaSliderStyle.h"
+
 #include <QEvent>
 
-#include "ElaSliderStyle.h"
 ElaSlider::ElaSlider(QWidget* parent)
     : QSlider(parent)
 {
     setOrientation(Qt::Horizontal);
-    setStyle(new ElaSliderStyle(style()));
+    auto* sliderStyle = new ElaSliderStyle(style());
+    sliderStyle->setParent(this);
+    setStyle(sliderStyle);
 }
 
 ElaSlider::ElaSlider(Qt::Orientation orientation, QWidget* parent)
-    : QSlider(orientation, parent)
+    : ElaSlider(parent)
 {
-    setStyle(new ElaSliderStyle(style()));
+    setOrientation(orientation);
 }
 
-ElaSlider::~ElaSlider()
-{
-    delete this->style();
-}
+ElaSlider::~ElaSlider() = default;

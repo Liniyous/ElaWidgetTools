@@ -1,120 +1,109 @@
 #include "ElaThemePrivate.h"
 
+#include "ElaExponentialBlur.h"
+
+#include <QDataStream>
+#include <QPainter>
+#include <QPainterPath>
+#include <QtMath>
+
 ElaThemePrivate::ElaThemePrivate(QObject* parent)
-    : QObject{parent}
+    : QObject(parent)
 {
+    // 按 ThemeColor 顺序集中维护浅色和深色配对 透明色叠加到实际背景
+    const QRgb colors[][2] = {
+        {0xFFF3F3F3, 0xFF202020}, // 窗口底色
+        {0xFFF9F9F9, 0xFF2C2C2C}, // 浮层与对话框底色
+        {0xB3FFFFFF, 0x0DFFFFFF}, // 卡片与内容层
+        {0xE4000000, 0xFFFFFFFF}, // 正文与图标
+        {0x9E000000, 0xC5FFFFFF}, // 次要与按压文字
+        {0x5C000000, 0x5DFFFFFF}, // 禁用文字
+        {0xFFFFFFFF, 0xFF000000}, // 强调色上的文字
+        {0xB3FFFFFF, 0x0FFFFFFF}, // 普通控件填充
+        {0x80F9F9F9, 0x15FFFFFF}, // 普通控件悬停填充
+        {0x4DF9F9F9, 0x08FFFFFF}, // 普通控件按压填充
+        {0x4DF9F9F9, 0x0BFFFFFF}, // 普通控件禁用填充
+        {0xFFFFFFFF, 0xB31E1E1E}, // 输入控件获得焦点时的填充
+        {0x09000000, 0x0FFFFFFF}, // 透明控件悬停与选中填充
+        {0x06000000, 0x0AFFFFFF}, // 透明控件按压与选中悬停填充
+        {0x0F000000, 0x12FFFFFF}, // 普通轮廓
+        {0x29000000, 0x18FFFFFF}, // 控件次级轮廓与分隔线
+        {0x72000000, 0x8BFFFFFF}, // 输入底线与强轮廓
+        {0x72000000, 0x8BFFFFFF}, // 滚动条与滑轨等中性指示器
+        {0xFF0067C0, 0xFF60CDFF}, // 统一强调色
+        {0xE60067C0, 0xE660CDFF}, // 强调色悬停
+        {0xCC0067C0, 0xCC60CDFF}, // 强调色按压
+        {0xFF0F7B0F, 0xFF6CCB5F}, // 成功状态
+        {0xFFDFF6DD, 0xFF393D1B}, // 成功提示底色
+        {0xFF9D5D00, 0xFFFCE100}, // 警告状态
+        {0xFFFFF4CE, 0xFF433519}, // 警告提示底色
+        {0xFFC42B1C, 0xFFFF99A4}, // 错误状态
+        {0xFFFDE7E9, 0xFF442726}, // 错误提示底色
+        {0x37000000, 0x28FFFFFF}, // 强调控件禁用填充
+        {0x06000000, 0x19000000}, // 选择指示器默认填充
+        {0x0F000000, 0x0BFFFFFF}, // 选择指示器悬停填充
+        {0x18000000, 0x12FFFFFF}, // 选择指示器按压填充
+        {0xFFFFFFFF, 0xFF454545}, // 滑块实心填充
+    };
+    static_assert(sizeof(colors) / sizeof(colors[0]) == ElaThemeType::ThemeColorCount, "主题色表必须覆盖全部颜色角色");
+    for (int index = 0; index < ElaThemeType::ThemeColorCount; ++index)
+    {
+        _lightThemeColorList[index] = QColor::fromRgba(colors[index][0]);
+        _darkThemeColorList[index] = QColor::fromRgba(colors[index][1]);
+    }
 }
 
 ElaThemePrivate::~ElaThemePrivate()
 {
 }
 
-void ElaThemePrivate::_initThemeColor()
+QPixmap ElaThemePrivate::_getShadowPixmap(const QPainterPath& path, const QSize& size, qreal devicePixelRatio, int shadowBorderWidth, qreal alphaRatio, const QColor& shadowColor)
 {
-    //ElaScrollBar
-    _lightThemeColorList[ElaThemeType::ScrollBarHandle] = QColor(0x8A, 0x8A, 0x8A);
-    _darkThemeColorList[ElaThemeType::ScrollBarHandle] = QColor(0x9F, 0x9F, 0x9F);
-
-    //ElaToggleSwitch
-    _lightThemeColorList[ElaThemeType::ToggleSwitchNoToggledCenter] = QColor(0x6A, 0x6A, 0x6A);
-    _darkThemeColorList[ElaThemeType::ToggleSwitchNoToggledCenter] = QColor(0xD0, 0xD0, 0xD0);
-
-    // 主题颜色
-    _lightThemeColorList[ElaThemeType::PrimaryNormal] = QColor(0x00, 0x67, 0xC0);
-    _darkThemeColorList[ElaThemeType::PrimaryNormal] = QColor(0x4A, 0xBC, 0xF7);
-    _lightThemeColorList[ElaThemeType::PrimaryHover] = QColor(0x19, 0x75, 0xC5);
-    _darkThemeColorList[ElaThemeType::PrimaryHover] = QColor(0x47, 0xB1, 0xE8);
-    _lightThemeColorList[ElaThemeType::PrimaryPress] = QColor(0x31, 0x83, 0xCA);
-    _darkThemeColorList[ElaThemeType::PrimaryPress] = QColor(0x42, 0xA1, 0xD2);
-
-    // 通用颜色
-    // 普通窗体
-    _lightThemeColorList[ElaThemeType::WindowBase] = QColor(0xEC, 0xEC, 0xEC);
-    _darkThemeColorList[ElaThemeType::WindowBase] = QColor(0x20, 0x20, 0x20);
-    _lightThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0xF8, 0xF8, 0xF8, 90);
-    _darkThemeColorList[ElaThemeType::WindowCentralStackBase] = QColor(0x3E, 0x3E, 0x3E, 60);
-
-    // 浮动窗体
-    _lightThemeColorList[ElaThemeType::PopupBorder] = QColor(0xC8, 0xC8, 0xC8);
-    _darkThemeColorList[ElaThemeType::PopupBorder] = QColor(0x47, 0x47, 0x47);
-    _lightThemeColorList[ElaThemeType::PopupBorderHover] = QColor(0xBC, 0xBC, 0xBC);
-    _darkThemeColorList[ElaThemeType::PopupBorderHover] = QColor(0x54, 0x54, 0x54);
-    _lightThemeColorList[ElaThemeType::PopupBase] = QColor(0xF6, 0xF6, 0xF6);
-    _darkThemeColorList[ElaThemeType::PopupBase] = QColor(0x2C, 0x2C, 0x2C);
-    _lightThemeColorList[ElaThemeType::PopupHover] = QColor(0xEE, 0xEE, 0xEE);
-    _darkThemeColorList[ElaThemeType::PopupHover] = QColor(0x38, 0x38, 0x38);
-
-    // Dialog窗体
-    _lightThemeColorList[ElaThemeType::DialogBase] = QColor(0xF7, 0xF7, 0xF7);
-    _darkThemeColorList[ElaThemeType::DialogBase] = QColor(0x1F, 0x1F, 0x1F);
-    _lightThemeColorList[ElaThemeType::DialogLayoutArea] = QColor(0xED, 0xED, 0xED);
-    _darkThemeColorList[ElaThemeType::DialogLayoutArea] = QColor(0x20, 0x20, 0x20);
-
-    // 基础颜色
-    _lightThemeColorList[ElaThemeType::BasicText] = Qt::black;
-    _darkThemeColorList[ElaThemeType::BasicText] = Qt::white;
-    _lightThemeColorList[ElaThemeType::BasicTextInvert] = Qt::white;
-    _darkThemeColorList[ElaThemeType::BasicTextInvert] = Qt::black;
-    _lightThemeColorList[ElaThemeType::BasicDetailsText] = QColor(0x87, 0x87, 0x87);
-    _darkThemeColorList[ElaThemeType::BasicDetailsText] = QColor(0xAD, 0xAD, 0xB0);
-    _lightThemeColorList[ElaThemeType::BasicTextNoFocus] = QColor(0x86, 0x86, 0x8A);
-    _darkThemeColorList[ElaThemeType::BasicTextNoFocus] = QColor(0x86, 0x86, 0x8A);
-    _lightThemeColorList[ElaThemeType::BasicTextDisable] = QColor(0xB6, 0xB6, 0xB6);
-    _darkThemeColorList[ElaThemeType::BasicTextDisable] = QColor(0xA7, 0xA7, 0xA7);
-    _lightThemeColorList[ElaThemeType::BasicTextPress] = QColor(0x5A, 0x5A, 0x5D);
-    _darkThemeColorList[ElaThemeType::BasicTextPress] = QColor(0xBB, 0xBB, 0xBF);
-    _lightThemeColorList[ElaThemeType::BasicTextCategory] = QColor(0x5C, 0x5C, 0x5F);
-    _darkThemeColorList[ElaThemeType::BasicTextCategory] = QColor(0xCC, 0xCC, 0xCE);
-    _lightThemeColorList[ElaThemeType::BasicBorder] = QColor(0xD6, 0xD6, 0xD6);
-    _darkThemeColorList[ElaThemeType::BasicBorder] = QColor(0x4B, 0x4B, 0x4B);
-    _lightThemeColorList[ElaThemeType::BasicBorderDeep] = QColor(0x9A, 0x9A, 0x9A);
-    _darkThemeColorList[ElaThemeType::BasicBorderDeep] = QColor(0x5C, 0x5C, 0x5C);
-    _lightThemeColorList[ElaThemeType::BasicBorderHover] = QColor(0xC8, 0xC8, 0xC8);
-    _darkThemeColorList[ElaThemeType::BasicBorderHover] = QColor(0x57, 0x57, 0x57);
-    _lightThemeColorList[ElaThemeType::BasicBase] = QColor(0xFD, 0xFD, 0xFD);
-    _darkThemeColorList[ElaThemeType::BasicBase] = QColor(0x34, 0x34, 0x34);
-    _lightThemeColorList[ElaThemeType::BasicBaseDeep] = QColor(0xE6, 0xE6, 0xE6);
-    _darkThemeColorList[ElaThemeType::BasicBaseDeep] = QColor(0x61, 0x61, 0x61);
-    _lightThemeColorList[ElaThemeType::BasicDisable] = QColor(0xF5, 0xF5, 0xF5);
-    _darkThemeColorList[ElaThemeType::BasicDisable] = QColor(0x2A, 0x2A, 0x2A);
-    _lightThemeColorList[ElaThemeType::BasicHover] = QColor(0xF3, 0xF3, 0xF3);
-    _darkThemeColorList[ElaThemeType::BasicHover] = QColor(0x40, 0x40, 0x40);
-    _lightThemeColorList[ElaThemeType::BasicPress] = QColor(0xF7, 0xF7, 0xF7);
-    _darkThemeColorList[ElaThemeType::BasicPress] = QColor(0x3A, 0x3A, 0x3A);
-    _lightThemeColorList[ElaThemeType::BasicSelectedHover] = QColor(0xEB, 0xEB, 0xEB);
-    _darkThemeColorList[ElaThemeType::BasicSelectedHover] = QColor(0x38, 0x38, 0x38);
-    _lightThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0xD1, 0xD1, 0xD1);
-    _darkThemeColorList[ElaThemeType::BasicBaseLine] = QColor(0x45, 0x45, 0x45);
-    _lightThemeColorList[ElaThemeType::BasicHemline] = QColor(0x86, 0x86, 0x86);
-    _darkThemeColorList[ElaThemeType::BasicHemline] = QColor(0x9A, 0x9A, 0x9A);
-    _lightThemeColorList[ElaThemeType::BasicIndicator] = QColor(0x75, 0x7C, 0x87);
-    _darkThemeColorList[ElaThemeType::BasicIndicator] = QColor(0x75, 0x7C, 0x87);
-    _lightThemeColorList[ElaThemeType::BasicChute] = QColor(0xB3, 0xB3, 0xB3);
-    _darkThemeColorList[ElaThemeType::BasicChute] = QColor(0x63, 0x63, 0x63);
-
-    // 基础透明
-    _lightThemeColorList[ElaThemeType::BasicAlternating] = QColor(0xEF, 0xEF, 0xEF, 160);
-    _darkThemeColorList[ElaThemeType::BasicAlternating] = QColor(0x45, 0x45, 0x45, 125);
-    _lightThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0xFA, 0xFA, 0xFA, 160);
-    _darkThemeColorList[ElaThemeType::BasicBaseAlpha] = QColor(0x2D, 0x2D, 0x2D, 95);
-    _lightThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0xC8, 0xC8, 0xC8, 160);
-    _darkThemeColorList[ElaThemeType::BasicBaseDeepAlpha] = QColor(0x72, 0x72, 0x72, 95);
-    _lightThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0xCE, 0xCE, 0xCE, 110);
-    _darkThemeColorList[ElaThemeType::BasicHoverAlpha] = QColor(0x4B, 0x4B, 0x4B, 75);
-    _lightThemeColorList[ElaThemeType::BasicPressAlpha] = QColor(0xD0, 0xD0, 0xD0, 80);
-    _darkThemeColorList[ElaThemeType::BasicPressAlpha] = QColor(0x4B, 0x4B, 0x4B, 55);
-    _lightThemeColorList[ElaThemeType::BasicSelectedAlpha] = QColor(0xCE, 0xCE, 0xCE, 110);
-    _darkThemeColorList[ElaThemeType::BasicSelectedAlpha] = QColor(0x4B, 0x4B, 0x4B, 75);
-    _lightThemeColorList[ElaThemeType::BasicSelectedHoverAlpha] = QColor(0xD0, 0xD0, 0xD0, 80);
-    _darkThemeColorList[ElaThemeType::BasicSelectedHoverAlpha] = QColor(0x4B, 0x4B, 0x4B, 55);
-
-    // 状态颜色
-    _lightThemeColorList[ElaThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
-    _darkThemeColorList[ElaThemeType::StatusDanger] = QColor(0xE8, 0x11, 0x23);
-
-    // Win10顶部边框颜色
-    _lightThemeColorList[ElaThemeType::Win10BorderActive] = QColor(0x6E, 0x6E, 0x6E);
-    _darkThemeColorList[ElaThemeType::Win10BorderActive] = QColor(0x33, 0x33, 0x33);
-    _lightThemeColorList[ElaThemeType::Win10BorderInactive] = QColor(0xA7, 0xA7, 0xA7);
-    _darkThemeColorList[ElaThemeType::Win10BorderInactive] = QColor(0x3D, 0x3D, 0x3D);
+    const QColor color = shadowColor.isValid() ? shadowColor : QColor(Qt::black);
+    QByteArray key;
+    QDataStream stream(&key, QIODevice::WriteOnly);
+    stream << path << size << devicePixelRatio << shadowBorderWidth << alphaRatio << color.rgba() << static_cast<int>(_themeMode);
+    if (const auto* cached = _shadowCache.object(key))
+    {
+        return *cached;
+    }
+    const qreal scale = shadowBorderWidth / 32.0;
+    const QSize pixelSize(qCeil(size.width() * devicePixelRatio), qCeil(size.height() * devicePixelRatio));
+    QImage mask(pixelSize, QImage::Format_ARGB32_Premultiplied);
+    mask.setDevicePixelRatio(devicePixelRatio);
+    mask.fill(Qt::transparent);
+    {
+        QPainter painter(&mask);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(Qt::black);
+        painter.drawPath(path);
+    }
+    QPixmap shadow(pixelSize);
+    shadow.setDevicePixelRatio(devicePixelRatio);
+    shadow.fill(Qt::transparent);
+    QPainter painter(&shadow);
+    for (int layer = 0; layer < 2; ++layer)
+    {
+        const quint16 radius = static_cast<quint16>(qMax(1, qRound((layer == 0 ? 3 : 9) * scale * devicePixelRatio)));
+        QPixmap blurred = ElaExponentialBlur::doExponentialBlur(mask, radius);
+        blurred = ElaExponentialBlur::doExponentialBlur(blurred.toImage(), radius);
+        blurred.setDevicePixelRatio(devicePixelRatio);
+        const qreal opacity = _themeMode == ElaThemeType::Light ? (layer == 0 ? 0.12 : 0.20) : (layer == 0 ? 0.20 : 0.38);
+        painter.setOpacity(qMin(qreal(1), opacity * alphaRatio));
+        painter.drawPixmap(QPointF(0, (layer == 0 ? 2 : 8) * scale), blurred);
+    }
+    painter.setOpacity(1);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    painter.fillRect(QRect(QPoint(), size), color);
+    // 清除内容内部的阴影 半透明面板只叠加自身主题色
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(Qt::black);
+    painter.drawPath(path);
+    painter.end();
+    const int cost = qMax(1, qCeil(static_cast<qreal>(shadow.width()) * shadow.height() * 4 / 1024));
+    _shadowCache.insert(key, new QPixmap(shadow), cost);
+    return shadow;
 }

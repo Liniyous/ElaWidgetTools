@@ -3,10 +3,6 @@
 #include "ElaContentDialog.h"
 #include "ElaMaskWidget.h"
 
-#include <QApplication>
-#include <QDebug>
-#include <QScreen>
-#include <QWindow>
 ElaContentDialogPrivate::ElaContentDialogPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -21,11 +17,6 @@ void ElaContentDialogPrivate::_doCloseAnimation(bool isAccept)
     Q_Q(ElaContentDialog);
     _maskWidget->doMaskAnimation(0);
     isAccept ? q->accept() : q->reject();
-    QApplication::processEvents();
-    if (const auto windowHandle = q->windowHandle())
-    {
-        windowHandle->close();
-    }
 }
 
 void ElaContentDialogPrivate::_moveToCenter()

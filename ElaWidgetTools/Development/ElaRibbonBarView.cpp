@@ -1,17 +1,19 @@
 #include "ElaRibbonBarView.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaMenu.h"
-#include "ElaRibbonBarDelegate.h"
-
 #include "ElaRibbonBar.h"
+#include "ElaRibbonBarDelegate.h"
 #include "ElaRibbonBarModel.h"
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
+
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPropertyAnimation>
 #include <QScroller>
+
 ElaRibbonBarView::ElaRibbonBarView(QWidget* parent)
     : QListView(parent)
 {
@@ -149,7 +151,7 @@ void ElaRibbonBarView::paintEvent(QPaintEvent* event)
             // painter.drawRect(QRect(startIndexRect.x(), startIndexRect.y(), endIndexRect.right() - startIndexRect.x(), startIndexRect.height()));
             auto groupRect = QRect(startIndexRect.x(), startIndexRect.bottom() - _pRibbonBarDelegate->getBottomMargin(), endIndexRect.right() - startIndexRect.x(), _pRibbonBarDelegate->getBottomMargin());
             painter.setPen(Qt::NoPen);
-            painter.setBrush(ElaThemeColor(_themeMode, BasicBaseDeepAlpha));
+            painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(_themeMode, BasicBaseAlpha), "Background"));
             painter.drawRect(groupRect);
             // 组名绘制
             painter.setPen(ElaThemeColor(_themeMode, BasicText));

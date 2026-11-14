@@ -1,14 +1,11 @@
 #ifndef ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOLORDISPLAYDELEGATE_H_
 #define ELAWORKSPACE_ELAWIDGETTOOLS_DEVELOPERCOMPONENTS_ELACOLORDISPLAYDELEGATE_H_
 
-#include "ElaPropertyMacro.h"
 #include <QStyledItemDelegate>
 
-#include "ElaWidgetToolsDef.h"
 class ElaColorDisplayDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
-    ELA_VARIABLE(ElaThemeType::ThemeMode, ThemeMode)
 public:
     explicit ElaColorDisplayDelegate(QObject* parent = nullptr);
     ~ElaColorDisplayDelegate();

@@ -1,17 +1,18 @@
 #include "ElaDockWidget.h"
 
+#include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaDockWidgetPrivate.h"
+#include "ElaDockWidgetTitleBar.h"
+#include "ElaTheme.h"
+#include "ElaWinShadowHelper.h"
+
 #include <QEvent>
 #include <QLayout>
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QTimer>
-
-#include "ElaApplication.h"
-#include "ElaDockWidgetPrivate.h"
-#include "ElaDockWidgetTitleBar.h"
-#include "ElaTheme.h"
-#include "ElaWinShadowHelper.h"
 
 ElaDockWidget::ElaDockWidget(QWidget* parent, Qt::WindowFlags flags)
     : QDockWidget(parent, flags), d_ptr(new ElaDockWidgetPrivate())
@@ -62,13 +63,13 @@ void ElaDockWidget::paintEvent(QPaintEvent* event)
         if (d->_windowDisplayMode != ElaApplicationType::WindowDisplayMode::ElaMica)
         {
             painter.setPen(Qt::NoPen);
-            painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
+            painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, PopupBase), "Background"));
             painter.drawRect(rect());
         }
 #else
         // 背景
         painter.setPen(Qt::NoPen);
-        painter.setBrush(d->_windowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica ? Qt::transparent : ElaThemeColor(d->_themeMode, DialogBase));
+        painter.setBrush(ElaColorAnimation::getColor(this, d->_windowDisplayMode == ElaApplicationType::WindowDisplayMode::ElaMica ? Qt::transparent : ElaThemeColor(d->_themeMode, PopupBase), "Background"));
         QRect foregroundRect(d->_shadowBorderWidth, d->_shadowBorderWidth, width() - 2 * d->_shadowBorderWidth, height() - 2 * d->_shadowBorderWidth);
         painter.drawRect(rect());
 #endif

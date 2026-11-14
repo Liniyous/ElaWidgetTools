@@ -88,6 +88,7 @@ install(
 )
 
 include(CMakePackageConfigHelpers)
+install(FILES Image/Fluent/LICENSE.txt Image/Fluent/SOURCE.txt DESTINATION ${PROJECT_NAME}/licenses/FluentSystemIcons)
 write_basic_package_version_file(
     ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION 2.0.0

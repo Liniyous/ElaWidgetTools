@@ -1,11 +1,13 @@
 #include "ElaToolTip.h"
 
-#include <QPainter>
-#include <QVBoxLayout>
-
+#include "ElaColorAnimation.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaToolTipPrivate.h"
+
+#include <QPainter>
+#include <QVBoxLayout>
+
 ELA_PROPERTY_Q_CPP(ElaToolTip, int, BorderRadius)
 ELA_PROPERTY_Q_CPP(ElaToolTip, int, DisplayMsec)
 ELA_PROPERTY_Q_CPP(ElaToolTip, int, ShowDelayMsec)
@@ -27,13 +29,13 @@ ElaToolTip::ElaToolTip(QWidget* parent)
     }
     setAttribute(Qt::WA_TransparentForMouseEvents);
     setAttribute(Qt::WA_TranslucentBackground);
-    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
+    setWindowFlags(Qt::Tool | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 
     d->_toolTipText = new ElaText(this);
     d->_toolTipText->setWordWrap(false);
     d->_toolTipText->setTextPixelSize(17);
     d->_mainLayout = new QVBoxLayout(this);
-    d->_mainLayout->setContentsMargins(d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2, d->_shadowBorderWidth * 2);
+    d->_mainLayout->setContentsMargins(eTheme->getShadowMargins() + QMargins(6, 6, 6, 6));
     d->_mainLayout->addWidget(d->_toolTipText);
 
     d->_themeMode = eTheme->getThemeMode();
@@ -100,11 +102,11 @@ void ElaToolTip::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHint(QPainter::Antialiasing);
     //阴影
-    eTheme->drawEffectShadow(&painter, rect(), d->_shadowBorderWidth, d->_pBorderRadius);
-    QRect foregroundRect = rect();
-    foregroundRect.adjust(d->_shadowBorderWidth, d->_shadowBorderWidth, -d->_shadowBorderWidth, -d->_shadowBorderWidth);
-    painter.setPen(ElaThemeColor(d->_themeMode, PopupBorder));
-    painter.setBrush(ElaThemeColor(d->_themeMode, PopupBase));
+    const QMargins margins = eTheme->getShadowMargins();
+    eTheme->drawEffectShadow(&painter, rect(), margins, d->_pBorderRadius);
+    const QRect foregroundRect = rect().marginsRemoved(margins);
+    painter.setPen(ElaThemeColor(d->_themeMode, BasicBorder));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, PopupBase), "Background"));
     painter.drawRoundedRect(foregroundRect, d->_pBorderRadius, d->_pBorderRadius);
     painter.restore();
 }

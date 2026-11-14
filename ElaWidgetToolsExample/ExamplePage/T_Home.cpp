@@ -21,12 +21,12 @@ T_Home::T_Home(QWidget* parent)
     : T_BasePage(parent)
 {
     // 预览窗口标题
-    setWindowTitle("Home");
+    setWindowTitle("首页");
 
     setTitleVisible(false);
     setContentsMargins(2, 2, 0, 0);
     // 标题卡片区域
-    ElaText* desText = new ElaText("FluentUI For QWidget", this);
+    ElaText* desText = new ElaText("面向 Qt Widgets 的 Fluent 风格通用组件库", this);
     desText->setTextPixelSize(18);
     ElaText* titleText = new ElaText("ElaWidgetTools", this);
     titleText->setTextPixelSize(35);
@@ -49,8 +49,8 @@ T_Home::T_Home(QWidget* parent)
     urlCard1->setSubTitleSpacing(13);
     urlCard1->setUrl("https://github.com/Liniyous/ElaWidgetTools");
     urlCard1->setCardPixmap(QPixmap(":/Resource/Image/github.png"));
-    urlCard1->setTitle("ElaTool Github");
-    urlCard1->setSubTitle("Use ElaWidgetTools To Create A Cool Project");
+    urlCard1->setTitle("项目源码");
+    urlCard1->setSubTitle("使用 ElaWidgetTools 构建出色的项目");
     ElaToolTip* urlCard1ToolTip = new ElaToolTip(urlCard1);
     urlCard1ToolTip->setToolTip("https://github.com/Liniyous/ElaWidgetTools");
     ElaAcrylicUrlCard* urlCard2 = new ElaAcrylicUrlCard(this);
@@ -111,7 +111,7 @@ T_Home::T_Home(QWidget* parent)
     connect(homeCard1, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
         Q_EMIT elaScreenNavigation();
     });
-    homeCard1->setTitle("ElaScreen");
+    homeCard1->setTitle("屏幕采集");
     homeCard1->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard1->setCardPixmap(QPixmap(":/Resource/Image/control/AutomationProperties.png"));
     homeCard1->setInteractiveTips("免费使用");
@@ -122,7 +122,7 @@ T_Home::T_Home(QWidget* parent)
     connect(homeCard2, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
         Q_EMIT elaSceneNavigation();
     });
-    homeCard2->setTitle("ElaScene");
+    homeCard2->setTitle("拓扑绘图");
     homeCard2->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard2->setCardPixmap(QPixmap(":/Resource/Image/control/Canvas.png"));
     homeCard2->setInteractiveTips("免费使用");
@@ -133,7 +133,7 @@ T_Home::T_Home(QWidget* parent)
     connect(homeCard3, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
         Q_EMIT elaBaseComponentNavigation();
     });
-    homeCard3->setTitle("ElaBaseComponent");
+    homeCard3->setTitle("基础控件");
     homeCard3->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard3->setCardPixmap(QPixmap(":/Resource/Image/control/StandardUICommand.png"));
     homeCard3->setInteractiveTips("免费使用");
@@ -144,7 +144,7 @@ T_Home::T_Home(QWidget* parent)
     connect(homeCard4, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
         Q_EMIT elaCardNavigation();
     });
-    homeCard4->setTitle("ElaCard");
+    homeCard4->setTitle("卡片展示");
     homeCard4->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard4->setCardPixmap(QPixmap(":/Resource/Image/control/FlipView.png"));
     homeCard4->setInteractiveTips("免费使用");
@@ -155,7 +155,7 @@ T_Home::T_Home(QWidget* parent)
     connect(homeCard5, &ElaPopularCard::popularCardButtonClicked, this, [=]() {
         Q_EMIT elaIconNavigation();
     });
-    homeCard5->setTitle("ElaIcon");
+    homeCard5->setTitle("图标资源");
     homeCard5->setSubTitle("5.0⭐ 实用程序与工具");
     homeCard5->setCardPixmap(QPixmap(":/Resource/Image/control/CommandBarFlyout.png"));
     homeCard5->setInteractiveTips("免费使用");
@@ -206,7 +206,7 @@ T_Home::T_Home(QWidget* parent)
     _homeMenu->addElaIconAction(ElaIconType::MagnifyingGlassPlus, "显示设置");
 
     QWidget* centralWidget = new QWidget(this);
-    centralWidget->setWindowTitle("Home");
+    centralWidget->setWindowTitle("首页");
     QVBoxLayout* centerVLayout = new QVBoxLayout(centralWidget);
     centerVLayout->setSpacing(0);
     centerVLayout->setContentsMargins(0, 0, 0, 0);
@@ -219,7 +219,7 @@ T_Home::T_Home(QWidget* parent)
     addCentralWidget(centralWidget);
 
     // 初始化提示
-    ElaMessageBar::success(ElaMessageBarType::BottomRight, "Success", "初始化成功!", 2000);
+    ElaMessageBar::success(ElaMessageBarType::BottomRight, "成功", "初始化成功!", 2000);
     qDebug() << "初始化成功";
 }
 

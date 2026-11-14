@@ -29,12 +29,11 @@ void ElaCalendarTitleDelegate::paint(QPainter* painter, const QStyleOptionViewIt
     {
         painter->setPen(ElaThemeColor(_themeMode, BasicText));
         QFont font = painter->font();
-        font.setWeight(QFont::Bold);
+        font.setWeight(QFont::DemiBold);
         painter->setFont(font);
         painter->drawText(itemRect, Qt::AlignCenter, title);
     }
     painter->restore();
-    QStyledItemDelegate::paint(painter, option, index);
 }
 
 QSize ElaCalendarTitleDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const

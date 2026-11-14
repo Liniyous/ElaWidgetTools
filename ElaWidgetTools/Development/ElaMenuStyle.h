@@ -21,7 +21,6 @@ public:
 
 private:
     mutable bool _isAnyoneItemHasIcon{false};
-    int _shadowBorderWidth{6};
     ElaThemeType::ThemeMode _themeMode;
     mutable int _iconWidth{0};
 };

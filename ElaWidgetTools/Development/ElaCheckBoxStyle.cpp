@@ -1,11 +1,14 @@
 #include "ElaCheckBoxStyle.h"
 
+#include "ElaApplication.h"
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QStyleOption>
 
-#include "ElaApplication.h"
-#include "ElaTheme.h"
 ElaCheckBoxStyle::ElaCheckBoxStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
@@ -32,49 +35,13 @@ void ElaCheckBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
             QRect checkRect = subElementRect(SE_CheckBoxIndicator, bopt, widget);
             checkRect.adjust(1, 1, -1, -1);
-            //复选框绘制
-            painter->setPen(Qt::NoPen);
-            if (bopt->state.testFlag(QStyle::State_On) || bopt->state.testFlag(QStyle::State_NoChange))
-            {
-                painter->setPen(Qt::NoPen);
-                if (bopt->state.testFlag(QStyle::State_Sunken))
-                {
-                    painter->setBrush(ElaThemeColor(_themeMode, PrimaryPress));
-                }
-                else
-                {
-                    if (bopt->state.testFlag(QStyle::State_MouseOver))
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, PrimaryHover));
-                    }
-                    else
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
-                    }
-                }
-            }
-            else
-            {
-                if (bopt->state.testFlag(QStyle::State_Sunken))
-                {
-                    painter->setPen(ElaThemeColor(_themeMode, BasicBorderDeep));
-                }
-                else
-                {
-                    painter->setPen(ElaThemeColor(_themeMode, BasicBorderDeep));
-                    if (bopt->state.testFlag(QStyle::State_MouseOver))
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicHover));
-                    }
-                    else
-                    {
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
-                    }
-                }
-            }
+            const bool isChecked = bopt->state.testFlag(QStyle::State_On) || bopt->state.testFlag(QStyle::State_NoChange);
+            const QColor background = ElaControlStyle::getIndicatorBackgroundColor(_themeMode, bopt->state, isChecked);
+            painter->setPen(isChecked ? QPen(Qt::NoPen) : QPen(ElaThemeColor(_themeMode, BasicBorderDeep)));
+            painter->setBrush(ElaColorAnimation::getColor(widget, background));
             painter->drawRoundedRect(checkRect, 2, 2);
             //图标绘制
-            painter->setPen(ElaThemeColor(ElaThemeType::Dark, BasicText));
+            painter->setPen(ElaThemeColor(_themeMode, BasicTextInvert));
             if (bopt->state.testFlag(QStyle::State_On))
             {
                 painter->save();

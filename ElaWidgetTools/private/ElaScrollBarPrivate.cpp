@@ -1,10 +1,11 @@
 #include "ElaScrollBarPrivate.h"
 
-#include <QApplication>
+#include "ElaScrollAnimation.h"
+#include "ElaScrollBar.h"
+
 #include <QPropertyAnimation>
 #include <QStyleOption>
 
-#include "ElaScrollBar.h"
 ElaScrollBarPrivate::ElaScrollBarPrivate(QObject* parent)
     : QObject{parent}
 {
@@ -17,6 +18,7 @@ ElaScrollBarPrivate::~ElaScrollBarPrivate()
 void ElaScrollBarPrivate::onRangeChanged(int min, int max)
 {
     Q_Q(ElaScrollBar);
+    _scrollAnimation->stop();
     if (q->isVisible() && _pIsAnimation && max != 0)
     {
         QPropertyAnimation* rangeSmoothAnimation = new QPropertyAnimation(this, "pTargetMaximum");
@@ -37,38 +39,29 @@ void ElaScrollBarPrivate::onRangeChanged(int min, int max)
     }
     else
     {
-        if (max == 0)
-        {
-            _scrollValue = -1;
-        }
         _pTargetMaximum = max;
     }
 }
 
-void ElaScrollBarPrivate::_scroll(Qt::KeyboardModifiers modifiers, int delta)
+bool ElaScrollBarPrivate::_scroll(qreal movement)
 {
     Q_Q(ElaScrollBar);
-    int stepsToScroll = 0;
-    qreal offset = qreal(delta) / 120;
-    int pageStep = 10;
-    int singleStep = q->singleStep();
-    if ((modifiers & Qt::ControlModifier) || (modifiers & Qt::ShiftModifier))
+    _scrollScale = _getScrollScale();
+    return _scrollAnimation->scrollBy({movement * _scrollScale, 0}, {q->value() * _scrollScale, 0}, {q->minimum() * _scrollScale, 0}, {q->maximum() * _scrollScale, 0}, _pSpeedLimit);
+}
+
+qreal ElaScrollBarPrivate::_getScrollScale() const
+{
+    Q_Q(const ElaScrollBar);
+    for (auto* widget = q->parentWidget(); widget; widget = widget->parentWidget())
     {
-        stepsToScroll = qBound(-pageStep, int(offset * pageStep), pageStep);
+        if (auto* area = qobject_cast<QAbstractScrollArea*>(widget))
+        {
+            const int extent = q->orientation() == Qt::Vertical ? area->viewport()->height() : area->viewport()->width();
+            return qMax(1.0, extent / static_cast<qreal>(qMax(1, q->pageStep())));
+        }
     }
-    else
-    {
-        stepsToScroll = QApplication::wheelScrollLines() * offset * singleStep;
-    }
-    if (abs(_scrollValue - q->value()) > abs(stepsToScroll * _pSpeedLimit))
-    {
-        _scrollValue = q->value();
-    }
-    _scrollValue -= stepsToScroll;
-    _slideSmoothAnimation->stop();
-    _slideSmoothAnimation->setStartValue(q->value());
-    _slideSmoothAnimation->setEndValue(_scrollValue);
-    _slideSmoothAnimation->start();
+    return 1;
 }
 
 int ElaScrollBarPrivate::_pixelPosToRangeValue(int pos) const
@@ -136,10 +129,12 @@ void ElaScrollBarPrivate::_handleScrollBarGeometry()
     q->setPageStep(_originScrollBar->pageStep());
     if (q->orientation() == Qt::Horizontal)
     {
-        q->setGeometry(0, _originScrollArea->height() - 10, _originScrollArea->width(), 10);
+        const int extent = q->sizeHint().height();
+        q->setGeometry(0, _originScrollArea->height() - extent, _originScrollArea->width(), extent);
     }
     else
     {
-        q->setGeometry(_originScrollArea->width() - 10, 0, 10, _originScrollArea->height());
+        const int extent = q->sizeHint().width();
+        q->setGeometry(_originScrollArea->width() - extent, 0, extent, _originScrollArea->height());
     }
 }

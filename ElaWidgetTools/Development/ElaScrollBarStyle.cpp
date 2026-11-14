@@ -1,21 +1,41 @@
 #include "ElaScrollBarStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaScrollBar.h"
+#include "ElaTheme.h"
+
 #include <QPainter>
 #include <QPainterPath>
 #include <QPropertyAnimation>
 #include <QStyleOptionSlider>
 #include <QtMath>
 
-#include "ElaScrollBar.h"
-#include "ElaTheme.h"
 ElaScrollBarStyle::ElaScrollBarStyle(QStyle* style)
 {
     _pIsExpand = false;
     _pOpacity = 0;
     _pScrollBar = nullptr;
-    _pSliderExtent = 2.4;
+    _pSliderExtent = 2;
     _themeMode = eTheme->getThemeMode();
-    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) { _themeMode = themeMode; });
+    connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
+        _themeMode = themeMode;
+    });
+    _opacityAnimation = new QPropertyAnimation(this, "pOpacity", this);
+    _opacityAnimation->setDuration(83);
+    connect(_opacityAnimation, &QPropertyAnimation::valueChanged, this, [this]() {
+        _pScrollBar->update();
+    });
+    connect(_opacityAnimation, &QPropertyAnimation::finished, this, [this]() {
+        _pIsExpand = _pOpacity > 0;
+    });
+    _extentAnimation = new QPropertyAnimation(this, "pSliderExtent", this);
+    _extentAnimation->setDuration(167);
+    QEasingCurve curve(QEasingCurve::BezierSpline);
+    curve.addCubicBezierSegment({0, 0}, {0, 1}, {1, 1});
+    _extentAnimation->setEasingCurve(curve);
+    connect(_extentAnimation, &QPropertyAnimation::valueChanged, this, [this]() {
+        _pScrollBar->update();
+    });
 }
 
 ElaScrollBarStyle::~ElaScrollBarStyle()
@@ -40,11 +60,11 @@ void ElaScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleO
                 // 背景绘制
                 painter->setOpacity(_pOpacity);
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, BasicBase));
+                painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBase), "Track"));
                 painter->drawRoundedRect(scrollBarRect, 6, 6);
                 //指示器绘制 center()在此处不适用 存在外围边距宽度 需手动计算
-                int sideLength = 8;
-                painter->setBrush(ElaThemeColor(_themeMode, ScrollBarHandle));
+                const int sideLength = _pScrollBar->getScrollBarWidth() - 2;
+                painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicIndicator), "Thumb"));
                 if (sopt->orientation == Qt::Horizontal)
                 {
                     QRect leftIndicatorRect = subControlRect(control, sopt, QStyle::SC_ScrollBarSubLine, widget);
@@ -97,7 +117,7 @@ void ElaScrollBarStyle::drawComplexControl(ComplexControl control, const QStyleO
             painter->setOpacity(1);
             //滑块绘制
             QRectF sliderRect = subControlRect(control, sopt, QStyle::SC_ScrollBarSlider, widget);
-            painter->setBrush(ElaThemeColor(_themeMode, ScrollBarHandle));
+            painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicIndicator), "Thumb"));
             if (sopt->orientation == Qt::Horizontal)
             {
                 sliderRect.setRect(sliderRect.x(), sliderRect.bottom() - _sliderMargin - _pSliderExtent, sliderRect.width(), _pSliderExtent);
@@ -126,7 +146,7 @@ int ElaScrollBarStyle::pixelMetric(PixelMetric metric, const QStyleOption* optio
     {
     case QStyle::PM_ScrollBarExtent:
     {
-        return _scrollBarExtent;
+        return _pScrollBar->getScrollBarWidth();
     }
     default:
     {
@@ -140,53 +160,20 @@ int ElaScrollBarStyle::styleHint(StyleHint hint, const QStyleOption* option, con
 {
     if (hint == QStyle::SH_ScrollBar_LeftClickAbsolutePosition)
     {
-        return true;
+        return false;
     }
     return QProxyStyle::styleHint(hint, option, widget, returnData);
 }
 
 void ElaScrollBarStyle::startExpandAnimation(bool isExpand)
 {
-    if (isExpand)
-    {
-        _pIsExpand = true;
-        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-        connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-            _pScrollBar->update();
-        });
-        opacityAnimation->setDuration(250);
-        opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        opacityAnimation->setStartValue(_pOpacity);
-        opacityAnimation->setEndValue(1);
-        opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-
-        QPropertyAnimation* extentAnimation = new QPropertyAnimation(this, "pSliderExtent");
-        extentAnimation->setDuration(250);
-        extentAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        extentAnimation->setStartValue(_pSliderExtent);
-        extentAnimation->setEndValue(_scrollBarExtent - 2 * _sliderMargin);
-        extentAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-    else
-    {
-        QPropertyAnimation* opacityAnimation = new QPropertyAnimation(this, "pOpacity");
-        connect(opacityAnimation, &QPropertyAnimation::finished, this, [=]() {
-            _pIsExpand = false;
-        });
-        connect(opacityAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-            _pScrollBar->update();
-        });
-        opacityAnimation->setDuration(250);
-        opacityAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        opacityAnimation->setStartValue(_pOpacity);
-        opacityAnimation->setEndValue(0);
-        opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-
-        QPropertyAnimation* extentAnimation = new QPropertyAnimation(this, "pSliderExtent");
-        extentAnimation->setDuration(250);
-        extentAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        extentAnimation->setStartValue(_pSliderExtent);
-        extentAnimation->setEndValue(2.4);
-        extentAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
+    _opacityAnimation->stop();
+    _extentAnimation->stop();
+    _pIsExpand = true;
+    _opacityAnimation->setStartValue(_pOpacity);
+    _opacityAnimation->setEndValue(isExpand ? 1.0 : 0.0);
+    _extentAnimation->setStartValue(_pSliderExtent);
+    _extentAnimation->setEndValue(isExpand ? _pScrollBar->getScrollBarWidth() - 2 * _sliderMargin : 2.0);
+    _opacityAnimation->start();
+    _extentAnimation->start();
 }

@@ -1,11 +1,15 @@
 #include "ElaKeyBinderContainer.h"
+
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaKeyBinder.h"
 #include "ElaTheme.h"
+
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QtMath>
+
 ElaKeyBinderContainer::ElaKeyBinderContainer(QWidget* parent)
     : QWidget(parent)
 {
@@ -115,31 +119,31 @@ void ElaKeyBinderContainer::mousePressEvent(QMouseEvent* event)
     {
     case Qt::LeftButton:
     {
-        _pBinderKeyText = "Mouse1";
+        _pBinderKeyText = "鼠标左键";
         _pNativeVirtualBinderKey = 0x01;
         break;
     }
     case Qt::RightButton:
     {
-        _pBinderKeyText = "Mouse2";
+        _pBinderKeyText = "鼠标右键";
         _pNativeVirtualBinderKey = 0x02;
         break;
     }
     case Qt::MiddleButton:
     {
-        _pBinderKeyText = "Middle";
+        _pBinderKeyText = "鼠标中键";
         _pNativeVirtualBinderKey = 0x04;
         break;
     }
     case Qt::BackButton:
     {
-        _pBinderKeyText = "Back";
+        _pBinderKeyText = "鼠标后退键";
         _pNativeVirtualBinderKey = 0x05;
         break;
     }
     case Qt::ForwardButton:
     {
-        _pBinderKeyText = "Forward";
+        _pBinderKeyText = "鼠标前进键";
         _pNativeVirtualBinderKey = 0x06;
         break;
     }
@@ -173,7 +177,7 @@ void ElaKeyBinderContainer::paintEvent(QPaintEvent* event)
     }
     // 中心文字背景绘制
     painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
-    painter.setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+    painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(_themeMode, PrimaryNormal), "Background"));
     qreal textWidth = fontMetrics().horizontalAdvance(_pBinderKeyText) * 1.3;
     qreal textHeight = fontMetrics().height() * 1.2;
     textWidth = qMax(textWidth, 35.0);

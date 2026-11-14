@@ -1,14 +1,17 @@
 #include "ElaDialog.h"
 
 #include "ElaApplication.h"
+#include "ElaColorAnimation.h"
 #include "ElaTheme.h"
 #include "private/ElaDialogPrivate.h"
+
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QScreen>
 #include <QTimer>
 #include <QVBoxLayout>
+
 Q_TAKEOVER_NATIVEEVENT_CPP(ElaDialog, d_func()->_appBar);
 ElaDialog::ElaDialog(QWidget* parent)
     : QDialog{parent}, d_ptr(new ElaDialogPrivate())
@@ -16,7 +19,7 @@ ElaDialog::ElaDialog(QWidget* parent)
     Q_D(ElaDialog);
     d->q_ptr = this;
     resize(500, 500); // 默认宽高
-    setWindowTitle("ElaDialog");
+    setWindowTitle("对话框");
     setObjectName("ElaDialog");
 #ifndef Q_OS_WIN
     setAttribute(Qt::WA_Hover);
@@ -145,7 +148,7 @@ void ElaDialog::paintEvent(QPaintEvent* event)
         painter.save();
         painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
         painter.setPen(Qt::NoPen);
-        painter.setBrush(ElaThemeColor(d->_themeMode, DialogBase));
+        painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, PopupBase), "Background"));
         painter.drawRect(rect());
         painter.restore();
     }

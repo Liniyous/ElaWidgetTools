@@ -1,12 +1,15 @@
 #include "ElaWindowStyle.h"
 
+#include "ElaColorAnimation.h"
+#include "ElaControlStyle.h"
+#include "ElaTheme.h"
+
 #include <QDebug>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
 #include <QtMath>
 
-#include "ElaTheme.h"
 ElaWindowStyle::ElaWindowStyle(QStyle* style)
 {
     _themeMode = eTheme->getThemeMode();
@@ -32,18 +35,8 @@ void ElaWindowStyle::drawPrimitive(PrimitiveElement element, const QStyleOption*
             painter->save();
             painter->setRenderHint(QPainter::Antialiasing);
             painter->setPen(Qt::NoPen);
-            if (option->state.testFlag(QStyle::State_Sunken))
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-            }
-            else if (option->state.testFlag(QStyle::State_MouseOver))
-            {
-                painter->setBrush(ElaThemeColor(_themeMode, BasicPressAlpha));
-            }
-            else
-            {
-                painter->setBrush(Qt::transparent);
-            }
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, option->state, option->state.testFlag(QStyle::State_Sunken));
+            painter->setBrush(ElaColorAnimation::getColor(widget, background));
             painter->drawRect(option->rect);
             painter->restore();
         }
@@ -140,49 +133,14 @@ void ElaWindowStyle::drawControl(ControlElement element, const QStyleOption* opt
             painter->save();
             painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
             painter->setPen(Qt::NoPen);
-            if (topt->state & QStyle::State_Selected)
-            {
-                if (topt->state & QStyle::State_Sunken)
-                {
-                    // 选中时点击
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                }
-                else
-                {
-                    if (topt->state & QStyle::State_MouseOver)
-                    {
-                        // 选中时覆盖
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
-                    }
-                    else
-                    {
-                        // 选中
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedAlpha));
-                    }
-                }
-            }
-            else
-            {
-                if (topt->state & QStyle::State_Sunken)
-                {
-                    // 点击时颜色
-                    painter->setBrush(ElaThemeColor(_themeMode, BasicSelectedHoverAlpha));
-                }
-                else
-                {
-                    if (topt->state & QStyle::State_MouseOver)
-                    {
-                        // 覆盖时颜色
-                        painter->setBrush(ElaThemeColor(_themeMode, BasicHoverAlpha));
-                    }
-                }
-            }
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, topt->state, topt->state.testFlag(QStyle::State_Sunken));
+            painter->setBrush(ElaControlStyle::getTabBackgroundColor(widget, topt, background));
             painter->drawRect(tabRect);
             // 间隔符绘制
             if (topt->position != QStyleOptionTab::End)
             {
                 painter->setPen(Qt::NoPen);
-                painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
+                painter->setBrush(ElaColorAnimation::getColor(widget, ElaThemeColor(_themeMode, BasicBorder), "Separator"));
                 painter->drawRoundedRect(QRectF(tabRect.right() - 3, tabRect.y() + 7, 3, tabRect.height() - 14), 2, 2);
             }
             painter->restore();

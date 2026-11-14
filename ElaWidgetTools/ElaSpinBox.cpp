@@ -1,34 +1,31 @@
 #include "ElaSpinBox.h"
 
-#include "ElaSpinBoxStyle.h"
+#include "ElaInputFocusAnimation.h"
 #include "ElaMenu.h"
 #include "ElaSpinBoxPrivate.h"
+#include "ElaSpinBoxStyle.h"
 #include "ElaTheme.h"
 
 #include <QContextMenuEvent>
 #include <QLineEdit>
-#include <QPainter>
-#include <QPropertyAnimation>
+
 ElaSpinBox::ElaSpinBox(QWidget* parent)
     : QSpinBox(parent), d_ptr(new ElaSpinBoxPrivate())
 {
     Q_D(ElaSpinBox);
     d->q_ptr = this;
-    d->_pExpandMarkWidth = 0;
     setFixedSize(115, 35);
     d->_style = new ElaSpinBoxStyle(style());
+    d->_style->setParent(this);
     setStyle(d->_style);
+    new ElaInputFocusAnimation(d->_style, this);
     lineEdit()->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     lineEdit()->setStyleSheet("background-color:transparent;padding-left:10px;padding-bottom:3px;");
     d->onThemeChanged(eTheme->getThemeMode());
     connect(eTheme, &ElaTheme::themeModeChanged, d, &ElaSpinBoxPrivate::onThemeChanged);
 }
 
-ElaSpinBox::~ElaSpinBox()
-{
-    Q_D(ElaSpinBox);
-    delete d->_style;
-}
+ElaSpinBox::~ElaSpinBox() = default;
 
 void ElaSpinBox::setButtonMode(ElaSpinBoxType::ButtonMode buttonMode)
 {
@@ -66,57 +63,14 @@ ElaSpinBoxType::ButtonMode ElaSpinBox::getButtonMode() const
     return d->_style->getButtonMode();
 }
 
-void ElaSpinBox::focusInEvent(QFocusEvent* event)
-{
-    Q_D(ElaSpinBox);
-    if (event->reason() == Qt::MouseFocusReason)
-    {
-        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            update();
-        });
-        markAnimation->setDuration(300);
-        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        markAnimation->setStartValue(d->_pExpandMarkWidth);
-        markAnimation->setEndValue(width() / 2 - 3);
-        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-    QSpinBox::focusInEvent(event);
-}
-
-void ElaSpinBox::focusOutEvent(QFocusEvent* event)
-{
-    Q_D(ElaSpinBox);
-    if (event->reason() != Qt::PopupFocusReason)
-    {
-        QPropertyAnimation* markAnimation = new QPropertyAnimation(d, "pExpandMarkWidth");
-        connect(markAnimation, &QPropertyAnimation::valueChanged, this, [=](const QVariant& value) {
-            update();
-        });
-        markAnimation->setDuration(300);
-        markAnimation->setEasingCurve(QEasingCurve::InOutSine);
-        markAnimation->setStartValue(d->_pExpandMarkWidth);
-        markAnimation->setEndValue(0);
-        markAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    }
-    QSpinBox::focusOutEvent(event);
-}
-
 void ElaSpinBox::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaSpinBox);
-    if (palette().color(QPalette::Text) != ElaThemeColor(d->_themeMode, BasicText))
+    if (palette().color(QPalette::Active, QPalette::Text) != ElaThemeColor(d->_themeMode, BasicText))
     {
         d->onThemeChanged(d->_themeMode);
     }
     QSpinBox::paintEvent(event);
-    QPainter painter(this);
-    painter.save();
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(ElaThemeColor(d->_themeMode, PrimaryNormal));
-    painter.drawRoundedRect(QRectF(width() / 2 - d->_pExpandMarkWidth, height() - 2.5, d->_pExpandMarkWidth * 2, 2.5), 2, 2);
-    painter.restore();
 }
 
 void ElaSpinBox::contextMenuEvent(QContextMenuEvent* event)
