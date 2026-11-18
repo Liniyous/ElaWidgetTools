@@ -50,6 +50,10 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     connect(d->_popup, &ElaComboBoxPopup::closeFinished, this, [this]() {
         QComboBox::hidePopup();
     });
+    connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this]() {
+        // 旧标记可能位于列表当前选区之外 确认新值时一并刷新
+        view()->viewport()->update();
+    });
     connect(this, &ElaComboBox::pBorderRadiusChanged, this, [this]() {
         update();
     });

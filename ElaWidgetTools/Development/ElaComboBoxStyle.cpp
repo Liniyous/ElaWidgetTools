@@ -2,6 +2,7 @@
 
 #include "ElaApplication.h"
 #include "ElaColorAnimation.h"
+#include "ElaComboBox.h"
 #include "ElaComboBoxPopup.h"
 #include "ElaControlAnimation.h"
 #include "ElaControlStyle.h"
@@ -131,9 +132,15 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
     }
     case QStyle::CE_ItemViewItem:
     {
-        //覆盖高亮
         if (const QStyleOptionViewItem* vopt = qstyleoption_cast<const QStyleOptionViewItem*>(option))
         {
+            QStyle::State itemState = vopt->state;
+            if (const auto* comboBox = qobject_cast<const ElaComboBox*>(parent()))
+            {
+                // Qt 列表选区会随悬停和键盘预览移动 选中底色和标记跟随组合框已确认的索引
+                const int selectedRow = comboBox->currentIndex();
+                itemState.setFlag(QStyle::State_Selected, selectedRow >= 0 && vopt->index == comboBox->model()->index(selectedRow, comboBox->modelColumn(), comboBox->rootModelIndex()));
+            }
             const bool isAnimating = _popup && _popup->getIsAnimating();
             const qreal popupOpacity = isAnimating ? _popup->getPopupOpacity() : 1.0;
             const qreal chromeOpacity = isAnimating ? _popup->getItemChromeOpacity() : 1.0;
@@ -150,10 +157,10 @@ void ElaComboBoxStyle::drawControl(ControlElement element, const QStyleOption* o
             optionRect.adjust(6, 0, -6, 0);
 #endif
             path.addRoundedRect(optionRect, 5, 5);
-            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, option->state);
+            const QColor background = ElaControlStyle::getItemBackgroundColor(_themeMode, itemState);
             painter->setBrush(ElaColorAnimation::getColor(widget, background, "ItemBackground", vopt->index));
             painter->drawPath(path);
-            if (option->state.testFlag(QStyle::State_Selected))
+            if (itemState.testFlag(QStyle::State_Selected))
             {
                 painter->setBrush(ElaThemeColor(_themeMode, PrimaryNormal));
                 painter->drawRoundedRect(QRectF(optionRect.x() + 3, optionRect.y() + optionRect.height() * 0.2, 3, optionRect.height() * 0.6), 1.5, 1.5);
