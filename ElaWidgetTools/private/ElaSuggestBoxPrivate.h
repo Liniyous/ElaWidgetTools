@@ -2,13 +2,14 @@
 #define ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELASUGGESTBOXPRIVATE_H_
 
 #include "ElaPropertyMacro.h"
+#include "ElaWidgetToolsDef.h"
+
 #include <QAction>
 #include <QObject>
-#include <QSize>
+#include <QPointer>
 #include <QVariantMap>
 #include <QVector>
 
-#include "ElaWidgetToolsDef.h"
 class ElaSuggestion : public QObject
 {
     Q_OBJECT
@@ -21,12 +22,10 @@ public:
     ~ElaSuggestion() override;
 };
 
-class QVBoxLayout;
+class QVariantAnimation;
 class ElaLineEdit;
-class ElaNavigationNode;
 class ElaSuggestModel;
 class ElaBaseListView;
-class ElaSuggestDelegate;
 class ElaSuggestBox;
 class ElaSuggestBoxSearchViewContainer;
 class ElaSuggestBoxPrivate : public QObject
@@ -42,23 +41,24 @@ public:
     Q_SLOT void onSearchEditTextEdit(const QString& searchText);
     Q_SLOT void onSearchViewClicked(const QModelIndex& index);
 
+protected:
+    bool eventFilter(QObject* watched, QEvent* event) override;
+
 private:
-    ElaThemeType::ThemeMode _themeMode;
+    void _animatePopupTo(qreal progress);
+    void _applyPopupReveal(qreal progress);
+
+    ElaThemeType::ThemeMode _themeMode{ElaThemeType::Light};
     QAction* _lightSearchAction{nullptr};
     QAction* _darkSearchAction{nullptr};
     QVector<ElaSuggestion*> _suggestionVector;
-    ElaSuggestBoxSearchViewContainer* _searchViewBaseWidget{nullptr};
+    QPointer<ElaSuggestBoxSearchViewContainer> _searchViewBaseWidget;
     ElaLineEdit* _searchEdit{nullptr};
     ElaSuggestModel* _searchModel{nullptr};
     ElaBaseListView* _searchView{nullptr};
-    ElaSuggestDelegate* _searchDelegate{nullptr};
-    QVBoxLayout* _shadowLayout{nullptr};
-    QSize _lastSize;
-    bool _isExpandAnimationFinished{true};
-    bool _isCloseAnimationFinished{true};
-    void _startSizeAnimation(QSize oldSize, QSize newSize);
-    void _startExpandAnimation();
-    void _startCloseAnimation();
+    QVariantAnimation* _popupAnimation{nullptr}; // 建议面板展开与收起共用的动画
+    qreal _popupProgress{0.0};                   // 面板已展开比例 范围为 0 到 1
+    bool _isPopupAbove{false};                   // 面板是否锚定在输入框上边缘
 };
 
 #endif // ELAWORKSPACE_ELAWIDGETTOOLS_PRIVATE_ELASUGGESTBOXPRIVATE_H_

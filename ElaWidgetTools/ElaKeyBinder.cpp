@@ -6,6 +6,7 @@
 #include "ElaKeyBinderContainer.h"
 #include "ElaKeyBinderPrivate.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 
 #include <QMouseEvent>
 #include <QPainter>
@@ -18,7 +19,7 @@ ElaKeyBinder::ElaKeyBinder(QWidget* parent)
     Q_D(ElaKeyBinder);
     d->q_ptr = this;
     d->_pBorderRadius = 5;
-    setFixedHeight(35);
+    setFixedHeight(ElaWidgetToolsSize::DefaultControlHeight);
     setMouseTracking(true);
     setObjectName("ElaKeyBinder");
     setStyleSheet("#ElaKeyBinder{background-color:transparent;}");

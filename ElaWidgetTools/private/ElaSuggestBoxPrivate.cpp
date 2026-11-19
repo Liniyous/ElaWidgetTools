@@ -1,15 +1,19 @@
 #include "ElaSuggestBoxPrivate.h"
 
 #include "ElaBaseListView.h"
+#include "ElaColorAnimation.h"
 #include "ElaLineEdit.h"
 #include "ElaSuggestBox.h"
 #include "ElaSuggestBoxSearchViewContainer.h"
 #include "ElaSuggestModel.h"
 #include "ElaTheme.h"
 
-#include <QLayout>
-#include <QPropertyAnimation>
+#include <QApplication>
+#include <QEvent>
+#include <QRegion>
 #include <QUuid>
+#include <QVariantAnimation>
+
 ElaSuggestion::ElaSuggestion(QObject* parent)
     : QObject(parent)
 {
@@ -26,6 +30,13 @@ ElaSuggestion::~ElaSuggestion()
 ElaSuggestBoxPrivate::ElaSuggestBoxPrivate(QObject* parent)
     : QObject{parent}
 {
+    _popupAnimation = new QVariantAnimation(this);
+    connect(_popupAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value) {
+        if (_popupAnimation->state() == QAbstractAnimation::Running)
+        {
+            _applyPopupReveal(value.toReal());
+        }
+    });
 }
 
 ElaSuggestBoxPrivate::~ElaSuggestBoxPrivate()
@@ -43,9 +54,13 @@ void ElaSuggestBoxPrivate::onThemeModeChanged(ElaThemeType::ThemeMode themeMode)
 void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
 {
     Q_Q(ElaSuggestBox);
+    if (!q->isVisible() || !_searchViewBaseWidget)
+    {
+        return;
+    }
     if (searchText.isEmpty())
     {
-        _startCloseAnimation();
+        _animatePopupTo(0.0);
         return;
     }
     QVector<ElaSuggestion*> suggestionVector;
@@ -56,43 +71,49 @@ void ElaSuggestBoxPrivate::onSearchEditTextEdit(const QString& searchText)
             suggestionVector.append(suggest);
         }
     }
-    if (!suggestionVector.isEmpty())
+    if (suggestionVector.isEmpty())
     {
-        _searchModel->setSearchSuggestion(suggestionVector);
-        int rowCount = suggestionVector.count();
-        if (rowCount > 4)
-        {
-            rowCount = 4;
-        }
-        const QMargins margins = eTheme->getShadowMargins();
-        const QSize size(q->width() + margins.left() + margins.right(), 40 * rowCount + 10 + margins.top() + margins.bottom());
-        const QRect available = _searchViewBaseWidget->parentWidget()->rect();
-        QPoint position = q->mapTo(_searchViewBaseWidget->parentWidget(), QPoint(-margins.left(), q->height() - margins.top()));
-        if (position.y() + size.height() > available.bottom() + 1)
-        {
-            position.setY(q->mapTo(_searchViewBaseWidget->parentWidget(), QPoint()).y() - size.height() + margins.bottom());
-        }
-        position.setX(qBound(available.left(), position.x(), qMax(available.left(), available.right() - size.width() + 1)));
-        position.setY(qBound(available.top(), position.y(), qMax(available.top(), available.bottom() - size.height() + 1)));
-        _searchViewBaseWidget->move(position);
-        if (!_searchViewBaseWidget->isVisible())
-        {
-            q->raise();
-            _searchViewBaseWidget->show();
-            _searchViewBaseWidget->raise();
-            _startSizeAnimation(QSize(size.width(), 0), size);
-            _searchView->move(_searchViewBaseWidget->contentsRect().left(), -40 * rowCount);
-        }
-        else
-        {
-            _startSizeAnimation(_searchViewBaseWidget->size(), size);
-        }
-        _startExpandAnimation();
+        _animatePopupTo(0.0);
+        return;
     }
-    else
+
+    QWidget* host = q->window();
+    if (_searchViewBaseWidget->parentWidget() != host)
     {
-        _startCloseAnimation();
+        _popupAnimation->stop();
+        _searchViewBaseWidget->setParent(host);
     }
+    _searchModel->setSearchSuggestion(suggestionVector);
+    const QRect available = host->rect();
+    const QRect editRect(_searchEdit->mapTo(host, QPoint()), _searchEdit->size());
+    const QMargins shadowMargins = eTheme->getShadowMargins();
+    const QMargins contentMargins = _searchViewBaseWidget->contentsMargins() - shadowMargins;
+    const int verticalPadding = contentMargins.top() + contentMargins.bottom();
+    const int shownRowCount = qMin<int>(4, suggestionVector.size());
+    const int desiredHeight = shownRowCount * _searchView->sizeHintForRow(0) + verticalPadding;
+    const int spaceBelow = available.bottom() - editRect.bottom();
+    const int spaceAbove = editRect.top() - available.top();
+    _isPopupAbove = spaceBelow < desiredHeight && spaceAbove > spaceBelow;
+    const int bodyHeight = qMin(desiredHeight, _isPopupAbove ? spaceAbove : spaceBelow);
+    const int bodyWidth = qMin(editRect.width(), available.width());
+    if (bodyHeight <= verticalPadding || bodyWidth <= contentMargins.left() + contentMargins.right())
+    {
+        _popupAnimation->stop();
+        _applyPopupReveal(0.0);
+        return;
+    }
+    const int bodyX = qBound(available.left(), editRect.left(), available.right() - bodyWidth + 1);
+    const int bodyY = _isPopupAbove ? editRect.top() - bodyHeight : editRect.bottom() + 1;
+    const QRect bodyRect(bodyX, bodyY, bodyWidth, bodyHeight);
+    _searchViewBaseWidget->setGeometry(bodyRect.marginsAdded(shadowMargins));
+    // 阴影留白可能覆盖输入框 将该区域从绘制和鼠标命中范围中排除
+    const QRect editInPopup = editRect.translated(-_searchViewBaseWidget->pos());
+    _searchViewBaseWidget->setMask(QRegion(_searchViewBaseWidget->rect()).subtracted(editInPopup));
+    _searchView->resize(_searchViewBaseWidget->contentsRect().size());
+    _applyPopupReveal(_searchViewBaseWidget->isVisible() ? _popupProgress : 0.5);
+    _animatePopupTo(1.0);
+    _searchViewBaseWidget->show();
+    _searchViewBaseWidget->raise();
 }
 
 void ElaSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
@@ -107,76 +128,85 @@ void ElaSuggestBoxPrivate::onSearchViewClicked(const QModelIndex& index)
     _searchEdit->setText(suggest->getSuggestText());
     ElaSuggestBox::SuggestData data(suggest->getElaIcon(), suggest->getSuggestText(), suggest->getSuggestData());
     data.setSuggestKey(suggest->getSuggestKey());
+    _animatePopupTo(0.0);
     Q_EMIT q->suggestionClicked(data);
-    _startCloseAnimation();
 }
 
-void ElaSuggestBoxPrivate::_startSizeAnimation(QSize oldSize, QSize newSize)
+bool ElaSuggestBoxPrivate::eventFilter(QObject* watched, QEvent* event)
 {
-    if (_lastSize.isValid() && _lastSize == newSize)
+    if (watched == q_ptr && event->type() == QEvent::Hide)
+    {
+        _popupAnimation->stop();
+        _applyPopupReveal(0.0);
+    }
+    return QObject::eventFilter(watched, event);
+}
+
+void ElaSuggestBoxPrivate::_animatePopupTo(qreal progress)
+{
+    Q_Q(ElaSuggestBox);
+    if (!ElaColorAnimation::getIsAnimationEnabled(q) || !QApplication::isEffectEnabled(Qt::UI_AnimateCombo))
+    {
+        _popupAnimation->stop();
+        _applyPopupReveal(progress);
+        return;
+    }
+    if (_popupAnimation->state() == QAbstractAnimation::Running && _popupAnimation->endValue().toReal() == progress)
     {
         return;
     }
-    _shadowLayout->removeWidget(_searchView);
-    QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
-    connect(expandAnimation, &QPropertyAnimation::valueChanged, this, [=]() {
-        _searchView->resize(_searchViewBaseWidget->contentsRect().size().expandedTo(QSize(0, 0)));
-    });
-    connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
-        _shadowLayout->addWidget(_searchView);
-    });
-    expandAnimation->setDuration(300);
-    expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    expandAnimation->setStartValue(oldSize);
-    expandAnimation->setEndValue(newSize);
-    expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    _lastSize = newSize;
-}
-
-void ElaSuggestBoxPrivate::_startExpandAnimation()
-{
-    if (!_isExpandAnimationFinished)
+    _popupAnimation->stop();
+    if (_popupProgress == progress)
     {
         return;
     }
-    _isCloseAnimationFinished = true;
-    _isExpandAnimationFinished = false;
-    QPropertyAnimation* expandAnimation = new QPropertyAnimation(_searchView, "pos");
-    connect(expandAnimation, &QPropertyAnimation::finished, this, [=]() {
-        _isExpandAnimationFinished = true;
-        _searchView->clearSelection();
-    });
-    expandAnimation->setDuration(300);
-    expandAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    expandAnimation->setStartValue(_searchView->pos());
-    expandAnimation->setEndValue(_searchViewBaseWidget->contentsRect().topLeft());
-    expandAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    if (progress > _popupProgress)
+    {
+        QEasingCurve easing(QEasingCurve::BezierSpline);
+        easing.addCubicBezierSegment(QPointF(0, 0), QPointF(0, 1), QPointF(1, 1));
+        _popupAnimation->setEasingCurve(easing);
+        _popupAnimation->setDuration(180);
+    }
+    else
+    {
+        _popupAnimation->setEasingCurve(QEasingCurve::OutCubic);
+        _popupAnimation->setDuration(150);
+    }
+    _popupAnimation->setStartValue(_popupProgress);
+    _popupAnimation->setEndValue(progress);
+    _popupAnimation->start();
 }
 
-void ElaSuggestBoxPrivate::_startCloseAnimation()
+void ElaSuggestBoxPrivate::_applyPopupReveal(qreal progress)
 {
-    if (!_isCloseAnimationFinished)
+    _popupProgress = progress;
+    if (!_searchViewBaseWidget)
     {
         return;
     }
-    _isExpandAnimationFinished = true;
-    _isCloseAnimationFinished = false;
-    QPropertyAnimation* baseWidgetsAnimation = new QPropertyAnimation(_searchViewBaseWidget, "size");
-    baseWidgetsAnimation->setDuration(300);
-    baseWidgetsAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    baseWidgetsAnimation->setStartValue(_searchViewBaseWidget->size());
-    baseWidgetsAnimation->setEndValue(QSize(_searchViewBaseWidget->width(), 0));
-    baseWidgetsAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    QPropertyAnimation* closeAnimation = new QPropertyAnimation(_searchView, "pos");
-    connect(closeAnimation, &QPropertyAnimation::finished, this, [=]() {
-        _isCloseAnimationFinished = true;
-        _searchModel->clearSearchNode();
+    if (progress <= 0.0)
+    {
         _searchViewBaseWidget->hide();
-    });
-    closeAnimation->setDuration(300);
-    closeAnimation->setEasingCurve(QEasingCurve::InOutSine);
-    closeAnimation->setStartValue(_searchView->pos());
-    closeAnimation->setEndValue(QPoint(_searchView->pos().x(), -_searchView->height()));
-    closeAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    _lastSize = baseWidgetsAnimation->endValue().toSize();
+        _searchModel->setSearchSuggestion({});
+        return;
+    }
+
+    QRect bodyRect = _searchViewBaseWidget->rect().marginsRemoved(eTheme->getShadowMargins());
+    const int visibleHeight = qMax(1, qRound(bodyRect.height() * progress));
+    if (_isPopupAbove)
+    {
+        bodyRect.setTop(bodyRect.bottom() - visibleHeight + 1);
+    }
+    else
+    {
+        bodyRect.setHeight(visibleHeight);
+    }
+    _searchViewBaseWidget->setBodyRect(bodyRect);
+    const QRect contentRect = _searchViewBaseWidget->contentsRect();
+    const int offset = qRound(24.0 * (1.0 - progress)) * (_isPopupAbove ? 1 : -1);
+    _searchView->move(contentRect.topLeft() + QPoint(0, offset));
+    // 视图尺寸保持不变 仅裁剪显示区域 避免滚动条随动画反复显隐
+    const QRect clipRect = bodyRect.intersected(contentRect).translated(-_searchView->pos()).intersected(_searchView->rect());
+    _searchView->setMask(clipRect == _searchView->rect() ? QRegion() : QRegion(clipRect));
+    _searchView->setVisible(!clipRect.isEmpty());
 }

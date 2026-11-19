@@ -359,7 +359,7 @@ void ElaNavigationBar::removeNode(const QString& nodeKey)
     if (node->getIsFooterNode())
     {
         d->_footerModel->removeNavigationNode(nodeKey);
-        d->_footerView->setFixedHeight(40 * d->_footerModel->getFooterNodeCount());
+        d->_footerView->setFixedHeight(ElaWidgetToolsSize::DefaultListItemHeight * d->_footerModel->getFooterNodeCount());
         removedKeys.append(nodeKey);
     }
     else

@@ -6,6 +6,7 @@
 #include "ElaPopularCardPrivate.h"
 #include "ElaPushButton.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 
 #include <QEvent>
 #include <QPainter>
@@ -179,7 +180,8 @@ void ElaPopularCard::paintEvent(QPaintEvent* event)
         buttonTargetWidth = width() * 0.25;
     }
     //处理ElaPushButton的阴影偏移
-    d->_buttonTargetRect = QRect(QPoint(width() + 2 * d->_floater->_floatGeometryOffset - d->_shadowBorderWidth + 3 - foregroundRect.height() * 0.15 - buttonTargetWidth, foregroundRect.height() * 0.15 - 3), QSize(buttonTargetWidth, 36));
+    d->_buttonTargetRect = QRect(QPoint(width() + 2 * d->_floater->_floatGeometryOffset - d->_shadowBorderWidth + 3 - foregroundRect.height() * 0.15 - buttonTargetWidth, foregroundRect.height() * 0.15 - 3),
+                                 QSize(buttonTargetWidth, ElaWidgetToolsSize::DefaultControlHeight));
 
     // Title
     painter.setPen(ElaThemeColor(d->_themeMode, BasicText));

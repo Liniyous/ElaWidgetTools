@@ -101,6 +101,10 @@ QSize ElaToolButtonStyle::sizeFromContents(ContentsType type, const QStyleOption
         if (const QStyleOptionToolButton* bopt = qstyleoption_cast<const QStyleOptionToolButton*>(option))
         {
             QSize toolButtonSize = QProxyStyle::sizeFromContents(type, option, size, widget);
+            if (bopt->toolButtonStyle != Qt::ToolButtonTextUnderIcon)
+            {
+                toolButtonSize.setHeight(ElaWidgetToolsSize::DefaultControlHeight);
+            }
             if (bopt->features.testFlag(QStyleOptionToolButton::HasMenu) && !bopt->features.testFlag(QStyleOptionToolButton::MenuButtonPopup))
             {
                 toolButtonSize.rwidth() += _getExpandIndicatorWidth(bopt);
@@ -148,6 +152,10 @@ void ElaToolButtonStyle::_drawIcon(QPainter* painter, QRectF iconRect, const QSt
     if (bopt->toolButtonStyle != Qt::ToolButtonTextOnly)
     {
         QSize iconSize = bopt->iconSize;
+        if (!iconRect.isEmpty() && iconSize.height() > iconRect.height())
+        {
+            iconSize.scale(iconSize.width(), qFloor(iconRect.height()), Qt::KeepAspectRatio);
+        }
         if (widget->property("ElaIconType").toString().isEmpty())
         {
             // 绘制QIcon

@@ -18,9 +18,9 @@ ElaRollerPickerPrivate::~ElaRollerPickerPrivate()
 void ElaRollerPickerPrivate::onRollerPickerClicked()
 {
     Q_Q(ElaRollerPicker);
-    const QMargins margins = eTheme->getShadowMargins();
-    const QSize size(_getRollerTotalWidth() + 4 + margins.left() + margins.right(), _pickerRollerHeight + _rollerPickerContainer->getButtonAreaHeight() + 2 + margins.top() + margins.bottom());
-    QPoint targetPos = q->mapToGlobal(QPoint(-margins.left(), q->rect().center().y() - (_pickerRollerHeight - 1) / 2 - margins.top() - 2));
+    const QMargins contentMargins = _rollerPickerContainer->contentsMargins();
+    const QSize size(_getRollerTotalWidth() + contentMargins.left() + contentMargins.right(), _pickerRollerHeight + contentMargins.top() + contentMargins.bottom());
+    QPoint targetPos = q->mapToGlobal(QPoint(-eTheme->getShadowMargins().left(), q->rect().center().y() - (_pickerRollerHeight - 1) / 2 - contentMargins.top()));
     QScreen* screen = QGuiApplication::screenAt(q->mapToGlobal(q->rect().center()));
     if (screen)
     {

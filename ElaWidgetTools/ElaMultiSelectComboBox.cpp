@@ -7,6 +7,7 @@
 #include "ElaControlAnimation.h"
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 #include "private/ElaMultiSelectComboBoxPrivate.h"
 
 #include <QApplication>
@@ -25,7 +26,7 @@ ElaMultiSelectComboBox::ElaMultiSelectComboBox(QWidget* parent)
     d->q_ptr = this;
     d->_pBorderRadius = 4;
     d->_themeMode = eTheme->getThemeMode();
-    setMinimumHeight(32);
+    setFixedHeight(ElaWidgetToolsSize::DefaultControlHeight);
     setMouseTracking(true);
 
     d->_comboBoxStyle = new ElaComboBoxStyle(style());

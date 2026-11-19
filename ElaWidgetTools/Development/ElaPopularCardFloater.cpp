@@ -30,8 +30,9 @@ ElaPopularCardFloater::ElaPopularCardFloater(ElaPopularCard* card, ElaPopularCar
     _overButton->setGraphicsEffect(_opacityEffect);
     _overButton->move(0, 0);
     _overButton->setIsAccent(true);
-    _overButton->setMinimumSize(0, 0);
-    _overButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
+    // 按钮展开前需要从提示标签的高度过渡到标准高度
+    _overButton->setMinimumHeight(0);
+    _overButton->setMaximumHeight(QWIDGETSIZE_MAX);
     connect(_overButton, &ElaPushButton::clicked, _card, &ElaPopularCard::popularCardButtonClicked);
 
     _themeMode = eTheme->getThemeMode();
@@ -207,7 +208,8 @@ void ElaPopularCardFloater::paintEvent(QPaintEvent* event)
     //DetailedText
     painter.setPen(ElaThemeColor(_themeMode, BasicTextNoFocus));
     int detailedTextHeight = painter.fontMetrics().height() * 2 + 2;
-    QRectF detailedTextRect(pixRect.x(), pixRect.bottom() + cardForegroundRect.height() * 0.15, cardForegroundRect.width() + 2 * _floatGeometryOffset - _cardPrivate->_textHSpacing - cardForegroundRect.height() * 0.15, detailedTextHeight);
+    const qreal headerBottom = qMax(pixRect.bottom(), static_cast<qreal>(_cardPrivate->_buttonTargetRect.bottom() + 1));
+    QRectF detailedTextRect(pixRect.x(), headerBottom + cardForegroundRect.height() * 0.15, cardForegroundRect.width() + 2 * _floatGeometryOffset - _cardPrivate->_textHSpacing - cardForegroundRect.height() * 0.15, detailedTextHeight);
     QString detailedText = painter.fontMetrics().elidedText(_cardPrivate->_pDetailedText, Qt::ElideRight, detailedTextRect.width() * 1.9);
     painter.drawText(detailedTextRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, detailedText);
 
@@ -216,14 +218,17 @@ void ElaPopularCardFloater::paintEvent(QPaintEvent* event)
     painter.drawLine(foregroundRect.x(), detailedTextRect.bottom() + 5, foregroundRect.right(), detailedTextRect.bottom() + 5);
 
     //CardFloatPixmap
-    painter.drawPixmap(QRect(pixRect.x(), detailedTextRect.bottom() + 15, cardForegroundRect.bottom() + _floatGeometryOffset + 90 - detailedTextRect.bottom() - 15 - _cardPrivate->_shadowBorderWidth - 10, cardForegroundRect.bottom() + _floatGeometryOffset + 90 - detailedTextRect.bottom() - 15 - _cardPrivate->_shadowBorderWidth - 10), _cardPrivate->_pCardFloatPixmap);
+    const qreal contentBottom = cardForegroundRect.bottom() + _getExpandedHeight() - _card->height();
+    const int pixmapSide = qMax(0, static_cast<int>(contentBottom - detailedTextRect.bottom() - 15 - _cardPrivate->_shadowBorderWidth - 10));
+    painter.drawPixmap(QRect(pixRect.x(), detailedTextRect.bottom() + 15, pixmapSide, pixmapSide), _cardPrivate->_pCardFloatPixmap);
     painter.restore();
 }
 
 QRect ElaPopularCardFloater::_calculateTargetGeometry(QRect cardGeometry)
 {
     QRect targetGeometry = cardGeometry;
-    targetGeometry.adjust(-_floatGeometryOffset, -_floatGeometryOffset, _floatGeometryOffset, 90);
+    targetGeometry.adjust(-_floatGeometryOffset, -_floatGeometryOffset, _floatGeometryOffset, 0);
+    targetGeometry.setHeight(_getExpandedHeight());
     QRect windowRect = _cardPrivate->_pCardFloatArea->rect();
     if (targetGeometry.bottom() > windowRect.bottom())
     {
@@ -236,4 +241,10 @@ QRect ElaPopularCardFloater::_calculateTargetGeometry(QRect cardGeometry)
         targetGeometry.adjust(0, -offset, 0, -offset);
     }
     return targetGeometry;
+}
+
+int ElaPopularCardFloater::_getExpandedHeight() const
+{
+    const int headerHeight = qMax(_card->height(), _cardPrivate->_buttonTargetRect.bottom() + 1 + _cardPrivate->_shadowBorderWidth);
+    return headerHeight + _floatGeometryOffset + 90;
 }

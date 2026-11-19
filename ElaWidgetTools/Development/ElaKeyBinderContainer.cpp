@@ -5,10 +5,13 @@
 #include "ElaKeyBinder.h"
 #include "ElaTheme.h"
 
+#include <QFontMetrics>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QtMath>
+
+static constexpr auto keyBindingPrompt = "按下任意按键以进行绑定";
+static constexpr int keyPreviewSpacing = 12;
 
 ElaKeyBinderContainer::ElaKeyBinderContainer(QWidget* parent)
     : QWidget(parent)
@@ -17,7 +20,8 @@ ElaKeyBinderContainer::ElaKeyBinderContainer(QWidget* parent)
     setStyleSheet("#ElaKeyBinderContainer{background-color:transparent;}");
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
-    setFixedHeight(140);
+    setContentsMargins(20, 16, 20, 16);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     QFont textFont = font();
     textFont.setLetterSpacing(QFont::AbsoluteSpacing, 0.5);
     textFont.setPixelSize(eApp->getFontPixelSize() + 3);
@@ -31,6 +35,15 @@ ElaKeyBinderContainer::ElaKeyBinderContainer(QWidget* parent)
 
 ElaKeyBinderContainer::~ElaKeyBinderContainer()
 {
+}
+
+QSize ElaKeyBinderContainer::sizeHint() const
+{
+    const QMargins margins = contentsMargins();
+    const QFontMetrics metrics = fontMetrics();
+    const int keyPreviewHeight = qMax(ElaWidgetToolsSize::DefaultControlHeight, metrics.height() + 8);
+    return {margins.left() + metrics.horizontalAdvance(keyBindingPrompt) + margins.right(),
+            margins.top() + metrics.height() + keyPreviewSpacing + keyPreviewHeight + margins.bottom()};
 }
 
 void ElaKeyBinderContainer::logOrResetHistoryData(bool isLog)
@@ -168,23 +181,24 @@ void ElaKeyBinderContainer::paintEvent(QPaintEvent* event)
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
     // 顶部提示绘制
+    const QRect contentRect = contentsRect();
     painter.setPen(ElaThemeColor(_themeMode, BasicText));
-    painter.drawText(QRect(20, 20, width(), 50), Qt::AlignLeft | Qt::AlignTop, u8"按下任意按键以进行绑定");
+    painter.drawText(contentRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextSingleLine, keyBindingPrompt);
     if (_pBinderKeyText.isEmpty())
     {
         painter.restore();
         return;
     }
     // 中心文字背景绘制
+    const QFontMetrics metrics = fontMetrics();
+    const QRect previewArea = contentRect.adjusted(0, metrics.height() + keyPreviewSpacing, 0, 0);
+    const qreal previewWidth = qMin<qreal>(previewArea.width(), qMax(metrics.horizontalAdvance(_pBinderKeyText) * 1.3, 35.0));
+    const QRectF previewRect(previewArea.left() + (previewArea.width() - previewWidth) / 2, previewArea.top(), previewWidth, previewArea.height());
     painter.setPen(ElaThemeColor(_themeMode, BasicBorder));
     painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(_themeMode, PrimaryNormal), "Background"));
-    qreal textWidth = fontMetrics().horizontalAdvance(_pBinderKeyText) * 1.3;
-    qreal textHeight = fontMetrics().height() * 1.2;
-    textWidth = qMax(textWidth, 35.0);
-    textHeight = qMax(textHeight, 35.0);
-    painter.drawRoundedRect(QRectF((width() - textWidth) / 2.0, rect().center().y() + 10, textWidth, textHeight), 5, 5);
+    painter.drawRoundedRect(previewRect, 5, 5);
     // 文字绘制
     painter.setPen(ElaThemeColor(_themeMode, BasicTextInvert));
-    painter.drawText(QRectF((width() - textWidth) / 2.0, rect().center().y() + 10, textWidth, textHeight), Qt::AlignCenter, _pBinderKeyText);
+    painter.drawText(previewRect, Qt::AlignCenter, _pBinderKeyText);
     painter.restore();
 }

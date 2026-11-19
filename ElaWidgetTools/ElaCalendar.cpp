@@ -12,6 +12,7 @@
 #include "ElaTheme.h"
 #include "ElaToolButton.h"
 #include "ElaToolButtonStyle.h"
+#include "ElaWidgetToolsDef.h"
 
 #include <QEvent>
 #include <QHBoxLayout>
@@ -28,7 +29,6 @@ ElaCalendar::ElaCalendar(QWidget* parent)
     : QWidget{parent}, d_ptr(new ElaCalendarPrivate())
 {
     Q_D(ElaCalendar);
-    setFixedSize(305, 340);
     setObjectName("ElaCalendar");
     d->q_ptr = this;
     d->_pBorderRaiuds = 8;
@@ -77,7 +77,6 @@ ElaCalendar::ElaCalendar(QWidget* parent)
 
     // 模式切换按钮
     d->_modeSwitchButton = new ElaToolButton(this);
-    d->_modeSwitchButton->setFixedHeight(32);
     d->_modeSwitchButton->setAccessibleName("切换日历视图");
     d->_modeSwitchButton->setToolTip("选择月份或年份");
     QFont switchButtonFont = d->_modeSwitchButton->font();
@@ -85,7 +84,7 @@ ElaCalendar::ElaCalendar(QWidget* parent)
     d->_modeSwitchButton->setFont(switchButtonFont);
     d->_modeSwitchButton->setToolButtonStyle(Qt::ToolButtonTextOnly);
     d->_modeSwitchButton->findChild<ElaToolButtonStyle*>()->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    d->_modeSwitchButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    d->_modeSwitchButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     connect(d->_modeSwitchButton, &ElaToolButton::clicked, d, &ElaCalendarPrivate::onSwitchButtonClicked);
     connect(d->_calendarView->verticalScrollBar(), &QScrollBar::valueChanged, d, [=]() {
         if (!d->_isUpdatingDateWindow && d->_isSwitchAnimationFinished)
@@ -97,14 +96,14 @@ ElaCalendar::ElaCalendar(QWidget* parent)
 
     // 翻页按钮
     d->_upButton = new ElaToolButton(this);
-    d->_upButton->setFixedSize(32, 32);
+    d->_upButton->setFixedWidth(ElaWidgetToolsSize::DefaultControlHeight);
     d->_upButton->setIconSize(QSize(16, 16));
     d->_upButton->setAccessibleName("上一页");
     d->_upButton->setToolTip("上一页");
     connect(d->_upButton, &ElaToolButton::clicked, d, &ElaCalendarPrivate::onUpButtonClicked);
 
     d->_downButton = new ElaToolButton(this);
-    d->_downButton->setFixedSize(32, 32);
+    d->_downButton->setFixedWidth(ElaWidgetToolsSize::DefaultControlHeight);
     d->_downButton->setIconSize(QSize(16, 16));
     d->_downButton->setAccessibleName("下一页");
     d->_downButton->setToolTip("下一页");
@@ -116,6 +115,7 @@ ElaCalendar::ElaCalendar(QWidget* parent)
     buttonLayout->addWidget(d->_modeSwitchButton);
     buttonLayout->addWidget(d->_upButton);
     buttonLayout->addWidget(d->_downButton);
+    d->_headerHeight = buttonLayout->sizeHint().height();
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
     mainLayout->setContentsMargins(5, 0, 0, 0);
@@ -124,6 +124,8 @@ ElaCalendar::ElaCalendar(QWidget* parent)
     mainLayout->addWidget(d->_calendarTitleView);
     mainLayout->addWidget(d->_calendarView);
     mainLayout->addStretch();
+    // 保留月视图和年视图所需的额外空间 避免切换时弹层跳动
+    setFixedSize(305, mainLayout->sizeHint().height() + 14);
 
     auto viewPolicy = d->_calendarView->sizePolicy();
     viewPolicy.setRetainSizeWhenHidden(true);
@@ -275,7 +277,8 @@ void ElaCalendar::paintEvent(QPaintEvent* event)
     if (!d->_isSwitchAnimationFinished)
     {
         painter.save();
-        const QRect pixRect(1, 44, width() - 2, height() - 45);
+        QRect pixRect = baseRect;
+        pixRect.setTop(d->_headerHeight);
         QPainterPath clipPath;
         clipPath.addRoundedRect(baseRect, d->_pBorderRaiuds, d->_pBorderRaiuds);
         QPainterPath contentClipPath;

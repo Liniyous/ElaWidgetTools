@@ -22,18 +22,13 @@ QVariant ElaSuggestModel::data(const QModelIndex& index, int role) const
 
 void ElaSuggestModel::setSearchSuggestion(const QVector<ElaSuggestion*>& suggestionVector)
 {
-    if (suggestionVector.count() == 0)
+    if (_suggestionVector == suggestionVector)
     {
         return;
     }
     beginResetModel();
     _suggestionVector = suggestionVector;
     endResetModel();
-}
-
-void ElaSuggestModel::clearSearchNode()
-{
-    this->_suggestionVector.clear();
 }
 
 ElaSuggestion* ElaSuggestModel::getSearchSuggestion(int row)

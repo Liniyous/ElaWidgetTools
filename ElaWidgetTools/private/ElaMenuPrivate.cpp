@@ -36,9 +36,10 @@ QWidget* ElaMenuPrivate::_getPopupSource() const
     {
         parentMenuBar = nullptr;
     }
-    if (!parentMenuBar && q->menuAction())
+    const QList<QWidget*> actionWidgets = q->menuAction() ? q->menuAction()->associatedWidgets() : QList<QWidget*>();
+    if (!parentMenuBar)
     {
-        for (QWidget* widget: q->menuAction()->associatedWidgets())
+        for (QWidget* widget: actionWidgets)
         {
             auto* menuBar = qobject_cast<QMenuBar*>(widget);
             if (menuBar && menuBar->isVisible() && menuBar->activeAction() == q->menuAction())
@@ -57,19 +58,33 @@ QWidget* ElaMenuPrivate::_getPopupSource() const
     {
         return parentToolButton;
     }
+
+    const auto isTriggeringToolButton = [q](const QToolButton* toolButton) {
+        if (!toolButton || !toolButton->isVisible() || toolButton->menu() != q)
+        {
+            return false;
+        }
+        const QRect buttonRect(toolButton->mapToGlobal(QPoint()), toolButton->size());
+        const QRect triggerZone = buttonRect.adjusted(-q->width() - 32, -q->height() - 64, q->width() + 32, q->height() + 64);
+        return toolButton->isDown() || triggerZone.contains(q->pos());
+    };
+    // 工具按钮可以关联无父窗口的菜单 用菜单动作的关联控件识别触发源
+    for (QWidget* widget: actionWidgets)
+    {
+        auto* toolButton = qobject_cast<QToolButton*>(widget);
+        if (isTriggeringToolButton(toolButton))
+        {
+            return toolButton;
+        }
+    }
     if (q->parentWidget())
     {
         const QList<QToolButton*> toolButtons = q->parentWidget()->window()->findChildren<QToolButton*>();
         for (QToolButton* toolButton: toolButtons)
         {
-            if (toolButton->isVisible() && toolButton->menu() == q)
+            if (isTriggeringToolButton(toolButton))
             {
-                const QRect buttonRect(toolButton->mapToGlobal(QPoint(0, 0)), toolButton->size());
-                const QRect triggerZone = buttonRect.adjusted(-q->width() - 32, -q->height() - 64, q->width() + 32, q->height() + 64);
-                if (toolButton->isDown() || triggerZone.contains(q->pos()))
-                {
-                    return toolButton;
-                }
+                return toolButton;
             }
         }
     }

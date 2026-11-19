@@ -83,6 +83,7 @@ MainWindow::~MainWindow()
 void MainWindow::initWindow()
 {
     setFocusPolicy(Qt::StrongFocus);
+    setAppBarHeight(45);
     // setIsCentralStackedWidgetTransparent(true);
     setWindowIcon(QIcon(":/include/Image/Cirno.jpg"));
     resize(1200, 740);
@@ -91,7 +92,7 @@ void MainWindow::initWindow()
     // setNavigationBarDisplayMode(ElaNavigationType::Compact);
     // setWindowButtonFlag(ElaAppBarType::MinimizeButtonHint, false);
     setUserInfoCardPixmap(QPixmap(":/Resource/Image/Cirno.jpg"));
-    setUserInfoCardTitle("Ela 工具");
+    setUserInfoCardTitle("ElaWidgetTools");
     setUserInfoCardSubTitle("Liniyous@gmail.com");
     setWindowTitle("ElaWidgetTools");
     // setIsStayTop(true);
@@ -180,7 +181,6 @@ void MainWindow::initWindow()
         }
     });
     _windowSuggestBox = new ElaSuggestBox(this);
-    _windowSuggestBox->setFixedHeight(32);
     _windowSuggestBox->setPlaceholderText("搜索关键字");
     connect(_windowSuggestBox, &ElaSuggestBox::suggestionClicked, this, [=](const ElaSuggestBox::SuggestData& suggestData) {
         navigation(suggestData.getSuggestData().value("ElaPageKey").toString());

@@ -2,6 +2,7 @@
 
 #include "ElaApplication.h"
 #include "ElaCheckBoxStyle.h"
+#include "ElaWidgetToolsDef.h"
 
 ElaCheckBox::ElaCheckBox(QWidget* parent)
     : QCheckBox(parent)
@@ -9,6 +10,7 @@ ElaCheckBox::ElaCheckBox(QWidget* parent)
     _pBorderRadius = 3;
     setMouseTracking(true);
     setObjectName("ElaCheckBox");
+    setFixedHeight(ElaWidgetToolsSize::DefaultControlHeight);
     auto* checkBoxStyle = new ElaCheckBoxStyle(style());
     checkBoxStyle->setParent(this);
     setStyle(checkBoxStyle);

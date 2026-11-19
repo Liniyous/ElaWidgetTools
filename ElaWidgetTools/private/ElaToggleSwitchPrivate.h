@@ -28,6 +28,7 @@ private:
     QPoint _mousePressPos{0, 0};
     int _lastMouseX{0};
     ElaThemeType::ThemeMode _themeMode;
+    int _getTrackHeight() const;
     void _startPosAnimation(qreal startX, qreal endX, bool isToggle);
     void _startRadiusAnimation(qreal startRadius, qreal endRadius);
     void _adjustCircleCenterX();

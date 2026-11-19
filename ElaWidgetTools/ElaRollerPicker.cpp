@@ -4,6 +4,7 @@
 #include "ElaColorAnimation.h"
 #include "ElaRollerPickerPrivate.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 
 #include <QDebug>
 #include <QPainter>
@@ -17,7 +18,7 @@ ElaRollerPicker::ElaRollerPicker(QWidget* parent)
     d->q_ptr = this;
     d->_pBorderRadius = 3;
     setMouseTracking(true);
-    setFixedSize(90, 30);
+    setFixedSize(90, ElaWidgetToolsSize::DefaultControlHeight);
     setObjectName("ElaRollerPicker");
     setStyleSheet("#ElaRollerPicker{background-color:transparent;}");
     QFont font = this->font();
@@ -25,7 +26,6 @@ ElaRollerPicker::ElaRollerPicker(QWidget* parent)
     setFont(font);
 
     d->_rollerPickerContainer = new ElaRollerPickerContainer(this);
-    d->_rollerPickerContainer->resize(90, d->_pickerRollerHeight + d->_rollerPickerContainer->getButtonAreaHeight());
     d->_rollerPickerContainer->hide();
     connect(this, &QPushButton::clicked, d, &ElaRollerPickerPrivate::onRollerPickerClicked);
     connect(d->_rollerPickerContainer, &ElaRollerPickerContainer::overButtonClicked, d, &ElaRollerPickerPrivate::onOverButtonClicked);

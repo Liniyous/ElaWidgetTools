@@ -303,14 +303,14 @@ QSize ElaComboBoxStyle::sizeFromContents(ContentsType type, const QStyleOption* 
     case QStyle::CT_ItemViewItem:
     {
         QSize itemSize = QProxyStyle::sizeFromContents(type, option, size, widget);
-        itemSize.setHeight(qMax(32, option->fontMetrics.height() + 12));
+        itemSize.setHeight(qMax(ElaWidgetToolsSize::DefaultListItemHeight, option->fontMetrics.height() + 12));
         return itemSize;
     }
     case QStyle::CT_ComboBox:
     {
         QSize comboBoxSize = QProxyStyle::sizeFromContents(type, option, size, widget);
         comboBoxSize.setWidth(comboBoxSize.width() + 26);
-        comboBoxSize.setHeight(qMax(32, option->fontMetrics.height() + 12));
+        comboBoxSize.setHeight(ElaWidgetToolsSize::DefaultControlHeight);
         return comboBoxSize;
     }
     default:

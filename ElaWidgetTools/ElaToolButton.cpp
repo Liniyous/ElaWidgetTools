@@ -91,7 +91,6 @@ void ElaToolButton::setMenu(ElaMenu* menu)
     QToolButton::setMenu(menu);
     if (menu)
     {
-        menu->setMenuItemHeight(32);
         menu->installEventFilter(this);
     }
     d_ptr->_controlAnimation->release();

@@ -20,6 +20,7 @@ class ElaText;
 class ElaPushButton;
 class ElaToolButton;
 class QSlider;
+class QWidget;
 class ElaColorValueSliderStyle;
 class ElaColorDialogPrivate : public QObject
 {
@@ -70,6 +71,7 @@ private:
     ElaColorDisplayModel* _customColorModel{nullptr};
     ElaColorDisplayDelegate* _customColorDelegate{nullptr};
 
+    QWidget* _buttonWidget{nullptr}; // 底部按钮区的布局和背景范围
     ElaPushButton* _overButton{nullptr};
     ElaPushButton* _cancelButton{nullptr};
 

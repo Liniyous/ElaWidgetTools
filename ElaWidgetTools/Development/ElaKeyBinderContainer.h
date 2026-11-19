@@ -13,6 +13,7 @@ class ElaKeyBinderContainer : public QWidget
 public:
     explicit ElaKeyBinderContainer(QWidget* parent = nullptr);
     ~ElaKeyBinderContainer() override;
+    QSize sizeHint() const override;
     void logOrResetHistoryData(bool isLog);
     void saveBinderChanged();
 

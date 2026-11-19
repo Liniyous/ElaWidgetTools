@@ -4,6 +4,7 @@
 #include "ElaColorAnimation.h"
 #include "ElaMessageBar.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 #include "private/ElaMessageButtonPrivate.h"
 
 #include <QMouseEvent>
@@ -25,7 +26,7 @@ ElaMessageButton::ElaMessageButton(QWidget* parent)
     d->q_ptr = this;
     d->_pBorderRadius = 3;
     setMouseTracking(true);
-    setFixedSize(80, 38);
+    setFixedSize(80, ElaWidgetToolsSize::DefaultControlHeight);
     QFont font = this->font();
     font.setPixelSize(eApp->getFontPixelSize() + 2);
     setFont(font);

@@ -14,7 +14,6 @@ public:
     int rowCount(const QModelIndex& parent) const;
     QVariant data(const QModelIndex& index, int role) const;
     void setSearchSuggestion(const QVector<ElaSuggestion*>& suggestionVector);
-    void clearSearchNode();
     ElaSuggestion* getSearchSuggestion(int row);
 
 private:

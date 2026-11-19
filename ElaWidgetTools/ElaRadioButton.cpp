@@ -3,6 +3,7 @@
 #include "ElaApplication.h"
 #include "ElaRadioButtonStyle.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 #include "private/ElaRadioButtonPrivate.h"
 
 ElaRadioButton::ElaRadioButton(QWidget* parent)
@@ -12,6 +13,7 @@ ElaRadioButton::ElaRadioButton(QWidget* parent)
     d->q_ptr = this;
     setAttribute(Qt::WA_Hover);
     setMouseTracking(true);
+    setFixedHeight(ElaWidgetToolsSize::DefaultControlHeight);
     QFont font = this->font();
     font.setPixelSize(eApp->getFontPixelSize());
     setFont(font);

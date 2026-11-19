@@ -257,7 +257,7 @@ void ElaCalendarPrivate::_switchDisplayMode(ElaCalendarType mode, QDate date)
     _dateWindowTimer->stop();
     _scrollAnimation->stop();
     _isZoomIn = mode > _calendarModel->getDisplayMode();
-    const QRect contentRect(1, 44, q->width() - 2, q->height() - 45);
+    const QRect contentRect = q->rect().adjusted(1, _headerHeight, -1, -1);
     _oldCalendarViewPix = _getContentPixmap(contentRect);
     _calendarModel->setDisplayMode(mode);
     _calendarTitleView->setVisible(mode == DayMode);

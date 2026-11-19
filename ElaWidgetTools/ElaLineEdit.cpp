@@ -5,6 +5,7 @@
 #include "ElaLineEditStyle.h"
 #include "ElaMenu.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 #include "private/ElaLineEditPrivate.h"
 
 #include <QClipboard>
@@ -20,7 +21,7 @@ ElaLineEdit::ElaLineEdit(QWidget* parent)
     Q_D(ElaLineEdit);
     d->q_ptr = this;
     setObjectName("ElaLineEdit");
-    setFixedHeight(35);
+    setFixedHeight(ElaWidgetToolsSize::DefaultControlHeight);
     d->_themeMode = eTheme->getThemeMode();
     d->_pBorderRadius = 6;
     d->_pIsClearButtonEnable = true;

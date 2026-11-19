@@ -12,7 +12,7 @@
 
 ElaMenuStyle::ElaMenuStyle(QStyle* style)
 {
-    _pMenuItemHeight = 32;
+    _pMenuItemHeight = ElaWidgetToolsSize::DefaultListItemHeight;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
         _themeMode = themeMode;

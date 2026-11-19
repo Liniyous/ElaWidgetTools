@@ -13,6 +13,12 @@ ElaToggleSwitchPrivate::~ElaToggleSwitchPrivate()
 {
 }
 
+int ElaToggleSwitchPrivate::_getTrackHeight() const
+{
+    Q_Q(const ElaToggleSwitch);
+    return qMin(22, q->height());
+}
+
 void ElaToggleSwitchPrivate::_startPosAnimation(qreal startX, qreal endX, bool isToggle)
 {
     Q_Q(ElaToggleSwitch);
@@ -53,12 +59,13 @@ void ElaToggleSwitchPrivate::_startRadiusAnimation(qreal startRadius, qreal endR
 void ElaToggleSwitchPrivate::_adjustCircleCenterX()
 {
     Q_Q(ElaToggleSwitch);
-    if (_circleCenterX > q->width() - q->height() / 2 - _margin * 2)
+    const int trackHeight = _getTrackHeight();
+    if (_circleCenterX > q->width() - trackHeight / 2 - _margin * 2)
     {
-        _circleCenterX = q->width() - q->height() / 2 - _margin * 2;
+        _circleCenterX = q->width() - trackHeight / 2 - _margin * 2;
     }
-    if (_circleCenterX < q->height() / 2)
+    if (_circleCenterX < trackHeight / 2)
     {
-        _circleCenterX = q->height() / 2;
+        _circleCenterX = trackHeight / 2;
     }
 }

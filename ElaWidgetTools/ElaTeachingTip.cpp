@@ -62,7 +62,7 @@ ElaTeachingTip::ElaTeachingTip(QWidget* parent)
     headerLayout->addLayout(textLayout, 1);
     d->_closeToolButton = new ElaToolButton(d->_headerWidget);
     d->_closeToolButton->setElaIcon(ElaIconType::Xmark);
-    d->_closeToolButton->setFixedSize(28, 28);
+    d->_closeToolButton->setFixedWidth(ElaWidgetToolsSize::DefaultControlHeight);
     d->_closeToolButton->setToolTip("关闭提示");
     d->_closeToolButton->setAccessibleName("关闭提示");
     headerLayout->addWidget(d->_closeToolButton, 0, Qt::AlignTop);
@@ -70,6 +70,7 @@ ElaTeachingTip::ElaTeachingTip(QWidget* parent)
     d->_contentLayout->addWidget(d->_headerWidget);
 
     d->_buttonWidget = new QWidget(d->_contentWidget);
+    d->_buttonWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     auto* buttonLayout = new QHBoxLayout(d->_buttonWidget);
     buttonLayout->setContentsMargins(0, 0, 0, 0);
     buttonLayout->setSpacing(8);
@@ -77,9 +78,6 @@ ElaTeachingTip::ElaTeachingTip(QWidget* parent)
     d->_closePushButton = new ElaPushButton(d->_buttonWidget);
     for (auto* button: {d->_actionPushButton, d->_closePushButton})
     {
-        button->setMinimumSize(0, 0);
-        button->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        button->setFixedHeight(32);
         button->setBorderRadius(4);
         buttonLayout->addWidget(button, 1);
     }

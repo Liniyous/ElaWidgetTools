@@ -42,8 +42,7 @@ T_BaseComponents::T_BaseComponents(QWidget* parent)
     iconButton->setIsTransparent(false);
     iconButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     _toggleButton = new ElaToggleButton("固定到顶部", this);
-    _toggleButton->setFixedSize(qMax(100, _toggleButton->fontMetrics().horizontalAdvance(_toggleButton->getText()) + 24), normalButton->height());
-    iconButton->setFixedHeight(normalButton->height());
+    _toggleButton->setFixedWidth(qMax(100, _toggleButton->fontMetrics().horizontalAdvance(_toggleButton->getText()) + 24));
     for (auto* button: {normalButton, accentButton, disabledButton})
     {
         button->setMinimumWidth(100);

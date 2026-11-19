@@ -34,7 +34,7 @@ T_TreeView::T_TreeView(QWidget* parent)
     auto* optionsLayout = new ElaFlowLayout(0, 24, 16);
     auto* heightSpinBox = new ElaSpinBox(this);
     heightSpinBox->setRange(24, 60);
-    heightSpinBox->setValue(35);
+    heightSpinBox->setValue(_treeView->getItemHeight());
     heightSpinBox->setFixedWidth(120);
     auto* marginSpinBox = new ElaSpinBox(this);
     marginSpinBox->setRange(0, 20);

@@ -2,12 +2,12 @@
 
 #include "ElaColorAnimation.h"
 #include "ElaMaskWidget.h"
+#include "ElaPushButton.h"
 #include "ElaText.h"
 #include "ElaTheme.h"
 #include "ElaWinShadowHelper.h"
 #include "private/ElaContentDialogPrivate.h"
 
-#include <ElaPushButton.h>
 #include <QApplication>
 #include <QGuiApplication>
 #include <QHBoxLayout>
@@ -54,9 +54,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
             Q_EMIT leftButtonClicked();
         }
     });
-    d->_leftButton->setMinimumSize(0, 0);
-    d->_leftButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    d->_leftButton->setFixedHeight(38);
     d->_leftButton->setBorderRadius(6);
     d->_middleButton = new ElaPushButton(d->_middleButtonText, this);
     connect(d->_middleButton, &ElaPushButton::clicked, this, [=]() {
@@ -67,9 +64,6 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
             Q_EMIT middleButtonClicked();
         }
     });
-    d->_middleButton->setMinimumSize(0, 0);
-    d->_middleButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    d->_middleButton->setFixedHeight(38);
     d->_middleButton->setBorderRadius(6);
     d->_rightButton = new ElaPushButton(d->_rightButtonText, this);
     connect(d->_rightButton, &ElaPushButton::clicked, this, [=]() {
@@ -86,14 +80,11 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
         }
     });
     d->_rightButton->setIsAccent(true);
-    d->_rightButton->setMinimumSize(0, 0);
-    d->_rightButton->setMaximumSize(QSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX));
-    d->_rightButton->setFixedHeight(38);
     d->_rightButton->setBorderRadius(6);
 
     d->_centralWidget = new QWidget(this);
     QVBoxLayout* centralVLayout = new QVBoxLayout(d->_centralWidget);
-    centralVLayout->setContentsMargins(24, 24, 24, 24);
+    centralVLayout->setContentsMargins(24, 24, 24, 16);
     ElaText* title = new ElaText("退出", this);
     title->setTextStyle(ElaTextType::Title);
     ElaText* subTitle = new ElaText("确定要退出程序吗", this);
@@ -107,9 +98,9 @@ ElaContentDialog::ElaContentDialog(QWidget* parent)
     d->_mainLayout->setContentsMargins(0, 0, 0, 0);
     d->_mainLayout->setSpacing(0);
     d->_buttonWidget = new QWidget(this);
-    d->_buttonWidget->setFixedHeight(70);
+    d->_buttonWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     QHBoxLayout* buttonLayout = new QHBoxLayout(d->_buttonWidget);
-    buttonLayout->setContentsMargins(24, 16, 24, 16);
+    buttonLayout->setContentsMargins(24, 12, 24, 12);
     buttonLayout->setSpacing(8);
     buttonLayout->addWidget(d->_leftButton);
     buttonLayout->addWidget(d->_middleButton);

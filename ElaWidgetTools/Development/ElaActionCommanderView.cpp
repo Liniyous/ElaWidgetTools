@@ -51,7 +51,6 @@ void ElaActionCommanderView::onCustomContextMenuRequested(const QPoint& pos)
     auto actionCommander = ElaActionCommander::getInstance();
     ElaMenu menu(this);
     menu.setMinimumWidth(200);
-    menu.setMenuItemHeight(35);
     connect(menu.addElaIconAction(ElaIconType::LocationArrow, "定位到当前位置"), &QAction::triggered, this, [=]() {
         auto selectedIndexList = selectionModel()->selectedRows(0);
         if (selectedIndexList.isEmpty())

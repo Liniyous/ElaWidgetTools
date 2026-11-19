@@ -20,7 +20,7 @@ ElaNavigationStyle::ElaNavigationStyle(ElaNavigationView* navigationView)
     _navigationView = navigationView;
     setParent(navigationView);
     _pRotate = 0;
-    _pItemHeight = 38;
+    _pItemHeight = ElaWidgetToolsSize::DefaultListItemHeight;
     _markAnimation = new ElaNavigationMarkAnimation(navigationView->viewport(), false, this);
     _rotateAnimation = new QPropertyAnimation(this, "pRotate", this);
     _rotateAnimation->setDuration(150);

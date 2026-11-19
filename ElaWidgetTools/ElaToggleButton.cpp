@@ -21,7 +21,7 @@ ElaToggleButton::ElaToggleButton(QWidget* parent)
     d->_pBorderRadius = 3;
     d->_themeMode = eTheme->getThemeMode();
     setMouseTracking(true);
-    setFixedSize(80, 32);
+    setFixedSize(80, ElaWidgetToolsSize::DefaultControlHeight);
     QFont font = this->font();
     font.setPixelSize(eApp->getFontPixelSize() + 2);
     setFont(font);

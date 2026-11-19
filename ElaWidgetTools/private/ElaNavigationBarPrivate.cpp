@@ -359,7 +359,7 @@ void ElaNavigationBarPrivate::_addFooterPage(QWidget* page, QString footKey)
     {
         page->setProperty("ElaPageKey", footKey);
     }
-    _footerView->setFixedHeight(40 * _footerModel->getFooterNodeCount());
+    _footerView->setFixedHeight(ElaWidgetToolsSize::DefaultListItemHeight * _footerModel->getFooterNodeCount());
     ElaNavigationNode* node = _footerModel->getNavigationNode(footKey);
     QVariantMap suggestData;
     suggestData.insert("ElaPageKey", footKey);

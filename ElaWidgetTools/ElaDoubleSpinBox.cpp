@@ -5,6 +5,7 @@
 #include "ElaMenu.h"
 #include "ElaSpinBoxStyle.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 
 #include <QContextMenuEvent>
 #include <QLineEdit>
@@ -14,7 +15,7 @@ ElaDoubleSpinBox::ElaDoubleSpinBox(QWidget* parent)
 {
     Q_D(ElaDoubleSpinBox);
     d->q_ptr = this;
-    setFixedSize(115, 35);
+    setFixedSize(115, ElaWidgetToolsSize::DefaultControlHeight);
     d->_style = new ElaSpinBoxStyle(style());
     d->_style->setParent(this);
     setStyle(d->_style);

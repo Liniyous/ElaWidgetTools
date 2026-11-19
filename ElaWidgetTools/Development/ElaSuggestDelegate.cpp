@@ -46,7 +46,7 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
     painter->fillPath(path, ElaColorAnimation::getColor(option.widget, background, "ItemBackground", index));
     //文字绘制
     painter->setPen(ElaThemeColor(_themeMode, BasicText));
-    painter->drawText(option.rect.x() + 37, option.rect.y() + 25, suggest->getSuggestText());
+    painter->drawText(option.rect.adjusted(37, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, suggest->getSuggestText());
 
     //图标绘制
     if (suggest->getElaIcon() != ElaIconType::None)
@@ -54,7 +54,7 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
         QFont iconFont = QFont("ElaAwesome");
         iconFont.setPixelSize(eApp->getFontPixelSize() + 4);
         painter->setFont(iconFont);
-        painter->drawText(option.rect.x() + 11, option.rect.y() + 26, QChar(suggest->getElaIcon()));
+        painter->drawText(option.rect.adjusted(11, 0, 0, 0), Qt::AlignLeft | Qt::AlignVCenter, QChar(suggest->getElaIcon()));
     }
     painter->restore();
 }
@@ -62,6 +62,6 @@ void ElaSuggestDelegate::paint(QPainter* painter, const QStyleOptionViewItem& op
 QSize ElaSuggestDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(40);
+    size.setHeight(ElaWidgetToolsSize::DefaultListItemHeight);
     return size;
 }

@@ -14,7 +14,7 @@
 
 ElaActionCommanderViewStyle::ElaActionCommanderViewStyle(QStyle* style)
 {
-    _pItemHeight = 40;
+    _pItemHeight = ElaWidgetToolsSize::DefaultListItemHeight;
     _pHeaderMargin = 5;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {

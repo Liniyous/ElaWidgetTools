@@ -12,7 +12,7 @@
 
 ElaTreeViewStyle::ElaTreeViewStyle(QStyle* style)
 {
-    _pItemHeight = 35;
+    _pItemHeight = ElaWidgetToolsSize::DefaultListItemHeight;
     _pHeaderMargin = 5;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {

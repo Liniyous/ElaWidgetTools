@@ -20,7 +20,7 @@ ElaToggleSwitch::ElaToggleSwitch(QWidget* parent)
     d->q_ptr = this;
     setObjectName("ElaToggleSwitch");
     setMouseTracking(true);
-    setFixedSize(44, 22);
+    setFixedSize(44, ElaWidgetToolsSize::DefaultControlHeight);
     d->_circleCenterX = -1;
     d->_isToggled = false;
     d->_themeMode = eTheme->getThemeMode();
@@ -42,13 +42,14 @@ void ElaToggleSwitch::setIsToggled(bool isToggled)
     {
         return;
     }
+    const int trackHeight = d->_getTrackHeight();
     if (d->_isToggled)
     {
-        d->_startPosAnimation(width() - height() / 2 - d->_margin * 2, height() / 2, isToggled);
+        d->_startPosAnimation(width() - trackHeight / 2 - d->_margin * 2, trackHeight / 2, isToggled);
     }
     else
     {
-        d->_startPosAnimation(height() / 2, width() - height() / 2 - d->_margin * 2, isToggled);
+        d->_startPosAnimation(trackHeight / 2, width() - trackHeight / 2 - d->_margin * 2, isToggled);
     }
 }
 
@@ -60,13 +61,14 @@ bool ElaToggleSwitch::getIsToggled() const
 bool ElaToggleSwitch::event(QEvent* event)
 {
     Q_D(ElaToggleSwitch);
+    const int trackHeight = d->_getTrackHeight();
     switch (event->type())
     {
     case QEvent::Enter:
     {
         if (isEnabled())
         {
-            d->_startRadiusAnimation(height() * 0.3, height() * 0.35);
+            d->_startRadiusAnimation(trackHeight * 0.3, trackHeight * 0.35);
         }
         break;
     }
@@ -74,7 +76,7 @@ bool ElaToggleSwitch::event(QEvent* event)
     {
         if (isEnabled())
         {
-            d->_startRadiusAnimation(height() * 0.35, height() * 0.3);
+            d->_startRadiusAnimation(trackHeight * 0.35, trackHeight * 0.3);
         }
         break;
     }
@@ -109,7 +111,7 @@ void ElaToggleSwitch::mousePressEvent(QMouseEvent* event)
     d->_isDragging = false;
     d->_mousePressPos = event->pos();
     d->_lastMouseX = event->pos().x();
-    d->_startRadiusAnimation(d->_circleRadius, height() * 0.25);
+    d->_startRadiusAnimation(d->_circleRadius, d->_getTrackHeight() * 0.25);
     event->accept();
 }
 
@@ -132,8 +134,9 @@ void ElaToggleSwitch::mouseReleaseEvent(QMouseEvent* event)
         isToggled = !isToggled;
     }
     d->_isDragging = false;
-    d->_startPosAnimation(d->_circleCenterX, isToggled ? width() - height() / 2 - d->_margin * 2 : height() / 2, isToggled);
-    d->_startRadiusAnimation(height() * 0.25, height() * 0.35);
+    const int trackHeight = d->_getTrackHeight();
+    d->_startPosAnimation(d->_circleCenterX, isToggled ? width() - trackHeight / 2 - d->_margin * 2 : trackHeight / 2, isToggled);
+    d->_startRadiusAnimation(trackHeight * 0.25, trackHeight * 0.35);
     event->accept();
 }
 
@@ -161,9 +164,12 @@ void ElaToggleSwitch::mouseMoveEvent(QMouseEvent* event)
 void ElaToggleSwitch::paintEvent(QPaintEvent* event)
 {
     Q_D(ElaToggleSwitch);
+    const int trackHeight = d->_getTrackHeight();
     QPainter painter(this);
     painter.save();
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    // 外框按标准高度参与布局 轨道和滑块在外框内垂直居中
+    painter.translate(0, (height() - trackHeight) / 2.0);
     // 背景绘制
     painter.setPen(d->_isToggled ? QPen(ElaThemeColor(d->_themeMode, BasicBorder), 1.5) : QPen(ElaThemeColor(d->_themeMode, BasicBorderDeep), 1.5));
     QStyleOption option;
@@ -171,11 +177,12 @@ void ElaToggleSwitch::paintEvent(QPaintEvent* event)
     option.state.setFlag(QStyle::State_Sunken, d->_isLeftButtonPress);
     painter.setBrush(ElaColorAnimation::getColor(this, ElaControlStyle::getIndicatorBackgroundColor(d->_themeMode, option.state, d->_isToggled)));
     QPainterPath path;
-    path.moveTo(width() - height() - d->_margin, height() - d->_margin);
-    path.arcTo(QRectF(QPointF(width() - height() - d->_margin, d->_margin), QSize(height() - d->_margin * 2, height() - d->_margin * 2)), -90, 180);
-    path.lineTo(height() / 2 + d->_margin, d->_margin);
-    path.arcTo(QRectF(QPointF(d->_margin, d->_margin), QSize(height() - d->_margin * 2, height() - d->_margin * 2)), 90, 180);
-    path.lineTo(width() - height() - d->_margin, height() - d->_margin);
+    const int arcDiameter = trackHeight - d->_margin * 2;
+    path.moveTo(width() - trackHeight - d->_margin, trackHeight - d->_margin);
+    path.arcTo(QRectF(width() - trackHeight - d->_margin, d->_margin, arcDiameter, arcDiameter), -90, 180);
+    path.lineTo(trackHeight / 2 + d->_margin, d->_margin);
+    path.arcTo(QRectF(d->_margin, d->_margin, arcDiameter, arcDiameter), 90, 180);
+    path.lineTo(width() - trackHeight - d->_margin, trackHeight - d->_margin);
     path.closeSubpath();
     painter.drawPath(path);
 
@@ -184,19 +191,19 @@ void ElaToggleSwitch::paintEvent(QPaintEvent* event)
     painter.setBrush(ElaColorAnimation::getColor(this, isEnabled() ? d->_isToggled ? ElaThemeColor(d->_themeMode, BasicTextInvert) : ElaThemeColor(d->_themeMode, BasicIndicator) : ElaThemeColor(d->_themeMode, BasicTextDisable), "Thumb"));
     if (d->_circleRadius == 0)
     {
-        d->_circleRadius = this->isEnabled() ? (underMouse() ? height() * 0.35 : height() * 0.3) : height() * 0.3;
+        d->_circleRadius = isEnabled() && underMouse() ? trackHeight * 0.35 : trackHeight * 0.3;
     }
     if (d->_isLeftButtonPress)
     {
-        painter.drawEllipse(QPointF(d->_circleCenterX, height() / 2), d->_circleRadius, d->_circleRadius);
+        painter.drawEllipse(QPointF(d->_circleCenterX, trackHeight / 2), d->_circleRadius, d->_circleRadius);
     }
     else
     {
         if (d->_circleCenterX == -1)
         {
-            d->_circleCenterX = d->_isToggled ? width() - height() / 2 - d->_margin * 2 : height() / 2;
+            d->_circleCenterX = d->_isToggled ? width() - trackHeight / 2 - d->_margin * 2 : trackHeight / 2;
         }
-        painter.drawEllipse(QPointF(d->_circleCenterX, height() / 2), d->_circleRadius, d->_circleRadius);
+        painter.drawEllipse(QPointF(d->_circleCenterX, trackHeight / 2), d->_circleRadius, d->_circleRadius);
     }
     painter.restore();
 }

@@ -34,6 +34,7 @@ private:
     ElaPopularCard* _card{nullptr};
     ElaPopularCardPrivate* _cardPrivate{nullptr};
     QRect _calculateTargetGeometry(QRect cardGeometry);
+    int _getExpandedHeight() const;
     int _floatGeometryOffset{25};
 };
 

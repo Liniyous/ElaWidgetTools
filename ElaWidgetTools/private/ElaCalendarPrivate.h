@@ -40,6 +40,7 @@ private:
     QPixmap _newCalendarViewPix;
     QDate _displayDate; // 当前视口中央的日期
     QDate _pageDate;    // 连续翻页的目标日期
+    int _headerHeight{0};
     qreal _borderWidth{1};
     qreal _zoomRatio{1};
     qreal _pixOpacity{1};

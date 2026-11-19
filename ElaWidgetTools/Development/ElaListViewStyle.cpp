@@ -11,7 +11,7 @@
 
 ElaListViewStyle::ElaListViewStyle(QStyle* style)
 {
-    _pItemHeight = 35;
+    _pItemHeight = ElaWidgetToolsSize::DefaultListItemHeight;
     _pIsTransparent = false;
     _themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {

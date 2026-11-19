@@ -43,7 +43,7 @@ void T_BasePage::createCustomWidget(const QString& description, const QString& t
     titleText->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
 
     auto* themeButton = new ElaToolButton(this);
-    themeButton->setFixedSize(32, 32);
+    themeButton->setFixedWidth(32);
     themeButton->setIsTransparent(false);
     themeButton->setElaIcon(ElaIconType::MoonStars);
     themeButton->setToolTip("切换浅色与深色主题");

@@ -5,6 +5,7 @@
 #include "ElaControlAnimation.h"
 #include "ElaScrollBar.h"
 #include "ElaTheme.h"
+#include "ElaWidgetToolsDef.h"
 #include "private/ElaComboBoxPrivate.h"
 
 #include <QAbstractItemView>
@@ -23,7 +24,7 @@ ElaComboBox::ElaComboBox(QWidget* parent)
     d->_pBorderRadius = 4;
     d->_themeMode = eTheme->getThemeMode();
     setObjectName("ElaComboBox");
-    setMinimumHeight(32);
+    setFixedHeight(ElaWidgetToolsSize::DefaultControlHeight);
     d->_comboBoxStyle = new ElaComboBoxStyle(style());
     d->_comboBoxStyle->setParent(this);
     setStyle(d->_comboBoxStyle);

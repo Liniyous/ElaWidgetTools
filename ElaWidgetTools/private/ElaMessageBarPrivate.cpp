@@ -97,7 +97,8 @@ void ElaMessageBarPrivate::_messageBarCreate(int displayMsec)
     int textWidth = q->fontMetrics().horizontalAdvance(_text);
     int fixedWidth = _closeButtonLeftRightMargin + _leftPadding + _titleLeftSpacing + _textLeftSpacing + _closeButtonWidth + titleWidth + textWidth + 2 * _shadowBorderWidth;
     q->setFixedWidth(fixedWidth > 500 ? 500 : fixedWidth);
-    q->setFixedHeight(qMax(50, _getTextHeight()));
+    const int verticalPadding = 2 * (_shadowBorderWidth + 4);
+    q->setFixedHeight(qMax(_closeButton->height(), _getTextHeight()) + verticalPadding);
     int startX = 0;
     int startY = 0;
     int endX = 0;
@@ -162,8 +163,7 @@ int ElaMessageBarPrivate::_getTextHeight()
     QFontMetrics textFontMetrics(font);
     int textRectWidth = q->minimumWidth() - (_leftPadding + _titleLeftSpacing + titleTextWidth + _textLeftSpacing + _closeButtonWidth + _closeButtonLeftRightMargin);
     int textFlags = Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap | Qt::TextWrapAnywhere;
-    int textHeight = textFontMetrics.boundingRect(QRect(0, 0, textRectWidth, 10000), textFlags, _text).height();
-    return textHeight + 20;
+    return textFontMetrics.boundingRect(QRect(0, 0, textRectWidth, 10000), textFlags, _text).height();
 }
 
 void ElaMessageBarPrivate::_calculateInitialPos(int& startX, int& startY, int& endX, int& endY)

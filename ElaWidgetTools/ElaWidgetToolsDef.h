@@ -6,6 +6,12 @@
 #include "ElaWidgetToolsExport.h"
 #define ElaDefVersion "2.0.3"
 
+namespace ElaWidgetToolsSize
+{
+constexpr int DefaultControlHeight{32};  // 常规单行控件的默认高度 单位为 Qt 逻辑像素
+constexpr int DefaultListItemHeight{35}; // 普通列表和菜单条目的默认行高 单位为 Qt 逻辑像素
+} // namespace ElaWidgetToolsSize
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
 #define Q_BEGIN_ENUM_CREATE(CLASS) \
     namespace CLASS                \

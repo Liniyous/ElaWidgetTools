@@ -3,6 +3,7 @@
 #include "ElaScrollBar.h"
 #include "ElaTableViewPrivate.h"
 #include "ElaTableViewStyle.h"
+#include "ElaWidgetToolsDef.h"
 
 #include <QHeaderView>
 #include <QMouseEvent>
@@ -27,6 +28,7 @@ ElaTableView::ElaTableView(QWidget* parent)
     d->_tableViewStyle = new ElaTableViewStyle(style());
     d->_tableViewStyle->setParent(this);
     setStyle(d->_tableViewStyle);
+    verticalHeader()->setDefaultSectionSize(ElaWidgetToolsSize::DefaultListItemHeight);
 }
 
 ElaTableView::~ElaTableView() = default;

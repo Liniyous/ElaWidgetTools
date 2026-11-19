@@ -125,6 +125,6 @@ void ElaFooterDelegate::paint(QPainter* painter, const QStyleOptionViewItem& opt
 QSize ElaFooterDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
     QSize size = QStyledItemDelegate::sizeHint(option, index);
-    size.setHeight(40);
+    size.setHeight(ElaWidgetToolsSize::DefaultListItemHeight);
     return size;
 }

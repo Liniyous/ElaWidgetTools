@@ -10,7 +10,6 @@ class ElaRollerPickerContainer : public QWidget
 {
     Q_OBJECT
     ELA_PROPERTY(int, AnimationPixOffsetY)
-    ELA_VARIABLE(int, ButtonAreaHeight)
 public:
     explicit ElaRollerPickerContainer(QWidget* parent = nullptr);
     ~ElaRollerPickerContainer() override;

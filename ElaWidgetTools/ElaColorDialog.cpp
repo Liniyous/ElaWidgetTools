@@ -27,14 +27,12 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
 {
     Q_D(ElaColorDialog);
     d->q_ptr = this;
-    setFixedSize(600, 600); // 默认宽高
     setObjectName("ElaColorDialog");
     setWindowTitle("选择颜色");
     setWindowModality(Qt::ApplicationModal);
 
     // 自定义AppBar
     d->_appBar = new ElaAppBar(this);
-    d->_appBar->setAppBarHeight(30);
     d->_appBar->setIsFixedSize(true);
     d->_appBar->setIsStayTop(true);
     d->_appBar->setWindowButtonFlags(ElaAppBarType::CloseButtonHint);
@@ -83,7 +81,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     ElaIntValidator* htmlValidator = new ElaIntValidator(0x000000, 0xFFFFFF, this);
     htmlValidator->setIsHexMode(true);
     d->_htmlEdit->setValidator(htmlValidator);
-    d->_htmlEdit->setFixedSize(120, 33);
+    d->_htmlEdit->setFixedWidth(120);
     connect(d->_htmlEdit, &ElaLineEdit::focusOut, d, &ElaColorDialogPrivate::onHtmlEditFocusOut);
     connect(d->_htmlEdit, &ElaLineEdit::textEdited, d, &ElaColorDialogPrivate::onHtmlEditChanged);
 
@@ -96,7 +94,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
 
     // 模式切换
     d->_modeComboBox = new ElaComboBox(this);
-    d->_modeComboBox->setFixedSize(120, 33);
+    d->_modeComboBox->setFixedWidth(120);
     d->_modeComboBox->addItem("RGB");
     d->_modeComboBox->addItem("HSV");
     d->_modeComboBox->setCurrentIndex(0);
@@ -110,7 +108,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     // R或H
     d->_firstEdit = new ElaLineEdit(this);
     d->_firstEdit->setText("0");
-    d->_firstEdit->setFixedSize(120, 33);
+    d->_firstEdit->setFixedWidth(120);
     d->_firstEdit->setValidator(new ElaIntValidator(0, 255, this));
     d->_firstText = new ElaText("红色", this);
     d->_firstText->setTextPixelSize(13);
@@ -126,7 +124,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     // G或S
     d->_secondEdit = new ElaLineEdit(this);
     d->_secondEdit->setText("0");
-    d->_secondEdit->setFixedSize(120, 33);
+    d->_secondEdit->setFixedWidth(120);
     d->_secondEdit->setValidator(new ElaIntValidator(0, 255, this));
     d->_secondText = new ElaText("绿色", this);
     d->_secondText->setTextPixelSize(13);
@@ -141,7 +139,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     // B或V
     d->_thridEdit = new ElaLineEdit(this);
     d->_thridEdit->setText("0");
-    d->_thridEdit->setFixedSize(120, 33);
+    d->_thridEdit->setFixedWidth(120);
     d->_thridEdit->setValidator(new ElaIntValidator(0, 255, this));
     d->_thridText = new ElaText("蓝色", this);
     d->_thridText->setTextPixelSize(13);
@@ -175,9 +173,19 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     colorControlLayout->addLayout(paramControlLayout);
     colorControlLayout->addStretch();
 
+    const auto fitColorView = [](ElaBaseListView* colorView, int columnCount) {
+        const auto* model = colorView->model();
+        const QSize cellSize = colorView->sizeHintForIndex(model->index(0, 0));
+        const int rowCount = (model->rowCount() + columnCount - 1) / columnCount;
+        colorView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        colorView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        colorView->setGridSize(cellSize);
+        // Qt 5 使用包含末像素的右边界判断换行 预留一像素让末列完整显示
+        colorView->setFixedSize(columnCount * cellSize.width() + 1, rowCount * cellSize.height());
+    };
+
     // 基本颜色
     d->_basicColorView = new ElaBaseListView(this);
-    d->_basicColorView->setFixedSize(380, 170);
     d->_basicColorView->setSelectionMode(QListView::NoSelection);
     d->_basicColorView->setFlow(QListView::LeftToRight);
     d->_basicColorView->setViewMode(QListView::IconMode);
@@ -187,20 +195,21 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     d->_basicColorDelegate = new ElaColorDisplayDelegate(this);
     d->_basicColorView->setItemDelegate(d->_basicColorDelegate);
     d->_initBasicColor();
+    fitColorView(d->_basicColorView, 12);
     connect(d->_basicColorView, &ElaBaseListView::clicked, d, &ElaColorDialogPrivate::onBasicColorViewClicked);
 
     ElaText* basicColorViewText = new ElaText("基本颜色", this);
     basicColorViewText->setTextPixelSize(14);
+    basicColorViewText->setMinimumHeight(ElaWidgetToolsSize::DefaultControlHeight);
     QVBoxLayout* basicColorLayout = new QVBoxLayout();
     basicColorLayout->setContentsMargins(3, 0, 0, 0);
+    basicColorLayout->setSpacing(5);
     basicColorLayout->addWidget(basicColorViewText);
-    basicColorLayout->addSpacing(15);
     basicColorLayout->addWidget(d->_basicColorView);
     basicColorLayout->addStretch();
 
     // 自定义颜色
     d->_customColorView = new ElaBaseListView(this);
-    d->_customColorView->setFixedSize(200, 170);
     d->_customColorView->setSelectionMode(QListView::SingleSelection);
     d->_customColorView->setFlow(QListView::LeftToRight);
     d->_customColorView->setViewMode(QListView::IconMode);
@@ -210,6 +219,7 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     d->_customColorDelegate = new ElaColorDisplayDelegate(this);
     d->_customColorView->setItemDelegate(d->_customColorDelegate);
     d->_initCustomColor();
+    fitColorView(d->_customColorView, 6);
     connect(d->_customColorView, &ElaBaseListView::clicked, d, &ElaColorDialogPrivate::onCustomColorViewClicked);
 
     // 增加移除按钮
@@ -235,8 +245,8 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
 
     QVBoxLayout* customColorLayout = new QVBoxLayout();
     customColorLayout->setContentsMargins(3, 0, 0, 0);
+    customColorLayout->setSpacing(5);
     customColorLayout->addLayout(customButtonLayout);
-    customColorLayout->addSpacing(5);
     customColorLayout->addWidget(d->_customColorView);
     customColorLayout->addStretch();
 
@@ -259,20 +269,25 @@ ElaColorDialog::ElaColorDialog(QWidget* parent)
     connect(d->_cancelButton, &ElaPushButton::clicked, this, [=]() {
         close();
     });
-    QHBoxLayout* buttonLayout = new QHBoxLayout();
-    buttonLayout->setContentsMargins(0, 0, 0, 0);
+    d->_buttonWidget = new QWidget(this);
+    d->_buttonWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    QHBoxLayout* buttonLayout = new QHBoxLayout(d->_buttonWidget);
+    buttonLayout->setContentsMargins(0, 12, 0, 12);
+    buttonLayout->setSpacing(8);
     buttonLayout->addWidget(d->_overButton);
     buttonLayout->addWidget(d->_cancelButton);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->setContentsMargins(20, 10, 11, 20);
+    mainLayout->setContentsMargins(20, 10, 11, 0);
+    mainLayout->setSpacing(0);
     mainLayout->addLayout(colorPickerTextLayout);
     mainLayout->addSpacing(3);
     mainLayout->addLayout(colorControlLayout);
-    mainLayout->addSpacing(80);
+    mainLayout->addSpacing(12);
     mainLayout->addLayout(colorDisplayLayout);
-    mainLayout->addLayout(buttonLayout);
-    mainLayout->addStretch();
+    mainLayout->addSpacing(8);
+    mainLayout->addWidget(d->_buttonWidget);
+    setFixedSize(mainLayout->totalSizeHint().expandedTo(QSize(600, 0)));
 
     d->_themeMode = eTheme->getThemeMode();
     connect(eTheme, &ElaTheme::themeModeChanged, this, [=](ElaThemeType::ThemeMode themeMode) {
@@ -334,7 +349,7 @@ void ElaColorDialog::paintEvent(QPaintEvent* event)
 
     // 按钮背景绘制
     painter.setBrush(ElaColorAnimation::getColor(this, ElaThemeColor(d->_themeMode, WindowBase), "LayoutArea"));
-    painter.drawRect(QRect(0, height() - 78, width(), 78));
+    painter.drawRect(0, d->_buttonWidget->y(), width(), d->_buttonWidget->height());
     painter.restore();
     QDialog::paintEvent(event);
 }

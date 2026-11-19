@@ -23,7 +23,7 @@ ElaCalendarPicker::ElaCalendarPicker(QWidget* parent)
     Q_D(ElaCalendarPicker);
     d->q_ptr = this;
     d->_pBorderRadius = 3;
-    setFixedSize(120, 30);
+    setFixedSize(120, ElaWidgetToolsSize::DefaultControlHeight);
     setObjectName("ElaCalendarPicker");
     setMouseTracking(true);
     d->_calendarPickerContainer = new ElaCalendarPickerContainer(this);
